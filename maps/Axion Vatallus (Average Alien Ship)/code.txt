@@ -1,0 +1,143 @@
+//colors in screen:
+0xFF00FF00 - green (orginal)
+0xFFFF0000 - red
+0xFFFF00FF - pink
+0xFF9E3DFF - violet
+
+command use: /setshipcolor 0xFF00FF00
+
+/*
+public OnFilterScriptInit(){
+	CreateStoczniaNGC(0xFF00FF00); //ARGB
+	return 1;
+}
+*/
+
+/****************************************************************************************************
+ * Axion Vatallus Ship by Abyss Morgan                                                              *
+ ****************************************************************************************************/
+
+#define StoczniaVW	0
+#define StoczniaINT	0
+
+new StoczniaNGC[22];
+
+SetStoczniaColor(color){
+	SetDynamicObjectMaterial(StoczniaNGC[0],0,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[0],4,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[0],5,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[1],0,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[1],4,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[1],5,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[2],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[2],1,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[2],2,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[3],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[3],1,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[3],2,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[4],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[4],1,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[4],2,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[5],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[5],1,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[5],2,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[6],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[6],1,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[6],2,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[7],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[7],1,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[7],2,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[8],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[8],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[8],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[8],5,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[9],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[9],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[9],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[9],5,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[10],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[10],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[10],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[10],5,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[11],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[11],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[11],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[11],5,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[12],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[12],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[12],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[12],5,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[13],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[13],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[13],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[13],5,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[14],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[14],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[14],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[14],3,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[14],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[14],5,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[14],6,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[15],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[15],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[15],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[15],3,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[15],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[15],5,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[15],6,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[16],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[16],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[16],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[16],3,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[16],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[16],5,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[16],6,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[17],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[17],1,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[17],2,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[17],3,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[17],4,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[17],5,2707,"Shopping","white",color);
+	SetDynamicObjectMaterial(StoczniaNGC[17],6,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[18],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[19],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[20],0,10817,"airportgnd_sfse","black64",0x00000000);
+	SetDynamicObjectMaterial(StoczniaNGC[21],0,10817,"airportgnd_sfse","black64",0x00000000);	
+}
+
+CreateStoczniaNGC(color){
+	StoczniaNGC[0] = CreateDynamicObject(9900,4050.0000000,100.0000000,200.0000000,90.0000000,0.0000000,180.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[1] = CreateDynamicObject(9900,3950.0000000,100.0000000,200.0000000,90.0000000,0.0000000,180.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[2] = CreateDynamicObject(7236,4050.0000000,-75.0000000,220.0000000,45.0000000,0.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[3] = CreateDynamicObject(7236,3950.0000000,-75.0000000,180.0000000,135.0000000,0.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[4] = CreateDynamicObject(7236,4080.0000000,-75.0000000,200.0000000,90.0000000,0.0000000,45.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[5] = CreateDynamicObject(7236,3920.0000000,-75.0000000,200.0000000,90.0000000,0.0000000,315.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[6] = CreateDynamicObject(7236,3950.0000000,-75.0000000,220.0000000,45.0000000,0.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[7] = CreateDynamicObject(7236,4050.0000000,-75.0000000,180.0000000,135.0000000,0.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[8] = CreateDynamicObject(5882,3962.5000000,0.0000000,200.0000000,0.0000000,270.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[9] = CreateDynamicObject(5882,4037.5000000,0.0000000,200.0000000,0.0000000,270.0000000,180.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[10] = CreateDynamicObject(5882,4083.8999000,0.0000000,200.0000000,0.0000000,270.0000000,180.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[11] = CreateDynamicObject(5882,3916.1006000,0.0000000,200.0000000,0.0000000,270.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[12] = CreateDynamicObject(5882,3950.0000000,-60.0000000,200.0000000,0.0000000,270.0000000,90.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[13] = CreateDynamicObject(5882,4050.0000000,-60.0000000,200.0000000,0.0000000,270.0000000,90.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[14] = CreateDynamicObject(3489,4050.0000000,-15.0000000,220.0000000,0.0000000,0.0000000,270.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[15] = CreateDynamicObject(3489,4050.0000000,-15.0000000,180.0000000,0.0000000,180.0000000,270.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[16] = CreateDynamicObject(3489,3950.0000000,-15.0000000,220.0000000,0.0000000,0.0000000,90.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[17] = CreateDynamicObject(3489,3950.0000000,-15.0000000,180.0000000,0.0000000,180.0000000,90.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[18] = CreateDynamicObject(3659,3950.0000000,235.0000000,200.5000000,0.0000000,0.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[19] = CreateDynamicObject(3659,4050.0000000,235.0000000,200.5000000,0.0000000,0.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[20] = CreateDynamicObject(3659,3950.0000000,235.0000000,199.5000000,0.0000000,180.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	StoczniaNGC[21] = CreateDynamicObject(3659,4050.0000000,235.0000000,199.5000000,0.0000000,180.0000000,0.0000000,StoczniaVW,StoczniaINT,-1,800.0,800.0);
+	SetStoczniaColor(color);
+}
+
+CMD:setshipcolor(playerid,params[]){
+	//Admin control
+	if(isnull(params)) return SendClientMessage(playerid,COLOR_ERROR1,"››› Use: /setshipcolor <0xARGB>");
+	new xcolor;
+	sscanf(params,"x",xcolor);
+	SetStoczniaColor(xcolor);
+	return 1;
+}
+
+//EOF
