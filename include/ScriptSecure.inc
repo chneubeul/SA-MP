@@ -32,9 +32,7 @@ ADM(){
 	//Date Check
 	new tmpdate, tmpyear, tmpmonth, tmpday;
 	getdate(tmpyear,tmpmonth,tmpday);
-
 	tmpdate = (10000*tmpyear)+(100*tmpmonth)+tmpday;
-
 	if(tmpdate > FILE_LICENSEID){
 		print("ADM: Script license has expired !");
 		SendRconCommand("exit");
