@@ -1,0 +1,147 @@
+/********************************
+ * ZAG-RS (RAW) by Abyss Morgan *
+ ********************************/
+
+//out code
+#define zagVW	0
+#define zagINT	0
+
+enum e_zfloat {
+	Float:X,
+	Float:Y,
+	Float:Z
+}
+
+
+//in code
+new F7[e_zfloat], ZAGRS[22];
+
+F7[X] = 597.2890;
+F7[Y] = 886.7802;
+F7[Z] = -44.1194;
+F7[Z] -= 2.3;
+
+CreateDynamic3DTextLabel("{FF0000}ZAG-RS",0xFF0000FF,F7[X],F7[Y],F7[Z]+250.0,800.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,0,zagVW,zagINT,-1,800.0);
+CreateDynamicMapIcon(F7[X],F7[Y],F7[Z],0,0xFF0000FF,zagVW,zagINT,-1,800.0);
+
+ZAGRS[2] = CreateDynamicObject(354,0.0+F7[X],0.0+F7[Y],250.0+F7[Z],0.0,0.0,0.0,zagVW,zagINT,-1,800.0,800.0);
+
+ZAGRS[3] = CreateDynamicObject(9900,85.0+F7[X],0.0+F7[Y],340.0+F7[Z],0.0,45.0,0.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[3],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[3],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[3],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[4] = CreateDynamicObject(9900,0.0+F7[X],0.0+F7[Y],135.0+F7[Z],0.0,179.9950000,0.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[4],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[4],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[4],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[5] = CreateDynamicObject(9900,-85.0+F7[X],0.0+F7[Y],340.0+F7[Z],0.0,45.0,180.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[5],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[5],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[5],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[6] = CreateDynamicObject(9900,0.0+F7[X],-85.0+F7[Y],340.0+F7[Z],0.0,45.0,270.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[6],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[6],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[6],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[7] = CreateDynamicObject(9900,0.0+F7[X],85.0+F7[Y],340.0+F7[Z],0.0,44.9950000,90.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[7],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[7],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[7],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[8] = CreateDynamicObject(9900,-200.0+F7[X],-185.0+F7[Y],237.0+F7[Z],0.0,90.0,270.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[8],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[8],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[8],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[9] = CreateDynamicObject(9900,200.0+F7[X],-185.0+F7[Y],237.0+F7[Z],0.0,90.0,270.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[9],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[9],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[9],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[10] = CreateDynamicObject(9900,200.0+F7[X],185.0+F7[Y],237.0+F7[Z],0.0,90.0,90.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[10],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[10],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[10],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[11] = CreateDynamicObject(9900,-200.0+F7[X],185.0+F7[Y],237.0+F7[Z],0.0,90.0,90.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[11],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[11],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[11],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[12] = CreateDynamicObject(4563,75.0+F7[X],-55.0+F7[Y],240.0+F7[Z],0.0,90.0,0.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[12],0,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[12],1,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[12],2,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[12],4,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[12],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[13] = CreateDynamicObject(4563,-75.0+F7[X],55.0+F7[Y],240.0+F7[Z],0.0,90.0,180.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[13],0,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[13],1,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[13],2,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[13],4,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[13],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[14] = CreateDynamicObject(4563,-75.0+F7[X],-55.0+F7[Y],240.0+F7[Z],270.0,90.0,180.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[14],0,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[14],1,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[14],2,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[14],4,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[14],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[15] = CreateDynamicObject(4563,75.0+F7[X],55.0+F7[Y],240.0+F7[Z],270.0,90.0,0.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[15],0,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[15],1,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[15],2,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[15],4,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[15],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[16] = CreateDynamicObject(4563,-75.0+F7[X],140.0+F7[Y],240.0+F7[Z],270.0,90.0,90.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[16],0,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[16],1,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[16],2,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[16],4,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[16],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[17] = CreateDynamicObject(4563,75.0+F7[X],140.0+F7[Y],240.0+F7[Z],0.0,90.0,90.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[17],0,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[17],1,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[17],2,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[17],4,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[17],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[18] = CreateDynamicObject(4563,75.0+F7[X],-140.0+F7[Y],240.0+F7[Z],270.0,90.0,270.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[18],0,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[18],1,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[18],2,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[18],4,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[18],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[19] = CreateDynamicObject(4563,-75.0+F7[X],-140.0+F7[Y],240.0+F7[Z],0.0,90.0,270.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[19],0,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[19],1,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[19],2,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[19],4,5150,"wiresetc_las2","metpat64",0xFF909090);
+SetDynamicObjectMaterial(ZAGRS[19],5,5150,"wiresetc_las2","metpat64",0xFF909090);
+
+ZAGRS[20] = CreateDynamicObject(17511,0.0+F7[X],0.0+F7[Y],260.0+F7[Z],0.0,0.0,0.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[20],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[20],1,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[20],2,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[20],3,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[20],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[20],5,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[20],6,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+
+ZAGRS[21] = CreateDynamicObject(17511,0.0+F7[X],0.0+F7[Y],226.3000000+F7[Z],0.0,180.0,90.0,zagVW,zagINT,-1,800.0,800.0);
+SetDynamicObjectMaterial(ZAGRS[21],0,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[21],1,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[21],2,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[21],3,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[21],4,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[21],5,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+SetDynamicObjectMaterial(ZAGRS[21],6,8463,"vgseland","tiadbuddhagold",0xFFFFFF00);
+//EOF

@@ -1,0 +1,438 @@
+//please find tag 'Admin control' and add checks for an admin
+
+/*
+#include <streamer>
+#include <mapandreas> //MapAndreas 1.2.1
+
+public OnFilterScriptInit(){
+	CreateFreeSka();
+	return 1;
+}
+
+public OnFilterScriptExit(){
+	DestroyFreeSka();
+	return 1;
+}
+
+public OnPlayerClickMap(playerid,Float:fX,Float:fY,Float:fZ){
+	ClickMap[playerid][X]=fX;
+	ClickMap[playerid][Y]=fY;
+	ClickMap[playerid][Z]=fZ;
+	return 1;
+}
+
+*/
+
+/****************************************************************************************************
+ * FreeSka City 1.0 by Abyss Morgan                                                                 *
+ ****************************************************************************************************/
+ 
+stock Float:GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2){
+    return VectorSize(x1-x2, y1-y2, z1-z2);
+}
+
+#define FREESKA_OFF					(0)
+#define FREESKA_STOP				(1)
+#define FREESKA_MOVE				(2)
+#define FREESKA_UPDZ				(4.5)
+
+enum e_fsfloat {
+	Float:X,
+	Float:Y,
+	Float:Z,
+	Float:rX,
+	Float:rY,
+	Float:rZ,
+	SPEED
+	
+}
+
+new FreeSka[39], FreeSkaStatus, ClickMap[MAX_PLAYERS][e_fsfloat];
+
+forward MoveFreeSka(Float:x,Float:y,Float:z,speed,Float:rz);
+forward StopFreeSka(Float:x,Float:y,Float:z);
+forward ResetFreeSka();
+forward CreateFreeSka();
+forward DestroyFreeSka();
+
+public MoveFreeSka(Float:x,Float:y,Float:z,speed,Float:rz){
+	MoveObject(FreeSka[0],x,y,z,speed,0.0,0.0,rz);
+	FreeSkaStatus = (FREESKA_MOVE);
+	return 1;
+}
+
+public StopFreeSka(Float:x,Float:y,Float:z){
+	FreeSkaStatus = (FREESKA_STOP);
+	StopObject(FreeSka[0]);
+	SetObjectPos(FreeSka[0],x,y,z);
+	return 1;
+}
+
+public ResetFreeSka(){
+	FreeSkaStatus = (FREESKA_OFF);
+	new F4[e_fsfloat];
+	GetObjectPos(FreeSka[0],F4[X],F4[Y],F4[Z]);
+	StopFreeSka(F4[X],F4[Y],F4[Z]);
+	SetObjectPos(FreeSka[0],835.0000,-4000.0000,FREESKA_UPDZ);
+	SetObjectRot(FreeSka[0],0.0,0.0,0.0);
+	return 1;
+}
+
+public CreateFreeSka(){
+	FreeSkaStatus = (FREESKA_OFF);
+	FreeSka[0] = CreateObject(354,0.0000000,0.0000000,0.0000000+6000.0,0.0000000,0.0000000,0.0000000);
+	FreeSka[1] = CreateObject(10955,0.0000000,0.0000000,5.5000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[1],FreeSka[0],0.0000000,0.0000000,5.5000000,180.0000000,0.0000000,0.0000000,1);
+	FreeSka[2] = CreateObject(10955,0.0000000,0.0000000,-1.8500000+6000.0,0.0000000,0.0000000,90.0000000);
+	AttachObjectToObject(FreeSka[2],FreeSka[0],0.0000000,0.0000000,-1.8500000,0.0000000,0.0000000,90.0000000,1);
+	FreeSka[3] = CreateObject(13607,0.0000000,0.0000000,0.0000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[3],FreeSka[0],0.0000000,0.0000000,0.0000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[4] = CreateObject(13623,0.0000000,0.0000000,10.0000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[4],FreeSka[0],0.0000000,0.0000000,10.0000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[5] = CreateObject(13607,0.0000000,0.0000000,10.0000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[5],FreeSka[0],0.0000000,0.0000000,10.0000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[6] = CreateObject(13607,0.0000000,0.0000000,0.0000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[6],FreeSka[0],0.0000000,0.0000000,0.0000000,180.0000000,0.0000000,0.0000000,1);
+	FreeSka[7] = CreateObject(10955,0.0000000,0.0000000,5.5000000+6000.0,180.0000000,0.0000000,90.0000000);
+	AttachObjectToObject(FreeSka[7],FreeSka[0],0.0000000,0.0000000,5.5000000,180.0000000,0.0000000,90.0000000,1);
+	FreeSka[8] = CreateObject(10955,0.0000000,0.0000000,-1.8500000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[8],FreeSka[0],0.0000000,0.0000000,-1.8500000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[9] = CreateObject(7236,48.0000000,48.0000000,-26.0000000+6000.0,180.0000000,15.0000000,45.0000000);
+	AttachObjectToObject(FreeSka[9],FreeSka[0],48.0000000,48.0000000,-26.0000000,180.0000000,15.0000000,45.0000000,1);
+	FreeSka[10] = CreateObject(7236,-48.0000000,-48.0000000,-26.0000000+6000.0,180.0000000,345.0000000,45.0000000);
+	AttachObjectToObject(FreeSka[10],FreeSka[0],-48.0000000,-48.0000000,-26.0000000,180.0000000,345.0000000,45.0000000,1);
+	FreeSka[11] = CreateObject(7236,-48.0000000,48.0000000,-26.0000000+6000.0,180.0000000,345.0000000,315.0000000);
+	AttachObjectToObject(FreeSka[11],FreeSka[0],-48.0000000,48.0000000,-26.0000000,180.0000000,345.0000000,315.0000000,1);
+	FreeSka[12] = CreateObject(7236,48.0000000,-48.0000000,-26.0000000+6000.0,180.0000000,15.0000000,315.0000000);
+	AttachObjectToObject(FreeSka[12],FreeSka[0],48.0000000,-48.0000000,-26.0000000,180.0000000,15.0000000,315.0000000,1);
+	FreeSka[13] = CreateObject(7236,0.0000000,0.0000000,-30.0000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[13],FreeSka[0],0.0000000,0.0000000,-30.0000000,180.0000000,0.0000000,0.0000000,1);
+	FreeSka[14] = CreateObject(10755,120.0000000,120.0000000,10.0000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[14],FreeSka[0],120.0000000,120.0000000,10.0000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[15] = CreateObject(10755,120.0000000,120.0000000,-5.0000000+6000.0,180.0000000,0.0000000,90.0000000);
+	AttachObjectToObject(FreeSka[15],FreeSka[0],120.0000000,120.0000000,-5.0000000,180.0000000,0.0000000,90.0000000,1);
+	FreeSka[16] = CreateObject(10755,-120.0000000,120.0000000,10.0000000+6000.0,0.0000000,0.0000000,90.0000000);
+	AttachObjectToObject(FreeSka[16],FreeSka[0],-120.0000000,120.0000000,10.0000000,0.0000000,0.0000000,90.0000000,1);
+	FreeSka[17] = CreateObject(10755,-120.0000000,-120.0000000,10.0000000+6000.0,0.0000000,0.0000000,180.0000000);
+	AttachObjectToObject(FreeSka[17],FreeSka[0],-120.0000000,-120.0000000,10.0000000,0.0000000,0.0000000,180.0000000,1);
+	FreeSka[18] = CreateObject(10755,120.0000000,-120.0000000,10.0000000+6000.0,0.0000000,0.0000000,270.0000000);
+	AttachObjectToObject(FreeSka[18],FreeSka[0],120.0000000,-120.0000000,10.0000000,0.0000000,0.0000000,270.0000000,1);
+	FreeSka[19] = CreateObject(10755,-120.0000000,120.0000000,-5.0000000+6000.0,180.0000000,0.0000000,180.0000000);
+	AttachObjectToObject(FreeSka[19],FreeSka[0],-120.0000000,120.0000000,-5.0000000,180.0000000,0.0000000,180.0000000,1);
+	FreeSka[20] = CreateObject(10755,-120.0000000,-120.0000000,-5.0000000+6000.0,180.0000000,0.0000000,270.0000000);
+	AttachObjectToObject(FreeSka[20],FreeSka[0],-120.0000000,-120.0000000,-5.0000000,180.0000000,0.0000000,270.0000000,1);
+	FreeSka[21] = CreateObject(10755,120.0000000,-120.0000000,-5.0000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[21],FreeSka[0],120.0000000,-120.0000000,-5.0000000,180.0000000,0.0000000,0.0000000,1);
+	FreeSka[22] = CreateObject(8171,60.0000000,58.0000000,13.9000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[22],FreeSka[0],60.0000000,58.0000000,13.9000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[23] = CreateObject(8171,60.0000000,-80.0000000,13.9000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[23],FreeSka[0],60.0000000,-80.0000000,13.9000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[24] = CreateObject(8171,60.0000000,58.0000000,13.9000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[24],FreeSka[0],60.0000000,58.0000000,13.9000000,180.0000000,0.0000000,0.0000000,1);
+	FreeSka[25] = CreateObject(8171,60.0000000,-80.0000000,13.9000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[25],FreeSka[0],60.0000000,-80.0000000,13.9000000,180.0000000,0.0000000,0.0000000,1);
+	FreeSka[26] = CreateObject(8171,-60.0000000,58.0000000,13.9000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[26],FreeSka[0],-60.0000000,58.0000000,13.9000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[27] = CreateObject(8171,-60.0000000,-80.0000000,13.9000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[27],FreeSka[0],-60.0000000,-80.0000000,13.9000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[28] = CreateObject(8171,-60.0000000,58.0000000,13.9000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[28],FreeSka[0],-60.0000000,58.0000000,13.9000000,180.0000000,0.0000000,0.0000000,1);
+	FreeSka[29] = CreateObject(8171,-60.0000000,-80.0000000,13.9000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[29],FreeSka[0],-60.0000000,-80.0000000,13.9000000,180.0000000,0.0000000,0.0000000,1);
+	FreeSka[30] = CreateObject(8171,0.0000000,-80.0000000,13.8000000+6000.0,0.0000000,0.0000000,90.0000000);
+	AttachObjectToObject(FreeSka[30],FreeSka[0],0.0000000,-80.0000000,13.8000000,0.0000000,0.0000000,90.0000000,1);
+	FreeSka[31] = CreateObject(8171,0.0000000,-80.0000000,13.8000000+6000.0,180.0000000,0.0000000,90.0000000);
+	AttachObjectToObject(FreeSka[31],FreeSka[0],0.0000000,-80.0000000,13.8000000,180.0000000,0.0000000,90.0000000,1);
+	FreeSka[32] = CreateObject(3816,0.0000000,-122.0000000,22.4000000+6000.0,0.0000000,0.0000000,180.0000000);
+	AttachObjectToObject(FreeSka[32],FreeSka[0],0.0000000,-122.0000000,22.4000000,0.0000000,0.0000000,180.0000000,1);
+	FreeSka[33] = CreateObject(8171,0.0000000,-50.0000000,13.7000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[33],FreeSka[0],0.0000000,-50.0000000,13.7000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[34] = CreateObject(8171,0.0000000,-120.0000000,13.8000000+6000.0,180.0000000,0.0000000,90.0000000);
+	AttachObjectToObject(FreeSka[34],FreeSka[0],0.0000000,-120.0000000,13.8000000,180.0000000,0.0000000,90.0000000,1);
+	FreeSka[35] = CreateObject(8171,0.0000000,-80.0000000,13.8000000+6000.0,180.0000000,0.0000000,90.0000000);
+	AttachObjectToObject(FreeSka[35],FreeSka[0],0.0000000,-80.0000000,13.8000000,180.0000000,0.0000000,90.0000000,1);
+	
+	FreeSka[36] = CreateObject(8171,0.0000000,-50.0000000,13.7000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[36],FreeSka[0],0.0000000,-50.0000000,13.7000000,180.0000000,0.0000000,0.0000000,1);
+	FreeSka[37] = CreateObject(13607,0.0000000,0.0000000,17.2000000+6000.0,0.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[37],FreeSka[0],0.0000000,0.0000000,17.2000000,0.0000000,0.0000000,0.0000000,1);
+	FreeSka[38] = CreateObject(13607,0.0000000,0.0000000,-17.0000000+6000.0,180.0000000,0.0000000,0.0000000);
+	AttachObjectToObject(FreeSka[38],FreeSka[0],0.0000000,0.0000000,-17.0000000,180.0000000,0.0000000,0.0000000,1);
+	SetObjectPos(FreeSka[0],835.0000,-4000.0000,FREESKA_UPDZ);
+	SetObjectRot(FreeSka[0],0.0,0.0,0.0);
+	return 1;
+}
+
+public DestroyFreeSka(){
+	StopObject(FreeSka[0]);
+	if(IsValidObject(FreeSka[1])) DestroyObject(FreeSka[1]); 
+	if(IsValidObject(FreeSka[2])) DestroyObject(FreeSka[2]); 
+	if(IsValidObject(FreeSka[3])) DestroyObject(FreeSka[3]); 
+	if(IsValidObject(FreeSka[4])) DestroyObject(FreeSka[4]); 
+	if(IsValidObject(FreeSka[5])) DestroyObject(FreeSka[5]); 
+	if(IsValidObject(FreeSka[6])) DestroyObject(FreeSka[6]); 
+	if(IsValidObject(FreeSka[7])) DestroyObject(FreeSka[7]); 
+	if(IsValidObject(FreeSka[8])) DestroyObject(FreeSka[8]); 
+	if(IsValidObject(FreeSka[9])) DestroyObject(FreeSka[9]); 
+	if(IsValidObject(FreeSka[10])) DestroyObject(FreeSka[10]); 
+	if(IsValidObject(FreeSka[11])) DestroyObject(FreeSka[11]); 
+	if(IsValidObject(FreeSka[12])) DestroyObject(FreeSka[12]); 
+	if(IsValidObject(FreeSka[13])) DestroyObject(FreeSka[13]); 
+	if(IsValidObject(FreeSka[14])) DestroyObject(FreeSka[14]); 
+	if(IsValidObject(FreeSka[15])) DestroyObject(FreeSka[15]); 
+	if(IsValidObject(FreeSka[16])) DestroyObject(FreeSka[16]); 
+	if(IsValidObject(FreeSka[17])) DestroyObject(FreeSka[17]); 
+	if(IsValidObject(FreeSka[18])) DestroyObject(FreeSka[18]); 
+	if(IsValidObject(FreeSka[19])) DestroyObject(FreeSka[19]); 
+	if(IsValidObject(FreeSka[20])) DestroyObject(FreeSka[20]); 
+	if(IsValidObject(FreeSka[21])) DestroyObject(FreeSka[21]); 
+	if(IsValidObject(FreeSka[22])) DestroyObject(FreeSka[22]); 
+	if(IsValidObject(FreeSka[23])) DestroyObject(FreeSka[23]); 
+	if(IsValidObject(FreeSka[24])) DestroyObject(FreeSka[24]); 
+	if(IsValidObject(FreeSka[25])) DestroyObject(FreeSka[25]); 
+	if(IsValidObject(FreeSka[26])) DestroyObject(FreeSka[26]); 
+	if(IsValidObject(FreeSka[27])) DestroyObject(FreeSka[27]); 
+	if(IsValidObject(FreeSka[28])) DestroyObject(FreeSka[28]); 
+	if(IsValidObject(FreeSka[29])) DestroyObject(FreeSka[29]); 
+	if(IsValidObject(FreeSka[30])) DestroyObject(FreeSka[30]); 
+	if(IsValidObject(FreeSka[31])) DestroyObject(FreeSka[31]); 
+	if(IsValidObject(FreeSka[32])) DestroyObject(FreeSka[32]); 
+	if(IsValidObject(FreeSka[33])) DestroyObject(FreeSka[33]); 
+	if(IsValidObject(FreeSka[34])) DestroyObject(FreeSka[34]); 
+	if(IsValidObject(FreeSka[35])) DestroyObject(FreeSka[35]); 
+	if(IsValidObject(FreeSka[36])) DestroyObject(FreeSka[36]); 
+	if(IsValidObject(FreeSka[37])) DestroyObject(FreeSka[37]); 
+	if(IsValidObject(FreeSka[38])) DestroyObject(FreeSka[38]); 
+	if(IsValidObject(FreeSka[0])) DestroyObject(FreeSka[0]); 
+	return 1;
+}
+
+/****************************************************************************************************/
+// FreeSka City command
+/****************************************************************************************************/
+CMD:frhelp(playerid){
+	//Admin control
+	SendClientMessage(playerid,0xFFFFFFFF,"{00AAFF}FreeSka command:");
+	SendClientMessage(playerid,0xFFFFFFFF,"{00AAFF}/frtrack /frland /frstart /frreset");
+	SendClientMessage(playerid,0xFFFFFFFF,"{00AAFF}/frmove /frgoto /frgotop /frgotomap /frstop");
+	return 1;
+}
+
+CMD:frcity(playerid,params[]){
+	new F4[e_fsfloat];
+	GetObjectPos(FreeSka[0],F4[X],F4[Y],F4[Z]);
+	GetObjectRot(FreeSka[0],F4[rX],F4[rY],F4[rZ]);
+	if(!strcmp(params,"in",true)){
+		SetPlayerPos(playerid,F4[X],F4[Y],F4[Z]-2.0);
+		SetPlayerFacingAngle(playerid,F4[rZ]);
+		SetPlayerVirtualWorld(playerid,0);
+		SetPlayerInterior(playerid,0);
+		GameTextForPlayer(playerid,"~b~FreeSka City",2500,1);
+	} else if(!strcmp(params,"out",true)){
+		SetPlayerPos(playerid,F4[X],F4[Y],F4[Z]+20.0);
+		SetPlayerFacingAngle(playerid,F4[rZ]);
+		SetPlayerVirtualWorld(playerid,0);
+		SetPlayerInterior(playerid,0);
+		GameTextForPlayer(playerid,"~b~FreeSka City",2500,1);
+	} else {
+		SendClientMessage(playerid,0xB01010FF,"››› Use: /frcity <in/out>");
+	}
+	return 1;
+}
+
+CMD:frreset(playerid){
+	//Admin control
+	ResetFreeSka();
+	FreeSkaStatus = (FREESKA_OFF);
+	SendClientMessage(playerid,0xFFFFFFFF,"{00AAFF}FreeSka City has been reset");
+	return 1;
+}
+
+CMD:frstop(playerid){
+	//Admin control
+	if(FreeSkaStatus == (FREESKA_OFF)) return SendClientMessage(playerid,0xB01010FF,"››› FreeSka City is not ready");
+	new F4[e_fsfloat];
+	GetObjectPos(FreeSka[0],F4[X],F4[Y],F4[Z]);
+	if(FreeSkaStatus == (FREESKA_MOVE)){
+		StopFreeSka(F4[X],F4[Y],F4[Z]);
+		SendClientMessage(playerid,0xFFFFFFFF,"{00AAFF}Stopped FreeSka City");
+	} else {
+		SendClientMessage(playerid,0xB01010FF,"››› FreeSka City is stopped");
+	}
+	return 1;
+}
+
+CMD:frmove(playerid,params[]){
+	//Admin control
+	if(FreeSkaStatus == (FREESKA_OFF)) return SendClientMessage(playerid,0xB01010FF,"››› FreeSka City is not ready");
+	if(isnull(params)) return SendClientMessage(playerid,0xB01010FF,"››› Use: /frmove <speed> <X> <Y> <Z> <A>");
+	new buffer[256], F4[e_fsfloat], F5[e_fsfloat], Float:tmpz;
+	sscanf(params,"dF(0)F(0)F(0)F(0)",F4[SPEED],F4[X],F4[Y],F4[Z],F4[rZ]);
+	if(F4[SPEED]<1 || F4[SPEED]>50) return SendClientMessage(playerid,0xB01010FF,"››› The speed must be within range 1-50");
+	if(!IsObjectMoving(FreeSka[0])){
+		FreeSkaStatus = (FREESKA_STOP);
+	}
+	if(FreeSkaStatus != (FREESKA_MOVE)){
+		GetObjectPos(FreeSka[0],F5[X],F5[Y],F5[Z]);
+		GetObjectRot(FreeSka[0],F5[rX],F5[rY],F5[rZ]);
+		if(F4[X]+F5[X]>18000 || F4[X]+F5[X]<-18000 || F4[Y]+F5[Y]>18000 ||F4[Y]+F5[Y]<-18000 || F4[Z]+F5[Z]>10000 || F4[Z]+F5[Z]<-80) return SendClientMessage(playerid,0xB01010FF,"››› Location must be within range -18000,-18000,-80 18000,18000,10000");
+		MapAndreas_FindZ_For2DCoord(F5[X]+F4[X],F5[Y]+F4[Y],tmpz);
+		if(F5[Z]+F4[Z] < tmpz+100){
+			F4[Z] = tmpz+100.0;
+		}
+		new Float:distance = GetDistanceBetweenPoints3D(F5[X],F5[Y],F5[Z],F5[X]+F4[X],F5[Y]+F4[Y],F5[Z]+F4[Z]);
+		format(buffer,sizeof buffer,"{00AAFF}You have chosen a destination location FreeSka {89C1FA}(%.4f,%.4f,%.4f,%.4f){00AAFF} distance %.2f meters",F5[X]+F4[X],F5[Y]+F4[Y],F5[Z]+F4[Z],F5[rZ]+F4[rZ],distance);
+		SendClientMessage(playerid,0xFFFFFFFF,buffer);
+		MoveFreeSka(F5[X]+F4[X],F5[Y]+F4[Y],F4[Z],F4[SPEED],F5[rZ]+F4[rZ]);
+	} else {
+		SendClientMessage(playerid,0xB01010FF,"››› FreeSka is in motion");
+	}
+	return 1;
+}
+
+CMD:frgoto(playerid,params[]){
+	//Admin control
+	if(FreeSkaStatus == (FREESKA_OFF)) return SendClientMessage(playerid,0xB01010FF,"››› FreeSka City is not ready");
+	if(isnull(params)) return SendClientMessage(playerid,0xB01010FF,"››› Use: /frgoto <speed> <X> <Y> <Z> <A>");
+	new buffer[256], F4[e_fsfloat], F5[e_fsfloat], Float:tmpz;
+	sscanf(params,"dF(-2139095040)F(-2139095040)F(-2139095040)F(-2139095040)",F4[SPEED],F4[X],F4[Y],F4[Z],F4[rZ]);
+	if(F4[SPEED]<1 || F4[SPEED]>50) return SendClientMessage(playerid,0xB01010FF,"››› The speed must be within range 1-50");
+	GetObjectPos(FreeSka[0],F5[X],F5[Y],F5[Z]);
+	GetObjectRot(FreeSka[0],F5[rX],F5[rY],F5[rZ]);
+	if(F4[X] == -2139095040) F4[X] = F5[X];
+	if(F4[Y] == -2139095040) F4[Y] = F5[Y];
+	if(F4[Z] == -2139095040) F4[Z] = F5[Z];
+	if(F4[rZ] == -2139095040) F4[rZ] = F5[rZ];
+	if(!IsObjectMoving(FreeSka[0])){
+		FreeSkaStatus = (FREESKA_STOP);
+	}
+	if(FreeSkaStatus != (FREESKA_MOVE)){
+		if(F4[X]>18000 || F4[X]<-18000 || F4[Y]>18000 || F4[Y]<-18000 || F4[Z]>10000 || F4[Z]<-80) return SendClientMessage(playerid,0xB01010FF,"››› Location must be within range -18000,-18000,-80 18000,18000,10000");
+		MapAndreas_FindZ_For2DCoord(F4[X],F4[Y],tmpz);
+		if(F4[Z] < tmpz+100){
+			F4[Z] = tmpz+100.0;
+		}
+		new Float:distance = GetDistanceBetweenPoints3D(F4[X],F4[Y],F4[Z],F5[X],F5[Y],F5[Z]);
+		format(buffer,sizeof buffer,"{00AAFF}You have chosen a destination location FreeSka {89C1FA}(%.4f,%.4f,%.4f,%.4f){00AAFF} distance %.2f meters",F4[X],F4[Y],F4[Z],F4[rZ],distance);
+		SendClientMessage(playerid,0xFFFFFFFF,buffer);
+		MoveFreeSka(F4[X],F4[Y],F4[Z],F4[SPEED],F4[rZ]);
+	} else {
+		SendClientMessage(playerid,0xB01010FF,"››› FreeSka is in motion");
+	}
+	return 1;
+}
+	
+CMD:frgotomap(playerid,params[]){
+	//Admin control
+	if(FreeSkaStatus == (FREESKA_OFF)) return SendClientMessage(playerid,0xB01010FF,"››› FreeSka City is not ready");
+	if(isnull(params)) return SendClientMessage(playerid,0xB01010FF,"››› Use: /frgotomap <speed> (Mark on the map a destination)");
+	new buffer[256], F4[e_fsfloat], F5[e_fsfloat], Float:tmpz;
+	sscanf(params,"d",F4[SPEED]);
+	if(F4[SPEED]<1 || F4[SPEED]>50) return SendClientMessage(playerid,0xB01010FF,"››› The speed must be within range 1-50");
+	if(!IsObjectMoving(FreeSka[0])){
+		FreeSkaStatus = (FREESKA_STOP);
+	}
+	if(FreeSkaStatus != (FREESKA_MOVE)){
+		GetObjectPos(FreeSka[0],F5[X],F5[Y],F5[Z]);
+		MapAndreas_FindZ_For2DCoord(ClickMap[playerid][X],ClickMap[playerid][Y],tmpz);
+		if(F4[Z] < tmpz+100){
+			F4[Z] = tmpz+100.0;
+		}
+		new Float:distance = GetDistanceBetweenPoints3D(F5[X],F5[Y],F5[Z],ClickMap[playerid][X],ClickMap[playerid][Y],F4[Z]);
+		format(buffer,sizeof buffer,"{00AAFF}You have chosen a destination location FreeSka {89C1FA}(%.4f,%.4f,%.4f,%.4f){00AAFF} distance %.2f meters",ClickMap[playerid][X],ClickMap[playerid][Y],F4[Z],F4[rZ],distance);
+		SendClientMessage(playerid,0xFFFFFFFF,buffer);
+		MoveFreeSka(ClickMap[playerid][X],ClickMap[playerid][Y],F4[Z],F4[SPEED],F4[rZ]);
+	} else {
+		SendClientMessage(playerid,0xB01010FF,"››› FreeSka is in motion");
+	}
+	return 1;
+}
+
+CMD:frgotop(playerid,params[]){
+	//Admin control
+	if(FreeSkaStatus == (FREESKA_OFF)) return SendClientMessage(playerid,0xB01010FF,"››› FreeSka City is not ready");
+	if(isnull(params)) return SendClientMessage(playerid,0xB01010FF,"››› Use: /frgotop <speed> <playerid>");
+	new buffer[256], F4[e_fsfloat], F5[e_fsfloat], userid, Float:tmpz;
+	sscanf(params,"dd",F4[SPEED],userid);
+	if(F4[SPEED]<1 || F4[SPEED]>50) return SendClientMessage(playerid,0xB01010FF,"››› The speed must be within range 1-50");
+	if(!IsPlayerConnected(userid)) return SendClientMessage(playerid,0xB01010FF,"››› There is no such player");
+	if(!IsObjectMoving(FreeSka[0])){
+		FreeSkaStatus = (FREESKA_STOP);
+	}
+	if(FreeSkaStatus != (FREESKA_MOVE)){
+		GetObjectPos(FreeSka[0],F5[X],F5[Y],F5[Z]);
+		GetObjectRot(FreeSka[0],F5[rX],F5[rY],F5[rZ]);
+		GetPlayerPos(userid,F4[X],F4[Y],F4[Z]);
+		MapAndreas_FindZ_For2DCoord(F4[X],F4[Y],tmpz);
+		if(F4[Z] < tmpz+100){
+			F4[Z] = tmpz+100.0;
+		}
+		new Float:distance = GetDistanceBetweenPoints3D(F4[X],F4[Y],F4[Z],F5[X],F5[Y],F5[Z]);
+		format(buffer,sizeof buffer,"{00AAFF}You have chosen a destination location FreeSka {89C1FA}(%.4f,%.4f,%.4f,%.4f){00AAFF} distance %.2f meters",F4[X],F4[Y],F4[Z],F5[rZ],distance);
+		SendClientMessage(playerid,0xFFFFFFFF,buffer);
+		MoveFreeSka(F4[X],F4[Y],F4[Z],F4[SPEED],F5[rZ]);
+	} else {
+		SendClientMessage(playerid,0xB01010FF,"››› FreeSka is in motion");
+	}
+	return 1;
+}
+
+CMD:frland(playerid){
+	//Admin control
+	if(FreeSkaStatus == (FREESKA_OFF)) return SendClientMessage(playerid,0xB01010FF,"››› FreeSka City is not ready");
+	new F5[e_fsfloat];
+	if(FreeSkaStatus != (FREESKA_OFF)){
+		GetObjectPos(FreeSka[0],F5[X],F5[Y],F5[Z]);
+		StopFreeSka(F5[X],F5[Y],F5[Z]);
+		GetObjectPos(FreeSka[0],F5[X],F5[Y],F5[Z]);
+		GetObjectRot(FreeSka[0],F5[rX],F5[rY],F5[rZ]);
+		MapAndreas_FindZ_For2DCoord(F5[X],F5[Y],F5[Z]);
+		if(F5[Z] != 0.0) return SendClientMessage(playerid,0xB01010FF,"››› He has to land on the water");
+		MoveFreeSka(F5[X],F5[Y],FREESKA_UPDZ,5,F5[rZ]);
+		FreeSkaStatus = (FREESKA_OFF);
+		SendClientMessage(playerid,0xFFFFFFFF,"{00AAFF}FreeSka City landed");
+	} else {
+		SendClientMessage(playerid,0xB01010FF,"››› FreeSka City is already on the water");
+	}
+	return 1;
+}
+
+CMD:frstart(playerid){
+	//Admin control
+	new F5[e_fsfloat];
+	if(FreeSkaStatus == (FREESKA_OFF)){
+		GetObjectPos(FreeSka[0],F5[X],F5[Y],F5[Z]);
+		GetObjectRot(FreeSka[0],F5[rX],F5[rY],F5[rZ]);
+		MoveFreeSka(F5[X],F5[Y],F5[Z]+100,5,F5[rZ]);
+		FreeSkaStatus = (FREESKA_STOP);
+		SendClientMessage(playerid,0xFFFFFFFF,"{00AAFF}FreeSka City took off");
+	} else {
+		SendClientMessage(playerid,0xB01010FF,"››› FreeSka City is already in the air");
+	}
+	return 1;
+}
+
+CMD:frtrack(playerid,params[]){
+	new buffer[256], F4[e_fsfloat], F5[e_fsfloat];	
+	GetObjectPos(FreeSka[0],F5[X],F5[Y],F5[Z]);
+	GetObjectRot(FreeSka[0],F5[rX],F5[rY],F5[rZ]);
+	if(FreeSkaStatus != (FREESKA_OFF)) if(!IsObjectMoving(FreeSka[0])){
+		FreeSkaStatus = (FREESKA_STOP);
+	}
+	new fsstatus[32];
+	if(FreeSkaStatus == (FREESKA_STOP)){
+		fsstatus = "standing";
+	}
+	if(FreeSkaStatus == (FREESKA_MOVE)){
+		fsstatus = "it's moving";
+	}
+	if(FreeSkaStatus == (FREESKA_OFF)){
+		fsstatus = "landed";
+	}
+	GetPlayerPos(playerid,F4[X],F4[Y],F4[Z]);
+	new Float:distance = GetDistanceBetweenPoints3D(F4[X],F4[Y],F4[Z],F5[X],F5[Y],F5[Z]);
+	format(buffer,sizeof buffer,"{00AAFF}FreeSka %s w location {00AAFF}(%.4f,%.4f,%.4f,%.4f){89C1FA} distance %.2f meters",fsstatus,F5[X],F5[Y],F5[Z],F5[rZ],distance);
+	SendClientMessage(playerid,0xFFFFFFFF,buffer);
+	return 1;
+}
+//EOF

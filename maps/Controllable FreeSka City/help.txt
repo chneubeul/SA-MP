@@ -1,0 +1,13 @@
+Video: https://www.youtube.com/watch?v=eHaGqvR1uFE
+
+/frhelp - help command
+/frcity - teleport to FreeSka
+/frtrack - get FreeSka location
+/frland - lands on the water
+/frstart - Start in the air
+/frreset - reset FreeSka
+/frmove - move X Y Z
+/frgoto - goto X Y Z
+/frgotop - goto player
+/frgotomap - goto map marker
+/frstop - stop FreeSka
