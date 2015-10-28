@@ -43,7 +43,7 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 #include <streamer>
 #include <sscanf2>
 #include <zcmd>
-#include <StreamerFunction>
+#include <SAM/StreamerFunction>
 
 new pliki[][32]={
 	"objectsfile1.txt",
