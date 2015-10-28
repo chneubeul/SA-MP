@@ -7,6 +7,11 @@
 #define FILE_RCONPASS			"123"			//rcon password
 #define FILE_LANGUAGE			"Polish"		//server language
 
+#if !defined isnull
+	#define isnull(%1) \
+				((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+#endif
+
 AntiDeAMX(){
 	new UAX[][] = { "Unarmed (Fist)", "Brass K" };
 	#pragma unused UAX
