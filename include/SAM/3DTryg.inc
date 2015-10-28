@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.1                                                                                                              *
+ * File Version: 1.3                                                                                                              *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -26,8 +26,25 @@
  * GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                                *
  * GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0,mapz = 0);        *
  * GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:x,&Float:y,&Float:z);            *
+ * ShiftDegreeToRadian(Float:deg,&Float:rad);                                                                                     *
+ * ShiftDegreeToGrades(Float:deg,&Float:grad);                                                                                    *
+ * ShiftRadianToDegree(Float:rad,&Float:deg);                                                                                     *
+ * ShiftRadianToGrades(Float:rad,&Float:grad);                                                                                    *
+ * ShiftGradesToDegree(Float:grad,&Float:deg);                                                                                    *
+ * ShiftGradesToRadian(Float:grad,&Float:rad);                                                                                    *
+ * ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz);                         *
+ * ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3);                       *
  *                                                                                                                                *
  **********************************************************************************************************************************/
+
+#if defined _3D_Tryg
+	#endinput
+#endif
+#define _3D_Tryg
+
+#if !defined PI
+	#define PI (3.14159265)
+#endif
 
 stock abs(value){
 	if(value < 0) value *= (-1);
@@ -156,4 +173,45 @@ stock GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:max
 	x = random(cx)+minx;
 	y = random(cy)+miny;
 	z = random(cz)+minz;
+}
+
+stock ShiftDegreeToRadian(Float:deg,&Float:rad){
+	CompRotationFloat(deg,deg);
+	rad = ((360-deg)*(-((PI*2)/360)));
+}
+
+stock ShiftDegreeToGrades(Float:deg,&Float:grad){
+	grad = (deg*(400/360));
+}
+
+stock ShiftRadianToDegree(Float:rad,&Float:deg){
+	CompRotationFloat(floatabs((rad/((PI*2)/360))+360),deg);
+}
+
+stock ShiftRadianToGrades(Float:rad,&Float:grad){
+	new deg;
+	ShiftRadianToDegree(rad,deg);
+	ShiftDegreeToGrades(deg,grad);
+}
+
+stock ShiftGradesToDegree(Float:grad,&Float:deg){
+	deg = (grad*0.9);
+}
+
+stock ShiftGradesToRadian(Float:grad,&Float:rad){
+	new deg;
+	ShiftGradesToDegree(grad,deg);
+	ShiftDegreeToRadian(deg,rad);
+}
+
+stock ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz){
+	ShiftRadianToDegree(rotation3,rx);
+	ShiftRadianToDegree(rotation2,ry);
+	ShiftRadianToDegree(rotation1,rz);
+}
+
+stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3){
+	ShiftDegreeToRadian(rx,rotation3);
+	ShiftDegreeToRadian(ry,rotation2);
+	ShiftDegreeToRadian(rz,rotation1);
 }
