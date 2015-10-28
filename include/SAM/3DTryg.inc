@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.3b                                                                                                             *
+ * File Version: 1.4                                                                                                              *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -30,6 +30,7 @@
  * ShiftDegreeToRadianEx(Float:deg,&Float:rad);                                                                                   *
  * ShiftDegreeToGrades(Float:deg,&Float:grad);                                                                                    *
  * ShiftRadianToDegree(Float:rad,&Float:deg);                                                                                     *
+ * ShiftRadianToDegreeEx(Float:rad,&Float:deg);                                                                                   *
  * ShiftRadianToGrades(Float:rad,&Float:grad);                                                                                    *
  * ShiftGradesToDegree(Float:grad,&Float:deg);                                                                                    *
  * ShiftGradesToRadian(Float:grad,&Float:rad);                                                                                    *
@@ -176,13 +177,13 @@ stock GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:max
 	z = random(cz)+minz;
 }
 
+stock ShiftDegreeToRadian(Float:deg,&Float:rad){
+	rad = (deg*((PI*2)/360));
+}
+
 stock ShiftDegreeToRadianEx(Float:deg,&Float:rad){
 	CompRotationFloat(deg,deg);
 	rad = ((360-deg)*(-((PI*2)/360)));
-}
-
-stock ShiftDegreeToRadian(Float:deg,&Float:rad){
-	rad = (deg*((PI*2)/360));
 }
 
 stock ShiftDegreeToGrades(Float:deg,&Float:grad){
@@ -190,7 +191,11 @@ stock ShiftDegreeToGrades(Float:deg,&Float:grad){
 }
 
 stock ShiftRadianToDegree(Float:rad,&Float:deg){
-	deg = floatabs((rad/((PI*2)/360))+360);
+	deg = (rad/((PI*2)/360));
+}
+
+stock ShiftRadianToDegreeEx(Float:rad,&Float:deg){
+	CompRotationFloat(floatabs((rad/((PI*2)/360))+360),deg);
 }
 
 stock ShiftRadianToGrades(Float:rad,&Float:grad){
@@ -210,9 +215,9 @@ stock ShiftGradesToRadian(Float:grad,&Float:rad){
 }
 
 stock ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz){
-	ShiftRadianToDegree(rotation3,rx);
-	ShiftRadianToDegree(rotation2,ry);
-	ShiftRadianToDegree(rotation1,rz);
+	ShiftRadianToDegreeEx(rotation3,rx);
+	ShiftRadianToDegreeEx(rotation2,ry);
+	ShiftRadianToDegreeEx(rotation1,rz);
 }
 
 stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3){
