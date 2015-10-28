@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.6                                                                                                              *
+ * File Version: 1.7                                                                                                              *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
  * GetDynamicObjectModel(objectid);                                                                                               *
@@ -21,6 +21,9 @@
  * GetDynamicObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                  *
  * RebuildDynamicObject(objectid,...);                                                                                            *
  * SetDynamicObjectMoveSpeed(objectid,Float:speed);                                                                               *
+ * GetDynamicObjectMoveSpeed(objectid,&Float:speed);                                                                              *
+ * GetDynamicObjectMovePos(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                    *
+ * SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0);            *
  *                                                                                                                                *
  * SAMP Object Functions:                                                                                                         * 
  * SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                               *
@@ -38,9 +41,15 @@
  * DestroyVehicleDynamicObject(vehicleid);                                                                                        *
  * DeattachVehicleDynamicObject(vehicleid);                                                                                       *
  *                                                                                                                                *
- * Pickup Functions:                                                                                                              *
+ * Check Point Functions:                                                                                                         *
  * SetDynamicCPSize(checkpointid,Float:size);                                                                                     *
+ * GetDynamicCPPos(checkpointid,&Float:x,&Float:y,&Float:z);                                                                      *
+ * SetDynamicCPPos(checkpointid,Float:x,Float:y,Float:z);                                                                         *
+ *                                                                                                                                *
+ * Race Check Point Functions:                                                                                                    *
  * SetDynamicRaceCPSize(checkpointid,Float:size);                                                                                 *
+ * GetDynamicRaceCPPos(checkpointid,&Float:x,&Float:y,&Float:z);                                                                  *
+ * SetDynamicRaceCPPos(checkpointid,Float:x,Float:y,Float:z);                                                                     *
  *                                                                                                                                *
  * Player Functions:                                                                                                              *
  * DestroyPlayerDynamicObject(playerid);                                                                                          *
@@ -48,6 +57,16 @@
  *                                                                                                                                *
  * MapIcon Functions:                                                                                                             *
  * SetDynamicMapIconColor(iconid,color);                                                                                          *
+ * GetDynamicMapIconPos(iconid,&Float:x,&Float:y,&Float:z);                                                                       *
+ * SetDynamicMapIconPos(iconid,Float:x,Float:y,Float:z);                                                                          *
+ *                                                                                                                                *
+ * Pickup Functions:                                                                                                              *
+ * GetDynamicPickupPos(pickupid,&Float:x,&Float:y,&Float:z);                                                                      *
+ * SetDynamicPickupPos(pickupid,Float:x,Float:y,Float:z);                                                                         *
+ *                                                                                                                                *
+ * 3DText Functions:                                                                                                              *
+ * GetDynamic3DTextPos(Text3D:id,&Float:x,&Float:y,&Float:z);                                                                     *
+ * SetDynamic3DTextPos(Text3D:id,Float:x,Float:y,Float:z);                                                                        *
  *                                                                                                                                *
  **********************************************************************************************************************************/
  
@@ -60,6 +79,59 @@
 #endif
 #define _streamer_spec
 
+//#define FIX_OBJECTS
+
+#if !defined INVALID_DYNAMIC_OBJECT_ID
+	#define INVALID_DYNAMIC_OBJECT_ID 0x7FFFFFFF
+#endif
+
+#if !defined IsValidVehicle
+	native IsValidVehicle(vehicleid);
+#endif
+
+
+//Fix Destroy Objects
+#if defined FIX_OBJECTS
+	//DestroyDynamicObject
+	stock AC_DestroyDynamicObject(&objectid){
+		DestroyDynamicObject(objectid);
+		objectid = INVALID_DYNAMIC_OBJECT_ID;
+	}
+
+	#if defined _ALS_DestroyDynamicObject
+		#undef DestroyDynamicObject
+	#else
+		#define _ALS_DestroyDynamicObject
+	#endif
+	#define DestroyDynamicObject AC_DestroyDynamicObject
+
+	//DestroyObject
+	stock AC_DestroyObject(&objectid){
+		DestroyObject(objectid);
+		objectid = INVALID_OBJECT_ID;
+	}
+
+	#if defined _ALS_DestroyObject
+		#undef DestroyObject
+	#else
+		#define _ALS_DestroyObject
+	#endif
+	#define DestroyObject AC_DestroyObject
+
+	//DestroyPlayerObject
+	stock AC_DestroyPlayerObject(playerid,&objectid){
+		DestroyPlayerObject(playerid,objectid);
+		objectid = INVALID_OBJECT_ID;
+	}
+
+	#if defined _ALS_DestroyPlayerObject
+		#undef DestroyPlayerObject
+	#else
+		#define _ALS_DestroyPlayerObject
+	#endif
+	#define DestroyPlayerObject AC_DestroyPlayerObject
+#endif
+
 #define GetDynamicObjectModel(%1)			Streamer_GetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MODEL_ID)
 #define SetDynamicObjectModel(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MODEL_ID,%2)
 #define SetDynamicObjectVW(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_WORLD_ID,%2)
@@ -69,6 +141,7 @@
 #define SetDynamicObjectSD(%1,%2)			Streamer_SetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_STREAM_DISTANCE,%2)
 #define SetDynamicObjectDD(%1,%2)			Streamer_SetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_DRAW_DISTANCE,%2)
 #define SetDynamicObjectMoveSpeed(%1,%2)	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MOVE_SPEED,%2)
+#define GetDynamicObjectMoveSpeed(%1,%2)	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MOVE_SPEED,%2)
 #define SetDynamicCPSize(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_CP,%1,E_STREAMER_SIZE,%2)
 #define SetDynamicRaceCPSize(%1,%2)			Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,%1,E_STREAMER_SIZE,%2)
 #define SetDynamicMapIconColor(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_COLOR,%2)
@@ -213,4 +286,82 @@ stock DestroyPlayerDynamicObject(playerid){
 			}
 		}
 	}
+}
+
+stock GetDynamicCPPos(checkpointid,&Float:x,&Float:y,&Float:z){
+	Streamer_GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_X,x);
+	Streamer_GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Y,y);
+	Streamer_GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Z,z);
+}
+
+stock SetDynamicCPPos(checkpointid,Float:x,Float:y,Float:z){
+	Streamer_SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_X,x);
+	Streamer_SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Y,y);
+	Streamer_SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Z,z);
+}
+
+stock GetDynamicRaceCPPos(checkpointid,&Float:x,&Float:y,&Float:z){
+	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_X,x);
+	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Y,y);
+	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Z,z);
+}
+
+stock SetDynamicRaceCPPos(checkpointid,Float:x,Float:y,Float:z){
+	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_X,x);
+	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Y,y);
+	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Z,z);
+}
+
+stock GetDynamicObjectMovePos(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
+	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,x);
+	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,y);
+	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,z);
+	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
+	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
+	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
+}
+
+stock SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0){
+	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,x);
+	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,y);
+	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,z);
+	if(rx != -1000.0) Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
+	if(ry != -1000.0) Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
+	if(rz != -1000.0) Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
+}
+
+stock GetDynamicPickupPos(pickupid,&Float:x,&Float:y,&Float:z){
+	Streamer_GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_X,x);
+	Streamer_GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Y,y);
+	Streamer_GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Z,z);
+}
+
+stock SetDynamicPickupPos(pickupid,Float:x,Float:y,Float:z){
+	Streamer_SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_X,x);
+	Streamer_SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Y,y);
+	Streamer_SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Z,z);
+}
+
+stock GetDynamicMapIconPos(iconid,&Float:x,&Float:y,&Float:z){
+	Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_X,x);
+	Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Y,y);
+	Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Z,z);
+}
+
+stock SetDynamicMapIconPos(iconid,Float:x,Float:y,Float:z){
+	Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_X,x);
+	Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Y,y);
+	Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Z,z);
+}
+
+stock GetDynamic3DTextPos(Text3D:id,&Float:x,&Float:y,&Float:z){
+	Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_X,x);
+	Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Y,y);
+	Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Z,z);
+}
+
+stock SetDynamic3DTextPos(Text3D:id,Float:x,Float:y,Float:z){
+	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_X,x);
+	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Y,y);
+	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Z,z);
 }
