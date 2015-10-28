@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.0                                                                                                              *
+ * File Version: 1.1                                                                                                              *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -122,8 +122,12 @@ stock GetRotationFor2Point2D(Float:x, Float:y, Float:tx, Float:ty, &Float:rz){
 //new code version support 3D made by Abyss Morgan 
 stock GetRotationFor2Point3D(Float:x, Float:y, Float:z, Float:tx, Float:ty, Float:tz, &Float:rx, &Float:rz){
 	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
-	CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
-	CompRotationFloat((atan2(ty-y,tx-x)-90),rz);
+	if(radius > 0.0){
+		CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
+		CompRotationFloat((atan2(ty-y,tx-x)-90),rz);
+	} else {
+		rx = 0.0, rz = 0.0;
+	}
 }
 
 //random clock pos
