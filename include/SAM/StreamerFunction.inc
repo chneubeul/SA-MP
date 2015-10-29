@@ -425,14 +425,14 @@ stock GetDynamicObjectMoveTime(objectid,&objstate,&rtime){
 			GetDynamicObjectMovePos(objectid,piotx,pioty,piotz);
 			GetDynamicObjectMoveSpeed(objectid,objspeed);
 			dist = VectorSize(piox-piotx,pioy-pioty,pioz-piotz);
-			time = floatround((dist/objspeed)*1000.0);
-			state =  MOVE_OBJECT_STATE_MOVED;
+			rtime = floatround((dist/objspeed)*1000.0);
+			objstate =  MOVE_OBJECT_STATE_MOVED;
 		} else {
-			state = MOVE_OBJECT_STATE_STOP;
-			time = 0;
+			objstate = MOVE_OBJECT_STATE_STOP;
+			rtime = 0;
 		}
 	} else {
-		state = MOVE_OBJECT_STATE_INVALID;
-		time = 0;
+		objstate = MOVE_OBJECT_STATE_INVALID;
+		rtime = 0;
 	}
 }
