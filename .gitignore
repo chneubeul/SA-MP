@@ -43,5 +43,5 @@ Temporary Items
 .apdisk
 
 
-.gitattributes
-.gitignore
+*.gitattributes
+*.gitignore
