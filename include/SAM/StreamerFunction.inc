@@ -143,9 +143,9 @@
 #endif
 
 
-#define MOVE_OBJECT_STATE_INVALID	(-1)
 #define MOVE_OBJECT_STATE_STOP		(0)
 #define MOVE_OBJECT_STATE_MOVED		(1)
+#define MOVE_OBJECT_STATE_INVALID	(2)
 
 #define GetDynamicObjectModel(%1)			Streamer_GetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MODEL_ID)
 #define SetDynamicObjectModel(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MODEL_ID,%2)
