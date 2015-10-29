@@ -4,30 +4,38 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.7                                                                                                              *
+ * File Version: 1.8                                                                                                              *
+ * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
  * GetDynamicObjectModel(objectid);                                                                                               *
  * SetDynamicObjectModel(objectid,modelid);                                                                                       *
- * SetDynamicObjectVW(objectid,worldid);                                                                                          *
- * SetDynamicObjectINT(objectid,interiorid);                                                                                      *
- * SetDynamicObjectSD(objectid,Float:streamdistance);                                                                             *
- * SetDynamicObjectDD(objectid,Float:drawdistance);                                                                               *
  * GetDynamicObjectVW(objectid);                                                                                                  *
+ * SetDynamicObjectVW(objectid,worldid);                                                                                          *
  * GetDynamicObjectINT(objectid);                                                                                                 *
+ * SetDynamicObjectINT(objectid,interiorid);                                                                                      *
  * GetDynamicObjectSD(objectid,&Float:streamdistance);                                                                            *
+ * SetDynamicObjectSD(objectid,Float:streamdistance);                                                                             *
  * GetDynamicObjectDD(objectid,&Float:drawdistance);                                                                              *
- * SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                        *
+ * SetDynamicObjectDD(objectid,Float:drawdistance);                                                                               *
  * GetDynamicObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                  *
- * RebuildDynamicObject(objectid,...);                                                                                            *
- * SetDynamicObjectMoveSpeed(objectid,Float:speed);                                                                               *
+ * SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                        *
  * GetDynamicObjectMoveSpeed(objectid,&Float:speed);                                                                              *
- * GetDynamicObjectMovePos(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                    *
- * SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0);            *
+ * SetDynamicObjectMoveSpeed(objectid,Float:speed);                                                                               *
+ * GetDynamicObjectMovePos(objectid,&Float:x,&Float:y,&Float:z);                                                                  *
+ * SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z);                                                                     *
+ * GetDynamicObjectMoveRot(objectid,&Float:rx,&Float:ry,&Float:rz);                                                               *
+ * SetDynamicObjectMoveRot(objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0);                                    *
+ * GetDynamicObjectMoveTime(objectid,&objstate,&rtime);                                                                           *
+ * SetDynamicObjectAttachSync(objectid,syncrotation);                                                                             *
+ * DeattachObjectDynamicObject(objectid);                                                                                         *
+ * DeattachDynamicObjectComponent(objectid,type);                                                                                 *
+ * DestroyDynamicObjectComponent(objectid,type);                                                                                  *
+ * RebuildDynamicObject(objectid,...);                                                                                            *
  *                                                                                                                                *
- * SAMP Object Functions:                                                                                                         * 
- * SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                               *
+ * SAMP Object Functions:                                                                                                         *
  * GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                         *
+ * SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                               *
  * DestroyObjects();                                                                                                              *
  * CountObjects();                                                                                                                *
  *                                                                                                                                *
@@ -63,13 +71,15 @@
  * Pickup Functions:                                                                                                              *
  * GetDynamicPickupPos(pickupid,&Float:x,&Float:y,&Float:z);                                                                      *
  * SetDynamicPickupPos(pickupid,Float:x,Float:y,Float:z);                                                                         *
+ * GetDynamicPickupModel(pickupid);                                                                                               *
+ * SetDynamicPickupModel(pickupid,modelid);                                                                                       *
  *                                                                                                                                *
  * 3DText Functions:                                                                                                              *
  * GetDynamic3DTextPos(Text3D:id,&Float:x,&Float:y,&Float:z);                                                                     *
  * SetDynamic3DTextPos(Text3D:id,Float:x,Float:y,Float:z);                                                                        *
  *                                                                                                                                *
  **********************************************************************************************************************************/
- 
+
 #if !defined Streamer_AppendArrayData
 	#error Unknown streamer version
 #endif
@@ -132,6 +142,11 @@
 	#define DestroyPlayerObject AC_DestroyPlayerObject
 #endif
 
+
+#define MOVE_OBJECT_STATE_INVALID	(-1)
+#define MOVE_OBJECT_STATE_STOP		(0)
+#define MOVE_OBJECT_STATE_MOVED		(1)
+
 #define GetDynamicObjectModel(%1)			Streamer_GetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MODEL_ID)
 #define SetDynamicObjectModel(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MODEL_ID,%2)
 #define SetDynamicObjectVW(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_WORLD_ID,%2)
@@ -145,33 +160,39 @@
 #define SetDynamicCPSize(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_CP,%1,E_STREAMER_SIZE,%2)
 #define SetDynamicRaceCPSize(%1,%2)			Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,%1,E_STREAMER_SIZE,%2)
 #define SetDynamicMapIconColor(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_COLOR,%2)
- 
-stock GetDynamicObjectSD(objectid,&Float:streamdistance){
-	return Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_STREAM_DISTANCE,streamdistance);
-}
-
-stock GetDynamicObjectDD(objectid,&Float:drawdistance){
-	return Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_DRAW_DISTANCE,drawdistance);
-}
+#define GetDynamicPickupModel(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_MODEL_ID)
+#define SetDynamicPickupModel(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_MODEL_ID,%2)
+#define GetDynamicObjectSD(%1,%2)			Streamer_GetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_STREAM_DISTANCE,%2)
+#define GetDynamicObjectDD(%1,%2)			Streamer_GetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_DRAW_DISTANCE,%2)
+#define DeattachObjectDynamicObject(%1)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_ATTACHED_OBJECT,INVALID_DYNAMIC_OBJECT_ID)
+#define SetDynamicObjectAttachSync(%1,%2)	Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_SYNC_ROTATION,%2)
 
 stock SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
-	if(IsValidDynamicObject(objectid)) SetDynamicObjectPos(objectid,x,y,z);
-	if(IsValidDynamicObject(objectid)) SetDynamicObjectRot(objectid,rx,ry,rz);
+	if(IsValidDynamicObject(objectid)){
+		SetDynamicObjectPos(objectid,x,y,z);
+		SetDynamicObjectRot(objectid,rx,ry,rz);
+	}
 }
 
 stock GetDynamicObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
-	if(IsValidDynamicObject(objectid)) GetDynamicObjectPos(objectid,x,y,z);
-	if(IsValidDynamicObject(objectid)) GetDynamicObjectRot(objectid,rx,ry,rz);
+	if(IsValidDynamicObject(objectid)){
+		GetDynamicObjectPos(objectid,x,y,z);
+		GetDynamicObjectRot(objectid,rx,ry,rz);
+	}
 }
 
 stock SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
-	if(IsValidObject(objectid)) SetObjectPos(objectid,x,y,z);
-	if(IsValidObject(objectid)) SetObjectRot(objectid,rx,ry,rz);
+	if(IsValidObject(objectid)){
+		SetObjectPos(objectid,x,y,z);
+		SetObjectRot(objectid,rx,ry,rz);
+	}
 }
 
 stock GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
-	if(IsValidObject(objectid)) GetObjectPos(objectid,x,y,z);
-	if(IsValidObject(objectid)) GetObjectRot(objectid,rx,ry,rz);
+	if(IsValidObject(objectid)){
+		GetObjectPos(objectid,x,y,z);
+		GetObjectRot(objectid,rx,ry,rz);
+	}
 }
 
 stock CountObjects(){
@@ -191,7 +212,7 @@ stock DestroyObjects(){
 stock RebuildDynamicObject(objectid,modelid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid,interiorid,playerid,Float:streamdistance,Float:drawdistance){
 	if(!IsValidDynamicObject(objectid)) return 0;
 	if(IsDynamicObjectMoving(objectid)) StopDynamicObject(objectid);
-	SetDynamicObjectPosAndRot(objectid,x,y,z,rx,ry,rz); 
+	SetDynamicObjectPosAndRot(objectid,x,y,z,rx,ry,rz);
 	SetDynamicObjectModel(objectid,modelid);
 	SetDynamicObjectVW(objectid,worldid);
 	SetDynamicObjectINT(objectid,interiorid);
@@ -312,19 +333,25 @@ stock SetDynamicRaceCPPos(checkpointid,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Z,z);
 }
 
-stock GetDynamicObjectMovePos(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
+stock GetDynamicObjectMovePos(objectid,&Float:x,&Float:y,&Float:z){
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,y);
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,z);
+}
+
+stock GetDynamicObjectMoveRot(objectid,&Float:rx,&Float:ry,&Float:rz){
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
 }
 
-stock SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0){
+stock SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,z);
+}
+
+stock SetDynamicObjectMoveRot(objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0){
 	if(rx != -1000.0) Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
 	if(ry != -1000.0) Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
 	if(rz != -1000.0) Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
@@ -364,4 +391,48 @@ stock SetDynamic3DTextPos(Text3D:id,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Z,z);
+}
+
+stock DestroyDynamicObjectComponent(objectid,type){
+	new max_dobj = Streamer_GetUpperBound(type);
+	for(new i = 0; i < max_dobj; i++){
+		if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == objectid){
+			switch(type){
+				case STREAMER_TYPE_OBJECT:	if(IsValidDynamicObject(i)) DestroyDynamicObject(i);
+				case STREAMER_TYPE_AREA:	if(IsValidDynamicArea(i)) DestroyDynamicArea(i);
+			}
+		}
+	}
+}
+
+stock DeattachDynamicObjectComponent(objectid,type){
+	new max_dobj = Streamer_GetUpperBound(type);
+	for(new i = 0; i < max_dobj; i++){
+		if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == objectid){
+			switch(type){
+				case STREAMER_TYPE_OBJECT:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_DYNAMIC_OBJECT_ID);
+				case STREAMER_TYPE_AREA:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_VEHICLE_ID);
+			}
+		}
+	}
+}
+
+stock GetDynamicObjectMoveTime(objectid,&objstate,&rtime){
+	if(IsValidDynamicObject(objectid)){
+		if(IsDynamicObjectMoving(objectid)){
+			new Float:piox, Float:pioy, Float:pioz, Float:piotx, Float:pioty, Float:piotz, Float:dist, Float:objspeed;
+			GetDynamicObjectPos(objectid,piox,pioy,pioz);
+			GetDynamicObjectMovePos(objectid,piotx,pioty,piotz);
+			GetDynamicObjectMoveSpeed(objectid,objspeed);
+			dist = VectorSize(piox-piotx,pioy-pioty,pioz-piotz);
+			time = floatround((dist/objspeed)*1000.0);
+			state =  MOVE_OBJECT_STATE_MOVED;
+		} else {
+			state = MOVE_OBJECT_STATE_STOP;
+			time = 0;
+		}
+	} else {
+		state = MOVE_OBJECT_STATE_INVALID;
+		time = 0;
+	}
 }
