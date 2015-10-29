@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.5                                                                                                              *
+ * File Version: 1.6                                                                                                              *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -36,6 +36,8 @@
  * ShiftGradesToRadian(Float:grad,&Float:rad);                                                                                    *
  * ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz);                         *
  * ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3);                       *
+ * GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime);                                            *
+ * GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                                    *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -226,4 +228,14 @@ stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Floa
 	ShiftDegreeToRadianEx(rx,rotation3);
 	ShiftDegreeToRadianEx(ry,rotation2);
 	ShiftDegreeToRadianEx(rz,rotation1);
+}
+
+stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime){
+	new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
+	rtime = floatround((dist/speed)*1000.0);
+}
+
+stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
+	new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
+	speed = (dist/(rtime/1000));
 }
