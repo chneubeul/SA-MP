@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.8                                                                                                              *
+ * File Version: 1.8b                                                                                                             *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
