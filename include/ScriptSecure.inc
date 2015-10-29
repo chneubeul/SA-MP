@@ -1,4 +1,6 @@
-
+/**************************************
+ * Script Secure v2.0 by Abyss Morgan *
+ **************************************/
 
 #define FILE_SERVERIP			"127.0.0.1"
 #define FILE_SERVERPORT			(7777)			
@@ -8,8 +10,7 @@
 #define FILE_LANGUAGE			"Polish"		//server language
 
 #if !defined isnull
-	#define isnull(%1) \
-				((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
 
 AntiDeAMX(){
