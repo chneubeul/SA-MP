@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.6                                                                                                              *
+ * File Version: 1.7                                                                                                              *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -38,6 +38,7 @@
  * ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3);                       *
  * GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime);                                            *
  * GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                                    *
+ * GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz);                                                                   *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -238,4 +239,17 @@ stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed
 stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
 	new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 	speed = (dist/(rtime/1000));
+}
+
+stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
+	new Float:q0, Float:q1, Float:q2, Float:q3;
+	GetVehicleRotationQuat(vehicleid,q0,q1,q2,q3);
+	GetVehicleZAngle(vehicleid,rz);
+	if((rz >= 0.0 && rz <= 90.0) || (rz >= 270.0 && rz <= 360.0)){
+		CompRotationFloat(-atan2(2*(q0*q1+q2*q3),1-2*((q1*q1)+(q2^q2))),rx);
+		CompRotationFloat(-asin(2*(q0*q2-q3*q1)),ry);
+	} else {
+		CompRotationFloat(atan2(2*(q0*q1+q2*q3),1-2*((q1*q1)+(q2^q2))),rx);
+		CompRotationFloat(asin(2*(q0*q2-q3*q1)),ry);
+	}
 }
