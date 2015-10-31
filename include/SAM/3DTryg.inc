@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.7                                                                                                              *
+ * File Version: 1.7b                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -39,6 +39,7 @@
  * GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime);                                            *
  * GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                                    *
  * GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz);                                                                   *
+ * GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz);                                                                         *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -252,4 +253,13 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 		CompRotationFloat(atan2(2*(q0*q1+q2*q3),1-2*((q1*q1)+(q2^q2))),rx);
 		CompRotationFloat(asin(2*(q0*q2-q3*q1)),ry);
 	}
+}
+
+stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){ 
+    new Float:mx, Float:my, Float:mz, Float:px, Float:py, Float:pz; 
+    GetPlayerPos(playerid,px,py,pz); 
+    GetPlayerCameraPos(playerid,mx,my,mz);
+    GetRotationFor2Point3D(px,py,pz+1.0,mx,my,mz,rx,rz);
+	CompRotationFloat(-rx,rx);
+	CompRotationFloat(rz+180.0,rz);
 }
