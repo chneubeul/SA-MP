@@ -69,15 +69,15 @@ stock GetRandomHit(Float:x, Float:y, Float:z, range, &Float:tx, &Float:ty, &Floa
 }
 
 stock Float:GetDistanceBetweenPoints1D(Float:x1,Float:x2){
-    return VectorSize(x1-x2, 0.0, 0.0);
+	return VectorSize(x1-x2, 0.0, 0.0);
 }
 
 stock Float:GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2){
-    return VectorSize(x1-x2, y1-y2, 0.0);
+	return VectorSize(x1-x2, y1-y2, 0.0);
 }
 
 stock Float:GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2){
-    return VectorSize(x1-x2, y1-y2, z1-z2);
+	return VectorSize(x1-x2, y1-y2, z1-z2);
 }
 
 stock Float:Center(Float:value1,Float:value2){
@@ -256,10 +256,10 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 }
 
 stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){ 
-    new Float:mx, Float:my, Float:mz, Float:px, Float:py, Float:pz; 
-    GetPlayerPos(playerid,px,py,pz); 
-    GetPlayerCameraPos(playerid,mx,my,mz);
-    GetRotationFor2Point3D(px,py,pz+1.0,mx,my,mz,rx,rz);
+	new Float:mx, Float:my, Float:mz, Float:px, Float:py, Float:pz; 
+	GetPlayerPos(playerid,px,py,pz); 
+	GetPlayerCameraPos(playerid,mx,my,mz);
+	GetRotationFor2Point3D(px,py,pz+1.0,mx,my,mz,rx,rz);
 	CompRotationFloat(-rx,rx);
 	CompRotationFloat(rz+180.0,rz);
 }
