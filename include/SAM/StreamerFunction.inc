@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.8b                                                                                                             *
+ * File Version: 1.9                                                                                                              *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -43,7 +43,7 @@
  * DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1);   *
  * DestroyDynamicObjectsInCubeFM(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1); *
  * IsPointInArea(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                      *
- * IsPointInAreaEx(...,pointworldid,pointinteriorid,areaworldid,areainteriorid);                                                  *
+ * IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,vw1,int1,vw2,int2);  *
  *                                                                                                                                *
  * Vehicle Functions:                                                                                                             *
  * DestroyVehicleDynamicObject(vehicleid);                                                                                        *
@@ -89,59 +89,15 @@
 #endif
 #define _streamer_spec
 
-//#define FIX_OBJECTS
-
-#if !defined INVALID_DYNAMIC_OBJECT_ID
-	#define INVALID_DYNAMIC_OBJECT_ID 0x7FFFFFFF
+#if !defined INVALID_STREAMER_ID
+	#define INVALID_STREAMER_ID 0
 #endif
 
 #if !defined IsValidVehicle
 	native IsValidVehicle(vehicleid);
 #endif
 
-
-//Fix Destroy Objects
-#if defined FIX_OBJECTS
-	//DestroyDynamicObject
-	stock AC_DestroyDynamicObject(&objectid){
-		DestroyDynamicObject(objectid);
-		objectid = INVALID_DYNAMIC_OBJECT_ID;
-	}
-
-	#if defined _ALS_DestroyDynamicObject
-		#undef DestroyDynamicObject
-	#else
-		#define _ALS_DestroyDynamicObject
-	#endif
-	#define DestroyDynamicObject AC_DestroyDynamicObject
-
-	//DestroyObject
-	stock AC_DestroyObject(&objectid){
-		DestroyObject(objectid);
-		objectid = INVALID_OBJECT_ID;
-	}
-
-	#if defined _ALS_DestroyObject
-		#undef DestroyObject
-	#else
-		#define _ALS_DestroyObject
-	#endif
-	#define DestroyObject AC_DestroyObject
-
-	//DestroyPlayerObject
-	stock AC_DestroyPlayerObject(playerid,&objectid){
-		DestroyPlayerObject(playerid,objectid);
-		objectid = INVALID_OBJECT_ID;
-	}
-
-	#if defined _ALS_DestroyPlayerObject
-		#undef DestroyPlayerObject
-	#else
-		#define _ALS_DestroyPlayerObject
-	#endif
-	#define DestroyPlayerObject AC_DestroyPlayerObject
-#endif
-
+//#define FIX_OBJECTS
 
 #define MOVE_OBJECT_STATE_STOP		(0)
 #define MOVE_OBJECT_STATE_MOVED		(1)
@@ -157,15 +113,16 @@
 #define SetDynamicObjectDD(%1,%2)			Streamer_SetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_DRAW_DISTANCE,%2)
 #define SetDynamicObjectMoveSpeed(%1,%2)	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MOVE_SPEED,%2)
 #define GetDynamicObjectMoveSpeed(%1,%2)	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MOVE_SPEED,%2)
+#define GetDynamicObjectSD(%1,%2)			Streamer_GetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_STREAM_DISTANCE,%2)
+#define GetDynamicObjectDD(%1,%2)			Streamer_GetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_DRAW_DISTANCE,%2)
+#define DeattachObjectDynamicObject(%1)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID)
+#define SetDynamicObjectAttachSync(%1,%2)	Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_SYNC_ROTATION,%2)
 #define SetDynamicCPSize(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_CP,%1,E_STREAMER_SIZE,%2)
 #define SetDynamicRaceCPSize(%1,%2)			Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,%1,E_STREAMER_SIZE,%2)
 #define SetDynamicMapIconColor(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_COLOR,%2)
 #define GetDynamicPickupModel(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_MODEL_ID)
 #define SetDynamicPickupModel(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_MODEL_ID,%2)
-#define GetDynamicObjectSD(%1,%2)			Streamer_GetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_STREAM_DISTANCE,%2)
-#define GetDynamicObjectDD(%1,%2)			Streamer_GetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_DRAW_DISTANCE,%2)
-#define DeattachObjectDynamicObject(%1)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_ATTACHED_OBJECT,INVALID_DYNAMIC_OBJECT_ID)
-#define SetDynamicObjectAttachSync(%1,%2)	Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_SYNC_ROTATION,%2)
+
 
 stock SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
 	if(IsValidDynamicObject(objectid)){
@@ -209,7 +166,7 @@ stock DestroyObjects(){
 	}
 }
 
-stock RebuildDynamicObject(objectid,modelid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid,interiorid,playerid,Float:streamdistance,Float:drawdistance){
+stock RebuildDynamicObject(objectid,modelid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid = -1,interiorid = -1,playerid = -1,Float:streamdistance = STREAMER_OBJECT_SD,Float:drawdistance = STREAMER_OBJECT_DD){
 	if(!IsValidDynamicObject(objectid)) return 0;
 	if(IsDynamicObjectMoving(objectid)) StopDynamicObject(objectid);
 	SetDynamicObjectPosAndRot(objectid,x,y,z,rx,ry,rz);
@@ -221,18 +178,18 @@ stock RebuildDynamicObject(objectid,modelid,Float:x,Float:y,Float:z,Float:rx,Flo
 	return 1;
 }
 
-stock IsPointInArea(Float:x, Float:y, Float:z, Float:minx = -FLOAT_INFINITY, Float:miny = -FLOAT_INFINITY, Float:minz = -FLOAT_INFINITY, Float:maxx = FLOAT_INFINITY, Float:maxy = FLOAT_INFINITY, Float:maxz = FLOAT_INFINITY){
+stock IsPointInArea(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
 	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz)) return true;
 	return false;
 }
 
-stock IsPointInAreaEx(Float:x, Float:y, Float:z, Float:minx = -FLOAT_INFINITY, Float:miny = -FLOAT_INFINITY, Float:minz = -FLOAT_INFINITY, Float:maxx = FLOAT_INFINITY, Float:maxy = FLOAT_INFINITY, Float:maxz = FLOAT_INFINITY, pointworldid = -1, pointinteriorid = -1, areaworldid = -1, areainteriorid = -1){
-	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz) && (pointworldid == areaworldid) && (pointinteriorid == areainteriorid)) return true;
+stock IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,vw1 = -1,int1 = -1,vw2 = -1,int2 = -1){
+	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz) && (vw1 == vw2) && (int1 == int2)) return true;
 	return false;
 }
 
 stock DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
-	new Float:piox, Float:pioy, Float:pioz, pioVW, pioINT, max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
+	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT,max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
 	for(new i = 0; i < max_dobj; i++){
 		if(IsValidDynamicObject(i)){
 			GetDynamicObjectPos(i,piox,pioy,pioz);
@@ -249,7 +206,7 @@ stock DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Fl
 }
 
 stock DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
-	new Float:piox, Float:pioy, Float:pioz, pioVW, pioINT, max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
+	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT,max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
 	for(new i = 0; i < max_dobj; i++){
 		if(IsValidDynamicObject(i)){
 			GetDynamicObjectPos(i,piox,pioy,pioz);
@@ -352,9 +309,9 @@ stock SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z){
 }
 
 stock SetDynamicObjectMoveRot(objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0){
-	if(rx != -1000.0) Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
-	if(ry != -1000.0) Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
-	if(rz != -1000.0) Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
+	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
+	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
+	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
 }
 
 stock GetDynamicPickupPos(pickupid,&Float:x,&Float:y,&Float:z){
@@ -410,7 +367,7 @@ stock DeattachDynamicObjectComponent(objectid,type){
 	for(new i = 0; i < max_dobj; i++){
 		if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == objectid){
 			switch(type){
-				case STREAMER_TYPE_OBJECT:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_DYNAMIC_OBJECT_ID);
+				case STREAMER_TYPE_OBJECT:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID);
 				case STREAMER_TYPE_AREA:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_VEHICLE_ID);
 			}
 		}
@@ -420,7 +377,7 @@ stock DeattachDynamicObjectComponent(objectid,type){
 stock GetDynamicObjectMoveTime(objectid,&objstate,&rtime){
 	if(IsValidDynamicObject(objectid)){
 		if(IsDynamicObjectMoving(objectid)){
-			new Float:piox, Float:pioy, Float:pioz, Float:piotx, Float:pioty, Float:piotz, Float:dist, Float:objspeed;
+			new Float:piox,Float:pioy,Float:pioz,Float:piotx,Float:pioty,Float:piotz,Float:dist,Float:objspeed;
 			GetDynamicObjectPos(objectid,piox,pioy,pioz);
 			GetDynamicObjectMovePos(objectid,piotx,pioty,piotz);
 			GetDynamicObjectMoveSpeed(objectid,objspeed);
@@ -436,3 +393,134 @@ stock GetDynamicObjectMoveTime(objectid,&objstate,&rtime){
 		rtime = 0;
 	}
 }
+
+
+//Fix Destroy Objects
+#if defined FIX_OBJECTS
+	//DestroyDynamicObject
+	stock AC_DestroyDynamicObject(&objectid){
+		new dobj = DestroyDynamicObject(objectid);
+		objectid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicObject
+		#undef DestroyDynamicObject
+	#else
+		#define _ALS_DestroyDynamicObject
+	#endif
+	#define DestroyDynamicObject AC_DestroyDynamicObject
+
+	//DestroyObject
+	stock AC_DestroyObject(&objectid){
+		new dobj = DestroyObject(objectid);
+		objectid = INVALID_OBJECT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyObject
+		#undef DestroyObject
+	#else
+		#define _ALS_DestroyObject
+	#endif
+	#define DestroyObject AC_DestroyObject
+
+	//DestroyPlayerObject
+	stock AC_DestroyPlayerObject(playerid,&objectid){
+		new dobj = DestroyPlayerObject(playerid,objectid);
+		objectid = INVALID_OBJECT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyPlayerObject
+		#undef DestroyPlayerObject
+	#else
+		#define _ALS_DestroyPlayerObject
+	#endif
+	#define DestroyPlayerObject AC_DestroyPlayerObject
+
+	//DestroyDynamicPickup
+	stock AC_DestroyDynamicPickup(&pickupid){
+		new dobj = DestroyDynamicPickup(pickupid);
+		pickupid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicPickup
+		#undef DestroyDynamicPickup
+	#else
+		#define _ALS_DestroyDynamicPickup
+	#endif
+	#define DestroyDynamicPickup AC_DestroyDynamicPickup
+
+	//DestroyDynamicCP
+	stock AC_DestroyDynamicCP(&checkpointid){
+		new dobj = DestroyDynamicCP(checkpointid);
+		checkpointid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicCP
+		#undef DestroyDynamicCP
+	#else
+		#define _ALS_DestroyDynamicCP
+	#endif
+	#define DestroyDynamicCP AC_DestroyDynamicCP
+
+	//DestroyDynamicRaceCP
+	stock AC_DestroyDynamicRaceCP(&checkpointid){
+		new dobj = DestroyDynamicRaceCP(checkpointid);
+		checkpointid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicRaceCP
+		#undef DestroyDynamicRaceCP
+	#else
+		#define _ALS_DestroyDynamicRaceCP
+	#endif
+	#define DestroyDynamicRaceCP AC_DestroyDynamicRaceCP
+
+	//DestroyDynamicMapIcon
+	stock AC_DestroyDynamicMapIcon(&iconid){
+		new dobj = DestroyDynamicMapIcon(iconid);
+		iconid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicMapIcon
+		#undef DestroyDynamicMapIcon
+	#else
+		#define _ALS_DestroyDynamicMapIcon
+	#endif
+	#define DestroyDynamicMapIcon AC_DestroyDynamicMapIcon
+
+	//DestroyDynamic3DTextLabel
+	stock AC_DestroyDynamic3DTextLabel(&Text3D:id){
+		new dobj = DestroyDynamic3DTextLabel(id);
+		id = Text3D:INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamic3DTextLabel
+		#undef DestroyDynamic3DTextLabel
+	#else
+		#define _ALS_DestroyDynamic3DTextLabel
+	#endif
+	#define DestroyDynamic3DTextLabel AC_DestroyDynamic3DTextLabel
+
+	//DestroyDynamicArea
+	stock AC_DestroyDynamicArea(&areaid){
+		new dobj = DestroyDynamicArea(areaid);
+		areaid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicArea
+		#undef DestroyDynamicArea
+	#else
+		#define _ALS_DestroyDynamicArea
+	#endif
+	#define DestroyDynamicArea AC_DestroyDynamicArea
+
+#endif
