@@ -155,7 +155,7 @@ stock GetRotationFor2Point3D(Float:x, Float:y, Float:z, Float:tx, Float:ty, Floa
 
 //random clock pos
 stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0){
-	new Float:tmpz, rand = random(360);
+	new rand = random(360);
 	if(rz == -1000.0) rz = rand;
 	GetPointInFront(x,y,z,0.0,rz,radius,tx,ty,tz);
 	CompRotationFloat(rz-180,trz);
