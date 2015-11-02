@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.9                                                                                                              *
+ * File Version: 1.9b                                                                                                             *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -125,31 +125,23 @@
 
 
 stock SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
-	if(IsValidDynamicObject(objectid)){
-		SetDynamicObjectPos(objectid,x,y,z);
-		SetDynamicObjectRot(objectid,rx,ry,rz);
-	}
+	SetDynamicObjectPos(objectid,x,y,z);
+	SetDynamicObjectRot(objectid,rx,ry,rz);
 }
 
 stock GetDynamicObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
-	if(IsValidDynamicObject(objectid)){
-		GetDynamicObjectPos(objectid,x,y,z);
-		GetDynamicObjectRot(objectid,rx,ry,rz);
-	}
+	GetDynamicObjectPos(objectid,x,y,z);
+	GetDynamicObjectRot(objectid,rx,ry,rz);
 }
 
 stock SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
-	if(IsValidObject(objectid)){
-		SetObjectPos(objectid,x,y,z);
-		SetObjectRot(objectid,rx,ry,rz);
-	}
+	SetObjectPos(objectid,x,y,z);
+	SetObjectRot(objectid,rx,ry,rz);
 }
 
 stock GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
-	if(IsValidObject(objectid)){
-		GetObjectPos(objectid,x,y,z);
-		GetObjectRot(objectid,rx,ry,rz);
-	}
+	GetObjectPos(objectid,x,y,z);
+	GetObjectRot(objectid,rx,ry,rz);
 }
 
 stock CountObjects(){

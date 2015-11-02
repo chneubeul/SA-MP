@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.7c                                                                                                             *
+ * File Version: 1.8                                                                                                              *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -181,7 +181,7 @@ stock ShiftDegreeToRadianEx(Float:deg,&Float:rad){
 }
 
 stock ShiftDegreeToGrades(Float:deg,&Float:grad){
-	grad = (deg*(400/360));
+	grad = (deg*(10/9));
 }
 
 stock ShiftRadianToDegree(Float:rad,&Float:deg){
@@ -221,13 +221,21 @@ stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Floa
 }
 
 stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime){
-	new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
-	rtime = floatround((dist/speed)*1000.0);
+	if(speed <= 0.0){
+		rtime = FLOAT_INFINITY;
+	} else {
+		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
+		rtime = floatround((dist/speed)*1000.0);
+	}
 }
 
 stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
-	new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
-	speed = (dist/(rtime/1000));
+	if(rtime/1000.0 <= 0.0){
+		speed = FLOAT_INFINITY;
+	} else {
+		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
+		speed = (dist/(rtime/1000.0));
+	}
 }
 
 stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
