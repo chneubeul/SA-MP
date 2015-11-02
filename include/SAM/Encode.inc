@@ -23,6 +23,8 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#include <SAM/BitFunctions>
+ 
 stock rot13(string[]){
 	for(new index = 0; index < strlen(string); index++){
 		if('a' <= string[index] <= 'z'){

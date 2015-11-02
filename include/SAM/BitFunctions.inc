@@ -25,6 +25,11 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if defined _bit_function
+	#endinput
+#endif
+#define _bit_function
+
 stock GetValueBit(value,bit){
 	return (value >>> bit & 0x01);
 }

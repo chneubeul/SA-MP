@@ -26,6 +26,10 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if defined _rgb_function
+	#endinput
+#endif
+#define _rgb_function
 
 //RGBA to Hex
 stock ShiftRGBAToHex(color,&red,&green,&blue,&alpha){
