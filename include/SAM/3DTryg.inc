@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.7b                                                                                                             *
+ * File Version: 1.7c                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -24,7 +24,7 @@
  * GetPointInFront(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                         *
  * GetRotationFor2Point2D(Float:x,Float:y,Float:tx,Float:ty,&Float:rz);                                                           *
  * GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                                *
- * GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz,mapz,Float:upz);            *
+ * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);           *
  * GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:x,&Float:y,&Float:z);            *
  * ShiftDegreeToRadian(Float:deg,&Float:rad);                                                                                     *
  * ShiftDegreeToRadianEx(Float:deg,&Float:rad);                                                                                   *
@@ -154,23 +154,11 @@ stock GetRotationFor2Point3D(Float:x, Float:y, Float:z, Float:tx, Float:ty, Floa
 }
 
 //random clock pos
-stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0,mapz = 0,Float:upz = 0.0){
+stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0){
 	new Float:tmpz, rand = random(360);
 	if(rz == -1000.0) rz = rand;
 	GetPointInFront(x,y,z,0.0,rz,radius,tx,ty,tz);
 	CompRotationFloat(rz-180,trz);
-	#if defined MapAndreas_FindZ_For2DCoord
-		if(mapz == 1){
-			MapAndreas_FindZ_For2DCoord(tx,ty,tmpz);
-			if(tz < tmpz+upz){
-				tz += upz;
-			}
-		}
-	#else
-		#pragma unused mapz
-		#pragma unused tmpz
-		#pragma unused upz
-	#endif
 }
 
 stock GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:x,&Float:y,&Float:z){
