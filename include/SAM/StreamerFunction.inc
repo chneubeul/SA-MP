@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.9b                                                                                                             *
+ * File Version: 1.9c                                                                                                             *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -389,6 +389,12 @@ stock GetDynamicObjectMoveTime(objectid,&objstate,&rtime){
 
 //Fix Destroy Objects
 #if defined FIX_OBJECTS
+	#if defined INVALID_DYNAMIC_OBJECT_ID
+		#error Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
+	#else
+		#define INVALID_DYNAMIC_OBJECT_ID INVALID_STREAMER_ID
+	#endif
+
 	//DestroyDynamicObject
 	stock AC_DestroyDynamicObject(&objectid){
 		new dobj = DestroyDynamicObject(objectid);

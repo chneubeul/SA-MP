@@ -1,6 +1,8 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Encode Include v1.1                                                                              *
+ * Encode Include                                                                                   *
+ *                                                                                                  *
+ * File Version: 1.2                                                                                *
  *                                                                                                  *
  * rot13(string[]);                                                                                 *
  * code128(string1[],string2[]);                                                                    *
@@ -23,8 +25,6 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
-#include <SAM/BitFunctions>
- 
 stock rot13(string[]){
 	for(new index = 0; index < strlen(string); index++){
 		if('a' <= string[index] <= 'z'){
@@ -36,24 +36,12 @@ stock rot13(string[]){
 	return string;
 }
 
-stock ExtractHex(value,&excerpt1,&excerpt2){
-	excerpt1 = 0, excerpt2 = 0;
-	for(new i = 4; i <= 7; i++){
-		excerpt1 = SetValueBit(excerpt1,i-4,GetValueBit(value,i));
-	}
-	for(new i = 0; i <= 3; i++){	
-		excerpt2 = SetValueBit(excerpt2,i,GetValueBit(value,i));
-	}
-}
-
 stock HexNegative(string1[],mode,string2[],maxdest = sizeof(string2)){
 	if(mode < 1 || mode > 15){
 		format(string2,maxdest,"%s","#NAN");
 	} else {
-		new va1, va2;
-		for(new i = 0;i < strlen(string1);i++){
-			ExtractHex(string1[i],va1,va2);
-			string2[i] = (((0xF & (va1+mode))*16) + (0xF & (va2+mode)));
+		for(new i = 0; i < strlen(string1); i++){
+			string2[i] = (((0xF & ((string1[i] >> 4)+mode))*16) + (0xF & ((string1[i] & 0xF)+mode)));
 		}
 		string2[strlen(string1)] = EOS;
 	}

@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.8                                                                                                              *
+ * File Version: 1.9                                                                                                              *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -40,6 +40,7 @@
  * GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                                    *
  * GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz);                                                                   *
  * GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz);                                                                         *
+ * QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz);                                                *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -49,8 +50,25 @@
 #define _3D_Tryg
 
 #if !defined PI
-	#define PI (3.14159265)
+	#define PI (22/7)
 #endif
+
+#define V1D					(0x11)
+#define V2D					(0x22)
+#define V3D					(0x33)
+#define VSYS				(V3D)
+
+#define sin					floatsin
+#define cos					floatcos
+#define tan					floattan
+#define ctan(%0)			cos(%0)/sin(%0)
+#define secans(%0,%1)		1/cos(%0)
+#define cosecans(%0,%1)		1/sin(%0)
+
+stock bool:TrygCheck(version){
+	if(version > VSYS) return false;
+	return true;
+}
 
 stock abs(value){
 	if(value < 0) value *= (-1);
@@ -258,4 +276,10 @@ stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
 	GetRotationFor2Point3D(px,py,pz+1.0,mx,my,mz,rx,rz);
 	CompRotationFloat(-rx,rx);
 	CompRotationFloat(rz+180.0,rz);
+}
+
+stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz){
+	CompRotationFloat(atan2(2*(qx*qy+qz*qw),1-2*((qy*qy)+(qz^qz))),rx);
+	CompRotationFloat(asin(2*(qx*qz-qw*qy)),ry);
+	CompRotationFloat(atan2(2*(qx*qw+qy*qz),1-2*(qz*qz+qw*qw)),rz);
 }
