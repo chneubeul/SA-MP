@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.9d                                                                                                             *
+ * File Version: 2.0                                                                                                              *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -40,6 +40,7 @@
  * GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                                    *
  * GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz);                                                                   *
  * GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz);                                                                         *
+ * GetPlayerCameraZAngle(playerid,&Float:rz);                                                                                     *
  * QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz);                                                *
  *                                                                                                                                *
  **********************************************************************************************************************************/
@@ -271,6 +272,7 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 	}
 }
 
+
 stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
 	new Float:mx, Float:my, Float:mz; 
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
@@ -278,6 +280,11 @@ stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
 	CompRotationFloat((atan2(my,mx)-90.0),rz);
 }
 
+stock GetPlayerCameraZAngle(playerid,&Float:rz){
+	new Float:mx, Float:my, Float:mz; 
+	GetPlayerCameraFrontVector(playerid,mx,my,mz);
+	CompRotationFloat((atan2(my,mx)-90.0),rz);
+}
 
 stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz){
 	CompRotationFloat(atan2(2*(qx*qy+qz*qw),1-2*((qy*qy)+(qz^qz))),rx);
