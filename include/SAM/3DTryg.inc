@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.9                                                                                                              *
+ * File Version: 1.9b                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -269,14 +269,12 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 	}
 }
 
-stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){ 
-	new Float:mx, Float:my, Float:mz, Float:px, Float:py, Float:pz; 
-	GetPlayerPos(playerid,px,py,pz); 
-	GetPlayerCameraPos(playerid,mx,my,mz);
-	GetRotationFor2Point3D(px,py,pz+1.0,mx,my,mz,rx,rz);
-	CompRotationFloat(-rx,rx);
-	CompRotationFloat(rz+180.0,rz);
+stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
+	new Float:mx, Float:my, Float:mz;
+	GetPlayerCameraFrontVector(playerid,mx,my,mz);
+	GetRotationFor2Point3D(0.0,0.0,0.0,mx,my,mz,rx,rz);
 }
+
 
 stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz){
 	CompRotationFloat(atan2(2*(qx*qy+qz*qw),1-2*((qy*qy)+(qz^qz))),rx);
