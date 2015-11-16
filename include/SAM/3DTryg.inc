@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.9c                                                                                                             *
+ * File Version: 1.9d                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -272,9 +272,10 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 }
 
 stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
-	new Float:mx, Float:my, Float:mz;
+	new Float:mx, Float:my, Float:mz; 
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
-	GetRotationFor2Point3D(0.0,0.0,0.0,mx,my,mz,rx,rz);
+	CompRotationFloat(-(acos(mz)-90.0),rx);
+	CompRotationFloat((atan2(my,mx)-90.0),rz);
 }
 
 
