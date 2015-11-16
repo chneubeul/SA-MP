@@ -1,6 +1,5 @@
 ﻿//StreamerFunction.inc
 [ADM] Warring: Invalid Object Component type.
-[ADM] Warring: Invalid Object Component type.
 
 //Encode.inc
 [ADM] Warring: Invalid HexNegative mode.
