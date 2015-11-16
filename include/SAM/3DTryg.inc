@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0                                                                                                              *
+ * File Version: 2.0b                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -21,7 +21,7 @@
  * CompRotation(rotation,&cr);                                                                                                    *
  * CompRotationFloat(Float:rotation,&Float:cr);                                                                                   *
  * GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty);                                                  *
- * GetPointInFront(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                         *
+ * GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                       *
  * GetRotationFor2Point2D(Float:x,Float:y,Float:tx,Float:ty,&Float:rz);                                                           *
  * GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                                *
  * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);           *
@@ -42,6 +42,9 @@
  * GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz);                                                                         *
  * GetPlayerCameraZAngle(playerid,&Float:rz);                                                                                     *
  * QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz);                                                *
+ * GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty);                               *
+ * GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz);   *
+ * ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz);                                                         *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -88,15 +91,15 @@ stock GetRandomHit(Float:x, Float:y, Float:z, range, &Float:tx, &Float:ty, &Floa
 }
 
 stock Float:GetDistanceBetweenPoints1D(Float:x1,Float:x2){
-	return VectorSize(x1-x2, 0.0, 0.0);
+	return VectorSize(x1-x2,0.0,0.0);
 }
 
 stock Float:GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2){
-	return VectorSize(x1-x2, y1-y2, 0.0);
+	return VectorSize(x1-x2,y1-y2,0.0);
 }
 
 stock Float:GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2){
-	return VectorSize(x1-x2, y1-y2, z1-z2);
+	return VectorSize(x1-x2,y1-y2,z1-z2);
 }
 
 stock Float:Center(Float:value1,Float:value2){
@@ -150,11 +153,13 @@ stock GetPointInFront2D(Float:x, Float:y, Float:rz, Float:radius, &Float:tx, &Fl
 }
 
 //a new version of the code, support 3D made by Abyss Morgan
-stock GetPointInFront(Float:x, Float:y, Float:z, Float:rx, Float:rz, Float:radius, &Float:tx, &Float:ty, &Float:tz){
+stock GetPointInFront3D(Float:x, Float:y, Float:z, Float:rx, Float:rz, Float:radius, &Float:tx, &Float:ty, &Float:tz){
 	tx = x + (radius * floatsin(rx+90.0,degrees) * floatcos(rz+90.0,degrees));
 	ty = y + (radius * floatsin(rx+90.0,degrees) * floatsin(rz+90.0,degrees));
 	tz = z + (radius * floatcos(-rx+90.0,degrees));
 }
+
+#define GetPointInFront GetPointInFront3D
 
 //old code version made by Zoutdaxv (modified version) 
 stock GetRotationFor2Point2D(Float:x, Float:y, Float:tx, Float:ty, &Float:rz){
@@ -177,7 +182,7 @@ stock GetRotationFor2Point3D(Float:x, Float:y, Float:z, Float:tx, Float:ty, Floa
 stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0){
 	new rand = random(360);
 	if(rz == -1000.0) rz = rand;
-	GetPointInFront(x,y,z,0.0,rz,radius,tx,ty,tz);
+	GetPointInFront3D(x,y,z,0.0,rz,radius,tx,ty,tz);
 	CompRotationFloat(rz-180,trz);
 }
 
@@ -272,18 +277,37 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 	}
 }
 
+stock ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz){
+	CompRotationFloat(-(acos(vz)-90.0),rx);
+	CompRotationFloat((atan2(vy,vx)-90.0),rz);
+}
 
 stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
 	new Float:mx, Float:my, Float:mz; 
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
-	CompRotationFloat(-(acos(mz)-90.0),rx);
-	CompRotationFloat((atan2(my,mx)-90.0),rz);
+	ShiftVectorToRotation(mx,my,mz,rx,rz);
 }
 
 stock GetPlayerCameraZAngle(playerid,&Float:rz){
 	new Float:mx, Float:my, Float:mz; 
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
 	CompRotationFloat((atan2(my,mx)-90.0),rz);
+}
+
+stock GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty){
+	new Float:dist, Float:dest_dist, Float:rz;
+	dist = GetDistanceBetweenPoints2D(x1,y1,x2,y2);
+	dest_dist = (dist*(percent_size/100.0));
+	GetRotationFor2Point2D(x1,y1,x2,y2,rz);
+	GetPointInFront2D(x1,y1,rz,dest_dist,tx,ty);
+}
+
+stock GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz){
+	new Float:dist, Float:dest_dist, Float:rx, Float:rz;
+	dist = GetDistanceBetweenPoints3D(x1,y1,z1,x2,y2,z2);
+	dest_dist = (dist*(percent_size/100.0));
+	GetRotationFor2Point3D(x1,y1,z1,x2,y2,z2,rx,rz);
+	GetPointInFront3D(x1,y1,z1,rx,rz,dest_dist,tx,ty,tz);
 }
 
 stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz){
