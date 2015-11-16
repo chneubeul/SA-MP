@@ -12,8 +12,6 @@
  * GetDistanceBetweenPoints1D(Float:x1,Float:x2);                                                                                 *
  * GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2);                                                               *
  * GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2);                                             *
- * Center(Float:value1,Float:value2);                                                                                             *
- * Intake(Float:value1,Float:value2);                                                                                             *
  * NLTZ(value);                                                                                                                   *
  * NMTZ(value);                                                                                                                   *
  * Float:NLTZF(Float:value);                                                                                                      *
@@ -100,14 +98,6 @@ stock Float:GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2){
 
 stock Float:GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2){
 	return VectorSize(x1-x2,y1-y2,z1-z2);
-}
-
-stock Float:Center(Float:value1,Float:value2){
-	return ((value1+value2)/2);
-}
-
-stock Float:Intake(Float:value1,Float:value2){
-	return Center(Center(value2,value1),value1);
 }
 
 //NotLessThanZero
