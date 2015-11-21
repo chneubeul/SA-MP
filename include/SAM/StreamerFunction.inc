@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.9d                                                                                                             *
+ * File Version: 2.0                                                                                                              *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -73,6 +73,10 @@
  * SetDynamicPickupPos(pickupid,Float:x,Float:y,Float:z);                                                                         *
  * GetDynamicPickupModel(pickupid);                                                                                               *
  * SetDynamicPickupModel(pickupid,modelid);                                                                                       *
+ * GetDynamicPickupVW(pickupid);                                                                                                  *
+ * SetDynamicPickupVW(pickupid,worldid);                                                                                          *
+ * GetDynamicPickupINT(pickupid);                                                                                                 *
+ * SetDynamicPickupINT(pickupid,interiorid);                                                                                      *
  *                                                                                                                                *
  * 3DText Functions:                                                                                                              *
  * GetDynamic3DTextPos(Text3D:id,&Float:x,&Float:y,&Float:z);                                                                     *
@@ -122,7 +126,10 @@
 #define SetDynamicMapIconColor(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_COLOR,%2)
 #define GetDynamicPickupModel(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_MODEL_ID)
 #define SetDynamicPickupModel(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_MODEL_ID,%2)
-
+#define SetDynamicPickupVW(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_WORLD_ID,%2)
+#define SetDynamicPickupINT(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_INTERIOR_ID,%2)
+#define GetDynamicPickupVW(%1)				Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_WORLD_ID)
+#define GetDynamicPickupINT(%1)				Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_INTERIOR_ID)
 
 stock SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
 	SetDynamicObjectPos(objectid,x,y,z);
