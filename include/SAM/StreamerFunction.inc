@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0b                                                                                                             *
+ * File Version: 2.0c                                                                                                             *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -33,11 +33,14 @@
  * DestroyDynamicObjectComponent(objectid,type);                                                                                  *
  * RebuildDynamicObject(objectid,...);                                                                                            *
  *                                                                                                                                *
- * SAMP Object Functions:                                                                                                         *
+ * SAMP Functions:                                                                                                                *
  * GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                         *
  * SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                               *
- * DestroyObjects();                                                                                                              *
  * CountObjects();                                                                                                                *
+ * CountVehicles();                                                                                                               *
+ * DestroyObjects();                                                                                                              *
+ * DestroyVehicles();                                                                                                             *
+ * GangZoneDestroyAll();                                                                                                          *
  *                                                                                                                                *
  * Cube Functions:                                                                                                                *
  * DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1);   *
@@ -158,18 +161,37 @@ stock GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry
 
 stock CountObjects(){
 	new count = 0;
-	for(new i=0; i <= MAX_OBJECTS; i++){
+	for(new i = 0; i <= MAX_OBJECTS; i++){
 		if(IsValidObject(i)) count += 1;
 	}
 	return count;
 }
 
 stock DestroyObjects(){
-	for(new i=0; i <= MAX_OBJECTS; i++){
+	for(new i = 0; i <= MAX_OBJECTS; i++){
 		if(IsValidObject(i)) DestroyObject(i);
 	}
 }
 
+stock CountVehicles(){
+	new count = 0;
+	for(new i = 0; i <= MAX_VEHICLES; i++){
+		if(IsValidVehicle(i)) count += 1;
+	}
+	return count;
+}
+
+stock DestroyVehicles(){
+	for(new i = 0; i <= MAX_VEHICLES; i++){
+		if(IsValidVehicle(i)) DestroyVehicle(i);
+	}
+}
+
+stock GangZoneDestroyAll(){
+	for(new i = 0; i <= MAX_GANG_ZONES; i++){
+		GangZoneDestroy(i);
+	}
+}
 stock RebuildDynamicObject(objectid,modelid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid = -1,interiorid = -1,playerid = -1,Float:streamdistance = STREAMER_OBJECT_SD,Float:drawdistance = STREAMER_OBJECT_DD){
 	if(!IsValidDynamicObject(objectid)) return 0;
 	if(IsDynamicObjectMoving(objectid)) StopDynamicObject(objectid);

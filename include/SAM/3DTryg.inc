@@ -4,10 +4,13 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0c                                                                                                             *
+ * File Version: 2.0d                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
- * power(value,exponent);                                                                                                         *
+ * power(value,Float:exponent);                                                                                                   *
+ * ctan(Float:value,anglemode:mode=radian);                                                                                       *
+ * secans(Float:value,anglemode:mode=radian);                                                                                     *
+ * cosecans(Float:value,anglemode:mode=radian);                                                                                   *
  * GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz);                                                     *
  * GetDistanceBetweenPoints1D(Float:x1,Float:x2);                                                                                 *
  * GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2);                                                               *
@@ -64,9 +67,10 @@
 #define sin					floatsin
 #define cos					floatcos
 #define tan					floattan
-#define ctan(%0)			cos(%0)/sin(%0)
-#define secans(%0,%1)		1/cos(%0)
-#define cosecans(%0,%1)		1/sin(%0)
+
+#define ctan(%0,%1)			floatcos(%0,%1)/floatsin(%0,%1)
+#define secans(%0,%1)		1/floatcos(%0)
+#define cosecans(%0,%1)		1/floatsin(%0)
 
 stock bool:TrygCheck(version){
 	if(version > VSYS) return false;
@@ -78,7 +82,7 @@ stock abs(value){
 	return value;
 }
 
-stock power(value,exponent){
+stock power(value,Float:exponent){
 	return floatround(floatpower(value,exponent));
 }
 
