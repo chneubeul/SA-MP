@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0b                                                                                                             *
+ * File Version: 2.0c                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,exponent);                                                                                                         *
@@ -43,6 +43,7 @@
  * GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty);                               *
  * GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz);   *
  * ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz);                                                         *
+ * ShiftRotationToVector(Float:rx,Float:rz,&Float:vx,&Float:vy,&Float:vz);                                                        *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -81,7 +82,7 @@ stock power(value,exponent){
 	return floatround(floatpower(value,exponent));
 }
 
-stock GetRandomHit(Float:x, Float:y, Float:z, range, &Float:tx, &Float:ty, &Float:tz){
+stock GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz){
 	new rand = range * 2;
 	tx = x + (random(rand)-range);
 	ty = y + (random(rand)-range);
@@ -124,26 +125,26 @@ stock Float:NMTZF(Float:value){
 	return value;
 }
 
-stock CompRotation(rotation,&cr){ 
-	cr = rotation; 
-	while(cr < 0) cr += 360; 
-	while(cr >= 360) cr -= 360; 
+stock CompRotation(rotation,&cr){
+	cr = rotation;
+	while(cr < 0) cr += 360;
+	while(cr >= 360) cr -= 360;
 }
 
-stock CompRotationFloat(Float:rotation,&Float:cr){ 
-	cr = rotation; 
-	while(cr < 0.0) cr += 360.0; 
-	while(cr >= 360.0) cr -= 360.0; 
+stock CompRotationFloat(Float:rotation,&Float:cr){
+	cr = rotation;
+	while(cr < 0.0) cr += 360.0;
+	while(cr >= 360.0) cr -= 360.0;
 }
 
-//the old version of the code 
-stock GetPointInFront2D(Float:x, Float:y, Float:rz, Float:radius, &Float:tx, &Float:ty){
+//the old version of the code
+stock GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty){
 	tx = x + (radius*floatsin(-rz,degrees));
 	ty = y + (radius*floatcos(-rz,degrees));
 }
 
-//a new version of the code, support 3D made by Abyss Morgan
-stock GetPointInFront3D(Float:x, Float:y, Float:z, Float:rx, Float:rz, Float:radius, &Float:tx, &Float:ty, &Float:tz){
+//a new version of the code,support 3D made by Abyss Morgan
+stock GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 	tx = x + (radius * floatsin(rx+90.0,degrees) * floatcos(rz+90.0,degrees));
 	ty = y + (radius * floatsin(rx+90.0,degrees) * floatsin(rz+90.0,degrees));
 	tz = z + (radius * floatcos(-rx+90.0,degrees));
@@ -151,20 +152,20 @@ stock GetPointInFront3D(Float:x, Float:y, Float:z, Float:rx, Float:rz, Float:rad
 
 #define GetPointInFront GetPointInFront3D
 
-//old code version made by Zoutdaxv (modified version) 
-stock GetRotationFor2Point2D(Float:x, Float:y, Float:tx, Float:ty, &Float:rz){
+//old code version made by Zoutdaxv (modified version)
+stock GetRotationFor2Point2D(Float:x,Float:y,Float:tx,Float:ty,&Float:rz){
 	CompRotationFloat((atan2(ty-y,tx-x)-90),rz);
 }
 
-//new code version support 3D made by Abyss Morgan 
-stock GetRotationFor2Point3D(Float:x, Float:y, Float:z, Float:tx, Float:ty, Float:tz, &Float:rx, &Float:rz){
+//new code version support 3D made by Abyss Morgan
+stock GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz){
 	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 	if(radius > 0.0){
 		CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
 		CompRotationFloat((atan2(ty-y,tx-x)-90),rz);
 	} else {
-		rx = 0.0, rz = 0.0;
-		printf("[ADM] Warring: Get the rotation wrong, identical points.");
+		rx = 0.0,rz = 0.0;
+		printf("[ADM] Warring: Get the rotation wrong,identical points.");
 	}
 }
 
@@ -247,7 +248,7 @@ stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed
 stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
 	if(rtime/1000.0 <= 0.0){
 		speed = FLOAT_INFINITY;
-		printf("[ADM] Warring: Get speed error, the wrong time.");
+		printf("[ADM] Warring: Get speed error,the wrong time.");
 	} else {
 		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 		speed = (dist/(rtime/1000.0));
@@ -255,14 +256,14 @@ stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Fl
 }
 
 stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
-	new Float:q0, Float:q1, Float:q2, Float:q3;
+	new Float:q0,Float:q1,Float:q2,Float:q3;
 	GetVehicleRotationQuat(vehicleid,q0,q1,q2,q3);
 	GetVehicleZAngle(vehicleid,rz);
 	if((rz >= 0.0 && rz <= 90.0) || (rz >= 270.0 && rz <= 360.0)){
-		CompRotationFloat(-atan2(2*(q0*q1+q2*q3),1-2*((q1*q1)+(q2^q2))),rx);
+		CompRotationFloat(-atan2(2*(q0*q1+q2*q3),1-2*((q1*q1)+(q2*q2))),rx);
 		CompRotationFloat(-asin(2*(q0*q2-q3*q1)),ry);
 	} else {
-		CompRotationFloat(atan2(2*(q0*q1+q2*q3),1-2*((q1*q1)+(q2^q2))),rx);
+		CompRotationFloat(atan2(2*(q0*q1+q2*q3),1-2*((q1*q1)+(q2*q2))),rx);
 		CompRotationFloat(asin(2*(q0*q2-q3*q1)),ry);
 	}
 }
@@ -272,20 +273,24 @@ stock ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz){
 	CompRotationFloat((atan2(vy,vx)-90.0),rz);
 }
 
+stock ShiftRotationToVector(Float:rx,Float:rz,&Float:vx,&Float:vy,&Float:vz){
+	GetPointInFront3D(0.0,0.0,0.0,rx,rz,1.0,vx,vy,vz);
+}
+
 stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
-	new Float:mx, Float:my, Float:mz; 
+	new Float:mx,Float:my,Float:mz;
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
 	ShiftVectorToRotation(mx,my,mz,rx,rz);
 }
 
 stock GetPlayerCameraZAngle(playerid,&Float:rz){
-	new Float:mx, Float:my, Float:mz; 
+	new Float:mx,Float:my,Float:mz;
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
 	CompRotationFloat((atan2(my,mx)-90.0),rz);
 }
 
 stock GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty){
-	new Float:dist, Float:dest_dist, Float:rz;
+	new Float:dist,Float:dest_dist,Float:rz;
 	dist = GetDistanceBetweenPoints2D(x1,y1,x2,y2);
 	dest_dist = (dist*(percent_size/100.0));
 	GetRotationFor2Point2D(x1,y1,x2,y2,rz);
@@ -293,7 +298,7 @@ stock GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size
 }
 
 stock GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz){
-	new Float:dist, Float:dest_dist, Float:rx, Float:rz;
+	new Float:dist,Float:dest_dist,Float:rx,Float:rz;
 	dist = GetDistanceBetweenPoints3D(x1,y1,z1,x2,y2,z2);
 	dest_dist = (dist*(percent_size/100.0));
 	GetRotationFor2Point3D(x1,y1,z1,x2,y2,z2,rx,rz);
@@ -301,7 +306,7 @@ stock GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,
 }
 
 stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz){
-	CompRotationFloat(atan2(2*(qx*qy+qz*qw),1-2*((qy*qy)+(qz^qz))),rx);
+	CompRotationFloat(atan2(2*(qx*qy+qz*qw),1-2*((qy*qy)+(qz*qz))),rx);
 	CompRotationFloat(asin(2*(qx*qz-qw*qy)),ry);
 	CompRotationFloat(atan2(2*(qx*qw+qy*qz),1-2*(qz*qz+qw*qw)),rz);
 }
