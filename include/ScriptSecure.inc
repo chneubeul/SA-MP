@@ -2,6 +2,26 @@
  * Script Secure v2.0 by Abyss Morgan *
  **************************************/
 
+/*
+//Install
+public OnGameModeInit(){
+
+	AntiDeAMX();
+	ADM();
+	
+	return 1;
+}
+
+public OnFilterScriptInit(){
+
+	AntiDeAMX();
+	ADM();
+	
+	return 1;
+}
+
+*/
+ 
 #define FILE_SERVERIP			"127.0.0.1"
 #define FILE_SERVERPORT			(7777)			
 #define FILE_LICENSEID			(20160201)		//01.02.2016
@@ -68,22 +88,3 @@ ADM(){
 	#undef FILE_LANGUAGE
 }
 
-
-
-
-
-public OnGameModeInit(){
-
-	AntiDeAMX();
-	ADM();
-	
-	return 1;
-}
-
-public OnFilterScriptInit(){
-
-	AntiDeAMX();
-	ADM();
-	
-	return 1;
-}
