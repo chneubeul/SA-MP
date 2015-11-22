@@ -69,10 +69,16 @@ forward Santa_GiftCreate(giftid);
 forward Santa_GiftReset(giftid);
 
 public Santa_GameModeInit(){
-	for(new i = 0; i < MAX_SANTA_GIFTS; i++){
-		Santa_GiftCreate(i);
+	new Float:pioz;
+	MapAndreas_FindZ_For2DCoord(0.0,0.0,pioz);
+	if(pioz == 0.0){
+		printf("[ADM] Invalid MapAndreas Memory");
+	} else {
+		for(new i = 0; i < MAX_SANTA_GIFTS; i++){
+			Santa_GiftCreate(i);
+		}
+		SantaTimer[0] = SetTimerEx("Santa_Reset",REFRESH_SANTA_GIFTS,true,"d",1);
 	}
-	SantaTimer[0] = SetTimerEx("Santa_Reset",REFRESH_SANTA_GIFTS,true,"d",1);
 	return 1;
 }
 
