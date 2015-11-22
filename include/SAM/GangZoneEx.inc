@@ -1,12 +1,12 @@
 /****************************************************************************************************
  *                                                                                                  *
- * GangZone Update v1.0 by Abyss Morgan                                                             *
+ * GangZone Update v1.1 by Abyss Morgan                                                             *
  *                                                                                                  *
  * IsPlayerInGangZone(playerid,zone);                                                               *
+ * IsPlayerInAnyGangZone(playerid);                                                                 *
  * GangZoneCreateEx(Float:minx,Float:miny,Float:maxx,Float:maxy,worldid = -1,interiorid = -1);      *
  *                                                                                                  *
  ****************************************************************************************************/
-
 
 new GangZoneArea[MAX_GANG_ZONES];
 
@@ -43,5 +43,12 @@ stock AC_GangZoneDestroy(zone){
 
 stock bool:IsPlayerInGangZone(playerid,zone){
 	if(IsPlayerInDynamicArea(playerid,GangZoneArea[zone])) return true;
+	return false;
+}
+
+stock bool:IsPlayerInAnyGangZone(playerid){
+	for(new i = 0; i < MAX_GANG_ZONES; i++){
+		if(IsPlayerInGangZone(playerid,i)) return true;
+	}
 	return false;
 }
