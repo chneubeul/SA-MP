@@ -72,7 +72,7 @@ public Santa_GameModeInit(){
 	new Float:pioz;
 	MapAndreas_FindZ_For2DCoord(0.0,0.0,pioz);
 	if(pioz == 0.0){
-		printf("[ADM] Invalid MapAndreas Memory");
+		printf("[ADM] Error: Invalid MapAndreas Memory");
 	} else {
 		for(new i = 0; i < MAX_SANTA_GIFTS; i++){
 			Santa_GiftCreate(i);
