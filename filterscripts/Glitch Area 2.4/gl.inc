@@ -9,10 +9,10 @@
  * Install information:                                                                             *
  *                                                                                                  *
  * Variable:                                                                                        *
- * pTemp[playerid][gltime]		//starter tick                                                      *
- * pTemp[playerid][glrecord]	//record player                                                     *
- * pTemp[playerid][glstatus]	//the status of the arena                                           *
- * pTemp[playerid][glshoot]		//shot in the Arena                                                 *
+ * pTemp[playerid][gltime]      //starter tick                                                      *
+ * pTemp[playerid][glrecord]    //record player                                                     *
+ * pTemp[playerid][glstatus]    //the status of the arena                                           *
+ * pTemp[playerid][glshoot]     //shot in the Arena                                                 *
  *                                                                                                  *
  * Attach Functions:                                                                                *
  * gl_OnPlayerSpawn(playerid);                                                                      *
@@ -25,9 +25,9 @@
  *                                                                                                  *
  * SQL:                                                                                             *
  * CREATE TABLE IF NOT EXISTS `glitch` (                                                            *
- *	`id` int(11) NOT NULL,                                                                          *
- *	`time` int(11) NOT NULL DEFAULT '999999',                                                       *
- *	PRIMARY KEY (`id`)                                                                              *
+ *  `id` int(11) NOT NULL,                                                                          *
+ *  `time` int(11) NOT NULL DEFAULT '999999',                                                       *
+ *  PRIMARY KEY (`id`)                                                                              *
  * ) ENGINE=MyISAM DEFAULT CHARSET=latin1;                                                          *
  *                                                                                                  *
  * Command:                                                                                         *
