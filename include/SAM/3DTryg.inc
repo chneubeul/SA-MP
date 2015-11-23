@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0d                                                                                                             *
+ * File Version: 2.0e                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
@@ -69,8 +69,8 @@
 #define tan					floattan
 
 #define ctan(%0,%1)			floatcos(%0,%1)/floatsin(%0,%1)
-#define secans(%0,%1)		1/floatcos(%0)
-#define cosecans(%0,%1)		1/floatsin(%0)
+#define secans(%0,%1)		1/floatcos(%0,%1)
+#define cosecans(%0,%1)		1/floatsin(%0,%1)
 
 stock bool:TrygCheck(version){
 	if(version > VSYS) return false;
