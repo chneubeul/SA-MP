@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0e                                                                                                             *
+ * File Version: 2.0f                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
@@ -59,11 +59,6 @@
 	#define PI (22/7)
 #endif
 
-#define V1D					(0x11)
-#define V2D					(0x22)
-#define V3D					(0x33)
-#define VSYS				(V3D)
-
 #define sin					floatsin
 #define cos					floatcos
 #define tan					floattan
@@ -71,16 +66,7 @@
 #define ctan(%0,%1)			floatcos(%0,%1)/floatsin(%0,%1)
 #define secans(%0,%1)		1/floatcos(%0,%1)
 #define cosecans(%0,%1)		1/floatsin(%0,%1)
-
-stock bool:TrygCheck(version){
-	if(version > VSYS) return false;
-	return true;
-}
-
-stock abs(value){
-	if(value < 0) value *= (-1);
-	return value;
-}
+#define abs(%0)				(((%0) < 0)?(-(%0)):((%0)))
 
 stock power(value,Float:exponent){
 	return floatround(floatpower(value,exponent));
