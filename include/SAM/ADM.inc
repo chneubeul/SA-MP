@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.0                                                                                *
+ * File Version: 1.1                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ADMx32(const input[], const output[], key[], &status);                                           *
@@ -55,144 +55,36 @@
 #define ERROR_CODE_ADM_KEY		-3		//invalid key
 #define ERROR_CODE_ADM_SIZE		-4		//invalid file size
 
-new ModeADMx32[MAX_MODE_ADMx32],
-	ModeADMx64[MAX_MODE_ADMx64],
-	ModeADMx128[MAX_MODE_ADMx128],
-	ModeADMx256[MAX_MODE_ADMx256];
-
-stock RootADMx32(string1,&string2,step){
-	string2 = ((string1+ModeADMx32[step]) & 0xFF);
-}
-
-stock RootADMx64(string1,&string2,step){
-	string2 = ((string1+ModeADMx64[step]) & 0xFF);
-}
-
-stock RootADMx128(string1,&string2,step){
-	string2 = ((string1+ModeADMx128[step]) & 0xFF);
-}
-
-stock RootADMx256(string1,&string2,step){
-	string2 = ((string1+ModeADMx256[step]) & 0xFF);
-}
-
-stock KeyExtractADMx32(string[],&status){
-	sscanf(string,"D(0)D(0)D(0)D(0)",
-		ModeADMx32[0],
-		ModeADMx32[1],
-		ModeADMx32[2],
-		ModeADMx32[3]
+stock ADMx32(const input[], const output[], key[], &status){
+	if(!fexist(input)){
+		status = ERROR_CODE_ADM_INPUT;
+		return 0;
+	}
+	if(fexist(output)){
+		status = ERROR_CODE_ADM_OUTPUT;
+		return 0;
+	}
+	new mode[MAX_MODE_ADMx32];
+	sscanf(key,"D(0)D(0)D(0)D(0)",
+		mode[0],mode[1],mode[2],mode[3]
 	);
 	for(new i = 0; i < MAX_MODE_ADMx32; i++){
-		if(ModeADMx32[0] < 1 || ModeADMx32[0] > 255){
+		if(mode[i] < 1 || mode[i] > 255){
 			status = ERROR_CODE_ADM_KEY;
 			break;
 		}
 	}
-}
-
-stock KeyExtractADMx64(string[],&status){
-	sscanf(string,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
-		ModeADMx64[0],
-		ModeADMx64[1],
-		ModeADMx64[2],
-		ModeADMx64[3],
-		ModeADMx64[4],
-		ModeADMx64[5],
-		ModeADMx64[6],
-		ModeADMx64[7]
-	);
-	for(new i = 0; i < MAX_MODE_ADMx64; i++){
-		if(ModeADMx64[0] < 1 || ModeADMx64[0] > 255){
-			status = ERROR_CODE_ADM_KEY;
-			break;
-		}
-	}
-}
-
-stock KeyExtractADMx128(string[],&status){
-	sscanf(string,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
-		ModeADMx128[0],
-		ModeADMx128[1],
-		ModeADMx128[2],
-		ModeADMx128[3],
-		ModeADMx128[4],
-		ModeADMx128[5],
-		ModeADMx128[6],
-		ModeADMx128[7],
-		ModeADMx128[8],
-		ModeADMx128[9],
-		ModeADMx128[10],
-		ModeADMx128[11],
-		ModeADMx128[12],
-		ModeADMx128[13],
-		ModeADMx128[14],
-		ModeADMx128[15]
-	);
-	for(new i = 0; i < MAX_MODE_ADMx128; i++){
-		if(ModeADMx128[0] < 1 || ModeADMx128[0] > 255){
-			status = ERROR_CODE_ADM_KEY;
-			break;
-		}
-	}
-}
-
-stock KeyExtractADMx256(string[],&status){
-	sscanf(string,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
-		ModeADMx256[0],
-		ModeADMx256[1],
-		ModeADMx256[2],
-		ModeADMx256[3],
-		ModeADMx256[4],
-		ModeADMx256[5],
-		ModeADMx256[6],
-		ModeADMx256[7],
-		ModeADMx256[8],
-		ModeADMx256[9],
-		ModeADMx256[10],
-		ModeADMx256[11],
-		ModeADMx256[12],
-		ModeADMx256[13],
-		ModeADMx256[14],
-		ModeADMx256[15],
-		ModeADMx256[16],
-		ModeADMx256[17],
-		ModeADMx256[18],
-		ModeADMx256[19],
-		ModeADMx256[20],
-		ModeADMx256[21],
-		ModeADMx256[22],
-		ModeADMx256[23],
-		ModeADMx256[24],
-		ModeADMx256[25],
-		ModeADMx256[26],
-		ModeADMx256[27],
-		ModeADMx256[28],
-		ModeADMx256[29],
-		ModeADMx256[30],
-		ModeADMx256[31]
-	);
-	for(new i = 0; i < MAX_MODE_ADMx256; i++){
-		if(ModeADMx256[0] < 1 || ModeADMx256[0] > 255){
-			status = ERROR_CODE_ADM_KEY;
-			break;
-		}
-	}
-}
-
-stock ADMx32(const input[], const output[], key[], &status){
-	if(!fexist(input)){ status = ERROR_CODE_ADM_INPUT; return 0; }
-	if(fexist(output)){ status = ERROR_CODE_ADM_OUTPUT; return 0; }
-	KeyExtractADMx32(key,status);
 	if(status == ERROR_CODE_ADM_KEY) return 0;
 	new File:inpf = fopen(input,io_read);
 	new asize = flength(inpf), idx = 0, s = 0;
-	if(asize > MAX_FILE_SIZE || asize < 0){ fclose(inpf); status = ERROR_CODE_ADM_SIZE; return 0; }
-	new File:outf = fopen(output,io_write), gchar;
+	if(asize > MAX_FILE_SIZE || asize < 0){
+		fclose(inpf);
+		status = ERROR_CODE_ADM_SIZE;
+		return 0;
+	}
+	new File:outf = fopen(output,io_write);
 	while(idx < asize){
-		gchar = fgetchar(inpf,0,false);
-		RootADMx32(gchar,gchar,s);
-		fputchar(outf,gchar,false);
+		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
 		s++;
 		if(s >= MAX_MODE_ADMx32) s = 0;
@@ -204,18 +96,35 @@ stock ADMx32(const input[], const output[], key[], &status){
 }
 
 stock ADMx64(const input[], const output[], key[], &status){
-	if(!fexist(input)){ status = ERROR_CODE_ADM_INPUT; return 0; }
-	if(fexist(output)){ status = ERROR_CODE_ADM_OUTPUT; return 0; }
-	KeyExtractADMx64(key,status);
+	if(!fexist(input)){
+		status = ERROR_CODE_ADM_INPUT;
+		return 0;
+	}
+	if(fexist(output)){
+		status = ERROR_CODE_ADM_OUTPUT;
+		return 0;
+	}
+	new mode[MAX_MODE_ADMx64];
+	sscanf(key,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7]
+	);
+	for(new i = 0; i < MAX_MODE_ADMx64; i++){
+		if(mode[i] < 1 || mode[i] > 255){
+			status = ERROR_CODE_ADM_KEY;
+			break;
+		}
+	}
 	if(status == ERROR_CODE_ADM_KEY) return 0;
 	new File:inpf = fopen(input,io_read);
 	new asize = flength(inpf), idx = 0, s = 0;
-	if(asize > MAX_FILE_SIZE || asize < 0){ fclose(inpf); status = ERROR_CODE_ADM_SIZE; return 0; }
-	new File:outf = fopen(output,io_write), gchar;
+	if(asize > MAX_FILE_SIZE || asize < 0){
+		fclose(inpf);
+		status = ERROR_CODE_ADM_SIZE;
+		return 0;
+	}
+	new File:outf = fopen(output,io_write);
 	while(idx < asize){
-		gchar = fgetchar(inpf,0,false);
-		RootADMx64(gchar,gchar,s);
-		fputchar(outf,gchar,false);
+		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
 		s++;
 		if(s >= MAX_MODE_ADMx64) s = 0;
@@ -227,18 +136,36 @@ stock ADMx64(const input[], const output[], key[], &status){
 }
 
 stock ADMx128(const input[], const output[], key[], &status){
-	if(!fexist(input)){ status = ERROR_CODE_ADM_INPUT; return 0; }
-	if(fexist(output)){ status = ERROR_CODE_ADM_OUTPUT; return 0; }
-	KeyExtractADMx128(key,status);
+	if(!fexist(input)){
+		status = ERROR_CODE_ADM_INPUT;
+		return 0;
+	}
+	if(fexist(output)){
+		status = ERROR_CODE_ADM_OUTPUT;
+		return 0;
+	}
+	new mode[MAX_MODE_ADMx128];
+	sscanf(string,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
+		mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15]
+	);
+	for(new i = 0; i < MAX_MODE_ADMx128; i++){
+		if(mode[i] < 1 || mode[i] > 255){
+			status = ERROR_CODE_ADM_KEY;
+			break;
+		}
+	}
 	if(status == ERROR_CODE_ADM_KEY) return 0;
 	new File:inpf = fopen(input,io_read);
 	new asize = flength(inpf), idx = 0, s = 0;
-	if(asize > MAX_FILE_SIZE || asize < 0){ fclose(inpf); status = ERROR_CODE_ADM_SIZE; return 0; }
+	if(asize > MAX_FILE_SIZE || asize < 0){
+		fclose(inpf);
+		status = ERROR_CODE_ADM_SIZE;
+		return 0;
+	}
 	new File:outf = fopen(output,io_write), gchar;
 	while(idx < asize){
-		gchar = fgetchar(inpf,0,false);
-		RootADMx128(gchar,gchar,s);
-		fputchar(outf,gchar,false);
+		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
 		s++;
 		if(s >= MAX_MODE_ADMx128) s = 0;
@@ -250,18 +177,38 @@ stock ADMx128(const input[], const output[], key[], &status){
 }
 
 stock ADMx256(const input[], const output[], key[], &status){
-	if(!fexist(input)){ status = ERROR_CODE_ADM_INPUT; return 0; }
-	if(fexist(output)){ status = ERROR_CODE_ADM_OUTPUT; return 0; }
-	KeyExtractADMx256(key,status);
+	if(!fexist(input)){
+		status = ERROR_CODE_ADM_INPUT;
+		return 0;
+	}
+	if(fexist(output)){
+		status = ERROR_CODE_ADM_OUTPUT;
+		return 0;
+	}
+	new mode[MAX_MODE_ADMx256];
+	sscanf(string,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
+		mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15],
+		mode[16],mode[17],mode[18],mode[19],mode[20],mode[21],mode[22],mode[23],
+		mode[24],mode[25],mode[26],mode[27],mode[28],mode[29],mode[30],mode[31]
+	);
+	for(new i = 0; i < MAX_MODE_ADMx256; i++){
+		if(mode[i] < 1 || mode[i] > 255){
+			status = ERROR_CODE_ADM_KEY;
+			break;
+		}
+	}
 	if(status == ERROR_CODE_ADM_KEY) return 0;
 	new File:inpf = fopen(input,io_read);
 	new asize = flength(inpf), idx = 0, s = 0;
-	if(asize > MAX_FILE_SIZE || asize < 0){ fclose(inpf); status = ERROR_CODE_ADM_SIZE; return 0; }
+	if(asize > MAX_FILE_SIZE || asize < 0){
+		fclose(inpf);
+		status = ERROR_CODE_ADM_SIZE;
+		return 0;
+	}
 	new File:outf = fopen(output,io_write), gchar;
 	while(idx < asize){
-		gchar = fgetchar(inpf,0,false);
-		RootADMx256(gchar,gchar,s);
-		fputchar(outf,gchar,false);
+		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
 		s++;
 		if(s >= MAX_MODE_ADMx256) s = 0;
