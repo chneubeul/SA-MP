@@ -12,6 +12,17 @@
  * ADMx128(const input[], const output[], key[], &status);                                          *
  * ADMx256(const input[], const output[], key[], &status);                                          *
  *                                                                                                  *
+ * return:                                                                                          *
+ * 0 - error                                                                                        *
+ * 1 - success                                                                                      *
+ *                                                                                                  *
+ * Status list:                                                                                     *
+ * ERROR_CODE_ADM_OK         //success                                                              *
+ * ERROR_CODE_ADM_INPUT      //input file not exist                                                 *
+ * ERROR_CODE_ADM_OUTPUT     //output file exist                                                    *
+ * ERROR_CODE_ADM_KEY        //invalid key                                                          *
+ * ERROR_CODE_ADM_SIZE       //invalid file size                                                    *
+ *                                                                                                  *
  * Key Generator:                                                                                   *
  * http://ngc.ugu.pl/admkg                                                                          *
  *                                                                                                  *
@@ -38,7 +49,6 @@
 #define MAX_KEY_LEN_ADMx128		64
 #define MAX_KEY_LEN_ADMx256		128
 
-//return 0 - error, 1 - success
 #define ERROR_CODE_ADM_OK		1		//success
 #define ERROR_CODE_ADM_INPUT	-1		//input file not exist
 #define ERROR_CODE_ADM_OUTPUT	-2		//output file exist
