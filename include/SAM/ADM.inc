@@ -4,19 +4,15 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.1                                                                                *
+ * File Version: 1.2                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
- * ADMx32(const input[], const output[], key[], &status);                                           *
- * ADMx64(const input[], const output[], key[], &status);                                           *
- * ADMx128(const input[], const output[], key[], &status);                                          *
- * ADMx256(const input[], const output[], key[], &status);                                          *
+ * ADMx32(const input[], const output[], key[]);                                                    *
+ * ADMx64(const input[], const output[], key[]);                                                    *
+ * ADMx128(const input[], const output[], key[]);                                                   *
+ * ADMx256(const input[], const output[], key[]);                                                   *
  *                                                                                                  *
- * return:                                                                                          *
- * 0 - error                                                                                        *
- * 1 - success                                                                                      *
- *                                                                                                  *
- * Status list:                                                                                     *
+ * Return value:                                                                                    *
  * ERROR_CODE_ADM_OK         //success                                                              *
  * ERROR_CODE_ADM_INPUT      //input file not exist                                                 *
  * ERROR_CODE_ADM_OUTPUT     //output file exist                                                    *
@@ -55,32 +51,23 @@
 #define ERROR_CODE_ADM_KEY		-3		//invalid key
 #define ERROR_CODE_ADM_SIZE		-4		//invalid file size
 
-stock ADMx32(const input[], const output[], key[], &status){
-	if(!fexist(input)){
-		status = ERROR_CODE_ADM_INPUT;
-		return 0;
-	}
-	if(fexist(output)){
-		status = ERROR_CODE_ADM_OUTPUT;
-		return 0;
-	}
+stock ADMx32(const input[], const output[], key[]){
+	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
+	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx32];
 	sscanf(key,"D(0)D(0)D(0)D(0)",
 		mode[0],mode[1],mode[2],mode[3]
 	);
 	for(new i = 0; i < MAX_MODE_ADMx32; i++){
 		if(mode[i] < 1 || mode[i] > 255){
-			status = ERROR_CODE_ADM_KEY;
-			break;
+			return ERROR_CODE_ADM_KEY;
 		}
 	}
-	if(status == ERROR_CODE_ADM_KEY) return 0;
 	new File:inpf = fopen(input,io_read);
 	new asize = flength(inpf), idx = 0, s = 0;
 	if(asize > MAX_FILE_SIZE || asize < 0){
 		fclose(inpf);
-		status = ERROR_CODE_ADM_SIZE;
-		return 0;
+		return ERROR_CODE_ADM_SIZE;
 	}
 	new File:outf = fopen(output,io_write);
 	while(idx < asize){
@@ -89,38 +76,30 @@ stock ADMx32(const input[], const output[], key[], &status){
 		s++;
 		if(s >= MAX_MODE_ADMx32) s = 0;
 	}
-	status = ERROR_CODE_ADM_OK;
 	fclose(inpf);
 	fclose(outf);
-	return 1;
+	return ERROR_CODE_ADM_OK;
 }
 
-stock ADMx64(const input[], const output[], key[], &status){
-	if(!fexist(input)){
-		status = ERROR_CODE_ADM_INPUT;
-		return 0;
-	}
-	if(fexist(output)){
-		status = ERROR_CODE_ADM_OUTPUT;
-		return 0;
-	}
+#define ADM ADMx32
+
+stock ADMx64(const input[], const output[], key[]){
+	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
+	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx64];
 	sscanf(key,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
 		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7]
 	);
 	for(new i = 0; i < MAX_MODE_ADMx64; i++){
 		if(mode[i] < 1 || mode[i] > 255){
-			status = ERROR_CODE_ADM_KEY;
-			break;
+			return ERROR_CODE_ADM_KEY;
 		}
 	}
-	if(status == ERROR_CODE_ADM_KEY) return 0;
 	new File:inpf = fopen(input,io_read);
 	new asize = flength(inpf), idx = 0, s = 0;
 	if(asize > MAX_FILE_SIZE || asize < 0){
 		fclose(inpf);
-		status = ERROR_CODE_ADM_SIZE;
-		return 0;
+		return ERROR_CODE_ADM_SIZE;
 	}
 	new File:outf = fopen(output,io_write);
 	while(idx < asize){
@@ -129,21 +108,14 @@ stock ADMx64(const input[], const output[], key[], &status){
 		s++;
 		if(s >= MAX_MODE_ADMx64) s = 0;
 	}
-	status = ERROR_CODE_ADM_OK;
 	fclose(inpf);
 	fclose(outf);
-	return 1;
+	return ERROR_CODE_ADM_OK;
 }
 
-stock ADMx128(const input[], const output[], key[], &status){
-	if(!fexist(input)){
-		status = ERROR_CODE_ADM_INPUT;
-		return 0;
-	}
-	if(fexist(output)){
-		status = ERROR_CODE_ADM_OUTPUT;
-		return 0;
-	}
+stock ADMx128(const input[], const output[], key[]){
+	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
+	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx128];
 	sscanf(string,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
 		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
@@ -151,40 +123,30 @@ stock ADMx128(const input[], const output[], key[], &status){
 	);
 	for(new i = 0; i < MAX_MODE_ADMx128; i++){
 		if(mode[i] < 1 || mode[i] > 255){
-			status = ERROR_CODE_ADM_KEY;
-			break;
+			return ERROR_CODE_ADM_KEY;
 		}
 	}
-	if(status == ERROR_CODE_ADM_KEY) return 0;
 	new File:inpf = fopen(input,io_read);
 	new asize = flength(inpf), idx = 0, s = 0;
 	if(asize > MAX_FILE_SIZE || asize < 0){
 		fclose(inpf);
-		status = ERROR_CODE_ADM_SIZE;
-		return 0;
+		return ERROR_CODE_ADM_SIZE;
 	}
-	new File:outf = fopen(output,io_write), gchar;
+	new File:outf = fopen(output,io_write);
 	while(idx < asize){
 		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
 		s++;
 		if(s >= MAX_MODE_ADMx128) s = 0;
 	}
-	status = ERROR_CODE_ADM_OK;
 	fclose(inpf);
 	fclose(outf);
-	return 1;
+	return ERROR_CODE_ADM_OK;
 }
 
-stock ADMx256(const input[], const output[], key[], &status){
-	if(!fexist(input)){
-		status = ERROR_CODE_ADM_INPUT;
-		return 0;
-	}
-	if(fexist(output)){
-		status = ERROR_CODE_ADM_OUTPUT;
-		return 0;
-	}
+stock ADMx256(const input[], const output[], key[]){
+	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
+	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx256];
 	sscanf(string,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
 		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
@@ -194,29 +156,25 @@ stock ADMx256(const input[], const output[], key[], &status){
 	);
 	for(new i = 0; i < MAX_MODE_ADMx256; i++){
 		if(mode[i] < 1 || mode[i] > 255){
-			status = ERROR_CODE_ADM_KEY;
-			break;
+			return ERROR_CODE_ADM_KEY;
 		}
 	}
-	if(status == ERROR_CODE_ADM_KEY) return 0;
 	new File:inpf = fopen(input,io_read);
 	new asize = flength(inpf), idx = 0, s = 0;
 	if(asize > MAX_FILE_SIZE || asize < 0){
 		fclose(inpf);
-		status = ERROR_CODE_ADM_SIZE;
-		return 0;
+		return ERROR_CODE_ADM_SIZE;
 	}
-	new File:outf = fopen(output,io_write), gchar;
+	new File:outf = fopen(output,io_write);
 	while(idx < asize){
 		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
 		s++;
 		if(s >= MAX_MODE_ADMx256) s = 0;
 	}
-	status = ERROR_CODE_ADM_OK;
 	fclose(inpf);
 	fclose(outf);
-	return 1;
+	return ERROR_CODE_ADM_OK;
 }
 
 //EOF
