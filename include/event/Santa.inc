@@ -1,5 +1,5 @@
 /*****************************************
- * Santa Gifts v1.1 made by Abyss Morgan *
+ * Santa Gifts v1.2 made by Abyss Morgan *
  *****************************************/
 
 /*
@@ -14,17 +14,24 @@ Santa_PickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
 */
 
 
-#if !defined Streamer_AppendArrayData
-	#error Unknown streamer version
-#endif
-
+//StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.0c
+	#error You need StreamerFunction.inc v2.0d
+#elseif !defined Streamer_Spec_Version
+	#error Update you StreamerFunction.inc to v2.0d
+#elseif (Streamer_Spec_Version < 0x20004)
+	#error Update you StreamerFunction.inc to v2.0d
 #endif
 
+//3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.0d
+	#error You need 3DTryg.inc v2.1b
+#elseif !defined Tryg3D_Version
+	#error Update you 3DTryg.inc to v2.1b
+#elseif (Tryg3D_Version < 0x20102)
+	#error Update you 3DTryg.inc to v2.1b
 #endif
+
 
 #define	MAX_SANTA_GIFTS			(100)
 #define REFRESH_SANTA_GIFTS		(2*60*60*1000)	//2 hour

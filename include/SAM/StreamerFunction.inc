@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0c                                                                                                             *
+ * File Version: 2.0d                                                                                                             *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -97,6 +97,8 @@
 	#endinput
 #endif
 #define _streamer_spec
+
+#define Streamer_Spec_Version 		(0x20004) //a.b[c] 0x(10000*a+100*b+c)
 
 #if !defined INVALID_STREAMER_ID
 	#define INVALID_STREAMER_ID 0

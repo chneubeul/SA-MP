@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1                                                                                                              *
+ * File Version: 2.1b                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
@@ -49,6 +49,8 @@
  * ShiftRotationToVector(Float:rx,Float:rz,&Float:vx,&Float:vy,&Float:vz);                                                        *
  * bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB);                                           *
  * bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB);                *
+ * bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist);                              *
+ * bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);   *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -56,6 +58,8 @@
 	#endinput
 #endif
 #define _3D_Tryg
+
+#define Tryg3D_Version 	(0x20102) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
@@ -310,6 +314,22 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
 		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
 	if(dAB == (dAP + dBP)) return true;
+	return false;
+}
+
+stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
+	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
+		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
+		Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
+	if(dAB <= (dAP + dBP) <= dAB+(maxdist*2)) return true;
+	return false;
+}
+
+stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
+		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
+		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
+	if(dAB <= (dAP + dBP) <= dAB+(maxdist*2)) return true;
 	return false;
 }
 
