@@ -1,5 +1,5 @@
 /******************************************
- * Knife Script v1.3 made by Abyss Morgan *
+ * Knife Script v1.4 made by Abyss Morgan *
  ******************************************/
  
  
@@ -23,11 +23,15 @@ Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 	#error Update you 3DTryg.inc to v2.1b
 #endif
 
-#define KNIFE_SPEED 		12.0
-#define KNIFE_MAX_RADIUS	15.0
+#define KNIFE_SPEED 			(12.0)
+#define KNIFE_MAX_RADIUS		(15.0)
+#define KNIFE_REFRESH_ACTION	(1000)	//1 sec
+#define KNIFE_REFRESH_PLAYER	(1000)	//1 sec
+#define KNIFE_REFRESH_MISS		(5000)	//5 sec
 
 new KnifeLockTarget[MAX_PLAYERS],
-	KnifeStep[MAX_PLAYERS];
+	KnifeStep[MAX_PLAYERS],
+	KnifeTime[MAX_PLAYERS];
 
 stock GivePlayerDamage(playerid,Float:damage){
 	new Float:thp, Float:tarm;
@@ -49,13 +53,16 @@ forward KnifeDestroy(objectid,targetid);
 forward Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 public Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
-	if(GetPlayerWeapon(playerid) == 4){
-		if(newkeys == KEY_FIRE && KnifeStep[playerid] == 1){
-			KnifeStep[playerid] = 0;
-			KnifeShot(playerid);
-		}
-		if(newkeys == KEY_HANDBRAKE && KnifeStep[playerid] == 0){
-			KnifeStep[playerid] = 1;
+
+	if(GetTickCount()-KnifeTime[playerid] >= KNIFE_REFRESH_ACTION){
+		if(GetPlayerWeapon(playerid) == 4){
+			if(newkeys == KEY_FIRE && KnifeStep[playerid] == 1){
+				KnifeStep[playerid] = 0;
+				KnifeShot(playerid);
+			}
+			if(newkeys == KEY_HANDBRAKE && KnifeStep[playerid] == 0){
+				KnifeStep[playerid] = 1;
+			}
 		}
 	}
 	return 1;
@@ -91,19 +98,22 @@ public KnifeShot(playerid){
 		}
 	}
 	
-	CompRotationFloat(mrz+90.0,trz);
-	new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
-	
 	if(KnifeLockTarget[playerid] == INVALID_PLAYER_ID){
-		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);
+		CompRotationFloat(mrz+90.0,trz);
+		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
+		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);		
 		GetMoveTime(mx,my,mz,mtx,mty,mtz,KNIFE_SPEED,mtime);
 		MoveDynamicObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,90.0+20.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+1000,0,"dd",tmpobj,INVALID_PLAYER_ID);
+		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"dd",tmpobj,INVALID_PLAYER_ID);
 	} else {
+		GetRotationFor2Point2D(mx,my,px,py,trz);
+		CompRotationFloat(trz+90.0,trz);
+		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
 		GetMoveTime(mx,my,mz,px,py,pz,KNIFE_SPEED,mtime);
 		MoveDynamicObject(tmpobj,px,py,pz,KNIFE_SPEED,0.0,90.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+250,0,"dd",tmpobj,KnifeLockTarget[playerid]);
+		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_PLAYER,0,"dd",tmpobj,KnifeLockTarget[playerid]);
 	}
+	KnifeTime[playerid] = GetTickCount();
 	return 1;
 }
 
