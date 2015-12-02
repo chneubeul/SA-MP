@@ -29,6 +29,21 @@ Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 new KnifeLockTarget[MAX_PLAYERS],
 	KnifeStep[MAX_PLAYERS];
 
+stock GivePlayerDamage(playerid,Float:damage){
+	new Float:thp, Float:tarm;
+	GetPlayerArmour(playerid,tarm);
+	GetPlayerHealth(playerid,thp);
+	if(tarm >= damage){
+		SetPlayerArmour(playerid,tarm-damage);
+	} else if(tarm < damage){
+		damage-=tarm;
+		SetPlayerArmour(playerid,0.0);
+		SetPlayerHealth(playerid,thp-damage);
+	} else {
+		SetPlayerHealth(playerid,thp-damage);
+	}
+}
+
 forward KnifeShot(playerid);
 forward KnifeDestroy(objectid,targetid);
 forward Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
@@ -95,14 +110,7 @@ public KnifeShot(playerid){
 public KnifeDestroy(objectid,targetid){
 	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
-		new Float:thp, Float:tarm;
-		GetPlayerArmour(targetid,tarm);
-		if(tarm > 0.0){
-			SetPlayerArmour(playerid,tarm-10.0);
-		} else {
-			GetPlayerHealth(targetid,thp);
-			SetPlayerHealth(targetid,thp-10.0);
-		}
+		GivePlayerDamage(targetid,10.0);
 	}
 	return 1;
 }
