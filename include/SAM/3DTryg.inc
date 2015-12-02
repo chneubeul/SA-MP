@@ -4,13 +4,13 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0f                                                                                                             *
+ * File Version: 2.0g                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
- * ctan(Float:value,anglemode:mode=radian);                                                                                       *
- * secans(Float:value,anglemode:mode=radian);                                                                                     *
- * cosecans(Float:value,anglemode:mode=radian);                                                                                   *
+ * Float:ctan(Float:value,anglemode:mode=radian);                                                                                 *
+ * Float:secans(Float:value,anglemode:mode=radian);                                                                               *
+ * Float:cosecans(Float:value,anglemode:mode=radian);                                                                             *
  * GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz);                                                     *
  * GetDistanceBetweenPoints1D(Float:x1,Float:x2);                                                                                 *
  * GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2);                                                               *
@@ -27,14 +27,14 @@
  * GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                                *
  * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);           *
  * GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:x,&Float:y,&Float:z);            *
- * ShiftDegreeToRadian(Float:deg,&Float:rad);                                                                                     *
- * ShiftDegreeToRadianEx(Float:deg,&Float:rad);                                                                                   *
- * ShiftDegreeToGrades(Float:deg,&Float:grad);                                                                                    *
- * ShiftRadianToDegree(Float:rad,&Float:deg);                                                                                     *
- * ShiftRadianToDegreeEx(Float:rad,&Float:deg);                                                                                   *
- * ShiftRadianToGrades(Float:rad,&Float:grad);                                                                                    *
- * ShiftGradesToDegree(Float:grad,&Float:deg);                                                                                    *
- * ShiftGradesToRadian(Float:grad,&Float:rad);                                                                                    *
+ * Float:ShiftDegreeToRadian(Float:deg);                                                                                          *
+ * Float:ShiftDegreeToRadianEx(Float:deg);                                                                                        *
+ * Float:ShiftDegreeToGrades(Float:deg);                                                                                          *
+ * Float:ShiftRadianToDegree(Float:rad);                                                                                          *
+ * Float:ShiftRadianToDegreeEx(Float:rad);                                                                                        *
+ * Float:ShiftRadianToGrades(Float:rad);                                                                                          *
+ * Float:ShiftGradesToDegree(Float:grad);                                                                                         *
+ * Float:ShiftGradesToRadian(Float:grad);                                                                                         *
  * ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz);                         *
  * ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3);                       *
  * GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime);                                            *
@@ -154,7 +154,7 @@ stock GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,
 		CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
 		CompRotationFloat((atan2(ty-y,tx-x)-90),rz);
 	} else {
-		rx = 0.0,rz = 0.0;
+		rx = 0.0, rz = 0.0;
 		printf("[ADM] Warring: Get the rotation wrong, identical points.");
 	}
 }
@@ -177,58 +177,58 @@ stock GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:max
 	z = random(cz)+minz;
 }
 
-stock ShiftDegreeToRadian(Float:deg,&Float:rad){
-	rad = (deg*((PI*2)/360));
+stock Float:ShiftDegreeToRadian(Float:deg){
+	return (deg*((PI*2)/360));
 }
 
-stock ShiftDegreeToRadianEx(Float:deg,&Float:rad){
+stock Float:ShiftDegreeToRadianEx(Float:deg){
 	CompRotationFloat(deg,deg);
-	rad = ((360-deg)*(-((PI*2)/360)));
+	return ((360-deg)*(-((PI*2)/360)));
 }
 
-stock ShiftDegreeToGrades(Float:deg,&Float:grad){
-	grad = (deg*(10/9));
+stock Float:ShiftDegreeToGrades(Float:deg){
+	return (deg*(10/9));
 }
 
-stock ShiftRadianToDegree(Float:rad,&Float:deg){
-	deg = (rad/((PI*2)/360));
+stock Float:ShiftRadianToDegree(Float:rad){
+	return (rad/((PI*2)/360));
 }
 
-stock ShiftRadianToDegreeEx(Float:rad,&Float:deg){
+stock Float:ShiftRadianToDegreeEx(Float:rad){
+	new Float:deg;
 	CompRotationFloat(floatabs((rad/((PI*2)/360))+360),deg);
+	return deg;
 }
 
-stock ShiftRadianToGrades(Float:rad,&Float:grad){
-	new deg;
-	ShiftRadianToDegree(rad,deg);
-	ShiftDegreeToGrades(deg,grad);
+stock Float:ShiftRadianToGrades(Float:rad){
+	new Float:deg = ShiftRadianToDegree(rad);
+	return ShiftDegreeToGrades(deg);
 }
 
-stock ShiftGradesToDegree(Float:grad,&Float:deg){
-	deg = (grad*0.9);
+stock Float:ShiftGradesToDegree(Float:grad){
+	return (grad*0.9);
 }
 
-stock ShiftGradesToRadian(Float:grad,&Float:rad){
-	new deg;
-	ShiftGradesToDegree(grad,deg);
-	ShiftDegreeToRadian(deg,rad);
+stock Float:ShiftGradesToRadian(Float:grad){
+	new Float:deg = ShiftGradesToDegree(grad);
+	return ShiftDegreeToRadian(deg);
 }
 
 stock ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz){
-	ShiftRadianToDegreeEx(rotation3,rx);
-	ShiftRadianToDegreeEx(rotation2,ry);
-	ShiftRadianToDegreeEx(rotation1,rz);
+	rx = ShiftRadianToDegreeEx(rotation3);
+	ry = ShiftRadianToDegreeEx(rotation2);
+	rz = ShiftRadianToDegreeEx(rotation1);
 }
 
 stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3){
-	ShiftDegreeToRadianEx(rx,rotation3);
-	ShiftDegreeToRadianEx(ry,rotation2);
-	ShiftDegreeToRadianEx(rz,rotation1);
+	rotation3 = ShiftDegreeToRadianEx(rx);
+	rotation2 = ShiftDegreeToRadianEx(ry);
+	rotation1 = ShiftDegreeToRadianEx(rz);
 }
 
 stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime){
 	if(speed <= 0.0){
-		rtime = FLOAT_INFINITY;
+		rtime = 0x7F000000;
 	} else {
 		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 		rtime = floatround((dist/speed)*1000.0);
