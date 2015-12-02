@@ -1,8 +1,7 @@
 /******************************************
- * Knife Script v1.0 made by Abyss Morgan *
+ * Knife Script v1.1 made by Abyss Morgan *
  ******************************************/
- 
- 
+
 /*
 
 //to hook functions
@@ -29,12 +28,14 @@ forward KnifeDestroy(objectid,targetid);
 forward Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 public Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
-	if(newkeys == KEY_FIRE && KnifeStep[playerid] == 1){
-		KnifeStep[playerid] = 0;
-		KnifeShot(playerid);
-	}
-	if(newkeys == KEY_HANDBRAKE && KnifeStep[playerid] == 0){
-		KnifeStep[playerid] = 1;
+	if(GetPlayerWeapon(playerid) == 4){
+		if(newkeys == KEY_FIRE && KnifeStep[playerid] == 1){
+			KnifeStep[playerid] = 0;
+			KnifeShot(playerid);
+		}
+		if(newkeys == KEY_HANDBRAKE && KnifeStep[playerid] == 0){
+			KnifeStep[playerid] = 1;
+		}
 	}
 	return 1;
 }
