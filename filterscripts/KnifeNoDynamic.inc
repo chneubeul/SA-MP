@@ -1,5 +1,5 @@
 /******************************************
- * Knife Script v1.1 made by Abyss Morgan *
+ * Knife Script v1.4 made by Abyss Morgan *
  ******************************************/
  
  
@@ -10,28 +10,55 @@ Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 */
 
+//3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.0g
+	#error You need 3DTryg.inc v2.1b
+#elseif !defined Tryg3D_Version
+	#error Update you 3DTryg.inc to v2.1b
+#elseif (Tryg3D_Version < 0x20102)
+	#error Update you 3DTryg.inc to v2.1b
 #endif
 
-#define KNIFE_SPEED 		12.0
-#define KNIFE_MAX_RADIUS	15.0
+#define KNIFE_SPEED 			(12.0)
+#define KNIFE_MAX_RADIUS		(15.0)
+#define KNIFE_REFRESH_ACTION	(1000)	//1 sec
+#define KNIFE_REFRESH_PLAYER	(1000)	//1 sec
+#define KNIFE_REFRESH_MISS		(5000)	//5 sec
 
 new KnifeLockTarget[MAX_PLAYERS],
-	KnifeStep[MAX_PLAYERS];
+	KnifeStep[MAX_PLAYERS],
+	KnifeTime[MAX_PLAYERS];
+
+stock GivePlayerDamage(playerid,Float:damage){
+	new Float:thp, Float:tarm;
+	GetPlayerArmour(playerid,tarm);
+	GetPlayerHealth(playerid,thp);
+	if(tarm >= damage){
+		SetPlayerArmour(playerid,tarm-damage);
+	} else if(tarm < damage){
+		damage-=tarm;
+		SetPlayerArmour(playerid,0.0);
+		SetPlayerHealth(playerid,thp-damage);
+	} else {
+		SetPlayerHealth(playerid,thp-damage);
+	}
+}
 
 forward KnifeShot(playerid);
 forward KnifeDestroy(objectid,targetid);
 forward Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 public Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
-	if(GetPlayerWeapon(playerid) == 4){
-		if(newkeys == KEY_FIRE && KnifeStep[playerid] == 1){
-			KnifeStep[playerid] = 0;
-			KnifeShot(playerid);
-		}
-		if(newkeys == KEY_HANDBRAKE && KnifeStep[playerid] == 0){
-			KnifeStep[playerid] = 1;
+
+	if(GetTickCount()-KnifeTime[playerid] >= KNIFE_REFRESH_ACTION){
+		if(GetPlayerWeapon(playerid) == 4){
+			if(newkeys == KEY_FIRE && KnifeStep[playerid] == 1){
+				KnifeStep[playerid] = 0;
+				KnifeShot(playerid);
+			}
+			if(newkeys == KEY_HANDBRAKE && KnifeStep[playerid] == 0){
+				KnifeStep[playerid] = 1;
+			}
 		}
 	}
 	return 1;
@@ -44,7 +71,7 @@ public KnifeShot(playerid){
 	GetPlayerFacingAngle(playerid,mrz);
 	mvw = GetPlayerVirtualWorld(playerid);
 	mint = GetPlayerInterior(playerid);
-	GetPointInFront2D(mx,my,mrz,(KNIFE_MAX_RADIUS/2),mtx,mty); //15.0 max radius for virtual sphere
+	GetPointInFront2D(mx,my,mrz,KNIFE_MAX_RADIUS,mtx,mty);
 	KnifeLockTarget[playerid] = INVALID_PLAYER_ID;
 	new Float:ldist = 9000;
 
@@ -55,38 +82,41 @@ public KnifeShot(playerid){
 				pvw = GetPlayerVirtualWorld(i);
 				pint = GetPlayerInterior(i);
 				if(pvw == mvw && pint == mint){
-					new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mty,mty,mz);
-					if(dist < ldist){
-						ldist = dist;
-						KnifeLockTarget[playerid] = i;
+					if(IsPointNearly2Points3D(px,py,pz, mx,my,mz, mtx,mty,mz, 1.0)){
+						new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
+						if(dist < ldist){
+							ldist = dist;
+							KnifeLockTarget[playerid] = i;
+						}
 					}
 				}
 			}
 		}
 	}
 	
-	CompRotationFloat(mrz+90.0,trz);
-	new tmpobj = CreateObject(335,mx,my,mz,0.0,90.0,trz);	
-	
 	if(KnifeLockTarget[playerid] == INVALID_PLAYER_ID){
-		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);
+		CompRotationFloat(mrz+90.0,trz);
+		new tmpobj = CreateObject(335,mx,my,mz,0.0,90.0,trz);
+		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);		
 		GetMoveTime(mx,my,mz,mtx,mty,mtz,KNIFE_SPEED,mtime);
 		MoveObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,90.0+20.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+1000,0,"dd",tmpobj,INVALID_PLAYER_ID);
+		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"dd",tmpobj,INVALID_PLAYER_ID);
 	} else {
+		GetRotationFor2Point2D(mx,my,px,py,trz);
+		CompRotationFloat(trz+90.0,trz);
+		new tmpobj = CreateObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
 		GetMoveTime(mx,my,mz,px,py,pz,KNIFE_SPEED,mtime);
 		MoveObject(tmpobj,px,py,pz,KNIFE_SPEED,0.0,90.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+250,0,"dd",tmpobj,KnifeLockTarget[playerid]);
+		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_PLAYER,0,"dd",tmpobj,KnifeLockTarget[playerid]);
 	}
+	KnifeTime[playerid] = GetTickCount();
 	return 1;
 }
 
 public KnifeDestroy(objectid,targetid){
 	if(IsValidObject(objectid)) DestroyObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
-		new Float:thp;
-		GetPlayerHealth(targetid,thp);
-		SetPlayerHealth(targetid,thp-10.0);
+		GivePlayerDamage(targetid,10.0);
 	}
 	return 1;
 }
