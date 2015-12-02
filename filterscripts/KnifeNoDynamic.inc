@@ -1,5 +1,5 @@
 /******************************************
- * Knife Script v1.0 made by Abyss Morgan *
+ * Knife Script v1.1 made by Abyss Morgan *
  ******************************************/
  
  

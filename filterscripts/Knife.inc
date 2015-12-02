@@ -1,7 +1,8 @@
 /******************************************
- * Knife Script v1.2 made by Abyss Morgan *
+ * Knife Script v1.1 made by Abyss Morgan *
  ******************************************/
-
+ 
+ 
 /*
 
 //to hook functions
@@ -9,12 +10,8 @@ Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 */
 
-#if !defined Streamer_AppendArrayData
-	#error Unknown streamer version
-#endif
-
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.1
+	#error You need 3DTryg.inc v2.0g
 #endif
 
 #define KNIFE_SPEED 		12.0
@@ -47,7 +44,7 @@ public KnifeShot(playerid){
 	GetPlayerFacingAngle(playerid,mrz);
 	mvw = GetPlayerVirtualWorld(playerid);
 	mint = GetPlayerInterior(playerid);
-	GetPointInFront2D(mx,my,mrz,KNIFE_MAX_RADIUS,mtx,mty);
+	GetPointInFront2D(mx,my,mrz,(KNIFE_MAX_RADIUS/2),mtx,mty); //15.0 max radius for virtual sphere
 	KnifeLockTarget[playerid] = INVALID_PLAYER_ID;
 	new Float:ldist = 9000;
 
@@ -58,12 +55,10 @@ public KnifeShot(playerid){
 				pvw = GetPlayerVirtualWorld(i);
 				pint = GetPlayerInterior(i);
 				if(pvw == mvw && pint == mint){
-					if(IsPointBetween2Points3D(px,py,pz, mx,my,mz, mtx,mty,mz)){
-						new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mty,mty,mz);
-						if(dist < ldist){
-							ldist = dist;
-							KnifeLockTarget[playerid] = i;
-						}
+					new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mty,mty,mz);
+					if(dist < ldist){
+						ldist = dist;
+						KnifeLockTarget[playerid] = i;
 					}
 				}
 			}
@@ -71,7 +66,7 @@ public KnifeShot(playerid){
 	}
 	
 	CompRotationFloat(mrz+90.0,trz);
-	new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);	
+	new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
 	
 	if(KnifeLockTarget[playerid] == INVALID_PLAYER_ID){
 		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);
