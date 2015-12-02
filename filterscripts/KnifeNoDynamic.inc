@@ -9,10 +9,6 @@ Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 */
 
-#if !defined Streamer_AppendArrayData
-	#error Unknown streamer version
-#endif
-
 #if !defined _3D_Tryg
 	#error You need 3DTryg.inc v2.1
 #endif
@@ -71,23 +67,23 @@ public KnifeShot(playerid){
 	}
 	
 	CompRotationFloat(mrz+90.0,trz);
-	new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);	
+	new tmpobj = CreateObject(335,mx,my,mz,0.0,90.0,trz);	
 	
 	if(KnifeLockTarget[playerid] == INVALID_PLAYER_ID){
 		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);
 		GetMoveTime(mx,my,mz,mtx,mty,mtz,KNIFE_SPEED,mtime);
-		MoveDynamicObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,90.0+20.0,trz);
+		MoveObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,90.0+20.0,trz);
 		SetTimerEx("KnifeDestroy",mtime+1000,0,"dd",tmpobj,INVALID_PLAYER_ID);
 	} else {
 		GetMoveTime(mx,my,mz,px,py,pz,KNIFE_SPEED,mtime);
-		MoveDynamicObject(tmpobj,px,py,pz,KNIFE_SPEED,0.0,90.0,trz);
+		MoveObject(tmpobj,px,py,pz,KNIFE_SPEED,0.0,90.0,trz);
 		SetTimerEx("KnifeDestroy",mtime+250,0,"dd",tmpobj,KnifeLockTarget[playerid]);
 	}
 	return 1;
 }
 
 public KnifeDestroy(objectid,targetid){
-	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
+	if(IsValidObject(objectid)) DestroyObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
 		new Float:thp;
 		GetPlayerHealth(targetid,thp);

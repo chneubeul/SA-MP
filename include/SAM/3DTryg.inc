@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0g                                                                                                             *
+ * File Version: 2.1                                                                                                              *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
@@ -47,6 +47,8 @@
  * GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz);   *
  * ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz);                                                         *
  * ShiftRotationToVector(Float:rx,Float:rz,&Float:vx,&Float:vy,&Float:vz);                                                        *
+ * bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB);                                           *
+ * bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB);                *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -293,6 +295,22 @@ stock GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,
 	dest_dist = (dist*(percent_size/100.0));
 	GetRotationFor2Point3D(x1,y1,z1,x2,y2,z2,rx,rz);
 	GetPointInFront3D(x1,y1,z1,rx,rz,dest_dist,tx,ty,tz);
+}
+
+stock bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB){
+	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
+		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
+		Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
+	if(dAB == (dAP + dBP)) return true;
+	return false;
+}
+
+stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB){
+	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
+		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
+		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
+	if(dAB == (dAP + dBP)) return true;
+	return false;
 }
 
 stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz){
