@@ -23,6 +23,14 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 #include <zcmd>
 #include <SAM/StreamerFunction>
 
+#if !defined _streamer_spec
+	#error You need StreamerFunction.inc v2.0d
+#elseif !defined Streamer_Spec_Version
+	#error Update you StreamerFunction.inc to v2.0d
+#elseif (Streamer_Spec_Version < 0x20004)
+	#error Update you StreamerFunction.inc to v2.0d
+#endif
+
 new pliki[][32]={
 	"objectsfile1.txt",
 	"objectsfile2.txt"
