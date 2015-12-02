@@ -10,6 +10,10 @@ Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 */
 
+#if !defined Streamer_AppendArrayData
+	#error Unknown streamer version
+#endif
+
 //3DTryg.inc
 #if !defined _3D_Tryg
 	#error You need 3DTryg.inc v2.1b
