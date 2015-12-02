@@ -1,5 +1,5 @@
 /******************************************
- * Knife Script v1.2 made by Abyss Morgan *
+ * Knife Script v1.3 made by Abyss Morgan *
  ******************************************/
  
  
@@ -95,9 +95,14 @@ public KnifeShot(playerid){
 public KnifeDestroy(objectid,targetid){
 	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
-		new Float:thp;
-		GetPlayerHealth(targetid,thp);
-		SetPlayerHealth(targetid,thp-10.0);
+		new Float:thp, Float:tarm;
+		GetPlayerArmour(targetid,tarm);
+		if(tarm > 0.0){
+			SetPlayerArmour(playerid,tarm-10.0);
+		} else {
+			GetPlayerHealth(targetid,thp);
+			SetPlayerHealth(targetid,thp-10.0);
+		}
 	}
 	return 1;
 }
