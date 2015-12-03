@@ -114,14 +114,14 @@ public KnifeShot(playerid){
 		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);		
 		GetMoveTime(mx,my,mz,mtx,mty,mtz,KNIFE_SPEED,mtime);
 		MoveDynamicObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,90.0+20.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"dd",tmpobj,INVALID_PLAYER_ID);
+		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"ddd",tmpobj,INVALID_PLAYER_ID,playerid);
 	} else {
 		GetRotationFor2Point2D(mx,my,px,py,trz);
 		CompRotationFloat(trz+90.0,trz);
 		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
 		GetMoveTime(mx,my,mz,px,py,pz,KNIFE_SPEED,mtime);
 		MoveDynamicObject(tmpobj,px,py,pz,KNIFE_SPEED,0.0,90.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_PLAYER,0,"dd",tmpobj,KnifeLockTarget[playerid]);
+		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_PLAYER,0,"ddd",tmpobj,KnifeLockTarget[playerid],playerid);
 	}
 	KnifeTime[playerid] = GetTickCount();
 	return 1;
