@@ -38,11 +38,19 @@ stock GivePlayerDamage(targetid,Float:damage,playerid,weaponid){
 	} else if(tarm < damage){
 		damage-=tarm;
 		SetPlayerArmour(targetid,0.0);
-		SetPlayerHealth(targetid,thp-damage);
-		if(thp-damage <= 0.0) SendDeathMessage(playerid,targetid,weaponid);
+		if(thp-damage <= 0.0){
+			SpawnPlayer(targetid);
+			SendDeathMessage(playerid,targetid,weaponid);
+		} else {
+			SetPlayerHealth(targetid,thp-damage);
+		}
 	} else {
-		SetPlayerHealth(targetid,thp-damage);
-		if(thp-damage <= 0.0) SendDeathMessage(playerid,targetid,weaponid);
+		if(thp-damage <= 0.0){
+			SpawnPlayer(targetid);
+			SendDeathMessage(playerid,targetid,weaponid);
+		} else {
+			SetPlayerHealth(targetid,thp-damage);
+		}
 	}
 }
 
