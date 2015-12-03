@@ -121,6 +121,7 @@ public KnifeDestroy(objectid,targetid){
 	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
 		GivePlayerDamage(targetid,10.0);
+		ApplyAnimation(targetid,"ped","SHOT_partial",4.1,0,1,1,1,1,1);
 	}
 	return 1;
 }
