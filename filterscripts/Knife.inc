@@ -1,5 +1,5 @@
 /******************************************
- * Knife Script v1.4 made by Abyss Morgan *
+ * Knife Script v1.5 made by Abyss Morgan *
  ******************************************/
  
  
@@ -33,23 +33,25 @@ new KnifeLockTarget[MAX_PLAYERS],
 	KnifeStep[MAX_PLAYERS],
 	KnifeTime[MAX_PLAYERS];
 
-stock GivePlayerDamage(playerid,Float:damage){
+stock GivePlayerDamage(targetid,Float:damage,playerid,weaponid){
 	new Float:thp, Float:tarm;
-	GetPlayerArmour(playerid,tarm);
-	GetPlayerHealth(playerid,thp);
+	GetPlayerArmour(targetid,tarm);
+	GetPlayerHealth(targetid,thp);
 	if(tarm >= damage){
-		SetPlayerArmour(playerid,tarm-damage);
+		SetPlayerArmour(targetid,tarm-damage);
 	} else if(tarm < damage){
 		damage-=tarm;
-		SetPlayerArmour(playerid,0.0);
-		SetPlayerHealth(playerid,thp-damage);
+		SetPlayerArmour(targetid,0.0);
+		SetPlayerHealth(targetid,thp-damage);
+		if(thp-damage <= 0.0) SendDeathMessage(playerid,targetid,weaponid);
 	} else {
-		SetPlayerHealth(playerid,thp-damage);
+		SetPlayerHealth(targetid,thp-damage);
+		if(thp-damage <= 0.0) SendDeathMessage(playerid,targetid,weaponid);
 	}
 }
 
 forward KnifeShot(playerid);
-forward KnifeDestroy(objectid,targetid);
+forward KnifeDestroy(objectid,targetid,playerid);
 forward Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 public Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
@@ -117,10 +119,10 @@ public KnifeShot(playerid){
 	return 1;
 }
 
-public KnifeDestroy(objectid,targetid){
-	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
+public KnifeDestroy(objectid,targetid,playerid){
+	if(IsValidObject(objectid)) DestroyObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
-		GivePlayerDamage(targetid,10.0);
+		GivePlayerDamage(targetid,10.0,playerid,4);
 		ApplyAnimation(targetid,"ped","SHOT_partial",4.1,0,1,1,1,1,1);
 	}
 	return 1;

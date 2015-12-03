@@ -1,5 +1,5 @@
 /******************************************
- * Knife Script v1.4 made by Abyss Morgan *
+ * Knife Script v1.5 made by Abyss Morgan *
  ******************************************/
  
  
@@ -29,23 +29,25 @@ new KnifeLockTarget[MAX_PLAYERS],
 	KnifeStep[MAX_PLAYERS],
 	KnifeTime[MAX_PLAYERS];
 
-stock GivePlayerDamage(playerid,Float:damage){
+stock GivePlayerDamage(targetid,Float:damage,playerid,weaponid){
 	new Float:thp, Float:tarm;
-	GetPlayerArmour(playerid,tarm);
-	GetPlayerHealth(playerid,thp);
+	GetPlayerArmour(targetid,tarm);
+	GetPlayerHealth(targetid,thp);
 	if(tarm >= damage){
-		SetPlayerArmour(playerid,tarm-damage);
+		SetPlayerArmour(targetid,tarm-damage);
 	} else if(tarm < damage){
 		damage-=tarm;
-		SetPlayerArmour(playerid,0.0);
-		SetPlayerHealth(playerid,thp-damage);
+		SetPlayerArmour(targetid,0.0);
+		SetPlayerHealth(targetid,thp-damage);
+		if(thp-damage <= 0.0) SendDeathMessage(playerid,targetid,weaponid);
 	} else {
-		SetPlayerHealth(playerid,thp-damage);
+		SetPlayerHealth(targetid,thp-damage);
+		if(thp-damage <= 0.0) SendDeathMessage(playerid,targetid,weaponid);
 	}
 }
 
 forward KnifeShot(playerid);
-forward KnifeDestroy(objectid,targetid);
+forward KnifeDestroy(objectid,targetid,playerid);
 forward Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 public Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
@@ -100,23 +102,23 @@ public KnifeShot(playerid){
 		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);		
 		GetMoveTime(mx,my,mz,mtx,mty,mtz,KNIFE_SPEED,mtime);
 		MoveObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,90.0+20.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"dd",tmpobj,INVALID_PLAYER_ID);
+		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"ddd",tmpobj,INVALID_PLAYER_ID,playerid);
 	} else {
 		GetRotationFor2Point2D(mx,my,px,py,trz);
 		CompRotationFloat(trz+90.0,trz);
 		new tmpobj = CreateObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
 		GetMoveTime(mx,my,mz,px,py,pz,KNIFE_SPEED,mtime);
 		MoveObject(tmpobj,px,py,pz,KNIFE_SPEED,0.0,90.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_PLAYER,0,"dd",tmpobj,KnifeLockTarget[playerid]);
+		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_PLAYER,0,"ddd",tmpobj,KnifeLockTarget[playerid],playerid);
 	}
 	KnifeTime[playerid] = GetTickCount();
 	return 1;
 }
 
-public KnifeDestroy(objectid,targetid){
+public KnifeDestroy(objectid,targetid,playerid){
 	if(IsValidObject(objectid)) DestroyObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
-		GivePlayerDamage(targetid,10.0);
+		GivePlayerDamage(targetid,10.0,playerid,4);
 		ApplyAnimation(targetid,"ped","SHOT_partial",4.1,0,1,1,1,1,1);
 	}
 	return 1;
