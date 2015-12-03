@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0d                                                                                                             *
+ * File Version: 2.0e                                                                                                             *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -38,9 +38,11 @@
  * SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                               *
  * CountObjects();                                                                                                                *
  * CountVehicles();                                                                                                               *
+ * CountPlayerObjects();                                                                                                          *
  * DestroyObjects();                                                                                                              *
  * DestroyVehicles();                                                                                                             *
- * GangZoneDestroyAll();                                                                                                          *
+ * DestroyPlayerObjects();                                                                                                        *
+ * GangZoneDestroyAll();                                                                                                          *                                                                                                       *
  *                                                                                                                                *
  * Cube Functions:                                                                                                                *
  * DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1);   *
@@ -86,6 +88,15 @@
  * 3DText Functions:                                                                                                              *
  * GetDynamic3DTextPos(Text3D:id,&Float:x,&Float:y,&Float:z);                                                                     *
  * SetDynamic3DTextPos(Text3D:id,Float:x,Float:y,Float:z);                                                                        *
+ *                                                                                                                                *
+ * Pool Size Functions:                                                                                                           *
+ * GetDynamicObjectPoolSize();                                                                                                    *
+ * GetDynamicPickupPoolSize();                                                                                                    *
+ * GetDynamicCPPoolSize();                                                                                                        *
+ * GetDynamicRaceCPPoolSize();                                                                                                    *
+ * GetDynamicMapIconPoolSize();                                                                                                   *
+ * GetDynamic3DTextPoolSize();                                                                                                    *
+ * GetDynamicAreaPoolSize();                                                                                                      *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -140,6 +151,13 @@
 #define GetDynamicPickupType(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_TYPE)
 #define SetDynamicPickupType(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,,E_STREAMER_TYPE,%2)
 
+#define GetDynamicObjectPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_OBJECT)
+#define GetDynamicPickupPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_PICKUP)
+#define GetDynamicCPPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_CP)
+#define GetDynamicRaceCPPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_RACE_CP)
+#define GetDynamicMapIconPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_MAP_ICON)
+#define GetDynamic3DTextPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_3D_TEXT_LABEL)
+#define GetDynamicAreaPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_AREA)
 
 stock SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
 	SetDynamicObjectPos(objectid,x,y,z);
@@ -194,6 +212,21 @@ stock GangZoneDestroyAll(){
 		GangZoneDestroy(i);
 	}
 }
+
+stock CountPlayerObjects(){
+	new count = 0;
+	for(new i = 0; i <= MAX_OBJECTS; i++){
+		if(IsValidPlayerObject(i)) count += 1;
+	}
+	return count;
+}
+
+stock DestroyPlayerObjects(){
+	for(new i = 0; i <= MAX_OBJECTS; i++){
+		if(IsValidPlayerObject(i)) DestroyPlayerObject(i);
+	}
+}
+
 stock RebuildDynamicObject(objectid,modelid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid = -1,interiorid = -1,playerid = -1,Float:streamdistance = STREAMER_OBJECT_SD,Float:drawdistance = STREAMER_OBJECT_DD){
 	if(!IsValidDynamicObject(objectid)) return 0;
 	if(IsDynamicObjectMoving(objectid)) StopDynamicObject(objectid);
@@ -217,7 +250,7 @@ stock IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,F
 }
 
 stock DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
-	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT,max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
+	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT,max_dobj = GetDynamicObjectPoolSize();
 	for(new i = 0; i < max_dobj; i++){
 		if(IsValidDynamicObject(i)){
 			GetDynamicObjectPos(i,piox,pioy,pioz);
@@ -234,7 +267,7 @@ stock DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Fl
 }
 
 stock DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
-	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT,max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
+	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT,max_dobj = GetDynamicObjectPoolSize();
 	for(new i = 0; i < max_dobj; i++){
 		if(IsValidDynamicObject(i)){
 			GetDynamicObjectPos(i,piox,pioy,pioz);
@@ -251,7 +284,7 @@ stock DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Flo
 }
 
 stock DestroyVehicleDynamicObject(vehicleid){
-	new max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
+	new max_dobj = GetDynamicObjectPoolSize();
 	for(new i = 0; i < max_dobj; i++){
 		if(IsValidDynamicObject(i)){
 			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE) == vehicleid){
@@ -262,7 +295,7 @@ stock DestroyVehicleDynamicObject(vehicleid){
 }
 
 stock DeattachVehicleDynamicObject(vehicleid){
-	new max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
+	new max_dobj = GetDynamicObjectPoolSize();
 	for(new i = 0; i < max_dobj; i++){
 		if(IsValidDynamicObject(i)){
 			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE) == vehicleid){
@@ -273,7 +306,7 @@ stock DeattachVehicleDynamicObject(vehicleid){
 }
 
 stock DeattachPlayerDynamicObject(playerid){
-	new max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
+	new max_dobj = GetDynamicObjectPoolSize();
 	for(new i = 0; i < max_dobj; i++){
 		if(IsValidDynamicObject(i)){
 			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER) == playerid){
@@ -284,7 +317,7 @@ stock DeattachPlayerDynamicObject(playerid){
 }
 
 stock DestroyPlayerDynamicObject(playerid){
-	new max_dobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT);
+	new max_dobj = GetDynamicObjectPoolSize();
 	for(new i = 0; i < max_dobj; i++){
 		if(IsValidDynamicObject(i)){
 			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER) == playerid){
