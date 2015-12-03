@@ -42,7 +42,7 @@
  * DestroyObjects();                                                                                                              *
  * DestroyVehicles();                                                                                                             *
  * DestroyPlayerObjects();                                                                                                        *
- * GangZoneDestroyAll();                                                                                                          *                                                                                                       *
+ * GangZoneDestroyAll();                                                                                                          *
  *                                                                                                                                *
  * Cube Functions:                                                                                                                *
  * DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1);   *
