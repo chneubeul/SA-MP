@@ -148,7 +148,7 @@ Float:CalculateObjectDistance(objectid){
 
 public OnFilterScriptInit(){
 	new silo = GetTickCount(), buf[255], line[255], File:olist, cnt = 0, lnum = 0, ecnt = 0, totalcnt = 0;
-	SendClientMessageToAll(0xFF0000FF,"[IMPORTANT] Trwa prze³adowywanie obiektów i pojazdów...");
+	SendClientMessageToAll(0xFF0000FF,"[IMPORTANT] It takes reloading of objects...");
 	WriteLog(LOG_FILE," ");
 	WriteLog(LOG_FILE,"[IMPORTANT] It takes reloading of objects...");
 	WriteLog(LOG_FILE," ");
