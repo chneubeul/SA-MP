@@ -109,7 +109,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 		(0x20004) //a.b[c] 0x(10000*a+100*b+c)
+#define Streamer_Spec_Version 		(0x20005) //a.b[c] 0x(10000*a+100*b+c)
 
 #if !defined INVALID_STREAMER_ID
 	#define INVALID_STREAMER_ID 0
