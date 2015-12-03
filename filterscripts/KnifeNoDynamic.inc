@@ -114,7 +114,7 @@ public KnifeShot(playerid){
 	} else {
 		GetRotationFor2Point2D(mx,my,px,py,trz);
 		CompRotationFloat(trz+90.0,trz);
-		new tmpobj = CreateObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
+		new tmpobj = CreateObject(335,mx,my,mz,0.0,90.0,trz);
 		GetMoveTime(mx,my,mz,px,py,pz,KNIFE_SPEED,mtime);
 		MoveObject(tmpobj,px,py,pz,KNIFE_SPEED,0.0,90.0,trz);
 		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_PLAYER,0,"ddd",tmpobj,KnifeLockTarget[playerid],playerid);
