@@ -1,13 +1,15 @@
-/**********************************************
- *                                            *
- * Update for MapAndreas 1.2.1                *
- *                                            *
- * Functions:                                 *
- * bool:IsMapAndreasInit();                   *
- * SafeMapAndreasInit();                      *
- * MapAndreasFindZ(Float:x,Float:y,&Float:z); *
- *                                            *
- **********************************************/
+/****************************************************************************************************
+ *                                                                                                  *
+ * MapAndreas Update v1.0 by Abyss Morgan                                                           *
+ *                                                                                                  *
+ * MapAndreas Version: 1.2.1                                                                        *
+ *                                                                                                  *
+ * Functions:                                                                                       *
+ * bool:IsMapAndreasInit();                                                                         *
+ * SafeMapAndreasInit();                                                                            *
+ * MapAndreasFindZ(Float:x,Float:y,&Float:z);                                                       *
+ *                                                                                                  *
+ ****************************************************************************************************/
 
 #if !defined MapAndreas_FindZ_For2DCoord
 	#error Unknown MapAndreas Version
@@ -27,6 +29,8 @@ stock SafeMapAndreasInit(){
 	}
 	if(!IsMapAndreasInit()){
 		print("[ADM] Error: MapAndreas failed to initiated");
+	} else {
+		print("[ADM] MapAndreas successfully init");
 	}
 }
 
