@@ -35,7 +35,7 @@ stock SafeMapAndreasInit(){
 }
 
 stock MapAndreasFindZ(Float:x,Float:y,&Float:z){
-	if(x <= -3000 || x >= 3000 || y <= -3000 || y >= 3000){
+	if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
 		z = 0.0;
 	} else {
 		MapAndreas_FindZ_For2DCoord(x,y,z);
