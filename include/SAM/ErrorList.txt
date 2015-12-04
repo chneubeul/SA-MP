@@ -13,5 +13,8 @@
 [ADM] Warring: Get the rotation wrong, identical points.
 [ADM] Warring: Get speed error, the wrong time.
 
+//MapAndreasEx.inc
+[ADM] Error: MapAndreas failed to initiated
+
 //Global
 [ADM] Error: Invalid MapAndreas Memory
