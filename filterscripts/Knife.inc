@@ -1,5 +1,5 @@
 /******************************************
- * Knife Script v1.5 made by Abyss Morgan *
+ * Knife Script v1.6 made by Abyss Morgan *
  ******************************************/
  
  
@@ -26,7 +26,6 @@ Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 #define KNIFE_SPEED 			(12.0)
 #define KNIFE_MAX_RADIUS		(15.0)
 #define KNIFE_REFRESH_ACTION	(1000)	//1 sec
-#define KNIFE_REFRESH_PLAYER	(1000)	//1 sec
 #define KNIFE_REFRESH_MISS		(5000)	//5 sec
 
 new KnifeLockTarget[MAX_PLAYERS],
@@ -121,7 +120,7 @@ public KnifeShot(playerid){
 		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
 		GetMoveTime(mx,my,mz,px,py,pz,KNIFE_SPEED,mtime);
 		MoveDynamicObject(tmpobj,px,py,pz,KNIFE_SPEED,0.0,90.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_PLAYER,0,"ddd",tmpobj,KnifeLockTarget[playerid],playerid);
+		SetTimerEx("KnifeDestroy",mtime,0,"ddd",tmpobj,KnifeLockTarget[playerid],playerid);
 	}
 	KnifeTime[playerid] = GetTickCount();
 	return 1;
