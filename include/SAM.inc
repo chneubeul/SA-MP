@@ -10,3 +10,4 @@
 #include "SAM/Encode.inc"
 #include "SAM/ADM.inc"
 #include "SAM/MapAndreasEx.inc"
+#include "SAM/HTMLColor.inc"

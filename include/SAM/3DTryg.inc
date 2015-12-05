@@ -8,7 +8,7 @@
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
- * Float:ctan(Float:value,anglemode:mode=radian);                                                                                 *
+ * Float:ctg(Float:value,anglemode:mode=radian);                                                                                  *
  * Float:secans(Float:value,anglemode:mode=radian);                                                                               *
  * Float:cosecans(Float:value,anglemode:mode=radian);                                                                             *
  * GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz);                                                     *
@@ -67,9 +67,9 @@
 
 #define sin					floatsin
 #define cos					floatcos
-#define tan					floattan
+#define tg					floattan
 
-#define ctan(%0,%1)			floatcos(%0,%1)/floatsin(%0,%1)
+#define ctg(%0,%1)			1/floattan(%0,%1)
 #define secans(%0,%1)		1/floatcos(%0,%1)
 #define cosecans(%0,%1)		1/floatsin(%0,%1)
 #define abs(%0)				(((%0) < 0)?(-(%0)):((%0)))
