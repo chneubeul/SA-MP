@@ -1,5 +1,5 @@
 /**************************************
- * Script Secure v2.0 by Abyss Morgan *
+ * Script Secure v2.1 by Abyss Morgan *
  **************************************/
 
 /*
@@ -43,14 +43,18 @@ ADM(){
 	//IP and PORT check
 	new serverIP[16];
 	GetServerVarAsString("bind",serverIP,sizeof(serverIP));
-	if(strcmp(serverIP,FILE_SERVERIP,false)!=0 || isnull(serverIP)){
-		if((strcmp(serverIP,"127.0.0.1",false)!=0) || (strcmp(serverIP,"localhost",false)!=0) || isnull(serverIP)){
+	
+	if(!strcmp(serverIP,FILE_SERVERIP,true)){ //wlasciwy server
+		
+	} else {
+		if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){ //localhost
 			print("ADM: Local Server Detect !");
 		} else {
 			print("ADM: This script is stolen !");
 			SendRconCommand("exit");
 		}
-	} else if(GetServerVarAsInt("port") != FILE_SERVERPORT){
+	} 
+	if(GetServerVarAsInt("port") != FILE_SERVERPORT){
 		print("ADM: This script is stolen !");
 		SendRconCommand("exit");
 	}
