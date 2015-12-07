@@ -53,8 +53,10 @@ ADM(){
 			print("ADM: This script is stolen !");
 			SendRconCommand("exit");
 		}
-	} 
-	if(GetServerVarAsInt("port") != FILE_SERVERPORT){
+	}
+	if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){ //localhost
+	
+	} else if(GetServerVarAsInt("port") != FILE_SERVERPORT){
 		print("ADM: This script is stolen !");
 		SendRconCommand("exit");
 	}
