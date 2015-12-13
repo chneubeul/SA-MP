@@ -24,13 +24,17 @@ stock bool:IsMapAndreasInit(){
 
 stock SafeMapAndreasInit(){
 	//check MapAndreas Init
+	new bool:MapAndreasLastStat = false;
 	if(!IsMapAndreasInit()){
 		MapAndreas_Init(MAP_ANDREAS_MODE_FULL);
+		MapAndreasLastStat = true;
 	}
 	if(!IsMapAndreasInit()){
 		print("[ADM] Error: MapAndreas failed to initiated");
 	} else {
-		print("[ADM] MapAndreas successfully init");
+		if(MapAndreasLastStat){
+			print("[ADM] MapAndreas successfully init");
+		}
 	}
 }
 
