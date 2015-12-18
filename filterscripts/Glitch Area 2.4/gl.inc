@@ -124,7 +124,7 @@ public gl_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float
 		if(weaponid == 24){
 			if(pTemp[playerid][glshoot] == 0){ //start
 				pTemp[playerid][gltime] = GetTickCount();
-				pTemp[playerid][glshoot] += 1
+				pTemp[playerid][glshoot] += 1;
 			} else if(pTemp[playerid][glshoot] >= 6){ //koniec zabawy
 				new tgltime = GetTickCount()-pTemp[playerid][gltime], tglmsg = 0, buffer[256];
 				if(tgltime < pTemp[playerid][glrecord] && tgltime > 0){
@@ -145,7 +145,7 @@ public gl_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float
 				}
 				SendClientMessage(playerid,0x00B300FF,buffer);
 			} else {
-				pTemp[playerid][glshoot] += 1
+				pTemp[playerid][glshoot] += 1;
 			}
 		}
 	}
