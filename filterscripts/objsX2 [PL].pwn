@@ -160,7 +160,7 @@ public OnFilterScriptInit(){
 				lnum++;
 				if(line[0]!='/' && strfind(line,"CreateDynamicObject",true)!=-1){
 					new objectid, Float:X, Float:Y, Float:Z, Float:rx, Float:ry, Float:rz, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = 200.0, Float:drawdistance = 0.0, Float:nul;
-					if(sscanf(line,"p<,>'('iffffffP<,)>D(-1)D(-1)D(-1)F(-1)F(0)p<)>F(0)", objectid, X, Y, Z, rx, ry, rz, worldid, interiorid, playerid, streamdistance, drawdistance, nul)){
+					if(sscanf(line,"p<,>'('ifffffP<,)>fP<,)>D(-1)D(-1)D(-1)F(-1)F(0)p<)>F(0)", objectid, X, Y, Z, rx, ry, rz, worldid, interiorid, playerid, streamdistance, drawdistance, nul)){
 						if(streamdistance == -1) streamdistance = CalculateObjectDistance(objectid);
 						CreateDynamicObject(objectid,X,Y,Z,rx,ry,rz,worldid,interiorid,playerid,streamdistance,drawdistance);
 						cnt++;
