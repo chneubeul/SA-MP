@@ -15,20 +15,36 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid, playerid, Float:streamdistance, Float:drawdistance);
 */
 
-#define LOG_FILE	"objsX.log"
+#define LOG_FILE		"objsX.log"
+#define MAX_FIND_OBJ	(1000)
+
+#define COLOR_ERROR		(0xB01010FF)
 
 #include <a_samp>
 #include <streamer>
 #include <sscanf2>
 #include <zcmd>
-#include <SAM/StreamerFunction>
 
+#define FIX_OBJECTS
+#include <SAM/StreamerFunction>
+#include <SAM/3DTryg>
+
+//StreamerFunction.inc
 #if !defined _streamer_spec
 	#error You need StreamerFunction.inc v2.0d
 #elseif !defined Streamer_Spec_Version
 	#error Update you StreamerFunction.inc to v2.0d
 #elseif (Streamer_Spec_Version < 0x20004)
 	#error Update you StreamerFunction.inc to v2.0d
+#endif
+
+//3DTryg.inc
+#if !defined _3D_Tryg
+	#error You need 3DTryg.inc v2.1b
+#elseif !defined Tryg3D_Version
+	#error Update you 3DTryg.inc to v2.1b
+#elseif (Tryg3D_Version < 0x20102)
+	#error Update you 3DTryg.inc to v2.1b
 #endif
 
 new pliki[][32]={
@@ -50,6 +66,68 @@ WriteLog(file[],string[]){
 	new File:flog = fopen(wl_file,io_append);
 	fwrite(flog,wl_str);
 	fclose(flog);
+	return 1;
+}
+
+new Text3D:FindObjLabel[MAX_FIND_OBJ], bool:FindObj = false;
+
+stock FindDynamicObject(playerid, Float:findradius, Float:streamdistance = 20.0){
+	new buffer[256], szLIST[768], cnt = 0, Float:px, Float:py, Float:pz,
+	moid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, vw, int, Float:sd, Float:dd;
+	
+	GetPlayerPos(playerid,px,py,pz);
+	for(new i = 0, j = GetDynamicObjectPoolSize(); i < j; i++){
+		if(cnt >= MAX_FIND_OBJ) break;
+		if(IsValidDynamicObject(i)){
+			GetDynamicObjectPos(i,x,y,z);
+			new Float:distance = GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
+			if(distance <= findradius){
+				vw = GetDynamicObjectVW(i);
+				int = GetDynamicObjectINT(i);
+				moid = GetDynamicObjectModel(i);
+				GetDynamicObjectRot(i,rx,ry,rz);
+				GetDynamicObjectSD(i,sd);
+				GetDynamicObjectDD(i,dd);
+				szLIST = "";
+				format(buffer,sizeof buffer,"{89C1FA}Object: {00AAFF}(%d) {89C1FA}Model: {00AAFF}(%d) {89C1FA}Stream: {00AAFF}(%d %d %.0f %.0f)\n",i,moid,vw,int,sd,dd);
+				strcat(szLIST,buffer);
+				format(buffer,sizeof buffer,"{89C1FA}Pos: {00AAFF}(%.7f,%.7f,%.7f,%.7f,%.7f,%.7f)",x,y,z,rx,ry,rz);
+				strcat(szLIST,buffer);
+				FindObjLabel[cnt] = CreateDynamic3DTextLabel(szLIST,0x89C1FAFF,x,y,z+0.2,streamdistance,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,0,-1,-1,-1,streamdistance);
+				cnt++;
+			}
+		}
+	}
+}
+
+stock RemoveFindDynamicObjectLabel(){
+	for(new i = 0; i < MAX_FIND_OBJ; i++){
+		if(IsValidDynamic3DTextLabel(FindObjLabel[i])) DestroyDynamic3DTextLabel(FindObjLabel[i]);
+	}
+}
+
+CMD:addobjinfo(playerid,params[]){
+	if(!IsPlayerAdmin(playerid)) return 0;
+	if(FindObj) return SendClientMessage(playerid,COLOR_ERROR,"››› The function is active, usage /delobjinfo");
+	if(isnull(params)) return SendClientMessage(playerid,COLOR_ERROR,"››› Usage: /addobjinfo <streamdistance (1-100)> <find radius>");
+	new Float:sd, Float:findr;
+	sscanf(params,"ff",sd,findr);
+	if(findr < 1.0) findr = 20.0;
+	if(sd < 1.0 || sd > 100.0) return SendClientMessage(playerid,COLOR_ERROR,"››› Stream distance must be within range 1-100");
+	new buffer[256];
+	format(buffer,sizeof buffer,"The object description was included, coverage %.0fm",sd);
+	SendClientMessage(playerid,0xFFFFFFFF,buffer);
+	FindDynamicObject(playerid,findr,sd);
+	FindObj = true;
+	return 1;
+}
+
+CMD:delobjinfo(playerid){
+	if(!IsPlayerAdmin(playerid)) return 0;
+	if(!FindObj) return SendClientMessage(playerid,COLOR_ERROR,"››› Function deactivated");
+	RemoveFindDynamicObjectLabel();
+	FindObj = false;
+	SendClientMessage(playerid,0xFFFFFFFF,"Removed all signatures of objects");
 	return 1;
 }
 

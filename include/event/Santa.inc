@@ -32,6 +32,10 @@ Santa_PickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
 	#error Update you 3DTryg.inc to v2.1b
 #endif
 
+//MapAndreasEx.inc
+#if !defined MapAndreasFindZ
+	#error You need MapAndreasEx.inc
+#endif
 
 #define	MAX_SANTA_GIFTS			(100)
 #define REFRESH_SANTA_GIFTS		(2*60*60*1000)	//2 hour
@@ -76,9 +80,7 @@ forward Santa_GiftCreate(giftid);
 forward Santa_GiftReset(giftid);
 
 public Santa_GameModeInit(){
-	new Float:pioz;
-	MapAndreas_FindZ_For2DCoord(0.0,0.0,pioz);
-	if(pioz == 0.0){
+	if(!IsMapAndreasInit()){
 		printf("[ADM] Error: Invalid MapAndreas Memory");
 	} else {
 		for(new i = 0; i < MAX_SANTA_GIFTS; i++){
@@ -124,7 +126,7 @@ public Santa_GiftCreate(giftid){
 	
 	SantaErrorPos:
 	GetRandomPointInCube(-3000.0,-3000.0,0.0,3000.0,3000.0,1.0,piox,pioy,pioz);
-	MapAndreas_FindZ_For2DCoord(piox,pioy,pioz);
+	MapAndreasFindZ(piox,pioy,pioz);
 	if(pioz == 0) goto SantaErrorPos; //water
 	
 	pioz+=1.0;
@@ -137,7 +139,7 @@ public Santa_GiftReset(giftid){
 	
 	SantaErrorPos:
 	GetRandomPointInCube(-3000.0,-3000.0,0.0,3000.0,3000.0,1.0,piox,pioy,pioz);
-	MapAndreas_FindZ_For2DCoord(piox,pioy,pioz);
+	MapAndreasFindZ(piox,pioy,pioz);
 	if(pioz == 0) goto SantaErrorPos; //water
 	
 	pioz+=1.0;

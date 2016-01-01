@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1b                                                                                                             *
+ * File Version: 2.1c                                                                                                             *
  *                                                                                                                                *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
@@ -59,15 +59,11 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version 	(0x20102) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version 	(0x20103) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
 #endif
-
-#define sin					floatsin
-#define cos					floatcos
-#define tg					floattan
 
 #define ctg(%0,%1)			1/floattan(%0,%1)
 #define secans(%0,%1)		1/floatcos(%0,%1)

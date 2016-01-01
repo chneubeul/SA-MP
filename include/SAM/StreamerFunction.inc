@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.0e                                                                                                             *
+ * File Version: 2.1                                                                                                              *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -109,7 +109,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 		(0x20005) //a.b[c] 0x(10000*a+100*b+c)
+#define Streamer_Spec_Version 		(0x21001) //a.b[c] 0x(10000*a+100*b+c)
 
 #if !defined INVALID_STREAMER_ID
 	#define INVALID_STREAMER_ID 0
@@ -119,7 +119,10 @@
 	native IsValidVehicle(vehicleid);
 #endif
 
-//#define FIX_OBJECTS
+//Force Fix Objects
+#if !defined FIX_OBJECTS
+	#define FIX_OBJECTS
+#endif
 
 #define MOVE_OBJECT_STATE_STOP		(0)
 #define MOVE_OBJECT_STATE_MOVED		(1)
