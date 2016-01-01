@@ -8,6 +8,10 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if !defined Streamer_AppendArrayData
+	#error Unknown streamer version
+#endif
+
 new GangZoneArea[MAX_GANG_ZONES];
 
 stock GangZoneCreateEx(Float:minx,Float:miny,Float:maxx,Float:maxy,worldid = -1,interiorid = -1){
