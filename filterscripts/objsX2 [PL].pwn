@@ -28,13 +28,14 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 #include <SAM/StreamerFunction>
 #include <SAM/3DTryg>
 
+
 //StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.0d
+	#error You need StreamerFunction.inc v2.1b
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.0d
-#elseif (Streamer_Spec_Version < 0x20004)
-	#error Update you StreamerFunction.inc to v2.0d
+	#error Update you StreamerFunction.inc to v2.1b
+#elseif (Streamer_Spec_Version < 0x21002)
+	#error Update you StreamerFunction.inc to v2.1b
 #endif
 
 //3DTryg.inc
@@ -75,7 +76,7 @@ stock FindDynamicObject(playerid, Float:findradius, Float:streamdistance = 20.0)
 	moid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, vw, int, Float:sd, Float:dd;
 	
 	GetPlayerPos(playerid,px,py,pz);
-	for(new i = 0, j = GetDynamicObjectPoolSize(); i < j; i++){
+	ForDynamicObjects(i){
 		if(cnt >= MAX_FIND_OBJ) break;
 		if(IsValidDynamicObject(i)){
 			GetDynamicObjectPos(i,x,y,z);
@@ -133,11 +134,11 @@ CMD:delobjinfo(playerid){
 //objstatus by Abyss Morgan
 CMD:objstatus(playerid){
 	if(!IsPlayerAdmin(playerid)) return 0;
-	new maxobj = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT), pVW, pINT, cnt = 0, vis, buffer[200], oVW, oINT, tmp = 0;
+	new pVW, pINT, cnt = 0, vis, buffer[200], oVW, oINT, tmp = 0;
 	pVW = GetPlayerVirtualWorld(playerid);
 	pINT = GetPlayerInterior(playerid);
 	vis = Streamer_CountVisibleItems(playerid,STREAMER_TYPE_OBJECT);
-	for(new i = 1; i < maxobj; i++){
+	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
 			tmp = 0;
 			oVW = GetDynamicObjectVW(i);
@@ -147,7 +148,7 @@ CMD:objstatus(playerid){
 			if(tmp == 1) cnt++;
 		}
 	}
-	format(buffer,sizeof buffer,"[Obiekty] Widocznych: %d, Œwiat VW %d INT %d: %d, Wszystkich: %d, Maksymalnie: %d, Statyczne: %d",vis,pVW,pINT,cnt,CountDynamicObjects(),maxobj-1,CountObjects());
+	format(buffer,sizeof buffer,"[Obiekty] Widocznych: %d, Œwiat VW %d INT %d: %d, Wszystkich: %d, Maksymalnie: %d, Statyczne: %d",vis,pVW,pINT,cnt,CountDynamicObjects(),GetDynamicObjectPoolSize()+1,CountObjects());
 	SendClientMessage(playerid,0xFFFFFFFF,buffer);
 	return 1;
 }

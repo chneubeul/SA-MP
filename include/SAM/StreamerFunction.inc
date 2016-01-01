@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1                                                                                                              *
+ * File Version: 2.1b                                                                                                             *
  * Streamer Version: 2.7.8                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -98,6 +98,25 @@
  * GetDynamic3DTextPoolSize();                                                                                                    *
  * GetDynamicAreaPoolSize();                                                                                                      *
  *                                                                                                                                *
+ * Update Functions:                                                                                                              *
+ * UpdateAllDynamicElements();                                                                                                    *
+ * UpdateAllDynamicObjects();                                                                                                     *
+ * UpdateAllDynamicPickups();                                                                                                     *
+ * UpdateAllDynamicCPs();                                                                                                         *
+ * UpdateAllDynamicRaceCPs();                                                                                                     *
+ * UpdateAllDynamicMapIcons();                                                                                                    *
+ * UpdateAllDynamic3DTextLabels();                                                                                                *
+ * UpdateAllDynamicAreas();                                                                                                       *
+ *                                                                                                                                *
+ * Foreach Functions:                                                                                                             *
+ * ForDynamicObjects(variable);                                                                                                   *
+ * ForDynamicPickups(variable);                                                                                                   *
+ * ForDynamicCPs(variable);                                                                                                       *
+ * ForDynamicRaceCPs(variable);                                                                                                   *
+ * ForDynamicMapIcons(variable);                                                                                                  *
+ * ForDynamic3DTextLabels(variable);                                                                                              *
+ * ForDynamicAreas(variable);                                                                                                     *
+ *                                                                                                                                *
  **********************************************************************************************************************************/
 
 #if !defined Streamer_AppendArrayData
@@ -109,7 +128,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 		(0x21001) //a.b[c] 0x(10000*a+100*b+c)
+#define Streamer_Spec_Version 		(0x21002) //a.b[c] 0x(10000*a+100*b+c)
 
 #if !defined INVALID_STREAMER_ID
 	#define INVALID_STREAMER_ID 0
@@ -124,9 +143,9 @@
 	#define FIX_OBJECTS
 #endif
 
-#define MOVE_OBJECT_STATE_STOP		(0)
-#define MOVE_OBJECT_STATE_MOVED		(1)
-#define MOVE_OBJECT_STATE_INVALID	(2)
+#define MOVE_OBJECT_STATE_STOP				(0)
+#define MOVE_OBJECT_STATE_MOVED				(1)
+#define MOVE_OBJECT_STATE_INVALID			(2)
 
 #define GetDynamicObjectModel(%1)			Streamer_GetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MODEL_ID)
 #define SetDynamicObjectModel(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MODEL_ID,%2)
@@ -152,7 +171,7 @@
 #define GetDynamicPickupVW(%1)				Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_WORLD_ID)
 #define GetDynamicPickupINT(%1)				Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_INTERIOR_ID)
 #define GetDynamicPickupType(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_TYPE)
-#define SetDynamicPickupType(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,,E_STREAMER_TYPE,%2)
+#define SetDynamicPickupType(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_TYPE,%2)
 
 #define GetDynamicObjectPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_OBJECT)
 #define GetDynamicPickupPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_PICKUP)
@@ -161,6 +180,14 @@
 #define GetDynamicMapIconPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_MAP_ICON)
 #define GetDynamic3DTextPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_3D_TEXT_LABEL)
 #define GetDynamicAreaPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_AREA)
+
+#define ForDynamicObjects(%1)				for(new %1 = 0, p_%1 = GetDynamicObjectPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicPickups(%1)				for(new %1 = 0, p_%1 = GetDynamicPickupPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicCPs(%1)					for(new %1 = 0, p_%1 = GetDynamicCPPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicRaceCPs(%1)				for(new %1 = 0, p_%1 = GetDynamicRaceCPPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicMapIcons(%1)				for(new %1 = 0, p_%1 = GetDynamicMapIconPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamic3DTextLabels(%1)			for(new %1 = 0, p_%1 = GetDynamic3DTextPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicAreas(%1)					for(new %1 = 0, p_%1 = GetDynamicAreaPoolSize(); %1 <= p_%1; %1++)
 
 stock SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
 	SetDynamicObjectPos(objectid,x,y,z);
@@ -253,8 +280,8 @@ stock IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,F
 }
 
 stock DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
-	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT,max_dobj = GetDynamicObjectPoolSize();
-	for(new i = 0; i < max_dobj; i++){
+	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT;
+	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
 			GetDynamicObjectPos(i,piox,pioy,pioz);
 			pioVW = GetDynamicObjectVW(i);
@@ -270,8 +297,8 @@ stock DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Fl
 }
 
 stock DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
-	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT,max_dobj = GetDynamicObjectPoolSize();
-	for(new i = 0; i < max_dobj; i++){
+	new Float:piox,Float:pioy,Float:pioz,pioVW,pioINT;
+	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
 			GetDynamicObjectPos(i,piox,pioy,pioz);
 			pioVW = GetDynamicObjectVW(i);
@@ -287,8 +314,7 @@ stock DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Flo
 }
 
 stock DestroyVehicleDynamicObject(vehicleid){
-	new max_dobj = GetDynamicObjectPoolSize();
-	for(new i = 0; i < max_dobj; i++){
+	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
 			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE) == vehicleid){
 				DestroyDynamicObject(i);
@@ -298,8 +324,7 @@ stock DestroyVehicleDynamicObject(vehicleid){
 }
 
 stock DeattachVehicleDynamicObject(vehicleid){
-	new max_dobj = GetDynamicObjectPoolSize();
-	for(new i = 0; i < max_dobj; i++){
+	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
 			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE) == vehicleid){
 				Streamer_SetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE,INVALID_VEHICLE_ID);
@@ -309,8 +334,7 @@ stock DeattachVehicleDynamicObject(vehicleid){
 }
 
 stock DeattachPlayerDynamicObject(playerid){
-	new max_dobj = GetDynamicObjectPoolSize();
-	for(new i = 0; i < max_dobj; i++){
+	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
 			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER) == playerid){
 				Streamer_SetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER,INVALID_PLAYER_ID);
@@ -320,8 +344,7 @@ stock DeattachPlayerDynamicObject(playerid){
 }
 
 stock DestroyPlayerDynamicObject(playerid){
-	new max_dobj = GetDynamicObjectPoolSize();
-	for(new i = 0; i < max_dobj; i++){
+	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
 			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER) == playerid){
 				DestroyDynamicObject(i);
@@ -460,6 +483,53 @@ stock GetDynamicObjectMoveTime(objectid,&objstate,&rtime){
 	}
 }
 
+stock UpdateAllDynamicObjects(){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		Streamer_Update(i,STREAMER_TYPE_OBJECT);
+	}
+}
+
+stock UpdateAllDynamicPickups(){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		Streamer_Update(i,STREAMER_TYPE_PICKUP);
+	}
+}
+
+stock UpdateAllDynamicCPs(){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		Streamer_Update(i,STREAMER_TYPE_CP);
+	}
+}
+
+stock UpdateAllDynamicRaceCPs(){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		Streamer_Update(i,STREAMER_TYPE_RACE_CP);
+	}
+}
+
+stock UpdateAllDynamicMapIcons(){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		Streamer_Update(i,STREAMER_TYPE_MAP_ICON);
+	}
+}
+
+stock UpdateAllDynamic3DTextLabels(){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		Streamer_Update(i,STREAMER_TYPE_3D_TEXT_LABEL);
+	}
+}
+
+stock UpdateAllDynamicAreas(){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		Streamer_Update(i, STREAMER_TYPE_AREA);
+	}
+}
+
+stock UpdateAllDynamicElements(){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		Streamer_Update(i);
+	}
+}
 
 //Fix Destroy Objects
 #if defined FIX_OBJECTS
