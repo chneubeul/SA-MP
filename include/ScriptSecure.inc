@@ -24,7 +24,7 @@ public OnFilterScriptInit(){
  
 #define FILE_SERVERIP			"127.0.0.1"
 #define FILE_SERVERPORT			(7777)			
-#define FILE_LICENSEID			(20160201)		//01.02.2016
+#define FILE_LICENSEID			(20160201)		//01.02.2016 (DDMMYYYY)
 #define FILE_MAX_PLAYERS		(500)			//max players in server.cfg
 #define FILE_RCONPASS			"123"			//rcon password
 #define FILE_LANGUAGE			"Polish"		//server language
