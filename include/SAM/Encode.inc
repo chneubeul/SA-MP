@@ -39,7 +39,7 @@ stock rot13(string[]){
 stock HexNegative(string1[],mode,string2[],maxdest = sizeof(string2)){
 	if(mode < 1 || mode > 15){
 		format(string2,maxdest,"%s","#NAN");
-		printf("[ADM] Warring: Invalid HexNegative mode.");
+		print("[ADM] Warring: Invalid HexNegative mode.");
 	} else {
 		for(new i = 0, j = strlen(string1); i < j; i++){
 			string2[i] = (((0xF & ((string1[i] >> 4)+mode))*16) + (0xF & ((string1[i] & 0xF)+mode)));
@@ -60,7 +60,7 @@ stock GetRollDecode(roll){
 }
 
 stock RollX(string1[],roll,string2[]){
-	if(roll < 0 || roll > 255) printf("[ADM] Warring: Invalid RollX mode.");
+	if(roll < 0 || roll > 255) print("[ADM] Warring: Invalid RollX mode.");
 	for(new i = 0, j = strlen(string1); i < j; i++){
 		string2[i] = (0xFF & (string1[i]+roll));
 	}

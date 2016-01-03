@@ -15,6 +15,13 @@
 
 //MapAndreasEx.inc
 [ADM] Error: MapAndreas failed to initiated
+[ADM] Info: MapAndreas successfully init.
+
+//ScriptSecure.inc
+[ADM] Info: Local Server Detect.
+[ADM] Error: This script is stolen.
+[ADM] Error: Script license has expired.
+[ADM] Error: Invalid Server Config.
 
 //Global
-[ADM] Error: Invalid MapAndreas Memory
+[ADM] Error: Invalid MapAndreas Memory.

@@ -81,7 +81,7 @@ forward Santa_GiftReset(giftid);
 
 public Santa_GameModeInit(){
 	if(!IsMapAndreasInit()){
-		printf("[ADM] Error: Invalid MapAndreas Memory");
+		print("[ADM] Error: Invalid MapAndreas Memory.");
 	} else {
 		for(new i = 0; i < MAX_SANTA_GIFTS; i++){
 			Santa_GiftCreate(i);

@@ -7,7 +7,7 @@
 public OnGameModeInit(){
 
 	AntiDeAMX();
-	ADM();
+	ScriptSecureADM();
 	
 	return 1;
 }
@@ -15,7 +15,7 @@ public OnGameModeInit(){
 public OnFilterScriptInit(){
 
 	AntiDeAMX();
-	ADM();
+	ScriptSecureADM();
 	
 	return 1;
 }
@@ -39,7 +39,7 @@ AntiDeAMX(){
 }
 
 
-ADM(){
+ScriptSecureADM(){
 	//IP and PORT check
 	new serverIP[16];
 	GetServerVarAsString("bind",serverIP,sizeof(serverIP));
@@ -48,16 +48,16 @@ ADM(){
 		
 	} else {
 		if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){ //localhost
-			print("[ADM] Local Server Detect !");
+			print("[ADM] Info: Local Server Detect.");
 		} else {
-			print("[ADM] This script is stolen !");
+			print("[ADM] Error: This script is stolen.");
 			SendRconCommand("exit");
 		}
 	}
 	if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){ //localhost
 	
 	} else if(GetServerVarAsInt("port") != FILE_SERVERPORT){
-		print("[ADM] This script is stolen !");
+		print("[ADM] Error: This script is stolen.");
 		SendRconCommand("exit");
 	}
 
@@ -66,20 +66,20 @@ ADM(){
 	getdate(tmpyear,tmpmonth,tmpday);
 	tmpdate = (10000*tmpyear)+(100*tmpmonth)+tmpday;
 	if(tmpdate > FILE_LICENSEID){
-		print("[ADM] Script license has expired !");
+		print("[ADM] Error: Script license has expired.");
 		SendRconCommand("exit");
 	}
 
 	//Check server.cfg
 	if(GetMaxPlayers() != FILE_MAX_PLAYERS){
-		print("[ADM] Error check server.cfg !");
+		print("[ADM] Error: Invalid Server Config.");
 		SendRconCommand("exit");
 	}
 	
 	new rtemp[32];
 	GetServerVarAsString("rcon_password",rtemp,sizeof(rtemp));
 	if(strcmp(rtemp,FILE_RCONPASS,false)!=0 || isnull(rtemp)){
-		print("[ADM] Error check server.cfg !");
+		print("[ADM] Error: Invalid Server Config.");
 		SendRconCommand("exit");
 	}
 	rtemp = "";
@@ -87,7 +87,7 @@ ADM(){
 	
 	GetServerVarAsString("language",rtemp,sizeof(rtemp));
 	if(strcmp(rtemp,FILE_LANGUAGE,false)!=0 || isnull(rtemp)){
-		print("[ADM] Error check server.cfg !");
+		print("[ADM] Error: Invalid Server Config.");
 		SendRconCommand("exit");
 	}
 	rtemp = "";

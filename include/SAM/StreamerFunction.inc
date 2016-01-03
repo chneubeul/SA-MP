@@ -444,7 +444,7 @@ stock DestroyDynamicObjectComponent(objectid,type){
 			switch(type){
 				case STREAMER_TYPE_OBJECT:	if(IsValidDynamicObject(i)) DestroyDynamicObject(i);
 				case STREAMER_TYPE_AREA:	if(IsValidDynamicArea(i)) DestroyDynamicArea(i);
-				default: printf("[ADM] Warring: Invalid Object Component type.");
+				default: print("[ADM] Warring: Invalid Object Component type.");
 			}
 		}
 	}
@@ -457,7 +457,7 @@ stock DeattachDynamicObjectComponent(objectid,type){
 			switch(type){
 				case STREAMER_TYPE_OBJECT:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID);
 				case STREAMER_TYPE_AREA:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_VEHICLE_ID);
-				default: printf("[ADM] Warring: Invalid Object Component type.");
+				default: print("[ADM] Warring: Invalid Object Component type.");
 			}
 		}
 	}

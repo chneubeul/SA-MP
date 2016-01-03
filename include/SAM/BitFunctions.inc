@@ -31,12 +31,12 @@
 #define _bit_function
 
 stock GetValueBit(value,bit){
-	if(bit < 0 || bit > 31) printf("[ADM] Warring: Get bit error, the wrong bit id.");
+	if(bit < 0 || bit > 31) print("[ADM] Warring: Get bit error, the wrong bit id.");
 	return (value >>> bit & 0x01);
 }
 
 stock SetValueBit(value,bit,power){
-	if(bit < 0 || bit > 31) printf("[ADM] Warring: Set bit error, the wrong bit id.");
+	if(bit < 0 || bit > 31) print("[ADM] Warring: Set bit error, the wrong bit id.");
 	new nv = 0;
 	power = (power & 0x01);
 	for(new i = 31; i >= 0; i--){

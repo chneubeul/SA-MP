@@ -30,10 +30,10 @@ stock SafeMapAndreasInit(){
 		MapAndreasLastStat = true;
 	}
 	if(!IsMapAndreasInit()){
-		print("[ADM] Error: MapAndreas failed to initiated");
+		print("[ADM] Error: MapAndreas failed to initiated.");
 	} else {
 		if(MapAndreasLastStat){
-			print("[ADM] MapAndreas successfully init");
+			print("[ADM] Info: MapAndreas successfully init.");
 		}
 	}
 }

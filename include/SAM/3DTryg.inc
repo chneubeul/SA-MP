@@ -157,7 +157,7 @@ stock GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,
 		CompRotationFloat((atan2(ty-y,tx-x)-90),rz);
 	} else {
 		rx = 0.0, rz = 0.0;
-		printf("[ADM] Warring: Get the rotation wrong, identical points.");
+		print("[ADM] Warring: Get the rotation wrong, identical points.");
 	}
 }
 
@@ -240,7 +240,7 @@ stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed
 stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
 	if(rtime/1000.0 <= 0.0){
 		speed = FLOAT_INFINITY;
-		printf("[ADM] Warring: Get speed error, the wrong time.");
+		print("[ADM] Warring: Get speed error, the wrong time.");
 	} else {
 		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 		speed = (dist/(rtime/1000.0));
