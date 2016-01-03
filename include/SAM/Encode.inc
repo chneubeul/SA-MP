@@ -26,11 +26,11 @@
  ****************************************************************************************************/
 
 stock rot13(string[]){
-	for(new index = 0; index < strlen(string); index++){
-		if('a' <= string[index] <= 'z'){
-			string[index] = (string[index] - 'a' + 13) % 26 + 'a';
-		} else if('A' <= string[index] <= 'Z'){
-			string[index] = (string[index] - 'A' + 13) % 26 + 'A';
+	for(new i = 0, j = strlen(string); i < j; i++){
+		if('a' <= string[i] <= 'z'){
+			string[i] = (string[i] - 'a' + 13) % 26 + 'a';
+		} else if('A' <= string[i] <= 'Z'){
+			string[i] = (string[i] - 'A' + 13) % 26 + 'A';
 		}
 	}
 	return string;
@@ -41,7 +41,7 @@ stock HexNegative(string1[],mode,string2[],maxdest = sizeof(string2)){
 		format(string2,maxdest,"%s","#NAN");
 		printf("[ADM] Warring: Invalid HexNegative mode.");
 	} else {
-		for(new i = 0; i < strlen(string1); i++){
+		for(new i = 0, j = strlen(string1); i < j; i++){
 			string2[i] = (((0xF & ((string1[i] >> 4)+mode))*16) + (0xF & ((string1[i] & 0xF)+mode)));
 		}
 		string2[strlen(string1)] = EOS;
@@ -49,7 +49,7 @@ stock HexNegative(string1[],mode,string2[],maxdest = sizeof(string2)){
 }
 
 stock code128(string1[],string2[]){
-	for(new i = 0;i < strlen(string1);i++){
+	for(new i = 0, j = strlen(string1); i < j; i++){
 		string2[i] = (0xFF & string1[i]+128);
 	}
 	string2[strlen(string1)] = EOS;
@@ -61,7 +61,7 @@ stock GetRollDecode(roll){
 
 stock RollX(string1[],roll,string2[]){
 	if(roll < 0 || roll > 255) printf("[ADM] Warring: Invalid RollX mode.");
-	for(new i = 0; i < strlen(string1); i++){
+	for(new i = 0, j = strlen(string1); i < j; i++){
 		string2[i] = (0xFF & (string1[i]+roll));
 	}
 	string2[strlen(string1)] = EOS;

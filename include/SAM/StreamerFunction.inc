@@ -5,7 +5,7 @@
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
  * File Version: 2.1b                                                                                                             *
- * Streamer Version: 2.7.8                                                                                                        *
+ * Streamer Version: 2.7.9                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
  * GetDynamicObjectModel(objectid);                                                                                               *
