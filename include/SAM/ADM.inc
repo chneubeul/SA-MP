@@ -7,6 +7,7 @@
  * File Version: 1.3                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
+ * ADMToInt(ADM:admvar);                                                                            *
  * ADM:ADMx32(const input[], const output[], key[]);                                                *
  * ADM:ADMx64(const input[], const output[], key[]);                                                *
  * ADM:ADMx128(const input[], const output[], key[]);                                               *
