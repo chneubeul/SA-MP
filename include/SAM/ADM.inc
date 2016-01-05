@@ -4,13 +4,13 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.2                                                                                *
+ * File Version: 1.3                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
- * ADMx32(const input[], const output[], key[]);                                                    *
- * ADMx64(const input[], const output[], key[]);                                                    *
- * ADMx128(const input[], const output[], key[]);                                                   *
- * ADMx256(const input[], const output[], key[]);                                                   *
+ * ADM:ADMx32(const input[], const output[], key[]);                                                *
+ * ADM:ADMx64(const input[], const output[], key[]);                                                *
+ * ADM:ADMx128(const input[], const output[], key[]);                                               *
+ * ADM:ADMx256(const input[], const output[], key[]);                                               *
  *                                                                                                  *
  * Return value:                                                                                    *
  * ERROR_CODE_ADM_OK         //success                                                              *
@@ -33,25 +33,25 @@
 	#error Unknown sscanf version
 #endif
 
-#define MAX_FILE_SIZE			2147483647	//2 GB
+#define MAX_FILE_SIZE			(2147483647)	//2 GB
 
-#define MAX_MODE_ADMx32			4
-#define MAX_MODE_ADMx64			8
-#define MAX_MODE_ADMx128		16
-#define MAX_MODE_ADMx256		32
+#define MAX_MODE_ADMx32			(4)
+#define MAX_MODE_ADMx64			(8)
+#define MAX_MODE_ADMx128		(16)
+#define MAX_MODE_ADMx256		(32)
 
-#define MAX_KEY_LEN_ADMx32		16
-#define MAX_KEY_LEN_ADMx64		32
-#define MAX_KEY_LEN_ADMx128		64
-#define MAX_KEY_LEN_ADMx256		128
+#define MAX_KEY_LEN_ADMx32		(16)
+#define MAX_KEY_LEN_ADMx64		(32)
+#define MAX_KEY_LEN_ADMx128		(64)
+#define MAX_KEY_LEN_ADMx256		(128)
 
-#define ERROR_CODE_ADM_OK		1		//success
-#define ERROR_CODE_ADM_INPUT	-1		//input file not exist
-#define ERROR_CODE_ADM_OUTPUT	-2		//output file exist
-#define ERROR_CODE_ADM_KEY		-3		//invalid key
-#define ERROR_CODE_ADM_SIZE		-4		//invalid file size
+#define ERROR_CODE_ADM_OK		(ADM:1)			//success
+#define ERROR_CODE_ADM_INPUT	(ADM:-1)		//input file not exist
+#define ERROR_CODE_ADM_OUTPUT	(ADM:-2)		//output file exist
+#define ERROR_CODE_ADM_KEY		(ADM:-3)		//invalid key
+#define ERROR_CODE_ADM_SIZE		(ADM:-4)		//invalid file size
 
-stock ADMx32(const input[], const output[], key[]){
+stock ADM:ADMx32(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx32];
@@ -81,9 +81,7 @@ stock ADMx32(const input[], const output[], key[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-#define ADM ADMx32
-
-stock ADMx64(const input[], const output[], key[]){
+stock ADM:ADMx64(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx64];
@@ -113,7 +111,7 @@ stock ADMx64(const input[], const output[], key[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADMx128(const input[], const output[], key[]){
+stock ADM:ADMx128(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx128];
@@ -144,7 +142,7 @@ stock ADMx128(const input[], const output[], key[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADMx256(const input[], const output[], key[]){
+stock ADM:ADMx256(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx256];
