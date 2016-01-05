@@ -51,6 +51,11 @@
 #define ERROR_CODE_ADM_KEY		(ADM:-3)		//invalid key
 #define ERROR_CODE_ADM_SIZE		(ADM:-4)		//invalid file size
 
+//Remove ADM: tag
+stock ADMToInt(ADM:admvar){
+	return (_:admvar);
+}
+
 stock ADM:ADMx32(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
