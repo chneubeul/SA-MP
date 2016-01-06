@@ -23,14 +23,6 @@ stock MapAndreasFindZ(Float:x,Float:y,&Float:z){
 	}
 }
 
-#if defined _ALS_MapAndreas_FindZ_For2DCoord
-    #undef MapAndreas_FindZ_For2DCoord
-#else
-    #define _ALS_MapAndreas_FindZ_For2DCoord
-#endif
-#define MapAndreas_FindZ_For2DCoord MapAndreasFindZ
-
-
 stock bool:IsMapAndreasInit(){
 	new Float:mapunit;
 	MapAndreasFindZ(0.0,0.0,mapunit);
