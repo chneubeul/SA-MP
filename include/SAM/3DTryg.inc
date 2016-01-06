@@ -4,8 +4,9 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1c                                                                                                             *
+ * File Version: 2.1d                                                                                                             *
  *                                                                                                                                *
+ * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
  * Float:ctg(Float:value,anglemode:mode=radian);                                                                                  *
@@ -59,7 +60,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version 	(0x20103) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version 	(0x20104) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
@@ -69,6 +70,10 @@
 #define secans(%0,%1)		1/floatcos(%0,%1)
 #define cosecans(%0,%1)		1/floatsin(%0,%1)
 #define abs(%0)				(((%0) < 0)?(-(%0)):((%0)))
+
+stock Float:sqrtN(Float:value,Float:exponent){
+	return floatpower(value,(1.0/exponent));
+}
 
 stock power(value,Float:exponent){
 	return floatround(floatpower(value,exponent));
