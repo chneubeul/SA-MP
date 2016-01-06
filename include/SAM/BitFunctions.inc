@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.1                                                                                *
+ * File Version: 1.2                                                                                *
  *                                                                                                  *
  * bit 0 - 31:                                                                                      *
  * (bit 31) --> 11111111000000001111010001010000 <-- (bit 0)                                        *
@@ -13,6 +13,8 @@
  * GetValueBit(value,bit);                                                                          *
  * SetValueBit(value,bit,power);  //power 0 or 1                                                    *
  * InvertValue(value);                                                                              *
+ * InvertValueEx(value,key = 0xFFFFFFFF);                                                           *
+ * bool:CheckValue(value); //even - false, uneven - true                                            *
  *                                                                                                  *
  * IF operators:                                                                                    *
  * if(AND(expression1,expression2))  // expression1 && expression2                                  *
@@ -30,6 +32,17 @@
 #endif
 #define _bit_function
 
+stock bool:CheckValue(value){
+	new int = 0;
+	for(new i = 31; i >= 0; i--){
+		if(GetValueBit(value,i)){
+			int++;
+		}
+	}
+	if(int%2 == 0) return false;
+	return true;
+}
+
 stock GetValueBit(value,bit){
 	if(bit < 0 || bit > 31) print("[ADM] Warring: Get bit error, the wrong bit id.");
 	return (value >>> bit & 0x01);
@@ -37,30 +50,28 @@ stock GetValueBit(value,bit){
 
 stock SetValueBit(value,bit,power){
 	if(bit < 0 || bit > 31) print("[ADM] Warring: Set bit error, the wrong bit id.");
-	new nv = 0;
+	new int = 0;
 	power = (power & 0x01);
 	for(new i = 31; i >= 0; i--){
 		if(i == bit){
 			if(power){
-				nv += floatround(floatpower(2, i));
+				int += floatround(floatpower(2,i));
 			}
 		} else {
-			if(GetValueBit(value,i)){
-				nv += floatround(floatpower(2, i));
+			if(value >>> i & 0x01){
+				int += floatround(floatpower(2,i));
 			}
 		}
 	}
-	return nv;
+	return int;
 }
 
 stock InvertValue(value){
-	new nv = 0;
-	for(new i = 31; i >= 0; i--){
-		if(!GetValueBit(value,i)){
-			nv += floatround(floatpower(2, i));
-		}
-	}
-	return nv;
+	return (value ^ 0xFFFFFFFF);
+}
+
+stock InvertValueEx(value,key = 0xFFFFFFFF){
+	return (value ^ key);
 }
 
 #define AND(%1,%2)					(%1 && %2)

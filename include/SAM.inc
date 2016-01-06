@@ -11,3 +11,4 @@
 #include "SAM/ADM.inc"
 #include "SAM/MapAndreasEx.inc"
 #include "SAM/HTMLColor.inc"
+#include "SAM/DataConvert.inc"

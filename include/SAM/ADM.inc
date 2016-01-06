@@ -4,10 +4,11 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.3                                                                                *
+ * File Version: 1.4                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ADMToInt(ADM:admvar);                                                                            *
+ * ADM:InvertFile(const input[], const output[]);                                                   *
  * ADM:ADMx32(const input[], const output[], key[]);                                                *
  * ADM:ADMx64(const input[], const output[], key[]);                                                *
  * ADM:ADMx128(const input[], const output[], key[]);                                               *
@@ -55,6 +56,25 @@
 //Remove ADM: tag
 stock ADMToInt(ADM:admvar){
 	return (_:admvar);
+}
+
+stock ADM:InvertFile(const input[], const output[]){
+	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
+	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
+	new File:inpf = fopen(input,io_read);
+	new asize = flength(inpf), idx = 0;
+	if(asize > MAX_FILE_SIZE || asize < 0){
+		fclose(inpf);
+		return ERROR_CODE_ADM_SIZE;
+	}
+	new File:outf = fopen(output,io_write);
+	while(idx < asize){
+		fputchar(outf,(fgetchar(inpf,0,false) ^ 0xFF),false);
+		idx++;
+	}
+	fclose(inpf);
+	fclose(outf);
+	return ERROR_CODE_ADM_OK;
 }
 
 stock ADM:ADMx32(const input[], const output[], key[]){
