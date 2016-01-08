@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1c                                                                                                             *
+ * File Version: 2.1d                                                                                                             *
  * Streamer Version: 2.7.9                                                                                                        *
  *                                                                                                                                *
  * Objects Functions:                                                                                                             *
@@ -130,7 +130,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 		(0x20103) //a.b[c] 0x(10000*a+100*b+c)
+#define Streamer_Spec_Version 		(0x20104) //a.b[c] 0x(10000*a+100*b+c)
 
 #if !defined INVALID_STREAMER_ID
 	#define INVALID_STREAMER_ID 0
@@ -163,7 +163,6 @@
 #define GetDynamicObjectDD(%1,%2)			Streamer_GetFloatData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_DRAW_DISTANCE,%2)
 #define DeattachObjectDynamicObject(%1)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID)
 #define SetDynamicObjectAttachSync(%1,%2)	Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_SYNC_ROTATION,%2)
-#define ResetDynamicObjectMaterial(%1,%2)	SetDynamicObjectMaterial(%1,%2,GetDynamicObjectModel(%1),"none","none",0)
 #define SetDynamicCPSize(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_CP,%1,E_STREAMER_SIZE,%2)
 #define SetDynamicRaceCPSize(%1,%2)			Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,%1,E_STREAMER_SIZE,%2)
 #define SetDynamicMapIconColor(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_COLOR,%2)
@@ -534,12 +533,18 @@ stock UpdateAllDynamicElements(){
 	}
 }
 
+stock ResetDynamicObjectMaterial(objectid,materialindex){
+	SetDynamicObjectMaterial(objectid,materialindex,-1,"none","none",0);
+	SetDynamicObjectModel(objectid,GetDynamicObjectModel(objectid));
+}
+
 stock ResetDynamicObjectMaterialAll(objectid){
 	for(new i = 0; i < 16; i++){
 		if(IsDynamicObjectMaterialUsed(objectid,i)){
-			ResetDynamicObjectMaterial(i);
+			SetDynamicObjectMaterial(objectid,i,-1,"none","none",0);
 		}
 	}
+	SetDynamicObjectModel(objectid,GetDynamicObjectModel(objectid));
 }
 
 //Fix Destroy Objects
