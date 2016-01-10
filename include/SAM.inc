@@ -12,3 +12,4 @@
 #include "SAM/MapAndreasEx.inc"
 #include "SAM/HTMLColor.inc"
 #include "SAM/DataConvert.inc"
+#include "SAM/TextDrawCount.inc"
