@@ -44,18 +44,19 @@ ScriptSecureADM(){
 	new serverIP[16];
 	GetServerVarAsString("bind",serverIP,sizeof(serverIP));
 	
-	if(!strcmp(serverIP,FILE_SERVERIP,true)){ //wlasciwy server
-		
+	if(!strcmp(serverIP,FILE_SERVERIP,true)){
+		//Server IP OK
 	} else {
-		if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){ //localhost
+		if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){
+			//localhost
 			print("[ADM] Info: Local Server Detect.");
 		} else {
 			print("[ADM] Error: This script is stolen.");
 			SendRconCommand("exit");
 		}
 	}
-	if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){ //localhost
-	
+	if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){
+		//localhost
 	} else if(GetServerVarAsInt("port") != FILE_SERVERPORT){
 		print("[ADM] Error: This script is stolen.");
 		SendRconCommand("exit");
