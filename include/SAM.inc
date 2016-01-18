@@ -13,3 +13,4 @@
 #include "SAM/HTMLColor.inc"
 #include "SAM/DataConvert.inc"
 #include "SAM/TextDrawEx.inc"
+#include "SAM/LY.inc"
