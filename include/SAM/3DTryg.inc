@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1d                                                                                                             *
+ * File Version: 2.1e                                                                                                             *
  *                                                                                                                                *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
@@ -52,6 +52,7 @@
  * bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB);                *
  * bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist);                              *
  * bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);   *
+ * bool:IsProbable(chance);                                                                                                       *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -60,7 +61,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version 	(0x20104) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version 	(0x20105) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
@@ -235,7 +236,7 @@ stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Floa
 
 stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime){
 	if(speed <= 0.0){
-		rtime = 0x7F000000;
+		rtime = FLOAT_INFINITY;
 	} else {
 		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 		rtime = floatround((dist/speed)*1000.0);
@@ -338,4 +339,11 @@ stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float
 	CompRotationFloat(atan2(2*(qx*qy+qz*qw),1-2*((qy*qy)+(qz*qz))),rx);
 	CompRotationFloat(asin(2*(qx*qz-qw*qy)),ry);
 	CompRotationFloat(atan2(2*(qx*qw+qy*qz),1-2*(qz*qz+qw*qw)),rz);
+}
+
+stock bool:IsProbable(chance){
+	if(chance <= 0) return false;
+	if(chance >= 100) return true;
+	if((random(100)+1) <= chance) return true;
+	return false;
 }
