@@ -4,13 +4,14 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.1                                                                                *
+ * File Version: 1.2                                                                                *
  *                                                                                                  *
  * Pawn Unsigned Long for 32 Bit language (precision 61-bit)                                        *
  * Available limit:                                                                                 *
  * 0 - 2 147 483 647 000 000 000                                                                    *
  * 0 - 2 000 000 000 000 000 000                                                                    *
  *                                                                                                  *
+ * bool:IsValueContainLY(prefix,sufix,value);                                                       *
  * GetLYString(prefix,sufix,string[]);                                                              *
  * UpdateLY(&prefix,&sufix,value,limitprefix = DEFAULT_MAX_LY_PREFIX);                              *
  *                                                                                                  *
@@ -32,6 +33,12 @@
 		string2[strlen(string1)] = EOS;
 	}
 #endif
+
+stock bool:IsValueContainLY(prefix,sufix,value){
+	if((prefix == 0) && (sufix == 0)) return false;
+	if((sufix < value) && (prefix == 0)) return false;
+	return true;
+}
 
 stock GetLYString(prefix,sufix,string[]){
 	new buffer[20];

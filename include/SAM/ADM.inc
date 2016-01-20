@@ -322,21 +322,18 @@ stock ADM:StringToHexString(input[], output[], maxdest = sizeof(output)){
 	new asize = strlen(input), idx = 0, offset = 0;
 	if((asize*2) > maxdest) return ERROR_CODE_ADM_DEST;
 	while(idx < asize){
-		
 		output[offset] = (0xF & (input[idx] >> 4));
 		if(output[offset] < 10){
 			output[offset] += 48;
 		} else {
 			output[offset] += 55;
 		}
-		
 		output[offset+1] = (0xF & input[idx]);
 		if(output[offset+1] < 10){
 			output[offset+1] += 48;
 		} else {
 			output[offset+1] += 55;
 		}
-		
 		idx++;
 		offset += 2;
 	}
