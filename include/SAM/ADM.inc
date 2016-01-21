@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.5                                                                                *
+ * File Version: 1.6                                                                                *
  *                                                                                                  *
  * File Functions:                                                                                  *
  * ADMToInt(ADM:admvar);                                                                            *
@@ -24,13 +24,15 @@
  * ADM:HexStringToString(input[], output[], maxdest = sizeof(output));                              *
  *                                                                                                  *
  * Return value:                                                                                    *
- * ERROR_CODE_ADM_UNEXEC     //function unexecutable                                                *
- * ERROR_CODE_ADM_OK         //success                                                              *
- * ERROR_CODE_ADM_INPUT      //input file not exist                                                 *
- * ERROR_CODE_ADM_OUTPUT     //output file exist                                                    *
- * ERROR_CODE_ADM_KEY        //invalid key                                                          *
- * ERROR_CODE_ADM_SIZE       //invalid file size                                                    *
- * ERROR_CODE_ADM_DEST       //error destination size                                               *
+ * ERROR_CODE_ADM_UNEXEC      //function unexecutable                                               *
+ * ERROR_CODE_ADM_OK          //success                                                             *
+ * ERROR_CODE_ADM_INPUT       //input file not exist                                                *
+ * ERROR_CODE_ADM_OUTPUT      //output file exist                                                   *
+ * ERROR_CODE_ADM_KEY         //invalid key                                                         *
+ * ERROR_CODE_ADM_SIZE        //invalid file size                                                   *
+ * ERROR_CODE_ADM_DEST        //error destination size                                              *
+ * ERROR_CODE_ADM_OPEN_INPUT  //error open input file                                               *
+ * ERROR_CODE_ADM_OPEN_OUTPUT //error open output file                                              *
  *                                                                                                  *
  * Key Generator:                                                                                   *
  * http://ngc.ugu.pl/admkg                                                                          *
@@ -46,25 +48,27 @@
 	#error Unknown sscanf version
 #endif
 
-#define MAX_FILE_SIZE			(2147483647)	//~2 GB
+#define MAX_FILE_SIZE				(2147483647)	//~2 GB
 
-#define MAX_MODE_ADMx32			(4)
-#define MAX_MODE_ADMx64			(8)
-#define MAX_MODE_ADMx128		(16)
-#define MAX_MODE_ADMx256		(32)
+#define MAX_MODE_ADMx32				(4)
+#define MAX_MODE_ADMx64				(8)
+#define MAX_MODE_ADMx128			(16)
+#define MAX_MODE_ADMx256			(32)
 
-#define MAX_KEY_LEN_ADMx32		(16)
-#define MAX_KEY_LEN_ADMx64		(32)
-#define MAX_KEY_LEN_ADMx128		(64)
-#define MAX_KEY_LEN_ADMx256		(128)
+#define MAX_KEY_LEN_ADMx32			(16)
+#define MAX_KEY_LEN_ADMx64			(32)
+#define MAX_KEY_LEN_ADMx128			(64)
+#define MAX_KEY_LEN_ADMx256			(128)
 
-#define ERROR_CODE_ADM_UNEXEC	(ADM:0)			//function unexecutable
-#define ERROR_CODE_ADM_OK		(ADM:1)			//success
-#define ERROR_CODE_ADM_INPUT	(ADM:-1)		//input file not exist
-#define ERROR_CODE_ADM_OUTPUT	(ADM:-2)		//output file exist
-#define ERROR_CODE_ADM_KEY		(ADM:-3)		//invalid key
-#define ERROR_CODE_ADM_SIZE		(ADM:-4)		//invalid file size
-#define ERROR_CODE_ADM_DEST		(ADM:-5)		//error destination size
+#define ERROR_CODE_ADM_UNEXEC		(ADM:0)		//function unexecutable
+#define ERROR_CODE_ADM_OK			(ADM:1)		//success
+#define ERROR_CODE_ADM_INPUT		(ADM:-1)	//input file not exist
+#define ERROR_CODE_ADM_OUTPUT		(ADM:-2)	//output file exist
+#define ERROR_CODE_ADM_KEY			(ADM:-3)	//invalid key
+#define ERROR_CODE_ADM_SIZE			(ADM:-4)	//invalid file size
+#define ERROR_CODE_ADM_DEST			(ADM:-5)	//error destination size
+#define ERROR_CODE_ADM_OPEN_INPUT	(ADM:-6)	//error open input file
+#define ERROR_CODE_ADM_OPEN_OUTPUT	(ADM:-7)	//error open output file
 
 //Remove ADM: tag
 stock ADMToInt(ADM:admvar){
@@ -75,12 +79,17 @@ stock ADM:InvertFile(const input[], const output[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new File:inpf = fopen(input,io_read);
+	if(!inpf) return ERROR_CODE_ADM_OPEN_INPUT;
 	new asize = flength(inpf), idx = 0;
 	if(asize > MAX_FILE_SIZE || asize < 0){
 		fclose(inpf);
 		return ERROR_CODE_ADM_SIZE;
 	}
 	new File:outf = fopen(output,io_write);
+	if(!outf){
+		fclose(inpf);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
 	while(idx < asize){
 		fputchar(outf,(fgetchar(inpf,0,false) ^ 0xFF),false);
 		idx++;
@@ -103,12 +112,17 @@ stock ADM:ADMx32(const input[], const output[], key[]){
 		}
 	}
 	new File:inpf = fopen(input,io_read);
+	if(!inpf) return ERROR_CODE_ADM_OPEN_INPUT;
 	new asize = flength(inpf), idx = 0, s = 0;
 	if(asize > MAX_FILE_SIZE || asize < 0){
 		fclose(inpf);
 		return ERROR_CODE_ADM_SIZE;
 	}
 	new File:outf = fopen(output,io_write);
+	if(!outf){
+		fclose(inpf);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
 	while(idx < asize){
 		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
@@ -133,12 +147,17 @@ stock ADM:ADMx64(const input[], const output[], key[]){
 		}
 	}
 	new File:inpf = fopen(input,io_read);
+	if(!inpf) return ERROR_CODE_ADM_OPEN_INPUT;
 	new asize = flength(inpf), idx = 0, s = 0;
 	if(asize > MAX_FILE_SIZE || asize < 0){
 		fclose(inpf);
 		return ERROR_CODE_ADM_SIZE;
 	}
 	new File:outf = fopen(output,io_write);
+	if(!outf){
+		fclose(inpf);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
 	while(idx < asize){
 		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
@@ -164,12 +183,17 @@ stock ADM:ADMx128(const input[], const output[], key[]){
 		}
 	}
 	new File:inpf = fopen(input,io_read);
+	if(!inpf) return ERROR_CODE_ADM_OPEN_INPUT;
 	new asize = flength(inpf), idx = 0, s = 0;
 	if(asize > MAX_FILE_SIZE || asize < 0){
 		fclose(inpf);
 		return ERROR_CODE_ADM_SIZE;
 	}
 	new File:outf = fopen(output,io_write);
+	if(!outf){
+		fclose(inpf);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
 	while(idx < asize){
 		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
@@ -197,12 +221,17 @@ stock ADM:ADMx256(const input[], const output[], key[]){
 		}
 	}
 	new File:inpf = fopen(input,io_read);
+	if(!inpf) return ERROR_CODE_ADM_OPEN_INPUT;
 	new asize = flength(inpf), idx = 0, s = 0;
 	if(asize > MAX_FILE_SIZE || asize < 0){
 		fclose(inpf);
 		return ERROR_CODE_ADM_SIZE;
 	}
 	new File:outf = fopen(output,io_write);
+	if(!outf){
+		fclose(inpf);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
 	while(idx < asize){
 		fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
 		idx++;
