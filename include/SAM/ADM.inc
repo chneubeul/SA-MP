@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.6                                                                                *
+ * File Version: 1.6b                                                                               *
  *                                                                                                  *
  * File Functions:                                                                                  *
  * ADMToInt(ADM:admvar);                                                                            *
@@ -252,6 +252,7 @@ stock ADM:InvertString(input[], output[], maxdest = sizeof(output)){
 		output[idx] = (input[idx] ^ 0xFF);
 		idx++;
 	}
+	output[asize] = EOS;
 	return ERROR_CODE_ADM_OK;
 }
 
@@ -274,6 +275,7 @@ stock ADM:ADMx32String(input[], output[], key[], maxdest = sizeof(output)){
 		s++;
 		if(s >= MAX_MODE_ADMx32) s = 0;
 	}
+	output[asize] = EOS;
 	return ERROR_CODE_ADM_OK;
 }
 
@@ -296,6 +298,7 @@ stock ADM:ADMx64String(input[], output[], key[], maxdest = sizeof(output)){
 		s++;
 		if(s >= MAX_MODE_ADMx64) s = 0;
 	}
+	output[asize] = EOS;
 	return ERROR_CODE_ADM_OK;
 }
 
@@ -319,6 +322,7 @@ stock ADM:ADMx128String(input[], output[], key[], maxdest = sizeof(output)){
 		s++;
 		if(s >= MAX_MODE_ADMx128) s = 0;
 	}
+	output[asize] = EOS;
 	return ERROR_CODE_ADM_OK;
 }
 
@@ -344,6 +348,7 @@ stock ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output)){
 		s++;
 		if(s >= MAX_MODE_ADMx256) s = 0;
 	}
+	output[asize] = EOS;
 	return ERROR_CODE_ADM_OK;
 }
 
@@ -366,6 +371,7 @@ stock ADM:StringToHexString(input[], output[], maxdest = sizeof(output)){
 		idx++;
 		offset += 2;
 	}
+	output[asize*2] = EOS;
 	return ERROR_CODE_ADM_OK;
 }
 
@@ -387,6 +393,7 @@ stock ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
 		idx++;
 		offset += 2;
 	}
+	output[asize] = EOS;
 	return ERROR_CODE_ADM_OK;
 }
 //EOF
