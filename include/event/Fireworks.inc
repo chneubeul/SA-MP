@@ -2,6 +2,15 @@
  * Rcon Fireworks v2.0 made by Abyss Morgan *
  ********************************************/
 
+//3DTryg.inc
+#if !defined _3D_Tryg
+	#error You need 3DTryg.inc v2.1b
+#elseif !defined Tryg3D_Version
+	#error Update you 3DTryg.inc to v2.1b
+#elseif (Tryg3D_Version < 0x20102)
+	#error Update you 3DTryg.inc to v2.1b
+#endif
+
 #if !defined e_float
 	//ATM Standard 1.1
 	enum e_float {
