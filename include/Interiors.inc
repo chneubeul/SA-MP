@@ -160,10 +160,13 @@ new InteriorList[][e_interiorlist] = {
 CMD:int(playerid,params[]){
 	if(!IsPlayerAdmin(playerid)) return 0;
 	if(isnull(params)) return SendClientMessage(playerid,0xFFFFFFFF,"››› Usage: /int <id>");
-	new intid = -1, buffer[128];
+	new intid = -1;
 	sscanf(params,"d",intid);
-	format(buffer,sizeof buffer,"››› Invalid id interior, range <0-%d>",sizeof(InteriorList)-1);
-	if(intid < 0 || intid >= sizeof(InteriorList)) return SendClientMessage(playerid,0xFFFFFFFF,buffer);
+	if(intid < 0 || intid >= sizeof(InteriorList)){
+		new buffer[128];
+		format(buffer,sizeof buffer,"››› Invalid id interior, range <0-%d>",sizeof(InteriorList)-1);
+		return SendClientMessage(playerid,0xFFFFFFFF,buffer);
+	}
 	SetPlayerPos(playerid,InteriorList[intid][X],InteriorList[intid][Y],InteriorList[intid][Z]);
 	SetPlayerFacingAngle(playerid,InteriorList[intid][A]);
 	SetPlayerInterior(playerid,InteriorList[intid][INT]);
