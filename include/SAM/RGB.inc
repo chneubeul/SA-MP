@@ -147,3 +147,5 @@ stock GetBHexFromRGBA(color){
 stock GetAHexFromRGBA(color){
 	return (color & 0xFF);
 }
+
+//EOF

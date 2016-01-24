@@ -1,8 +1,12 @@
 /****************************************************************************************************
  *                                                                                                  *
- * GangZone Update v1.1 by Abyss Morgan                                                             *
+ * GangZone Update v1.2 by Abyss Morgan                                                             *
  *                                                                                                  *
- * IsPlayerInGangZone(playerid,zone);                                                               *
+ * Notice:                                                                                          *
+ * Fit with YSF.inc when it is before GangZoneEx.inc                                                *
+ *                                                                                                  *
+ * IsValidGangZone(zoneid);                                                                         *
+ * IsPlayerInGangZone(playerid,zoneid);                                                             *
  * IsPlayerInAnyGangZone(playerid);                                                                 *
  * GangZoneCreateEx(Float:minx,Float:miny,Float:maxx,Float:maxy,worldid = -1,interiorid = -1);      *
  *                                                                                                  *
@@ -16,12 +20,14 @@ new GangZoneArea[MAX_GANG_ZONES];
 
 stock GangZoneCreateEx(Float:minx,Float:miny,Float:maxx,Float:maxy,worldid = -1,interiorid = -1){
 	new tid = GangZoneCreate(minx,miny,maxx,maxy);
+	if(tid == INVALID_GANG_ZONE) return print("[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE");
 	GangZoneArea[tid] = CreateDynamicRectangle(minx,miny,maxx,maxy,worldid,interiorid,-1);
 	return tid;
 }
 
 stock AC_GangZoneCreate(Float:minx,Float:miny,Float:maxx,Float:maxy){
 	new tid = GangZoneCreate(minx,miny,maxx,maxy);
+	if(tid == INVALID_GANG_ZONE) return print("[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE");
 	GangZoneArea[tid] = CreateDynamicRectangle(minx,miny,maxx,maxy,-1,-1,-1);
 	return tid;
 }
@@ -33,9 +39,10 @@ stock AC_GangZoneCreate(Float:minx,Float:miny,Float:maxx,Float:maxy){
 #endif
 #define GangZoneCreate AC_GangZoneCreate
 
-stock AC_GangZoneDestroy(zone){
-	if(IsValidDynamicArea(GangZoneArea[zone])) DestroyDynamicArea(GangZoneArea[zone]);
-	GangZoneDestroy(zone);
+stock AC_GangZoneDestroy(zoneid){
+	if(zoneid < 0 || zoneid > MAX_GANG_ZONES) return printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+	if(IsValidDynamicArea(GangZoneArea[zoneid])) DestroyDynamicArea(GangZoneArea[zoneid]);
+	return GangZoneDestroy(zoneid);
 }
 
 #if defined _ALS_GangZoneDestroy
@@ -45,10 +52,23 @@ stock AC_GangZoneDestroy(zone){
 #endif
 #define GangZoneDestroy AC_GangZoneDestroy
 
-stock bool:IsPlayerInGangZone(playerid,zone){
-	if(IsPlayerInDynamicArea(playerid,GangZoneArea[zone])) return true;
-	return false;
-}
+//fix colision YSF.inc
+#if !defined _YSF_included
+	stock bool:IsPlayerInGangZone(playerid,zoneid){
+		if(zoneid < 0 || zoneid > MAX_GANG_ZONES) return printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+		if(IsPlayerInDynamicArea(playerid,GangZoneArea[zoneid])) return true;
+		return false;
+	}
+	
+	stock bool:IsValidGangZone(zoneid){
+		if(zoneid < 0 || zoneid > MAX_GANG_ZONES) return printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+		if(IsValidDynamicArea(GangZoneArea[zoneid]) && GangZoneArea[zoneid] != 0) return true
+		return false;
+	}
+#else
+	//if YSF.inc occurred later than GangZoneEx.inc we force reactions user
+	#define _YSF_included
+#endif
 
 stock bool:IsPlayerInAnyGangZone(playerid){
 	for(new i = 0; i < MAX_GANG_ZONES; i++){
@@ -56,3 +76,5 @@ stock bool:IsPlayerInAnyGangZone(playerid){
 	}
 	return false;
 }
+
+//EOF

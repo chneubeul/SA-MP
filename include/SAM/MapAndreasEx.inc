@@ -46,3 +46,4 @@ stock SafeMapAndreasInit(){
 	}
 }
 
+//EOF

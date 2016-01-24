@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.0                                                                                *
+ * File Version: 1.1                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileID(File:handle);                                                                          *
@@ -18,6 +18,8 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#define StringToInt(%0)		strval(%0)
+ 
 stock GetFileID(File:handle){
 	return (_:handle);
 }
@@ -39,10 +41,6 @@ stock BoolToInt(bool:boolean){
 	} else {
 		return 0;
 	}
-}
-
-stock StringToInt(string[]){
-	return strval(string);
 }
 
 stock bool:StringToBool(string[]){
@@ -95,3 +93,5 @@ stock IntToHex(int){
 	}
 	return result;
 }
+
+//EOF

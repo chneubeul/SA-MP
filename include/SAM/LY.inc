@@ -50,7 +50,7 @@ stock GetLYString(prefix,sufix,string[]){
 	strcopy(buffer,string);
 }
 
-//Unsigned Long 32 bit
+//Pawn Unsigned Long for 32 Bit language (precision 61-bit)
 stock UpdateLY(&prefix,&sufix,value,limitprefix = DEFAULT_MAX_LY_PREFIX){
 	if(value == 0) return 1; //skip
 	
@@ -99,3 +99,4 @@ stock UpdateLY(&prefix,&sufix,value,limitprefix = DEFAULT_MAX_LY_PREFIX){
 	return 1;
 }
 
+//EOF

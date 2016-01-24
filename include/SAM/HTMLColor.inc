@@ -4,6 +4,7 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+//		name					0xRGBA
 #define white					0xFFFFFFFF
 #define gray					0x808080FF
 #define silver					0xC0C0C0FF
@@ -164,3 +165,4 @@
 #define darkslategray			0x2F4F4FFF
 #define black					0x000000FF
 
+//EOF

@@ -1,21 +1,22 @@
 /****************************************************************************************************
  *                                                                                                  *
- * TextDraw Update v1.0 by Abyss Morgan                                                             *
+ * TextDraw Update v1.1 by Abyss Morgan                                                             *
  *                                                                                                  *
  * Functions:                                                                                       *
  * CountTextDraw();                                                                                 *
- * CountPlayerTextDraw();                                                                           *
+ * CountPlayerTextDraw(playerid);                                                                   *
  *                                                                                                  *
  ****************************************************************************************************/
 
-new TextDrawCount = 0, PlayerTextDrawCount = 0;
+new TextDrawCount = 0,
+	PlayerTextDrawCount[MAX_PLAYERS];
 
 stock CountTextDraw(){
 	return TextDrawCount;
 }
 	
-stock CountPlayerTextDraw(){
-	return PlayerTextDrawCount;
+stock CountPlayerTextDraw(playerid){
+	return PlayerTextDrawCount[playerid];
 }
 
 //TextDrawCreate
@@ -33,7 +34,7 @@ stock Text:AC_TextDrawCreate(Float:x,Float:y,text[]){
 
 //CreatePlayerTextDraw
 stock PlayerText:AC_CreatePlayerTextDraw(playerid,Float:x,Float:y,text[]){
-	PlayerTextDrawCount++;
+	PlayerTextDrawCount[playerid]++;
 	return CreatePlayerTextDraw(playerid,x,y,text);
 }
 
@@ -59,7 +60,7 @@ stock AC_TextDrawDestroy(Text:text){
 
 //DestroyPlayerTextDraw
 stock AC_DestroyPlayerTextDraw(playerid,PlayerText:text){
-	PlayerTextDrawCount--;
+	PlayerTextDrawCount[playerid]--;
 	return DestroyPlayerTextDraw(playerid,text);
 }
 
@@ -70,3 +71,4 @@ stock AC_DestroyPlayerTextDraw(playerid,PlayerText:text){
 #endif
 #define DestroyPlayerTextDraw AC_DestroyPlayerTextDraw
 
+//EOF

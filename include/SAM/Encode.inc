@@ -66,3 +66,5 @@ stock RollX(string1[],roll,string2[]){
 	}
 	string2[strlen(string1)] = EOS;
 }
+
+//EOF

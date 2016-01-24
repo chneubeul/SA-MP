@@ -39,10 +39,23 @@
  *                                                                                                  *
  ****************************************************************************************************/
  
+/*
+//Check Version ADM.inc
+#if !defined _adm_encryption
+	#error You need ADM.inc v1.6b
+#elseif !defined ADM_Encryption_Version
+	#error Update you ADM.inc to v1.6b
+#elseif (ADM_Encryption_Version < 0x10602)
+	#error Update you ADM.inc to v1.6b
+#endif
+*/
+
 #if defined _adm_encryption
 	#endinput
 #endif
 #define _adm_encryption
+
+#define ADM_Encryption_Version 		(0x10602) //a.b[c] 0x(10000*a+100*b+c)
 
 #if !defined sscanf
 	#error Unknown sscanf version
@@ -396,4 +409,5 @@ stock ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
 	output[asize] = EOS;
 	return ERROR_CODE_ADM_OK;
 }
+
 //EOF

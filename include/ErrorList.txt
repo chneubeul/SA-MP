@@ -17,6 +17,10 @@
 [ADM] Error: MapAndreas failed to initiated
 [ADM] Info: MapAndreas successfully init.
 
+//GangZoneEx.inc
+[ADM] Warring: Invalid zoneid, range 0 - 1023
+[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE
+
 //ScriptSecure.inc
 [ADM] Info: Local Server Detect.
 [ADM] Error: This script is stolen.

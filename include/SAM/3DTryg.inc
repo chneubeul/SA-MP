@@ -56,6 +56,17 @@
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
+/*
+//Check Version 3DTryg.inc
+#if !defined _3D_Tryg
+	#error You need 3DTryg.inc v2.1e
+#elseif !defined Tryg3D_Version
+	#error Update you 3DTryg.inc to v2.1e
+#elseif (Tryg3D_Version < 0x20105)
+	#error Update you 3DTryg.inc to v2.1e
+#endif
+*/
+
 #if defined _3D_Tryg
 	#endinput
 #endif
@@ -236,7 +247,7 @@ stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Floa
 
 stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime){
 	if(speed <= 0.0){
-		rtime = FLOAT_INFINITY;
+		rtime = _:FLOAT_INFINITY;
 	} else {
 		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 		rtime = floatround((dist/speed)*1000.0);
@@ -347,3 +358,5 @@ stock bool:IsProbable(chance){
 	if((random(100)+1) <= chance) return true;
 	return false;
 }
+
+//EOF

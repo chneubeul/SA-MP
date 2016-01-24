@@ -121,6 +121,17 @@
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
+/*
+//Check Version StreamerFunction.inc
+#if !defined _streamer_spec
+	#error You need StreamerFunction.inc v2.1d
+#elseif !defined Streamer_Spec_Version
+	#error Update you StreamerFunction.inc to v2.1d
+#elseif (Streamer_Spec_Version < 0x20104)
+	#error Update you StreamerFunction.inc to v2.1d
+#endif
+*/
+
 #if !defined Streamer_AppendArrayData
 	#error Unknown streamer version
 #endif
@@ -682,3 +693,5 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#define DestroyDynamicArea AC_DestroyDynamicArea
 
 #endif
+
+//EOF

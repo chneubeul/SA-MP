@@ -81,3 +81,5 @@ stock InvertValueEx(value,key = 0xFFFFFFFF){
 #define NAND(%1,%2)					(!(%1 && %2))
 #define XOR(%1,%2)					(!(%1 && %2) && (%1 || %2))
 #define NXOR(%1,%2)					((%1 && %2) || !(%1 || %2))
+
+//EOF
