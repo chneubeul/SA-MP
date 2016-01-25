@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1e                                                                                                             *
+ * File Version: 2.1F                                                                                                             *
  *                                                                                                                                *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
@@ -59,11 +59,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.1e
+	#error You need 3DTryg.inc v2.1F
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.1e
-#elseif (Tryg3D_Version < 0x20105)
-	#error Update you 3DTryg.inc to v2.1e
+	#error Update you 3DTryg.inc to v2.1F
+#elseif (Tryg3D_Version < 20106)
+	#error Update you 3DTryg.inc to v2.1F
 #endif
 */
 
@@ -72,7 +72,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version 	(0x20105) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version 	(20106) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
@@ -264,6 +264,7 @@ stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Fl
 	}
 }
 
+//Prototype function v2.0
 stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 	new Float:q0,Float:q1,Float:q2,Float:q3;
 	GetVehicleRotationQuat(vehicleid,q0,q1,q2,q3);
@@ -289,7 +290,8 @@ stock ShiftRotationToVector(Float:rx,Float:rz,&Float:vx,&Float:vy,&Float:vz){
 stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
 	new Float:mx,Float:my,Float:mz;
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
-	ShiftVectorToRotation(mx,my,mz,rx,rz);
+	CompRotationFloat(-(acos(mz)-90.0),rx);
+	CompRotationFloat((atan2(my,mx)-90.0),rz);
 }
 
 stock GetPlayerCameraZAngle(playerid,&Float:rz){
@@ -330,22 +332,63 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 	return false;
 }
 
-stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
-	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
-		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
-		Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
-	if(dAB <= (dAP + dBP) <= dAB+(maxdist*2)) return true;
-	return false;
-}
+#if defined OLD_PROTOTYPE_NT
+	//old prototype function
+	stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
+		new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
+			Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
+			Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
+		if(dAB <= (dAP + dBP) <= (dAB+(maxdist*2))) return true;
+		return false;
+	}
 
-stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
-	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
-		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
-		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
-	if(dAB <= (dAP + dBP) <= dAB+(maxdist*2)) return true;
-	return false;
-}
+	//old prototype function
+	stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+		new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
+			Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
+			Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
+		if(dAB <= (dAP + dBP) <= (dAB+(maxdist*2))) return true;
+		return false;
+	}
+#else
+	stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
+		new Float:minx, Float:miny,
+			Float:maxx, Float:maxy,
+			Float:tmp;
+		GetPointInFront2D(xA,yA,90.0,maxdist,minx,miny);
+		GetPointInFront2D(xB,yB,270.0,maxdist,maxx,maxy);
+		if(minx > maxx){
+			tmp = minx, minx = maxx, maxx = tmp;
+		}
+		if(miny > maxy){
+			tmp = miny, miny = maxy, maxy = tmp;
+		}
+		if((px >= minx && px <= maxx) && (py >= miny && py <= maxy)) return true;
+		return false;
+	}
 
+	stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+		new Float:minx, Float:miny, Float:minz,
+			Float:maxx, Float:maxy, Float:maxz,
+			Float:tmp, Float:mot = floatsqroot(3);
+		GetPointInFront3D(xA,yA,zA,45.0,90.0,(maxdist*mot),minx,miny,minz);
+		GetPointInFront3D(xB,yB,zB,315.0,270.0,(maxdist*mot),maxx,maxy,maxz);
+		if(minx > maxx){
+			tmp = minx, minx = maxx, maxx = tmp;
+		}
+		if(miny > maxy){
+			tmp = miny, miny = maxy, maxy = tmp;
+		}
+		if(minz > maxz){
+			tmp = minz, minz = maxz, maxz = tmp;
+		}
+		if((px >= minx && px <= maxx) && (py >= miny && py <= maxy) && (pz >= minz && pz <= maxz)) return true;
+		
+		return false;
+	}
+#endif
+
+//Prototype function
 stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz){
 	CompRotationFloat(atan2(2*(qx*qy+qz*qw),1-2*((qy*qy)+(qz*qz))),rx);
 	CompRotationFloat(asin(2*(qx*qz-qw*qy)),ry);

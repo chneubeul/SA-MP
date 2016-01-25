@@ -19,7 +19,7 @@ Santa_PickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
 	#error You need StreamerFunction.inc v2.0d
 #elseif !defined Streamer_Spec_Version
 	#error Update you StreamerFunction.inc to v2.0d
-#elseif (Streamer_Spec_Version < 0x20004)
+#elseif (Streamer_Spec_Version < 20004)
 	#error Update you StreamerFunction.inc to v2.0d
 #endif
 
@@ -28,7 +28,7 @@ Santa_PickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
 	#error You need 3DTryg.inc v2.1b
 #elseif !defined Tryg3D_Version
 	#error Update you 3DTryg.inc to v2.1b
-#elseif (Tryg3D_Version < 0x20102)
+#elseif (Tryg3D_Version < 20102)
 	#error Update you 3DTryg.inc to v2.1b
 #endif
 

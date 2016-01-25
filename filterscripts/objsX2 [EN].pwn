@@ -34,7 +34,7 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 	#error You need StreamerFunction.inc v2.1b
 #elseif !defined Streamer_Spec_Version
 	#error Update you StreamerFunction.inc to v2.1b
-#elseif (Streamer_Spec_Version < 0x20102)
+#elseif (Streamer_Spec_Version < 20102)
 	#error Update you StreamerFunction.inc to v2.1b
 #endif
 
@@ -43,7 +43,7 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 	#error You need 3DTryg.inc v2.1b
 #elseif !defined Tryg3D_Version
 	#error Update you 3DTryg.inc to v2.1b
-#elseif (Tryg3D_Version < 0x20102)
+#elseif (Tryg3D_Version < 20102)
 	#error Update you 3DTryg.inc to v2.1b
 #endif
 

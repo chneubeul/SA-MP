@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.6b                                                                               *
+ * File Version: 1.6B                                                                               *
  *                                                                                                  *
  * File Functions:                                                                                  *
  * ADMToInt(ADM:admvar);                                                                            *
@@ -42,11 +42,11 @@
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v1.6b
+	#error You need ADM.inc v1.6B
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v1.6b
-#elseif (ADM_Encryption_Version < 0x10602)
-	#error Update you ADM.inc to v1.6b
+	#error Update you ADM.inc to v1.6B
+#elseif (ADM_Encryption_Version < 10602)
+	#error Update you ADM.inc to v1.6B
 #endif
 */
 
@@ -55,7 +55,7 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(0x10602) //a.b[c] 0x(10000*a+100*b+c)
+#define ADM_Encryption_Version 		(10602) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
 	#error Unknown sscanf version
