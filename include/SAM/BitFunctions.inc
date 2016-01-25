@@ -16,15 +16,6 @@
  * InvertValueEx(value,key = 0xFFFFFFFF);                                                           *
  * bool:CheckValue(value); //even - false, uneven - true                                            *
  *                                                                                                  *
- * IF operators:                                                                                    *
- * if(AND(expression1,expression2))  // expression1 && expression2                                  *
- * if(OR(expression1,expression2))   // expression1 || expression2                                  *
- * if(NOT(expression))               // !expression1                                                *
- * if(NOR(expression1,expression2))                                                                 *
- * if(NAND(expression1,expression2))                                                                *
- * if(XOR(expression1,expression2))                                                                 *
- * if(NXOR(expression1,expression2))                                                                *
- *                                                                                                  *
  ****************************************************************************************************/
 
 #if defined _bit_function
@@ -64,13 +55,5 @@ stock InvertValue(value){
 stock InvertValueEx(value,key = 0xFFFFFFFF){
 	return (value ^ key);
 }
-
-#define AND(%1,%2)					(%1 && %2)
-#define OR(%1,%2)					(%1 || %2)
-#define NOT(%1)						(!%1)
-#define NOR(%1,%2)					(!(%1 || %2))
-#define NAND(%1,%2)					(!(%1 && %2))
-#define XOR(%1,%2)					(!(%1 && %2) && (%1 || %2))
-#define NXOR(%1,%2)					((%1 && %2) || !(%1 || %2))
 
 //EOF
