@@ -4,14 +4,14 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.2                                                                                *
+ * File Version: 1.3                                                                                *
  *                                                                                                  *
  * bit 0 - 31:                                                                                      *
  * (bit 31) --> 11111111000000001111010001010000 <-- (bit 0)                                        *
  *                                                                                                  *
  * Bit Functions:                                                                                   *
  * GetValueBit(value,bit);                                                                          *
- * SetValueBit(value,bit,power);  //power 0 or 1                                                    *
+ * SetValueBit(&value,bit,power);  //power 0 or 1                                                   *
  * InvertValue(value);                                                                              *
  * InvertValueEx(value,key = 0xFFFFFFFF);                                                           *
  * bool:CheckValue(value); //even - false, uneven - true                                            *
@@ -48,22 +48,13 @@ stock GetValueBit(value,bit){
 	return (value >>> bit & 0x01);
 }
 
-stock SetValueBit(value,bit,power){
+stock SetValueBit(&value,bit,power){
 	if(bit < 0 || bit > 31) print("[ADM] Warring: Set bit error, the wrong bit id.");
-	new int = 0;
-	power = (power & 0x01);
-	for(new i = 31; i >= 0; i--){
-		if(i == bit){
-			if(power){
-				int += floatround(floatpower(2,i));
-			}
-		} else {
-			if(value >>> i & 0x01){
-				int += floatround(floatpower(2,i));
-			}
-		}
+	if((power & 0x01) == 1){
+		value |= floatround(floatpower(2,bit));
+	} else {
+		value &= ~floatround(floatpower(2,bit));
 	}
-	return int;
 }
 
 stock InvertValue(value){
