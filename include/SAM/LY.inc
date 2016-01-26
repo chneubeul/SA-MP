@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.2                                                                                *
+ * File Version: 1.3                                                                                *
  *                                                                                                  *
  * Pawn Unsigned Long for 32 Bit language (precision 61-bit)                                        *
  * Available limit:                                                                                 *
@@ -25,29 +25,18 @@
 #define MAX_LY_PREFIX	 			(2147483647)
 #define DEFAULT_MAX_LY_PREFIX		(2000000000)
 
-#if !defined strcopy
-	stock strcopy(string1[],string2[]){
-		for(new i = 0, j = strlen(string1); i < j; i++){
-			string2[i] = string1[i];
-		}
-		string2[strlen(string1)] = EOS;
-	}
-#endif
-
 stock bool:IsValueContainLY(prefix,sufix,value){
 	if((prefix == 0) && (sufix == 0)) return false;
 	if((sufix < value) && (prefix == 0)) return false;
 	return true;
 }
 
-stock GetLYString(prefix,sufix,string[]){
-	new buffer[20];
+stock GetLYString(prefix,sufix,string[],maxdest = sizeof(string)){
 	if(prefix == 0){
-		format(buffer,sizeof(buffer),"%d",sufix);
+		format(string,maxdest,"%d",sufix);
 	} else {
-		format(buffer,sizeof(buffer),"%d%09d",prefix,sufix);
+		format(string,maxdest,"%d%09d",prefix,sufix);
 	}
-	strcopy(buffer,string);
 }
 
 //Pawn Unsigned Long for 32 Bit language (precision 61-bit)
