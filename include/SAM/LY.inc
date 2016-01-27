@@ -12,7 +12,7 @@
  * 0 - 2 000 000 000 000 000 000                                                                    *
  *                                                                                                  *
  * bool:IsValueContainLY(prefix,sufix,value);                                                       *
- * GetLYString(prefix,sufix,string[]);                                                              *
+ * GetLYString(prefix,sufix,string[],maxdest = sizeof(string));                                     *
  * UpdateLY(&prefix,&sufix,value,limitprefix = DEFAULT_MAX_LY_PREFIX);                              *
  *                                                                                                  *
  ****************************************************************************************************/
