@@ -30,7 +30,7 @@
  * ADMToInt(ADM:admvar);                                                                            *
  * bool:IsValidADMKey(key[], type);                                                                 *
  * GetADMKeyType(key[], bool:distorted = false);                                                    *
- * ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(output));                       *
+ * ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(outputkey));                    *
  * ADM:CreateADMKey(key[], type, maxdest = sizeof(key));                                            *
  *                                                                                                  *
  * Return value:                                                                                    *
