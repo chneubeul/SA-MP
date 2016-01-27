@@ -72,7 +72,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version 	(20106) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version		(20106) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)

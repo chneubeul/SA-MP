@@ -15,6 +15,20 @@ FOR /l %%i IN (1,1,%ARGCNT%) DO CALL :SET_KEY %%i
 
 ECHO Decryption key:%O_KEY%
 ECHO.
+IF "%ARGCNT%" == "1" (
+	ECHO Key Type: RollX
+) ELSE IF "%ARGCNT%" == "4" (
+	ECHO Key Type: ADMx32
+) ELSE IF "%ARGCNT%" == "8" (
+	ECHO Key Type: ADMx64
+) ELSE IF "%ARGCNT%" == "16" (
+	ECHO Key Type: ADMx128
+) ELSE IF "%ARGCNT%" == "32" (
+	ECHO Key Type: ADMx256
+) ELSE (
+	ECHO Key Type: Unknown
+)
+ECHO.
 PAUSE > nul
 
 GOTO :eof

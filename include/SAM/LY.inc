@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.3b                                                                               *
+ * File Version: 1.3B                                                                               *
  *                                                                                                  *
  * Pawn Unsigned Long for 32 Bit language (precision 61-bit)                                        *
  * Available limit:                                                                                 *

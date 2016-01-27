@@ -4,24 +4,33 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.1                                                                                *
+ * File Version: 1.2                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
+ * GetFileHandleID(File:handle);                                                                    *
  * GetFileID(File:handle);                                                                          *
  * BinToInt(string[]);                                                                              *
  * BoolToInt(bool:boolean);                                                                         *
  * HexToInt(string[]);                                                                              * 
  * StringToInt(string[]);                                                                           *
  * bool:StringToBool(string[]);                                                                     *
- * strcopy(string1[],string2[]);                                                                    *
+ * strcopy(input[], output[], maxlength = sizeof(output));                                          *
  * IntToHex(int);                                                                                   *
  *                                                                                                  *
  ****************************************************************************************************/
 
-#define StringToInt(%0)		strval(%0)
- 
+#define FIRST_FILE_ADDRESS			(0x004E5A18)
+#define INVALID_FILE_ID				(0xFFB1A5E7)
+#define INVALID_FILE_HANDLE			(File:0)
+#define GetFileHandleID(%0)			(_:%0)
+#define StringToInt(%0)				strval(%0)
+
 stock GetFileID(File:handle){
-	return (_:handle);
+	if(handle == INVALID_FILE_HANDLE){
+		return INVALID_FILE_ID;
+	} else {
+		return ((GetFileHandleID(handle)-FIRST_FILE_ADDRESS)/32);
+	}
 }
 
 stock BinToInt(string[]){
@@ -51,11 +60,9 @@ stock bool:StringToBool(string[]){
 	}
 }
 
-stock strcopy(string1[],string2[]){
-	for(new i = 0, j = strlen(string1); i < j; i++){
-		string2[i] = string1[i];
-	}
-	string2[strlen(string1)] = EOS;
+stock strcopy(input[], output[], maxlength = sizeof(output)){
+	output[0] = 0;
+	strcat(output,input,maxlength);
 }
 
 stock HexToInt(string[]){
