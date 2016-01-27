@@ -60,9 +60,11 @@ stock bool:StringToBool(string[]){
 	}
 }
 
-stock strcopy(input[], output[], maxlength = sizeof(output)){
-	output[0] = 0;
-	strcat(output,input,maxlength);
+stock strcopy(input[],output[]){
+	for(new i = 0, j = strlen(input); i < j; i++){
+		output[i] = input[i];
+	}
+	output[strlen(input)] = EOS;
 }
 
 stock HexToInt(string[]){
