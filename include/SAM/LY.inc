@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.3                                                                                *
+ * File Version: 1.3b                                                                               *
  *                                                                                                  *
  * Pawn Unsigned Long for 32 Bit language (precision 61-bit)                                        *
  * Available limit:                                                                                 *
@@ -22,8 +22,9 @@
 #endif
 #define _Long_Yoyo
 
-#define MAX_LY_PREFIX	 			(2147483647)
-#define DEFAULT_MAX_LY_PREFIX		(2000000000)
+#define LY_STRING_LEN					(20)
+#define MAX_LY_PREFIX	 				(2147483647)
+#define DEFAULT_MAX_LY_PREFIX			(2000000000)
 
 stock bool:IsValueContainLY(prefix,sufix,value){
 	if((prefix == 0) && (sufix == 0)) return false;
