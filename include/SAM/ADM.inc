@@ -1,63 +1,68 @@
-/****************************************************************************************************
- *                                                                                                  *
- *                                       ADM Encryption File                                        *
- *                                                                                                  *
- * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
- *                                                                                                  *
- * File Version: 1.7                                                                                *
- *                                                                                                  *
- * File Functions:                                                                                  *
- * ADM:InvertFile(const input[], const output[]);                                                   *
- * ADM:HexNegativeFile(const input[], const output[], key[]);                                       *
- * ADM:RollXFile(const input[], const output[], key[]);                                             *
- * ADM:ADMx32(const input[], const output[], key[]);                                                *
- * ADM:ADMx64(const input[], const output[], key[]);                                                *
- * ADM:ADMx128(const input[], const output[], key[]);                                               *
- * ADM:ADMx256(const input[], const output[], key[]);                                               *
- *                                                                                                  *
- * String Functions:                                                                                *
- * ADM:InvertString(input[], output[], maxdest = sizeof(output));                                   *
- * ADM:HexNegativeString(input[], output[], key[], maxdest = sizeof(output));                       *
- * ADM:RollXString(input[], output[], key[], maxdest = sizeof(output));                             *
- * ADM:ADMx32String(input[], output[], key[], maxdest = sizeof(output));                            *
- * ADM:ADMx64String(input[], output[], key[], maxdest = sizeof(output));                            *
- * ADM:ADMx128String(input[], output[], key[], maxdest = sizeof(output));                           *
- * ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output));                           *
- * ADM:StringToHexString(input[], output[], maxdest = sizeof(output));                              *
- * ADM:HexStringToString(input[], output[], maxdest = sizeof(output));                              *
- *                                                                                                  *
- * Other Functions:                                                                                 *
- * ADMToInt(ADM:admvar);                                                                            *
- * bool:IsValidADMKey(key[], type);                                                                 *
- * GetADMKeyType(key[], bool:distorted = false);                                                    *
- * ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(outputkey));                    *
- * ADM:CreateADMKey(key[], type, maxdest = sizeof(key));                                            *
- *                                                                                                  *
- * Return value:                                                                                    *
- * ERROR_CODE_ADM_UNEXEC       //function unexecutable                                              *
- * ERROR_CODE_ADM_OK           //success                                                            *
- * ERROR_CODE_ADM_INPUT        //input file not exist                                               *
- * ERROR_CODE_ADM_OUTPUT       //output file exist                                                  *
- * ERROR_CODE_ADM_KEY          //invalid key                                                        *
- * ERROR_CODE_ADM_SIZE         //invalid file size                                                  *
- * ERROR_CODE_ADM_DEST         //error destination size                                             *
- * ERROR_CODE_ADM_OPEN_INPUT   //error open input file                                              *
- * ERROR_CODE_ADM_OPEN_OUTPUT  //error open output file                                             * 
- * ERROR_CODE_ADM_INVALID_TYPE //invalid key type                                                   *
- *                                                                                                  *
- * Key Generator:                                                                                   *
- * http://ngc.ugu.pl/admkg                                                                          *
- *                                                                                                  *
- ****************************************************************************************************/
+/**********************************************************************************************************************************
+ *                                                                                                                                *
+ *                                                      ADM Encryption File                                                       *
+ *                                                                                                                                *
+ * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
+ *                                                                                                                                *
+ * File Version: 1.8                                                                                                              *
+ *                                                                                                                                *
+ * File Functions:                                                                                                                *
+ * ADM:InvertFile(const input[], const output[]);                                                                                 *
+ * ADM:HexNegativeFile(const input[], const output[], key[]);                                                                     *
+ * ADM:RollXFile(const input[], const output[], key[]);                                                                           *
+ * ADM:ADMx32(const input[], const output[], key[]);                                                                              *
+ * ADM:ADMx64(const input[], const output[], key[]);                                                                              *
+ * ADM:ADMx128(const input[], const output[], key[]);                                                                             *
+ * ADM:ADMx256(const input[], const output[], key[]);                                                                             *
+ * ADM:ADMx512(const input[], const output[], password[], bool:invertpassword = false);                                           *
+ *                                                                                                                                *
+ * String Functions:                                                                                                              *
+ * ADM:InvertString(input[], output[], maxdest = sizeof(output));                                                                 *
+ * ADM:HexNegativeString(input[], output[], key[], maxdest = sizeof(output));                                                     *
+ * ADM:RollXString(input[], output[], key[], maxdest = sizeof(output));                                                           *
+ * ADM:ADMx32String(input[], output[], key[], maxdest = sizeof(output));                                                          *
+ * ADM:ADMx64String(input[], output[], key[], maxdest = sizeof(output));                                                          *
+ * ADM:ADMx128String(input[], output[], key[], maxdest = sizeof(output));                                                         *
+ * ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output));                                                         *
+ * ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output));                       *
+ *                                                                                                                                *
+ * Other Functions:                                                                                                               *
+ * ADMToInt(ADM:admvar);                                                                                                          *
+ * bool:IsValidADMKey(key[], type);                                                                                               *
+ * GetADMKeyType(key[], bool:distorted = false);                                                                                  *
+ * ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(outputkey));                                                  *
+ * ADM:CreateADMKey(key[], type, maxdest = sizeof(key));                                                                          *
+ * ADM:StringToHexString(input[], output[], maxdest = sizeof(output));                                                            *
+ * ADM:HexStringToString(input[], output[], maxdest = sizeof(output));                                                            *
+ *                                                                                                                                *
+ * Return value:                                                                                                                  *
+ * ERROR_CODE_ADM_UNEXEC       //function unexecutable                                                                            *
+ * ERROR_CODE_ADM_OK           //success                                                                                          *
+ * ERROR_CODE_ADM_INPUT        //input file not exist                                                                             *
+ * ERROR_CODE_ADM_OUTPUT       //output file exist                                                                                *
+ * ERROR_CODE_ADM_KEY          //invalid key                                                                                      *
+ * ERROR_CODE_ADM_SIZE         //invalid file size                                                                                *
+ * ERROR_CODE_ADM_DEST         //error destination size                                                                           *
+ * ERROR_CODE_ADM_OPEN_INPUT   //error open input file                                                                            *
+ * ERROR_CODE_ADM_OPEN_OUTPUT  //error open output file                                                                           * 
+ * ERROR_CODE_ADM_INVALID_TYPE //invalid key type                                                                                 *
+ * ERROR_CODE_ADM_PASSWORD     //invalid password len                                                                             *
+ * ERROR_CODE_ADM_MD5          //invalid MD5 Load                                                                                 *
+ *                                                                                                                                *
+ * Key Generator:                                                                                                                 *
+ * http://ngc.ugu.pl/admkg                                                                                                        *
+ * http://ngc.porobieni.com/admkg/                                                                                                *
+ *                                                                                                                                *
+ **********************************************************************************************************************************/
  
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v1.7
+	#error You need ADM.inc v1.8
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v1.7
-#elseif (ADM_Encryption_Version < 10701)
-	#error Update you ADM.inc to v1.7
+	#error Update you ADM.inc to v1.8
+#elseif (ADM_Encryption_Version < 10801)
+	#error Update you ADM.inc to v1.8
 #endif
 */
 
@@ -66,7 +71,7 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(10701) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(10801) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
 	#error Unknown sscanf version
@@ -86,6 +91,7 @@
 #define MAX_MODE_ADMx64				(8)
 #define MAX_MODE_ADMx128			(16)
 #define MAX_MODE_ADMx256			(32)
+#define MAX_MODE_ADMx512			(64)
 
 #define MAX_KEY_LEN_HEXNEGATIVE		(4)
 #define MAX_KEY_LEN_ROLLX			(4)
@@ -93,6 +99,9 @@
 #define MAX_KEY_LEN_ADMx64			(32)
 #define MAX_KEY_LEN_ADMx128			(64)
 #define MAX_KEY_LEN_ADMx256			(128)
+#define MAX_KEY_LEN_ADMx512			(36)
+
+#define MAX_LEN_BINARY_ADMx512		(20)
 
 #define ERROR_CODE_ADM_UNEXEC		(ADM:0)		//function unexecutable
 #define ERROR_CODE_ADM_OK			(ADM:1)		//success
@@ -104,6 +113,8 @@
 #define ERROR_CODE_ADM_OPEN_INPUT	(ADM:-6)	//error open input file
 #define ERROR_CODE_ADM_OPEN_OUTPUT	(ADM:-7)	//error open output file
 #define ERROR_CODE_ADM_INVALID_TYPE	(ADM:-8)	//invalid key type
+#define ERROR_CODE_ADM_PASSWORD		(ADM:-9)	//invalid password len
+#define ERROR_CODE_ADM_MD5			(ADM:-10)	//invalid MD5 Load
 
 
 /********************
@@ -404,6 +415,49 @@ stock ADM:CreateADMKey(key[], type, maxdest = sizeof(key)){
 	return ERROR_CODE_ADM_OK;
 }
 
+stock ADM:StringToHexString(input[], output[], maxdest = sizeof(output)){
+	new asize = strlen(input), offset = 0;
+	if((asize*2) > maxdest) return ERROR_CODE_ADM_DEST;
+	for(new i = 0; i < asize; i++){
+		output[offset] = (0xF & (input[i] >> 4));
+		if(output[offset] < 10){
+			output[offset] += 48;
+		} else {
+			output[offset] += 55;
+		}
+		output[offset+1] = (0xF & input[i]);
+		if(output[offset+1] < 10){
+			output[offset+1] += 48;
+		} else {
+			output[offset+1] += 55;
+		}
+		offset += 2;
+	}
+	output[asize*2] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
+stock ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
+	new asize = (strlen(input)/2), offset = 0, unit[2];
+	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
+	for(new i = 0; i < asize; i++){
+		if(input[offset] < 58){
+			unit[0] = (input[offset]-48);
+		} else {
+			unit[0] = (input[offset]-55);
+		}
+		if(input[offset+1] < 58){
+			unit[1] = (input[offset+1]-48);
+		} else {
+			unit[1] = (input[offset+1]-55);
+		}
+		output[i] = (unit[0]*16)+unit[1];
+		offset += 2;
+	}
+	output[asize] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
 
 /********************
  * File Functions   *
@@ -631,6 +685,94 @@ stock ADM:ADMx256(const input[], const output[], key[]){
 	return ERROR_CODE_ADM_OK;
 }
 
+#if defined MD5_Hash
+	stock ADM:ADMx512(const input[], const output[], password[], bool:invertpassword = false){
+		if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
+		if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
+		new psize = strlen(password);
+		if(psize < 1 || psize > 255) return ERROR_CODE_ADM_PASSWORD;
+		
+		new	mode[MAX_MODE_ADMx512],
+			hash[MAX_KEY_LEN_ADMx512],
+			BinKeyAlfa[MAX_LEN_BINARY_ADMx512],
+			BinKeyBeta[MAX_LEN_BINARY_ADMx512],
+			BinKeyGamma[MAX_LEN_BINARY_ADMx512],
+			BinKeyDelta[MAX_LEN_BINARY_ADMx512];
+			
+		//Create Bin Key Alfa
+		format(hash,sizeof(hash),"%s",MD5_Hash(password));
+		HexStringToString(hash,BinKeyAlfa);
+		
+		//Create Bin Key Beta	
+		for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
+			BinKeyBeta[i] = (BinKeyAlfa[i] ^ 0xFF);
+		}
+		
+		//Create Bin Key Gamma
+		for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
+			BinKeyGamma[i] = (((0xF & ((BinKeyAlfa[i] >> 4)+8))*16) + (0xF & ((BinKeyAlfa[i] & 0xF)+8)));
+		}
+		
+		//Create Bin Key Delta
+		for(new i = 0, j = strlen(BinKeyBeta); i < j; i++){
+			BinKeyDelta[i] = (((0xF & ((BinKeyBeta[i] >> 4)+8))*16) + (0xF & ((BinKeyBeta[i] & 0xF)+8)));
+		}
+		
+		//Decode password
+		if(invertpassword){
+			for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
+				BinKeyAlfa[i] = (0xFF & (256-BinKeyAlfa[i]));
+				BinKeyBeta[i] = (0xFF & (256-BinKeyBeta[i]));
+				BinKeyGamma[i] = (0xFF & (256-BinKeyGamma[i]));
+				BinKeyDelta[i] = (0xFF & (256-BinKeyDelta[i]));
+			}
+		}
+		
+		//Allocate key address
+		new tid = 0;
+		for(new i = 0; i < MAX_MODE_ADMx512; i++){
+			switch(i % 8){
+				case 0: mode[i] = BinKeyAlfa[tid];
+				case 1: mode[i] = BinKeyGamma[tid];
+				case 2: mode[i] = BinKeyBeta[tid];
+				case 3: mode[i] = BinKeyDelta[tid];
+				case 4: mode[i] = BinKeyGamma[tid];
+				case 5: mode[i] = BinKeyBeta[tid];
+				case 6: mode[i] = BinKeyAlfa[tid];
+				case 7: mode[i] = BinKeyDelta[tid];
+			}
+			if((i+1) % 8 == 0) tid++;
+		}
+		
+		new File:inpf = fopen(input,io_read);
+		if(!inpf) return ERROR_CODE_ADM_OPEN_INPUT;
+		new asize = flength(inpf), idx = 0, s = 0;
+		if(asize > MAX_FILE_SIZE || asize < 0){
+			fclose(inpf);
+			return ERROR_CODE_ADM_SIZE;
+		}
+		new File:outf = fopen(output,io_write);
+		if(!outf){
+			fclose(inpf);
+			return ERROR_CODE_ADM_OPEN_OUTPUT;
+		}
+		while(idx < asize){
+			fputchar(outf,((fgetchar(inpf,0,false)+mode[s]) & 0xFF),false);
+			idx++;
+			s++;
+			if(s >= MAX_MODE_ADMx512) s = 0;
+		}
+		fclose(inpf);
+		fclose(outf);
+		return ERROR_CODE_ADM_OK;
+	}
+#else 
+	stock ADM:ADMx512(const input[], const output[], password[], bool:invertpassword = false){
+		#pragma unused input, output, password, invertpassword
+		return ERROR_CODE_ADM_MD5;
+	}
+#endif
+
 /********************
  * String Functions *
  ********************/
@@ -763,48 +905,81 @@ stock ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output)){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:StringToHexString(input[], output[], maxdest = sizeof(output)){
-	new asize = strlen(input), offset = 0;
-	if((asize*2) > maxdest) return ERROR_CODE_ADM_DEST;
-	for(new i = 0; i < asize; i++){
-		output[offset] = (0xF & (input[i] >> 4));
-		if(output[offset] < 10){
-			output[offset] += 48;
-		} else {
-			output[offset] += 55;
-		}
-		output[offset+1] = (0xF & input[i]);
-		if(output[offset+1] < 10){
-			output[offset+1] += 48;
-		} else {
-			output[offset+1] += 55;
-		}
-		offset += 2;
-	}
-	output[asize*2] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
 
-stock ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
-	new asize = (strlen(input)/2), offset = 0, unit[2];
-	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
-	for(new i = 0; i < asize; i++){
-		if(input[offset] < 58){
-			unit[0] = (input[offset]-48);
-		} else {
-			unit[0] = (input[offset]-55);
+#if defined MD5_Hash
+	stock ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output)){
+		new asize = strlen(input);
+		if(maxdest < asize) return ERROR_CODE_ADM_DEST;
+		new psize = strlen(password);
+		if(psize < 1 || psize > 255) return ERROR_CODE_ADM_PASSWORD;
+		
+		new	mode[MAX_MODE_ADMx512],
+			hash[MAX_KEY_LEN_ADMx512],
+			BinKeyAlfa[MAX_LEN_BINARY_ADMx512],
+			BinKeyBeta[MAX_LEN_BINARY_ADMx512],
+			BinKeyGamma[MAX_LEN_BINARY_ADMx512],
+			BinKeyDelta[MAX_LEN_BINARY_ADMx512];
+			
+		//Create Bin Key Alfa
+		format(hash,sizeof(hash),"%s",MD5_Hash(password));
+		HexStringToString(hash,BinKeyAlfa);
+		
+		//Create Bin Key Beta	
+		for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
+			BinKeyBeta[i] = (BinKeyAlfa[i] ^ 0xFF);
 		}
-		if(input[offset+1] < 58){
-			unit[1] = (input[offset+1]-48);
-		} else {
-			unit[1] = (input[offset+1]-55);
+		
+		//Create Bin Key Gamma
+		for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
+			BinKeyGamma[i] = (((0xF & ((BinKeyAlfa[i] >> 4)+8))*16) + (0xF & ((BinKeyAlfa[i] & 0xF)+8)));
 		}
-		output[i] = (unit[0]*16)+unit[1];
-		offset += 2;
+		
+		//Create Bin Key Delta
+		for(new i = 0, j = strlen(BinKeyBeta); i < j; i++){
+			BinKeyDelta[i] = (((0xF & ((BinKeyBeta[i] >> 4)+8))*16) + (0xF & ((BinKeyBeta[i] & 0xF)+8)));
+		}
+		
+		//Decode password
+		if(invertpassword){
+			for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
+				BinKeyAlfa[i] = (0xFF & (256-BinKeyAlfa[i]));
+				BinKeyBeta[i] = (0xFF & (256-BinKeyBeta[i]));
+				BinKeyGamma[i] = (0xFF & (256-BinKeyGamma[i]));
+				BinKeyDelta[i] = (0xFF & (256-BinKeyDelta[i]));
+			}
+		}
+		
+		//Allocate key address
+		new tid = 0;
+		for(new i = 0; i < MAX_MODE_ADMx512; i++){
+			switch(i % 8){
+				case 0: mode[i] = BinKeyAlfa[tid];
+				case 1: mode[i] = BinKeyGamma[tid];
+				case 2: mode[i] = BinKeyBeta[tid];
+				case 3: mode[i] = BinKeyDelta[tid];
+				case 4: mode[i] = BinKeyGamma[tid];
+				case 5: mode[i] = BinKeyBeta[tid];
+				case 6: mode[i] = BinKeyAlfa[tid];
+				case 7: mode[i] = BinKeyDelta[tid];
+			}
+			if((i+1) % 8 == 0) tid++;
+		}
+		
+		new s = 0;
+		for(new i = 0; i < asize; i++){
+			output[i] = ((input[i]+mode[s]) & 0xFF);
+			s++;
+			if(s >= MAX_MODE_ADMx512) s = 0;
+		}
+		output[asize] = EOS;
+		return ERROR_CODE_ADM_OK;
 	}
-	output[asize] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
+#else 
+	stock ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output)){
+		#pragma unused input, output, password, invertpassword, maxdest
+		return ERROR_CODE_ADM_MD5;
+	}
+#endif
 
 
 //EOF
