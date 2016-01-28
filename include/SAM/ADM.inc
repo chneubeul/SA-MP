@@ -113,7 +113,7 @@
 #define ERROR_CODE_ADM_OPEN_INPUT	(ADM:-6)	//error open input file
 #define ERROR_CODE_ADM_OPEN_OUTPUT	(ADM:-7)	//error open output file
 #define ERROR_CODE_ADM_INVALID_TYPE	(ADM:-8)	//invalid key type
-#define ERROR_CODE_ADM_PASSWORD		(ADM:-9)	//invalid password len
+#define ERROR_CODE_ADM_PASSWORD		(ADM:-9)	//invalid password length
 #define ERROR_CODE_ADM_MD5			(ADM:-10)	//invalid MD5 Load
 
 

@@ -45,7 +45,7 @@
  * ERROR_CODE_ADM_OPEN_INPUT   //error open input file                                                                            *
  * ERROR_CODE_ADM_OPEN_OUTPUT  //error open output file                                                                           * 
  * ERROR_CODE_ADM_INVALID_TYPE //invalid key type                                                                                 *
- * ERROR_CODE_ADM_PASSWORD     //invalid password len                                                                             *
+ * ERROR_CODE_ADM_PASSWORD     //invalid password length                                                                          *
  * ERROR_CODE_ADM_MD5          //invalid MD5 Load                                                                                 *
  *                                                                                                                                *
  * Key Generator:                                                                                                                 *
