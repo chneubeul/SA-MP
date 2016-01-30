@@ -1,8 +1,7 @@
 /******************************************
  * Knife Script v1.6 made by Abyss Morgan *
  ******************************************/
- 
- 
+
 /*
 
 //to hook functions
@@ -16,11 +15,11 @@ Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 //3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.1b
+	#error You need 3DTryg.inc v2.1B
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.1b
+	#error Update you 3DTryg.inc to v2.1B
 #elseif (Tryg3D_Version < 20102)
-	#error Update you 3DTryg.inc to v2.1b
+	#error Update you 3DTryg.inc to v2.1B
 #endif
 
 #define KNIFE_SPEED 			(12.0)
