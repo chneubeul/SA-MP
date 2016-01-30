@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.8                                                                                                              *
+ * File Version: 1.8B                                                                                                             *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
  * ADM:InvertFile(const input[], const output[]);                                                                                 *
@@ -71,7 +71,7 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(10801) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(10802) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
 	#error Unknown sscanf version
@@ -441,12 +441,16 @@ stock ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
 	new asize = (strlen(input)/2), offset = 0, unit[2];
 	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
 	for(new i = 0; i < asize; i++){
-		if(input[offset] < 58){
+		if(input[offset] >= 97){
+			unit[0] = (input[offset]-87);
+		} else if(input[offset] < 58){
 			unit[0] = (input[offset]-48);
 		} else {
 			unit[0] = (input[offset]-55);
 		}
-		if(input[offset+1] < 58){
+		if(input[offset+1] >= 97){
+			unit[1] = (input[offset+1]-87);
+		} else if(input[offset+1] < 58){
 			unit[1] = (input[offset+1]-48);
 		} else {
 			unit[1] = (input[offset+1]-55);
