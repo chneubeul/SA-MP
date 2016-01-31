@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1H                                                                                                             *
+ * File Version: 2.1I                                                                                                             *
  *                                                                                                                                *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
@@ -72,7 +72,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version		(20108) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version		(20109) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
@@ -336,25 +336,28 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 	return false;
 }
 
-#if defined OLD_PROTOTYPE_NT
-	//old prototype function
-	stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
-		new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
-			Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
-			Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
-		if(dAB <= (dAP + dBP) <= (dAB+(maxdist*2))) return true;
-		return false;
-	}
 
-	//old prototype function
-	stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
-		new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
-			Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
-			Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
-		if(dAB <= (dAP + dBP) <= (dAB+(maxdist*2))) return true;
-		return false;
-	}
+//#if defined OLD_PROTOTYPE_NT
+//old prototype function
+stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
+	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
+		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
+		Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
+	if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
+	return false;
+}
+
+//old prototype function
+stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
+		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
+		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
+	if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
+	return false;
+}
+/*	
 #else
+//invalid
 	stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
 		new Float:minx, Float:miny,
 			Float:maxx, Float:maxy,
@@ -401,6 +404,7 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 		return false;
 	}
 #endif
+*/
 
 //Prototype function
 stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz){
