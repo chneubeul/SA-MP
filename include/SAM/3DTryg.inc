@@ -396,7 +396,6 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 		if(minz > maxz){
 			tmp = minz, minz = maxz, maxz = tmp;
 		}
-		printf("%.0f %.0f %.0f %.0f %.0f %.0f",minx,miny,minz,maxx,maxy,maxz);
 		if((px >= minx && px <= maxx) && (py >= miny && py <= maxy) && (pz >= minz && pz <= maxz)) return true;
 		
 		return false;
