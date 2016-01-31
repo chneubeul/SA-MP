@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1G                                                                                                             *
+ * File Version: 2.1H                                                                                                             *
  *                                                                                                                                *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
@@ -72,7 +72,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version		(20107) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version		(20108) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
@@ -358,9 +358,12 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 	stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
 		new Float:minx, Float:miny,
 			Float:maxx, Float:maxy,
-			Float:tmp;
-		GetPointInFront2D(xA,yA,90.0,maxdist,minx,miny);
-		GetPointInFront2D(xB,yB,270.0,maxdist,maxx,maxy);
+			Float:tmp, Float:turz;
+		GetRotationFor2Point2D(xA,yA,xB,yB,turz);
+		CompRotationFloat(turz+90.0,tmp);
+		GetPointInFront2D(xA,yA,tmp,maxdist,minx,miny);
+		CompRotationFloat(turz+270.0,tmp);
+		GetPointInFront2D(xB,yB,tmp,maxdist,maxx,maxy);
 		if(minx > maxx){
 			tmp = minx, minx = maxx, maxx = tmp;
 		}
@@ -374,9 +377,16 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 	stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
 		new Float:minx, Float:miny, Float:minz,
 			Float:maxx, Float:maxy, Float:maxz,
-			Float:tmp, Float:mot = floatsqroot(3);
-		GetPointInFront3D(xA,yA,zA,45.0,90.0,(maxdist*mot),minx,miny,minz);
-		GetPointInFront3D(xB,yB,zB,315.0,270.0,(maxdist*mot),maxx,maxy,maxz);
+			Float:tmp, Float:mot = floatsqroot(3),
+			Float:turx, Float:turz, Float:tmp2;
+			
+		GetRotationFor2Point3D(xA,yA,zA,xB,yB,zB,turx,turz);
+		CompRotationFloat(turx+45.0,tmp);
+		CompRotationFloat(turz+90.0,tmp2);
+		GetPointInFront3D(xA,yA,zA,tmp,tmp2,(maxdist*mot),minx,miny,minz);
+		CompRotationFloat(turx+315.0,tmp);
+		CompRotationFloat(turz+270.0,tmp2);
+		GetPointInFront3D(xB,yB,zB,tmp,tmp2,(maxdist*mot),maxx,maxy,maxz);
 		if(minx > maxx){
 			tmp = minx, minx = maxx, maxx = tmp;
 		}
@@ -386,6 +396,7 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 		if(minz > maxz){
 			tmp = minz, minz = maxz, maxz = tmp;
 		}
+		printf("%.0f %.0f %.0f %.0f %.0f %.0f",minx,miny,minz,maxx,maxy,maxz);
 		if((px >= minx && px <= maxx) && (py >= miny && py <= maxy) && (pz >= minz && pz <= maxz)) return true;
 		
 		return false;
