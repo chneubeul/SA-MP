@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.8                                                                                                              *
+ * File Version: 1.8B                                                                                                             *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
  * InvertFile(const char* input, const char* output);                                                                             *
@@ -74,7 +74,7 @@ using namespace std;
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(10801) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(10802) //a.b[c] 10000*a+100*b+c
 
 #define MAX_FILE_SIZE				(18446744073709551615ULL)	//~16 EB
 
@@ -484,12 +484,16 @@ int HexStringToString(char* input, char* output, int maxdest){
 	int asize = (strlen(input)/2), idx = 0, offset = 0, unit[2];
 	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
 	while(idx < asize){
-		if(input[offset] < 58){
+		if(input[offset] >= 97){
+			unit[0] = (input[offset]-87);
+		} else if(input[offset] < 58){
 			unit[0] = (input[offset]-48);
 		} else {
 			unit[0] = (input[offset]-55);
 		}
-		if(input[offset+1] < 58){
+		if(input[offset+1] >= 97){
+			unit[1] = (input[offset+1]-87);
+		} else if(input[offset+1] < 58){
 			unit[1] = (input[offset+1]-48);
 		} else {
 			unit[1] = (input[offset+1]-55);

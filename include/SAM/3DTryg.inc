@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1F                                                                                                             *
+ * File Version: 2.1G                                                                                                             *
  *                                                                                                                                *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
@@ -72,10 +72,14 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version		(20106) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version		(20107) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
+#endif
+
+#if !defined FLOAT_INFINITY
+    #define FLOAT_INFINITY (Float:0x7F800000)
 #endif
 
 #define ctg(%0,%1)			1/floattan(%0,%1)
