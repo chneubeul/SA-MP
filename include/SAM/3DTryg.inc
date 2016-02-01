@@ -337,25 +337,7 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 }
 
 
-#if defined OLD_PROTOTYPE_NT
-	//old prototype function
-	stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
-		new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
-			Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
-			Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
-		if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
-		return false;
-	}
-
-	//old prototype function
-	stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
-		new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
-			Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
-			Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
-		if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
-		return false;
-	}
-#else
+#if defined USE_NEW_PROTOTYPE_NT
 	//IsPointInCylinder
 	//Orig: Greg James - gjames@NVIDIA.com SRC: http://www.flipcode.com/archives/Fast_Point-In-Cylinder_Test.shtml
 	stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
@@ -393,6 +375,24 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 	}
 	
 	#define IsPointInCylinder IsPointNearly2Points3D
+#else
+	//old prototype function
+	stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
+		new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
+			Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
+			Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
+		if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
+		return false;
+	}
+
+	//old prototype function
+	stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+		new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
+			Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
+			Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
+		if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
+		return false;
+	}
 #endif
 
 /*	
