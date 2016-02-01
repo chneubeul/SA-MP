@@ -94,7 +94,7 @@ public KnifeShot(playerid){
 				pvw = GetPlayerVirtualWorld(i);
 				pint = GetPlayerInterior(i);
 				if(pvw == mvw && pint == mint){
-					if(IsPointNearly2Points3D(px,py,pz, mx,my,mz, mtx,mty,mz, 1.0)){
+					if(IsPointNearly2Points3D(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
 						new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
 						if(dist < ldist){
 							ldist = dist;
