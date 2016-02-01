@@ -15,11 +15,11 @@ Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
 //3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.1B
+	#error You need 3DTryg.inc v2.2
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.1B
-#elseif (Tryg3D_Version < 20102)
-	#error Update you 3DTryg.inc to v2.1B
+	#error Update you 3DTryg.inc to v2.2
+#elseif (Tryg3D_Version < 20201)
+	#error Update you 3DTryg.inc to v2.2
 #endif
 
 #define KNIFE_SPEED 			(12.0)

@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.1I                                                                                                             *
+ * File Version: 2.2                                                                                                              *
  *                                                                                                                                *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
@@ -62,7 +62,7 @@
 	#error You need 3DTryg.inc v2.1F
 #elseif !defined Tryg3D_Version
 	#error Update you 3DTryg.inc to v2.1F
-#elseif (Tryg3D_Version < 20106)
+#elseif (Tryg3D_Version < 20201)
 	#error Update you 3DTryg.inc to v2.1F
 #endif
 */
@@ -72,7 +72,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version		(20109) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version		(20201) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
@@ -337,73 +337,111 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 }
 
 
-//#if defined OLD_PROTOTYPE_NT
-//old prototype function
-stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
-	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
-		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
-		Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
-	if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
-	return false;
-}
-
-//old prototype function
-stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
-	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
-		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
-		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
-	if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
-	return false;
-}
-/*	
-#else
-//invalid
+#if defined OLD_PROTOTYPE_NT
+	//old prototype function
 	stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
-		new Float:minx, Float:miny,
-			Float:maxx, Float:maxy,
-			Float:tmp, Float:turz;
-		GetRotationFor2Point2D(xA,yA,xB,yB,turz);
-		CompRotationFloat(turz+90.0,tmp);
-		GetPointInFront2D(xA,yA,tmp,maxdist,minx,miny);
-		CompRotationFloat(turz+270.0,tmp);
-		GetPointInFront2D(xB,yB,tmp,maxdist,maxx,maxy);
-		if(minx > maxx){
-			tmp = minx, minx = maxx, maxx = tmp;
-		}
-		if(miny > maxy){
-			tmp = miny, miny = maxy, maxy = tmp;
-		}
-		if((px >= minx && px <= maxx) && (py >= miny && py <= maxy)) return true;
+		new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
+			Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
+			Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
+		if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
 		return false;
 	}
 
+	//old prototype function
 	stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
-		new Float:minx, Float:miny, Float:minz,
-			Float:maxx, Float:maxy, Float:maxz,
-			Float:tmp, Float:mot = floatsqroot(3),
-			Float:turx, Float:turz, Float:tmp2;
-			
-		GetRotationFor2Point3D(xA,yA,zA,xB,yB,zB,turx,turz);
-		CompRotationFloat(turx+45.0,tmp);
-		CompRotationFloat(turz+90.0,tmp2);
-		GetPointInFront3D(xA,yA,zA,tmp,tmp2,(maxdist*mot),minx,miny,minz);
-		CompRotationFloat(turx+315.0,tmp);
-		CompRotationFloat(turz+270.0,tmp2);
-		GetPointInFront3D(xB,yB,zB,tmp,tmp2,(maxdist*mot),maxx,maxy,maxz);
-		if(minx > maxx){
-			tmp = minx, minx = maxx, maxx = tmp;
-		}
-		if(miny > maxy){
-			tmp = miny, miny = maxy, maxy = tmp;
-		}
-		if(minz > maxz){
-			tmp = minz, minz = maxz, maxz = tmp;
-		}
-		if((px >= minx && px <= maxx) && (py >= miny && py <= maxy) && (pz >= minz && pz <= maxz)) return true;
-		
+		new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
+			Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
+			Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
+		if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
 		return false;
 	}
+#else
+	//IsPointInCylinder
+	//Orig: Greg James - gjames@NVIDIA.com SRC: http://www.flipcode.com/archives/Fast_Point-In-Cylinder_Test.shtml
+	stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+		new Float:dx, Float:dy, Float:dz, Float:pdx, Float:pdy, Float:pdz, Float:dot, Float:dsq, Float:lengthsq;
+			
+		dx = xB - xA;
+		dy = yB - yA; 
+		dz = zB - zA;
+		
+		pdx = px - xA;
+		pdy = py - yA;
+		pdz = pz - zA;
+		
+		dot = pdx * dx + pdy * dy + pdz * dz;
+		
+		lengthsq = GetDistanceBetweenPoints3D(xA,yA,zA, xB,yB,zB);
+		lengthsq = lengthsq*lengthsq;
+		if(lengthsq <= 0.0 || maxdist <= 0.0){
+			print("[ADM] Warring: Invalid lengthsq OR maxdist");
+			return false;
+		}
+		if(dot < 0.0 || dot > lengthsq){
+			return false;
+		} else {
+			dsq = (pdx*pdx + pdy*pdy + pdz*pdz) - dot*dot/lengthsq;
+			if(dsq <= (maxdist*maxdist)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
+		return IsPointNearly2Points3D(px,py,0.0,xA,yA,0.0,xB,yB,0.0,maxdist);
+	}
+	
+	#define IsPointInCylinder IsPointNearly2Points3D
 #endif
+
+/*	
+//invalid
+stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
+	new Float:minx, Float:miny,
+		Float:maxx, Float:maxy,
+		Float:tmp, Float:turz;
+	GetRotationFor2Point2D(xA,yA,xB,yB,turz);
+	CompRotationFloat(turz+90.0,tmp);
+	GetPointInFront2D(xA,yA,tmp,maxdist,minx,miny);
+	CompRotationFloat(turz+270.0,tmp);
+	GetPointInFront2D(xB,yB,tmp,maxdist,maxx,maxy);
+	if(minx > maxx){
+		tmp = minx, minx = maxx, maxx = tmp;
+	}
+	if(miny > maxy){
+		tmp = miny, miny = maxy, maxy = tmp;
+	}
+	if((px >= minx && px <= maxx) && (py >= miny && py <= maxy)) return true;
+	return false;
+}
+
+stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+	new Float:minx, Float:miny, Float:minz,
+		Float:maxx, Float:maxy, Float:maxz,
+		Float:tmp, Float:mot = floatsqroot(3),
+		Float:turx, Float:turz, Float:tmp2;
+		
+	GetRotationFor2Point3D(xA,yA,zA,xB,yB,zB,turx,turz);
+	CompRotationFloat(turx+45.0,tmp);
+	CompRotationFloat(turz+90.0,tmp2);
+	GetPointInFront3D(xA,yA,zA,tmp,tmp2,(maxdist*mot),minx,miny,minz);
+	CompRotationFloat(turx+315.0,tmp);
+	CompRotationFloat(turz+270.0,tmp2);
+	GetPointInFront3D(xB,yB,zB,tmp,tmp2,(maxdist*mot),maxx,maxy,maxz);
+	if(minx > maxx){
+		tmp = minx, minx = maxx, maxx = tmp;
+	}
+	if(miny > maxy){
+		tmp = miny, miny = maxy, maxy = tmp;
+	}
+	if(minz > maxz){
+		tmp = minz, minz = maxz, maxz = tmp;
+	}
+	if((px >= minx && px <= maxx) && (py >= miny && py <= maxy) && (pz >= minz && pz <= maxz)) return true;
+	
+	return false;
+}
 */
 
 //Prototype function
