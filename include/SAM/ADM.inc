@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.8B                                                                                                             *
+ * File Version: 1.9                                                                                                              *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
  * ADM:InvertFile(const input[], const output[]);                                                                                 *
@@ -25,6 +25,17 @@
  * ADM:ADMx128String(input[], output[], key[], maxdest = sizeof(output));                                                         *
  * ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output));                                                         *
  * ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output));                       *
+ *                                                                                                                                *
+ * Dump Functions:                                                                                                                *
+ * FindFreeDumpFileID();                                                                                                          *
+ * GetDumpFileType(const name[]);                                                                                                 *
+ * bool:IsDumpFileOpen(index);                                                                                                    *
+ * bool:IsValidDumpFile(const name[]);                                                                                            *
+ * DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32);                                                                   *
+ * bool:DumpFileDestroy(&index);                                                                                                  *
+ * DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32);                                                                     *
+ * bool:DumpFileClose(&index);                                                                                                    *
+ * ADM:DumpFileWrite(index, string[]);                                                                                            *
  *                                                                                                                                *
  * Other Functions:                                                                                                               *
  * ADMToInt(ADM:admvar);                                                                                                          *
@@ -48,6 +59,8 @@
  * ERROR_CODE_ADM_INVALID_TYPE //invalid key type                                                                                 *
  * ERROR_CODE_ADM_PASSWORD     //invalid password len                                                                             *
  * ERROR_CODE_ADM_MD5          //invalid MD5 Load                                                                                 *
+ * ERROR_CODE_ADM_DMP_NAME     //invalid dump file name                                                                           *
+ * ERROR_CODE_ADM_DMP_IDX      //invalid dump file index                                                                          *
  *                                                                                                                                *
  * Key Generator:                                                                                                                 *
  * http://ngc.ugu.pl/admkg                                                                                                        *
@@ -58,11 +71,11 @@
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v1.8
+	#error You need ADM.inc v1.9
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v1.8
-#elseif (ADM_Encryption_Version < 10801)
-	#error Update you ADM.inc to v1.8
+	#error Update you ADM.inc to v1.9
+#elseif (ADM_Encryption_Version < 10901)
+	#error Update you ADM.inc to v1.9
 #endif
 */
 
@@ -71,7 +84,7 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(10802) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(10901) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
 	#error Unknown sscanf version
@@ -115,7 +128,29 @@
 #define ERROR_CODE_ADM_INVALID_TYPE	(ADM:-8)	//invalid key type
 #define ERROR_CODE_ADM_PASSWORD		(ADM:-9)	//invalid password length
 #define ERROR_CODE_ADM_MD5			(ADM:-10)	//invalid MD5 Load
+#define ERROR_CODE_ADM_DMP_NAME		(ADM:-11)	//invalid dump file name
+#define ERROR_CODE_ADM_DMP_IDX		(ADM:-12)	//invalid dump file index
 
+#define MAX_DUMP_FILE				(100)
+#define MAX_DUMP_FILE_NAME			(80)
+#define MAX_DUMP_HEADER_SIZE		(14)
+
+#define INVALID_DUMP_FILE			(-1)
+
+#define DUMP_HEADER_x32				"SAMP_DUMPx32  "
+#define DUMP_HEADER_x64				"SAMP_DUMPx64  "
+#define DUMP_HEADER_x128			"SAMP_DUMPx128 "
+#define DUMP_HEADER_x256			"SAMP_DUMPx256 "
+
+#if !defined isnull
+	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+#endif
+
+new bool:DumpFileStatus[MAX_DUMP_FILE] = false,
+	DumpFileType[MAX_DUMP_FILE],
+	DumpFileName[MAX_DUMP_FILE][MAX_DUMP_FILE_NAME],
+	DumpFileKey[MAX_DUMP_FILE][MAX_KEY_LEN_ADMx256];
+	
 
 /********************
  * Other Functions  *
@@ -984,6 +1019,186 @@ stock ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output)){
 		return ERROR_CODE_ADM_MD5;
 	}
 #endif
+
+/********************
+ * Dump Functions   *
+ ********************/
+ 
+stock FindFreeDumpFileID(){
+	for(new i = 0; i < MAX_DUMP_FILE; i++){
+		if(DumpFileStatus[i] == false) return i;
+	}
+	return INVALID_DUMP_FILE;
+}
+
+stock bool:IsDumpFileOpen(index){
+	if(index < 0 || index >= MAX_DUMP_FILE) return false;
+	if(!fexist(DumpFileName[index])) return false;
+	return DumpFileStatus[index];
+}
+
+stock DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
+	if(fexist(name)) return INVALID_DUMP_FILE;
+	new File:dmpfile = fopen(name,io_write);
+	if(dmpfile){
+		new buffer[20];
+		switch(type){
+			case KEY_TYPE_ADMx32:	format(buffer,sizeof buffer,"%s",DUMP_HEADER_x32);
+			case KEY_TYPE_ADMx64: 	format(buffer,sizeof buffer,"%s",DUMP_HEADER_x64);
+			case KEY_TYPE_ADMx128:	format(buffer,sizeof buffer,"%s",DUMP_HEADER_x128);
+			case KEY_TYPE_ADMx256:	format(buffer,sizeof buffer,"%s",DUMP_HEADER_x256);
+		}		
+		for(new i = 0, j = strlen(buffer); i < j; i++){
+			fputchar(dmpfile,buffer[i],false);
+		}
+		fclose(dmpfile);
+		new idx = FindFreeDumpFileID();
+		if(idx == INVALID_DUMP_FILE) return INVALID_DUMP_FILE;
+		DumpFileStatus[idx] = true;
+		DumpFileType[idx] = type;
+		format(DumpFileName[idx],MAX_DUMP_FILE_NAME,"%s",name);
+		format(DumpFileKey[idx],MAX_KEY_LEN_ADMx256,"%s",key);
+		return idx;
+	} else {
+		return INVALID_DUMP_FILE;
+	}
+}
+
+stock bool:DumpFileDestroy(&index){
+	if(index < 0 || index >= MAX_DUMP_FILE) return false;
+	new tid = fremove(DumpFileName[index]);
+	DumpFileName[index] = "";
+	DumpFileKey[index] = "";
+	DumpFileStatus[index] = false;
+	DumpFileType[index] = KEY_TYPE_UNKNOWN;
+	index = INVALID_DUMP_FILE;
+	return tid;
+}
+
+stock bool:IsValidDumpFile(const name[]){
+	if(!fexist(name)) return false;
+	new File:dmpfile = fopen(name,io_read), midi = 0, buffer[20];
+	if(dmpfile){
+		for(new i = 0; i < MAX_DUMP_HEADER_SIZE; i++){
+			buffer[i] = fgetchar(dmpfile,0,false);
+			midi = (i+1);
+		}
+		fclose(dmpfile);
+		buffer[midi] = EOS;
+		if(!strcmp(buffer,DUMP_HEADER_x32,true)){	
+			return true;
+		} else if(!strcmp(buffer,DUMP_HEADER_x64,true)){	
+			return true;
+		} else if(!strcmp(buffer,DUMP_HEADER_x128,true)){	
+			return true;
+		} else if(!strcmp(buffer,DUMP_HEADER_x256,true)){	
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
+
+stock GetDumpFileType(const name[]){
+	if(!fexist(name)) return KEY_TYPE_UNKNOWN;
+	new File:dmpfile = fopen(name,io_read), midi = 0, buffer[20];
+	if(dmpfile){
+		for(new i = 0; i < MAX_DUMP_HEADER_SIZE; i++){
+			buffer[i] = fgetchar(dmpfile,0,false);
+			midi = (i+1);
+		}
+		fclose(dmpfile);
+		buffer[midi] = EOS;
+		if(!strcmp(buffer,DUMP_HEADER_x32,true)){	
+			return KEY_TYPE_ADMx32;
+		} else if(!strcmp(buffer,DUMP_HEADER_x64,true)){	
+			return KEY_TYPE_ADMx64;
+		} else if(!strcmp(buffer,DUMP_HEADER_x128,true)){	
+			return KEY_TYPE_ADMx128;
+		} else if(!strcmp(buffer,DUMP_HEADER_x256,true)){	
+			return KEY_TYPE_ADMx256;
+		} else {
+			return KEY_TYPE_UNKNOWN;
+		}
+	} else {
+		return KEY_TYPE_UNKNOWN;
+	}
+}
+
+stock DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32){
+	if(!fexist(name)) return INVALID_DUMP_FILE;
+	if(!IsValidDumpFile(name))return INVALID_DUMP_FILE;
+	new idx = FindFreeDumpFileID();
+	if(idx == INVALID_DUMP_FILE) return INVALID_DUMP_FILE;
+	DumpFileStatus[idx] = true;
+	DumpFileType[idx] = type;
+	format(DumpFileName[idx],MAX_DUMP_FILE_NAME,"%s",name);
+	format(DumpFileKey[idx],MAX_KEY_LEN_ADMx256,"%s",key);
+	return idx;
+}
+
+stock bool:DumpFileClose(&index){
+	if(index < 0 || index >= MAX_DUMP_FILE) return false;
+	DumpFileName[index] = "";
+	DumpFileKey[index] = "";
+	DumpFileStatus[index] = false;
+	DumpFileType[index] = KEY_TYPE_UNKNOWN;
+	index = INVALID_DUMP_FILE;
+	return true;
+}
+
+stock ADM:DumpFileWrite(index, string[]){
+	if(index < 0 || index >= MAX_DUMP_FILE) return ERROR_CODE_ADM_DMP_IDX;
+	if(isnull(DumpFileName[index])) return ERROR_CODE_ADM_DMP_NAME;
+	if(!IsValidADMKey(DumpFileKey[index],DumpFileType[index])) return ERROR_CODE_ADM_KEY;
+	new File:dmpfile = fopen(DumpFileName[index],io_append);
+	if(dmpfile){
+		new mod = (DumpFileType[index]/8),
+			idx = flength(dmpfile),
+			s = (idx % mod),
+			mode[MAX_MODE_ADMx256];
+		
+		switch(DumpFileType[index]){
+			case KEY_TYPE_ADMx32: {
+				sscanf(DumpFileKey[index],"D(0)D(0)D(0)D(0)",
+					mode[0],mode[1],mode[2],mode[3]
+				);
+			}
+			case KEY_TYPE_ADMx64: {
+				sscanf(DumpFileKey[index],"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+					mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7]
+				);
+			}
+			case KEY_TYPE_ADMx128: {
+				sscanf(DumpFileKey[index],"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+					mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
+					mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15]
+				);
+			}
+			case KEY_TYPE_ADMx256: {
+				sscanf(DumpFileKey[index],"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+					mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
+					mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15],
+					mode[16],mode[17],mode[18],mode[19],mode[20],mode[21],mode[22],mode[23],
+					mode[24],mode[25],mode[26],mode[27],mode[28],mode[29],mode[30],mode[31]
+				);
+			}		
+		}
+		
+		for(new i = 0, j = strlen(string); i < j; i++){
+			fputchar(dmpfile,((string[i]+mode[s]) & 0xFF),false);
+			idx++;
+			s++;
+			if(s >= mod) s = 0;
+		}
+		fclose(dmpfile);
+		return ERROR_CODE_ADM_OK;
+	} else {
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
+}
 
 
 //EOF
