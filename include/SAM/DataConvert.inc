@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.2                                                                                *
+ * File Version: 1.3                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileHandleID(File:handle);                                                                    *
@@ -14,8 +14,12 @@
  * HexToInt(string[]);                                                                              * 
  * StringToInt(string[]);                                                                           *
  * bool:StringToBool(string[]);                                                                     *
- * strcopy(input[], output[], maxlength = sizeof(output));                                          *
+ * strcopy(input[], output[]);  //string copy for warning 224: indeterminate array size             *
+ * fstrcopy(input[], output[], maxdest = sizeof(output));   //fast string copy                      *
  * IntToHex(int);                                                                                   *
+ * ABCToCBA(input[], output[]);                                                                     *
+ * AnyToInt(str[], type, &bool:flag);                                                               *
+ * IntToAny(value, output[], type);                                                                 *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -67,6 +71,12 @@ stock strcopy(input[],output[]){
 	output[strlen(input)] = EOS;
 }
 
+stock fstrcopy(input[], output[], maxdest = sizeof(output)){
+	output[0] = EOS;
+	strcat(output,input);
+	output[strlen(input)] = EOS;
+}
+
 stock HexToInt(string[]){
 	if(string[0] == 0) return 0;
 	new cur = 1, res = 0;
@@ -102,5 +112,59 @@ stock IntToHex(int){
 	}
 	return result;
 }
+
+
+stock ABCToCBA(input[], output[]){
+	for(new i = 0, j = strlen(input); i < j; i++){
+		output[j-(i+1)] = input[i];
+	}
+	output[strlen(input)] = EOS;
+}
+
+stock AnyToInt(str[], type, &bool:flag){
+	new k, n = strlen(str), i = 1, val;
+	if(str[0] >= 0x30 && str[0] <= 0x39){
+		val = str[0] - 48;
+	} else {
+		val = str[0] - 55;
+	}
+	if(val >= type){
+		flag = false;
+		return 0;
+	}
+	
+	while(i < n){
+		if(str[i] >= 0x30 && str[i] <= 0x39){
+	    	k = str[i] - 48;
+		} else {
+			k = str[i] - 55;
+		}
+		if(k >= type){
+			flag = false;
+			return 0;
+		}
+		val = val * type + k;
+		i++;
+	}
+	flag = true;
+	return val;
+}
+
+stock IntToAny(value, output[], type){
+	new tmp = value, val[256], i = 0;
+	while(tmp > 1){
+		val[i] = (tmp % type);
+		if(val[i] < 10){
+			val[i] += 0x30;
+		} else {
+			val[i] += 0x37;
+		}
+		tmp = tmp / type;
+		i++;
+	}
+	val[i] = EOS;
+	ABCToCBA(val,output);
+}
+
 
 //EOF
