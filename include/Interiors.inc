@@ -173,3 +173,5 @@ CMD:int(playerid,params[]){
 	GameTextForPlayer(playerid,InteriorList[intid][intname],1000,1);
 	return 1;
 }
+
+//EOF

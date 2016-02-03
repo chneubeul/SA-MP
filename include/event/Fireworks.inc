@@ -85,3 +85,5 @@ CMD:xbumm(playerid){
 	SendClientMessageToAll(0xFFFFFFFF,"{9E3DFF}››› Fired fireworks");
 	return 1;
 }
+
+//EOF

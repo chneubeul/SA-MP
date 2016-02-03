@@ -148,3 +148,4 @@ public Santa_GiftReset(giftid){
 	return 1;
 }
 
+//EOF

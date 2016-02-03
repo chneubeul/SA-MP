@@ -133,3 +133,5 @@ public KnifeDestroy(objectid,targetid,playerid){
 	}
 	return 1;
 }
+
+//EOF

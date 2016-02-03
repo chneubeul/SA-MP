@@ -154,3 +154,4 @@ public gl_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float
 	return 1;
 }
 
+//EOF
