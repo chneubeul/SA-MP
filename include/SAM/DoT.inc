@@ -250,3 +250,5 @@ stock ADM:SaveDoTMap(const input[], const output[]){
 	
 	return ERROR_CODE_ADM_OK;
 }
+
+//EOF
