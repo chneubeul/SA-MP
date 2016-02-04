@@ -1,10 +1,6 @@
 ﻿//StreamerFunction.inc
 [ADM] Warring: Invalid Object Component type.
 
-//BitFunctions.inc
-[ADM] Warring: Get bit error, the wrong bit id.
-[ADM] Warring: Set bit error, the wrong bit id.
-
 //3DTryg.inc
 [ADM] Warring: Get the rotation wrong, identical points.
 [ADM] Warring: Get speed error, the wrong time.
