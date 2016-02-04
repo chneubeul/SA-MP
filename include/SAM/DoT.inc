@@ -27,6 +27,8 @@ Example:
 
 SaveDoTMap("Christmas.txt","Christmas.dot"); //Converting Text File Object to DoT File
 
+//Note: The first line of a TXT file may not contain objects required clearance!
+
 LoadDoTMap("Christmas.dot"); //Load DoT File
 
 */
@@ -152,7 +154,7 @@ stock ADM:LoadDoTMap(const name[]){
 		if(fexist(tempfile)) fremove(tempfile);
 		return edi;
 	}
-	new File:NTObj = fopen(tempfile, io_read), buf[255], line[255], cnt = 0, lnum = 0, ecnt = 0;
+	new File:NTObj = fopen(tempfile, io_read), buf[255], line[255], cnt = 0, lnum = -1, ecnt = 0;
 	
 	while(fread(NTObj,line)){
 		lnum++;

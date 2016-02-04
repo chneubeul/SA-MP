@@ -7,7 +7,6 @@
 #include "SAM/RGB.inc"              //http://forum.sa-mp.com/showthread.php?t=590770
 #include "SAM/3DTryg.inc"           //http://forum.sa-mp.com/showthread.php?t=591010
 #include "SAM/GangZoneEx.inc"       //not published
-#include "SAM/Encode.inc"           //not published
 #include "SAM/ADM.inc"              //http://forum.sa-mp.com/showthread.php?t=595203
 #include "SAM/MapAndreasEx.inc"     //not published
 #include "SAM/HTMLColor.inc"        //not published
