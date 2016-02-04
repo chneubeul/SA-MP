@@ -149,6 +149,7 @@ stock ADM:LoadDoTMap(const name[]){
 		return ERROR_CODE_ADM_OPEN_INPUT;
 	}
 	format(tempfile,sizeof(tempfile),"%s.tmp",name);
+	if(fexist(tempfile)) fremove(tempfile);
 	new ADM:edi = ADMx256(name, tempfile, tempkey);
 	if(edi != ERROR_CODE_ADM_OK){
 		if(fexist(tempfile)) fremove(tempfile);
