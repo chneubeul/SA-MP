@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.0                                                                                *
+ * File Version: 1.1                                                                                *
  *                                                                                                  *
  * Object Functions:                                                                                *
  * ADM:LoadDoTMap(const name[]);                                                                    *
@@ -48,7 +48,7 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 #endif
 #define _DoT_Loader
 
-#define DoT_Loader_Version 		(10001) //a.b[c] 10000*a+100*b+c
+#define DoT_Loader_Version 		(10101) //a.b[c] 10000*a+100*b+c
 
 #define DOT_HEADER				"DoTv1.0"
 #define DOT_HEADER_SIZE			(32)
@@ -253,5 +253,7 @@ stock ADM:SaveDoTMap(const input[], const output[]){
 	
 	return ERROR_CODE_ADM_OK;
 }
+
+#define DoT(%0) LoadDoTMap(%0)
 
 //EOF
