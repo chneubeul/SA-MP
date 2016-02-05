@@ -1,5 +1,5 @@
 /**********************************
- * FullServer Objects Loader v3.0 *
+ * FullServer Objects Loader v3.1 *
  * Authored by eider              *
  * Update by Abyss Morgan         *
  **********************************/
@@ -60,11 +60,11 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 
 //Check Version DoT.inc
 #if !defined _DoT_Loader
-	#error You need ADM.inc v1.1
+	#error You need DoT.inc v1.2
 #elseif !defined DoT_Loader_Version
-	#error Update you ADM.inc to v1.1
-#elseif (DoT_Loader_Version < 10101)
-	#error Update you ADM.inc to v1.1
+	#error Update you DoT.inc to v1.2
+#elseif (DoT_Loader_Version < 10201)
+	#error Update you DoT.inc to v1.2
 #endif
 
 new pliki[][32] = {
@@ -74,6 +74,10 @@ new pliki[][32] = {
 
 new DoTFile[][32] = {
 	"empty.dot"
+};
+
+new BinIMGFile[][32] = {
+	"empty.bin"
 };
 
 WriteLog(file[],string[]){
@@ -211,6 +215,11 @@ public OnFilterScriptInit(){
 	for(new i = 0, j = sizeof(DoTFile); i < j; i++){
 		if(fexist(DoTFile[i])){
 			DoT(DoTFile[i]);
+		}
+	}
+	for(new i = 0, j = sizeof(BinIMGFile); i < j; i++){
+		if(fexist(BinIMGFile[i])){
+			LoadBinaryObjectIMG(BinIMGFile[i]);
 		}
 	}
 	if(ecnt > 0){
