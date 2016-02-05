@@ -4,11 +4,14 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.1                                                                                *
+ * File Version: 1.2                                                                                *
  *                                                                                                  *
  * Object Functions:                                                                                *
  * ADM:LoadDoTMap(const name[]);                                                                    *
  * ADM:SaveDoTMap(const input[], const output[]);                                                   *
+ * ADM:LoadBinaryObjectIMG(const name[]);                                                           *
+ * ADM:SaveBinaryObjectIMG(const input[], const output[]);                                          *
+ * ADM:DecompressBinaryObjectIMG(const input[], const output[]);                                    *
  * Float:CalculateObjectDistance(objectid);                                                         *
  *                                                                                                  *
  ****************************************************************************************************/
@@ -48,10 +51,19 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 #endif
 #define _DoT_Loader
 
-#define DoT_Loader_Version 		(10101) //a.b[c] 10000*a+100*b+c
+#define DoT_Loader_Version 		(10201) //a.b[c] 10000*a+100*b+c
 
 #define DOT_HEADER				"DoTv1.0"
 #define DOT_HEADER_SIZE			(32)
+
+#define MAX_RAW_DATA	(42)
+
+//						[1][2][3][4]
+#define RAW_GET_1(%0)	(((%0) & 0xFF000000) >>> 24)
+#define RAW_GET_2(%0)	(((%0) & 0x00FF0000) >>> 16)
+#define RAW_GET_3(%0)	(((%0) & 0x0000FF00) >>> 8)
+#define RAW_GET_4(%0)	((%0) & 0x000000FF)
+
 
 stock Float:CalculateObjectDistance(objectid){
 	switch(objectid){
@@ -155,7 +167,7 @@ stock ADM:LoadDoTMap(const name[]){
 		if(fexist(tempfile)) fremove(tempfile);
 		return edi;
 	}
-	new File:NTObj = fopen(tempfile, io_read), buf[255], line[255], cnt = 0, lnum = -1, ecnt = 0;
+	new File:NTObj = fopen(tempfile, io_read), buf[255], line[255], cnt = 0, lnum = 0, ecnt = 0;
 	
 	while(fread(NTObj,line)){
 		lnum++;
@@ -255,5 +267,212 @@ stock ADM:SaveDoTMap(const input[], const output[]){
 }
 
 #define DoT(%0) LoadDoTMap(%0)
+
+
+stock ADM:LoadBinaryObjectIMG(const name[]){
+	new NTTime = GetTickCount();
+	if(!fexist(name)) return ERROR_CODE_ADM_INPUT;
+	new RAW[MAX_RAW_DATA], File:inpf = fopen(name,io_read);
+	if(!inpf) return ERROR_CODE_ADM_OPEN_INPUT;
+	new asize = flength(inpf), idx = 0, s = 0, cnt = 0;
+	if(asize > MAX_FILE_SIZE || asize < 0 || (asize % MAX_RAW_DATA) != 0){
+		fclose(inpf);
+		return ERROR_CODE_ADM_SIZE;
+	}
+	new modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid, Float:streamdistance, Float:drawdistance;
+	while(idx < asize){
+		RAW[s] = fgetchar(inpf,0,false);
+		idx++;
+		s++;
+		if(s >= MAX_RAW_DATA){
+			s = 0;
+			modelid = ((RAW[0]*256)+RAW[1]);													//+16b (Total: 2 B)
+			x = Float:((RAW[2]*16777216)+(RAW[3]*65536)+(RAW[4]*256)+RAW[5]);					//+32b (Total: 6 B)
+			y = Float:((RAW[6]*16777216)+(RAW[7]*65536)+(RAW[8]*256)+RAW[9]);					//+32b (Total: 10 B)
+			z = Float:((RAW[10]*16777216)+(RAW[11]*65536)+(RAW[12]*256)+RAW[13]);				//+32b (Total: 14 B)
+			rx = Float:((RAW[14]*16777216)+(RAW[15]*65536)+(RAW[16]*256)+RAW[17]);				//+32b (Total: 18 B)
+			ry = Float:((RAW[18]*16777216)+(RAW[19]*65536)+(RAW[20]*256)+RAW[21]);				//+32b (Total: 22 B)
+			rz = Float:((RAW[22]*16777216)+(RAW[23]*65536)+(RAW[24]*256)+RAW[25]);				//+32b (Total: 26 B)
+			worldid = ((RAW[26]*16777216)+(RAW[27]*65536)+(RAW[28]*256)+RAW[29]);				//+32b (Total: 30 B)
+			interiorid = ((RAW[30]*16777216)+(RAW[31]*65536)+(RAW[32]*256)+RAW[33]);			//+32b (Total: 34 B)
+			streamdistance = Float:((RAW[34]*16777216)+(RAW[35]*65536)+(RAW[36]*256)+RAW[37]);	//+32b (Total: 38 B)
+			drawdistance = Float:((RAW[38]*16777216)+(RAW[39]*65536)+(RAW[40]*256)+RAW[41]);	//+32b (Total: 42 B)
+			CreateDynamicObject(modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance);
+			cnt++;
+		}
+	}	
+	fclose(inpf);
+	new buffer[256];
+	format(buffer,sizeof buffer,"%s, objects: %d load time %d ms",name,cnt,GetTickCount()-NTTime);
+	printf(buffer);
+	return ERROR_CODE_ADM_OK;
+}
+
+stock ADM:SaveBinaryObjectIMG(const input[], const output[]){
+	new NTTime = GetTickCount();
+	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
+	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
+	
+	new File:InputMap = fopen(input,io_read);
+	if(!InputMap) return ERROR_CODE_ADM_OPEN_INPUT;
+	
+	new File:OutputMap = fopen(output,io_write);
+	if(!OutputMap){
+		fclose(InputMap);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
+	new cnt = 0, line[256], lcnt = 0;
+	
+	while(fread(InputMap,line)){
+		if(line[0]!='/' && strfind(line,"CreateDynamicObject",true)!=-1){
+			new modelid, Float:x, Float:y,
+				Float:z, Float:rx, Float:ry, Float:rz,
+				worldid = -1, interiorid = -1, playerid = -1,
+				Float:streamdistance = 200.0, Float:drawdistance = 0.0,
+				Float:nul, RAW[MAX_RAW_DATA];
+				
+			if(sscanf(line,"p<,>'('ifffffP<,)>fP<,)>D(-1)D(-1)D(-1)F(-1)F(0)p<)>F(0)", modelid, x, y, z, rx, ry, rz, worldid, interiorid, playerid, streamdistance, drawdistance, nul)){
+				if(streamdistance == -1) streamdistance = CalculateObjectDistance(modelid);
+				
+				
+				//extract modelid
+				RAW[0] = RAW_GET_3(modelid);
+				RAW[1] = RAW_GET_4(modelid);
+			
+				//extract float x
+				RAW[2] = RAW_GET_1(_:x);
+				RAW[3] = RAW_GET_2(_:x);
+				RAW[4] = RAW_GET_3(_:x);
+				RAW[5] = RAW_GET_4(_:x);
+
+				//extract float y
+				RAW[6] = RAW_GET_1(_:y);
+				RAW[7] = RAW_GET_2(_:y);
+				RAW[8] = RAW_GET_3(_:y);
+				RAW[9] = RAW_GET_4(_:y);
+				
+				//extract float z
+				RAW[10] = RAW_GET_1(_:z);
+				RAW[11] = RAW_GET_2(_:z);
+				RAW[12] = RAW_GET_3(_:z);
+				RAW[13] = RAW_GET_4(_:z);
+				
+				//extract float rx
+				RAW[14] = RAW_GET_1(_:rx);
+				RAW[15] = RAW_GET_2(_:rx);
+				RAW[16] = RAW_GET_3(_:rx);
+				RAW[17] = RAW_GET_4(_:rx);
+
+				//extract float ry
+				RAW[18] = RAW_GET_1(_:ry);
+				RAW[19] = RAW_GET_2(_:ry);
+				RAW[20] = RAW_GET_3(_:ry);
+				RAW[21] = RAW_GET_4(_:ry);
+
+				//extract float rz
+				RAW[22] = RAW_GET_1(_:rz);
+				RAW[23] = RAW_GET_2(_:rz);
+				RAW[24] = RAW_GET_3(_:rz);
+				RAW[25] = RAW_GET_4(_:rz);
+
+				//extract worldid
+				RAW[26] = RAW_GET_1(worldid);
+				RAW[27] = RAW_GET_2(worldid);
+				RAW[28] = RAW_GET_3(worldid);
+				RAW[29] = RAW_GET_4(worldid);
+				
+				//extract interiorid
+				RAW[30] = RAW_GET_1(interiorid);
+				RAW[31] = RAW_GET_2(interiorid);
+				RAW[32] = RAW_GET_3(interiorid);
+				RAW[33] = RAW_GET_4(interiorid);				
+				
+				//extract float streamdistance
+				RAW[34] = RAW_GET_1(_:streamdistance);
+				RAW[35] = RAW_GET_2(_:streamdistance);
+				RAW[36] = RAW_GET_3(_:streamdistance);
+				RAW[37] = RAW_GET_4(_:streamdistance);
+				
+				//extract float drawdistance
+				RAW[38] = RAW_GET_1(_:drawdistance);
+				RAW[39] = RAW_GET_2(_:drawdistance);
+				RAW[40] = RAW_GET_3(_:drawdistance);
+				RAW[41] = RAW_GET_4(_:drawdistance);
+				
+				for(new i = 0; i < MAX_RAW_DATA; i++){
+					fputchar(OutputMap,RAW[i],false);
+				}
+				cnt++;
+			}
+		}
+		lcnt++;
+	}
+	
+	new buffer[256];
+	new Float:ratio = ((float(flength(OutputMap))/float(flength(InputMap)))*100.0);
+	format(buffer,sizeof buffer,"%s, line: %d, objects: %d convert time %d ms ratio %.2f",input,lcnt,cnt,GetTickCount()-NTTime,ratio);
+	printf(buffer);
+	
+	fclose(InputMap);
+	fclose(OutputMap);
+	
+	return ERROR_CODE_ADM_OK;
+}
+
+stock ADM:DecompressBinaryObjectIMG(const input[], const output[]){
+	new NTTime = GetTickCount();
+	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
+	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
+	
+	new File:InputMap = fopen(input,io_read);
+	if(!InputMap) return ERROR_CODE_ADM_OPEN_INPUT;
+	
+	new File:OutputMap = fopen(output,io_write);
+	if(!OutputMap){
+		fclose(InputMap);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
+	fwrite(OutputMap,"//Decompress Binary Object IMG\r\n");
+	fclose(OutputMap);
+	OutputMap = fopen(output,io_append);
+	if(!OutputMap){
+		fclose(InputMap);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
+	new cnt = 0, line[256], asize = flength(InputMap), idx = 0, s = 0, RAW[MAX_RAW_DATA],	
+		modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid, Float:streamdistance, Float:drawdistance;
+	
+	while(idx < asize){
+		RAW[s] = fgetchar(InputMap,0,false);
+		idx++;
+		s++;
+		if(s >= MAX_RAW_DATA){
+			s = 0;
+			modelid = ((RAW[0]*256)+RAW[1]);													//+16b (Total: 2 B)
+			x = Float:((RAW[2]*16777216)+(RAW[3]*65536)+(RAW[4]*256)+RAW[5]);					//+32b (Total: 6 B)
+			y = Float:((RAW[6]*16777216)+(RAW[7]*65536)+(RAW[8]*256)+RAW[9]);					//+32b (Total: 10 B)
+			z = Float:((RAW[10]*16777216)+(RAW[11]*65536)+(RAW[12]*256)+RAW[13]);				//+32b (Total: 14 B)
+			rx = Float:((RAW[14]*16777216)+(RAW[15]*65536)+(RAW[16]*256)+RAW[17]);				//+32b (Total: 18 B)
+			ry = Float:((RAW[18]*16777216)+(RAW[19]*65536)+(RAW[20]*256)+RAW[21]);				//+32b (Total: 22 B)
+			rz = Float:((RAW[22]*16777216)+(RAW[23]*65536)+(RAW[24]*256)+RAW[25]);				//+32b (Total: 26 B)
+			worldid = ((RAW[26]*16777216)+(RAW[27]*65536)+(RAW[28]*256)+RAW[29]);				//+32b (Total: 30 B)
+			interiorid = ((RAW[30]*16777216)+(RAW[31]*65536)+(RAW[32]*256)+RAW[33]);			//+32b (Total: 34 B)
+			streamdistance = Float:((RAW[34]*16777216)+(RAW[35]*65536)+(RAW[36]*256)+RAW[37]);	//+32b (Total: 38 B)
+			drawdistance = Float:((RAW[38]*16777216)+(RAW[39]*65536)+(RAW[40]*256)+RAW[41]);	//+32b (Total: 42 B)
+			format(line,sizeof line,"CreateDynamicObject(%i,%f,%f,%f,%f,%f,%f,%d,%d,%d,%.1f,%.1f);\r\n",modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance);
+			fwrite(OutputMap,line);
+			cnt++;
+		}
+	}	
+	
+	new buffer[256], Float:ratio = ((float(flength(OutputMap))/float(flength(InputMap)))*100.0);
+	format(buffer,sizeof buffer,"%s, objects: %d convert time %d ms ratio %.2f",input,cnt,GetTickCount()-NTTime,ratio);
+	printf(buffer);
+	
+	fclose(InputMap);
+	fclose(OutputMap);
+	
+	return ERROR_CODE_ADM_OK;
+}
 
 //EOF

@@ -77,7 +77,7 @@ new DoTFile[][32] = {
 };
 
 WriteLog(file[],string[]){
-	new wl_date[3],wl_time[3],wl_str[512],wl_file[64];
+	static wl_date[3],wl_time[3],wl_str[512],wl_file[64];
 	getdate(wl_date[0],wl_date[1],wl_date[2]);
    	gettime(wl_time[0],wl_time[1],wl_time[2]);
    	format(wl_str,sizeof wl_str,"[%02d.%02d.%02d %02d:%02d:%02d] %s\r\n",wl_date[0],wl_date[1],wl_date[2],wl_time[0],wl_time[1],wl_time[2],string);
