@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.2                                                                                *
+ * File Version: 1.2B                                                                               *
  *                                                                                                  *
  * Object Functions:                                                                                *
  * ADM:LoadDoTMap(const name[]);                                                                    *
@@ -51,7 +51,7 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 #endif
 #define _DoT_Loader
 
-#define DoT_Loader_Version 		(10201) //a.b[c] 10000*a+100*b+c
+#define DoT_Loader_Version 		(10202) //a.b[c] 10000*a+100*b+c
 
 #define DOT_HEADER				"DoTv1.0"
 #define DOT_HEADER_SIZE			(32)
@@ -279,25 +279,26 @@ stock ADM:LoadBinaryObjectIMG(const name[]){
 		fclose(inpf);
 		return ERROR_CODE_ADM_SIZE;
 	}
-	new modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid, Float:streamdistance, Float:drawdistance;
 	while(idx < asize){
 		RAW[s] = fgetchar(inpf,0,false);
 		idx++;
 		s++;
 		if(s >= MAX_RAW_DATA){
 			s = 0;
-			modelid = ((RAW[0]*256)+RAW[1]);													//+16b (Total: 2 B)
-			x = Float:((RAW[2]*16777216)+(RAW[3]*65536)+(RAW[4]*256)+RAW[5]);					//+32b (Total: 6 B)
-			y = Float:((RAW[6]*16777216)+(RAW[7]*65536)+(RAW[8]*256)+RAW[9]);					//+32b (Total: 10 B)
-			z = Float:((RAW[10]*16777216)+(RAW[11]*65536)+(RAW[12]*256)+RAW[13]);				//+32b (Total: 14 B)
-			rx = Float:((RAW[14]*16777216)+(RAW[15]*65536)+(RAW[16]*256)+RAW[17]);				//+32b (Total: 18 B)
-			ry = Float:((RAW[18]*16777216)+(RAW[19]*65536)+(RAW[20]*256)+RAW[21]);				//+32b (Total: 22 B)
-			rz = Float:((RAW[22]*16777216)+(RAW[23]*65536)+(RAW[24]*256)+RAW[25]);				//+32b (Total: 26 B)
-			worldid = ((RAW[26]*16777216)+(RAW[27]*65536)+(RAW[28]*256)+RAW[29]);				//+32b (Total: 30 B)
-			interiorid = ((RAW[30]*16777216)+(RAW[31]*65536)+(RAW[32]*256)+RAW[33]);			//+32b (Total: 34 B)
-			streamdistance = Float:((RAW[34]*16777216)+(RAW[35]*65536)+(RAW[36]*256)+RAW[37]);	//+32b (Total: 38 B)
-			drawdistance = Float:((RAW[38]*16777216)+(RAW[39]*65536)+(RAW[40]*256)+RAW[41]);	//+32b (Total: 42 B)
-			CreateDynamicObject(modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance);
+			CreateDynamicObject(
+				((RAW[0]*256)+RAW[1]),
+				Float:((RAW[2]*16777216)+(RAW[3]*65536)+(RAW[4]*256)+RAW[5]),
+				Float:((RAW[6]*16777216)+(RAW[7]*65536)+(RAW[8]*256)+RAW[9]),
+				Float:((RAW[10]*16777216)+(RAW[11]*65536)+(RAW[12]*256)+RAW[13]),
+				Float:((RAW[14]*16777216)+(RAW[15]*65536)+(RAW[16]*256)+RAW[17]),
+				Float:((RAW[18]*16777216)+(RAW[19]*65536)+(RAW[20]*256)+RAW[21]),
+				Float:((RAW[22]*16777216)+(RAW[23]*65536)+(RAW[24]*256)+RAW[25]),
+				((RAW[26]*16777216)+(RAW[27]*65536)+(RAW[28]*256)+RAW[29]),
+				((RAW[30]*16777216)+(RAW[31]*65536)+(RAW[32]*256)+RAW[33]),
+				-1,
+				Float:((RAW[34]*16777216)+(RAW[35]*65536)+(RAW[36]*256)+RAW[37]),
+				Float:((RAW[38]*16777216)+(RAW[39]*65536)+(RAW[40]*256)+RAW[41])
+			);
 			cnt++;
 		}
 	}	
