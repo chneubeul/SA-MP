@@ -26,6 +26,7 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 #include <zcmd>
 #define FIX_OBJECTS
 #include <SAM/StreamerFunction>
+#include <SAM/BitFunctions>
 #include <SAM/3DTryg>
 #include <SAM/ADM>
 #include <SAM/DoT>
