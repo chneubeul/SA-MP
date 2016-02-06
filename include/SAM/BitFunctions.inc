@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.5                                                                                *
+ * File Version: 1.5B                                                                               *
  *                                                                                                  *
  * bit 0 - 31:                                                                                      *
  * (bit 31) --> 11111111000000001111010001010000 <-- (bit 0)                                        *
