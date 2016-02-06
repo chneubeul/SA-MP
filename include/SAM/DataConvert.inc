@@ -24,6 +24,11 @@
  * code128(input[], output[]);                                                                      *
  *                                                                                                  *
  ****************************************************************************************************/
+ 
+#if defined _Data_Convert
+	#endinput
+#endif
+#define _Data_Convert
 
 #define FIRST_FILE_ADDRESS			(0x004E5A18)
 #define INVALID_FILE_ID				(0xFFB1A5E7)

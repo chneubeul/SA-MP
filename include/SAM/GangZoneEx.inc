@@ -12,6 +12,11 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if defined _Gang_Zone_Ex
+	#endinput
+#endif
+#define _Gang_Zone_Ex
+
 #if !defined Streamer_AppendArrayData
 	#error Unknown streamer version
 #endif

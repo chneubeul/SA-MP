@@ -4,6 +4,11 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if defined _HTML_Color
+	#endinput
+#endif
+#define _HTML_Color
+
 //		name					0xRGBA
 #define white					0xFFFFFFFF
 #define gray					0x808080FF

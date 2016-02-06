@@ -8,6 +8,11 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if defined _Text_Draw_Ex
+	#endinput
+#endif
+#define _Text_Draw_Ex
+
 new TextDrawCount = 0,
 	PlayerTextDrawCount[MAX_PLAYERS];
 

@@ -11,6 +11,11 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if defined _Map_Andreas_Ex
+	#endinput
+#endif
+#define _Map_Andreas_Ex
+
 #if !defined MapAndreas_FindZ_For2DCoord
 	#error Unknown MapAndreas Version
 #endif
