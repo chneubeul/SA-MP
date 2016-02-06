@@ -2,6 +2,10 @@
  * SAM Include by Abyss Morgan *
  *******************************/
 
+#if !defined MD5_Hash
+	#tryinclude	<MD5>
+#endif
+
 #include "SAM/StreamerFunction.inc" //http://forum.sa-mp.com/showthread.php?t=590918
 #include "SAM/BitFunctions.inc"     //http://forum.sa-mp.com/showthread.php?t=591223
 #include "SAM/RGB.inc"              //http://forum.sa-mp.com/showthread.php?t=590770
