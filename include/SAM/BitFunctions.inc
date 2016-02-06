@@ -34,9 +34,8 @@
 #define ExtractValue(%0,%1,%2,%3,%4)	((%1) = (((%0) & 0xFF000000) >>> 24),(%2) = (((%0) & 0x00FF0000) >>> 16),(%3) = (((%0) & 0x0000FF00) >>> 8),(%4) = ((%0) & 0x000000FF))
 #define ExtractFloat(%0,%1,%2,%3,%4)	((%1) = (((_:%0) & 0xFF000000) >>> 24),(%2) = (((_:%0) & 0x00FF0000) >>> 16),(%3) = (((_:%0) & 0x0000FF00) >>> 8),(%4) = ((_:%0) & 0x000000FF))
 
-#define MergeValue(%0,%1,%2,%3,%4)		((%0) = (((%1)*16777216)+((%2)*65536)+((%3)*256)+(%4)))
-#define MergeFloat(%0,%1,%2,%3,%4)		((%0) = Float:(((%1)*16777216)+((%2)*65536)+((%3)*256)+(%4)))
-
+#define MergeValue(%0,%1,%2,%3,%4)		((%0) = (((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
+#define MergeFloat(%0,%1,%2,%3,%4)		((%0) = Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 
 stock bool:CheckValue(value){
 	new int = 0;
@@ -50,10 +49,10 @@ stock bool:CheckValue(value){
 }
 
 stock SetValueBit(&value,bit,power){
-	if((power & 0x01) == 1){
-		value |= floatround(floatpower(2,bit));
+	if(power){
+		value |= (0x01 << bit);
 	} else {
-		value &= ~floatround(floatpower(2,bit));
+		value &= ~(0x01 << bit);
 	}
 }
 
