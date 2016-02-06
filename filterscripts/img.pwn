@@ -7,6 +7,7 @@
 
 #include <a_samp>
 #include <sscanf2>
+#include <SAM/BitFunctions>
 #include <SAM/ADM>
 #include <SAM/DoT>
 
