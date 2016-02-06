@@ -29,11 +29,25 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 Example:
 
 SaveDoTMap("Christmas.txt","Christmas.dot"); //Converting Text File Object to DoT File
-
 //Note: The first line of a TXT file may not contain objects required clearance!
-
 LoadDoTMap("Christmas.dot"); //Load DoT File
 
+//OR
+
+SaveBinaryObjectIMG("Christmas.txt", "Christmas.bin"); //Converting Text File Object to Binary Object IMG (compress ratio ~34%)
+LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
+
+*/
+
+/*
+//Check Version DoT.inc
+#if !defined _DoT_Loader
+	#error You need DoT.inc v1.2B
+#elseif !defined DoT_Loader_Version
+	#error Update you DoT.inc to v1.2B
+#elseif (DoT_Loader_Version < 10202)
+	#error Update you DoT.inc to v1.2B
+#endif
 */
 
 
@@ -56,13 +70,13 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 #define DOT_HEADER				"DoTv1.0"
 #define DOT_HEADER_SIZE			(32)
 
-#define MAX_RAW_DATA	(42)
+#define MAX_RAW_DATA			(42)
 
-//						[1][2][3][4]
-#define RAW_GET_1(%0)	(((%0) & 0xFF000000) >>> 24)
-#define RAW_GET_2(%0)	(((%0) & 0x00FF0000) >>> 16)
-#define RAW_GET_3(%0)	(((%0) & 0x0000FF00) >>> 8)
-#define RAW_GET_4(%0)	((%0) & 0x000000FF)
+//								[1][2][3][4]
+#define RAW_GET_1(%0)			(((%0) & 0xFF000000) >>> 24)
+#define RAW_GET_2(%0)			(((%0) & 0x00FF0000) >>> 16)
+#define RAW_GET_3(%0)			(((%0) & 0x0000FF00) >>> 8)
+#define RAW_GET_4(%0)			((%0) & 0x000000FF)
 
 
 stock Float:CalculateObjectDistance(objectid){
