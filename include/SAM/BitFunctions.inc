@@ -10,10 +10,10 @@
  * (bit 31) --> 11111111000000001111010001010000 <-- (bit 0)                                        *
  *                                                                                                  *
  * Bit Functions:                                                                                   *
- * GetValueBit(value,bit);                                                                          *
- * SetValueBit(&value,bit,power);  //power 0 or 1                                                   *
+ * GetValueBit(value, bit);                                                                         *
+ * SetValueBit(&value, bit, power);  //power 0 or 1                                                 *
  * InvertValue(value);                                                                              *
- * InvertValueEx(value,key); //default key 0xFFFFFFFF                                               *
+ * InvertValueEx(value, key); //default key 0xFFFFFFFF                                              *
  * bool:CheckValue(value); //even - false, uneven - true                                            *
  * ExtractValue(value, &byte1, &byte2, &byte3, &byte4);                                             *
  * ExtractFloat(Float:value, &byte1, &byte2, &byte3, &byte4);                                       *
