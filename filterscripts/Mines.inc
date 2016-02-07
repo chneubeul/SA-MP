@@ -8,7 +8,7 @@
 
 //to hook functions
 forward Min_OnFilterScriptInit(); //IN OnFilterScriptInit OR OnGameModeInit
-forward Min_OnFilterScriptExit(); //IN OnFilterScriptExit Or OnGameModeExit
+forward Min_OnFilterScriptExit(); //IN OnFilterScriptExit OR OnGameModeExit
 forward Min_OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z); //IN OnPlayerShootDynamicObject
 forward Min_OnPlayerEnterDynamicArea(playerid, areaid); //IN OnPlayerEnterDynamicArea
 
