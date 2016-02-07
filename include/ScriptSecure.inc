@@ -4,6 +4,14 @@
 
 /*
 //Install
+ 
+#define FILE_SERVERIP			"127.0.0.1"
+#define FILE_SERVERPORT			(7777)			
+#define FILE_LICENSEID			(20160201)		//<--- YYYYMMDD 01.02.2016 (DD.MM.YYYY)
+#define FILE_MAX_PLAYERS		(500)			//max players in server.cfg
+#define FILE_RCONPASS			"123"			//rcon password
+#define FILE_LANGUAGE			"Polish"		//server language
+
 public OnGameModeInit(){
 
 	AntiDeAMX();
@@ -21,17 +29,35 @@ public OnFilterScriptInit(){
 }
 
 */
- 
-#define FILE_SERVERIP			"127.0.0.1"
-#define FILE_SERVERPORT			(7777)			
-#define FILE_LICENSEID			(20160201)		//<--- YYYYMMDD 01.02.2016 (DD.MM.YYYY)
-#define FILE_MAX_PLAYERS		(500)			//max players in server.cfg
-#define FILE_RCONPASS			"123"			//rcon password
-#define FILE_LANGUAGE			"Polish"		//server language
 
 #if !defined isnull
 	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
+
+#if !defined FILE_SERVERIP
+	#error Please #define FILE_SERVERIP "127.0.0.1"
+#endif
+
+#if !defined FILE_SERVERPORT
+	#error Please #define FILE_SERVERPORT (7777)
+#endif
+
+#if !defined FILE_LICENSEID
+	#error Please #define FILE_LICENSEID (20160201)
+#endif
+
+#if !defined FILE_MAX_PLAYERS
+	#error Please #define FILE_MAX_PLAYERS (500)
+#endif
+
+#if !defined FILE_RCONPASS
+	#error Please #define FILE_RCONPASS "123"
+#endif
+
+#if !defined FILE_LANGUAGE
+	#error Please #define FILE_LANGUAGE "Polish"
+#endif
+
 
 AntiDeAMX(){
 	new UAX[][] = { "Unarmed (Fist)", "Brass K" };
