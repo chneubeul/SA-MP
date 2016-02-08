@@ -15,10 +15,12 @@
 [ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE
 
 //ScriptSecure.inc
-[ADM] Info: Local Server Detect.
+[ADM] Info: Local server detect.
 [ADM] Error: This script is stolen.
 [ADM] Error: Script license has expired.
-[ADM] Error: Invalid Server Config.
+[ADM] Error: Invalid server config, check your max players.
+[ADM] Error: Invalid server config, check your rcon password.
+[ADM] Error: Invalid server config, check your language.
 
 //Global
 [ADM] Error: Invalid MapAndreas Memory.

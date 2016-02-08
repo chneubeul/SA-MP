@@ -1,10 +1,11 @@
 /**************************************
- * Script Secure v2.1 by Abyss Morgan *
+ * Script Secure v2.2 by Abyss Morgan *
  **************************************/
 
 /*
 //Install
- 
+
+//#define DONT_ALLOW_LOCALHOST	//additional option
 #define FILE_SERVERIP			"127.0.0.1"
 #define FILE_SERVERPORT			(7777)			
 #define FILE_LICENSEID			(20160201)		//<--- YYYYMMDD 01.02.2016 (DD.MM.YYYY)
@@ -27,7 +28,6 @@ public OnFilterScriptInit(){
 	
 	return 1;
 }
-
 */
 
 #if !defined isnull
@@ -70,12 +70,17 @@ ScriptSecureADM(){
 	new serverIP[16];
 	GetServerVarAsString("bind",serverIP,sizeof(serverIP));
 	
-	if(!strcmp(serverIP,FILE_SERVERIP,true)){
+	if(!strcmp(serverIP,FILE_SERVERIP,true) && !isnull(serverIP)){
 		//Server IP OK
 	} else {
 		if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){
 			//localhost
-			print("[ADM] Info: Local Server Detect.");
+			#if defined DONT_ALLOW_LOCALHOST
+				print("[ADM] Error: This script is stolen.");
+				SendRconCommand("exit");
+			#else
+				print("[ADM] Info: Local server detect.");
+			#endif
 		} else {
 			print("[ADM] Error: This script is stolen.");
 			SendRconCommand("exit");
@@ -83,6 +88,10 @@ ScriptSecureADM(){
 	}
 	if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){
 		//localhost
+		#if defined DONT_ALLOW_LOCALHOST
+			print("[ADM] Error: This script is stolen.");
+			SendRconCommand("exit");
+		#endif
 	} else if(GetServerVarAsInt("port") != FILE_SERVERPORT){
 		print("[ADM] Error: This script is stolen.");
 		SendRconCommand("exit");
@@ -99,26 +108,31 @@ ScriptSecureADM(){
 
 	//Check server.cfg
 	if(GetMaxPlayers() != FILE_MAX_PLAYERS){
-		print("[ADM] Error: Invalid Server Config.");
+		print("[ADM] Error: Invalid server config, check your max players.");
 		SendRconCommand("exit");
 	}
 	
 	new rtemp[32];
 	GetServerVarAsString("rcon_password",rtemp,sizeof(rtemp));
-	if(strcmp(rtemp,FILE_RCONPASS,false)!=0 || isnull(rtemp)){
-		print("[ADM] Error: Invalid Server Config.");
+	if(strcmp(rtemp,FILE_RCONPASS,false) != 0){
+		print("[ADM] Error: Invalid server config, check your rcon password.");
 		SendRconCommand("exit");
 	}
 	rtemp = "";
-	#undef FILE_RCONPASS
 	
 	GetServerVarAsString("language",rtemp,sizeof(rtemp));
-	if(strcmp(rtemp,FILE_LANGUAGE,false)!=0 || isnull(rtemp)){
-		print("[ADM] Error: Invalid Server Config.");
+	if(strcmp(rtemp,FILE_LANGUAGE,false) != 0 || isnull(rtemp)){
+		print("[ADM] Error: Invalid server config, check your language.");
 		SendRconCommand("exit");
 	}
 	rtemp = "";
-	#undef FILE_LANGUAGE
 }
+
+#undef FILE_SERVERIP
+#undef FILE_SERVERPORT
+#undef FILE_LICENSEID
+#undef FILE_MAX_PLAYERS
+#undef FILE_RCONPASS
+#undef FILE_LANGUAGE
 
 //EOF

@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 2.2B                                                                                                             *
+ * File Version: 2.2C                                                                                                             *
  *                                                                                                                                *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
@@ -53,7 +53,7 @@
  * bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist);                              *
  * bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);   *
  * bool:IsProbable(chance);                                                                                                       *
- * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry,&Float:rz);                                                   *
+ * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -73,7 +73,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version		(20202) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version		(20203) //a.b[c] 10000*a+100*b+c
 
 #if !defined PI
 	#define PI (22/7)
@@ -458,7 +458,7 @@ stock bool:IsProbable(chance){
 	return false;
 }
 
-stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry,&Float:rz){
+stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry){
 	new Float:tpx1, Float:tpy1, Float:tpz1,
 		Float:tpx2, Float:tpy2, Float:tpz2,
 		Float:tmp;
@@ -466,7 +466,7 @@ stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry,&Float:rz
 	GetPointInFront2D(x,y,180.0,size,tpx2,tpy2);
 	MapAndreas_FindZ_For2DCoord(tpx1,tpy1,tpz1);
 	MapAndreas_FindZ_For2DCoord(tpx2,tpy2,tpz2);
-	GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,rx,rz);
+	GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,rx,tmp);
 	
 	GetPointInFront2D(x,y,90.0,size,tpx1,tpy1);
 	GetPointInFront2D(x,y,270.0,size,tpx2,tpy2);
