@@ -81,24 +81,8 @@ AntiDeAMX(){
 ScriptSecureADM(){
 	new sid = FindServerID();
 	
-	if(sid == INVALID_SERVERID){
-		print("[ADM] Error: This script is stolen.");
-		SendRconCommand("exit");
-		return 0;
-	}
-	
 	//IP and PORT check
-	new serverIP[16];
-	GetServerVarAsString("bind",serverIP,sizeof(serverIP));
-	
-	if(!strcmp(serverIP,ADMServerList[sid][ADM_ServerIP],true) && !isnull(serverIP)){
-		//Server IP OK
-	} else {
-		print("[ADM] Error: This script is stolen.");
-		SendRconCommand("exit");
-		return 0;
-	}
-	if(GetServerVarAsInt("port") != ADMServerList[sid][ADM_ServerPort]){
+	if(sid == INVALID_SERVERID){
 		print("[ADM] Error: This script is stolen.");
 		SendRconCommand("exit");
 		return 0;
