@@ -87,12 +87,14 @@ ScriptSecureADM(){
 			#if defined DONT_ALLOW_LOCALHOST
 				print("[ADM] Error: This script is stolen.");
 				SendRconCommand("exit");
+				return 0;
 			#else
 				print("[ADM] Info: Local server detect.");
 			#endif
 		} else {
 			print("[ADM] Error: This script is stolen.");
 			SendRconCommand("exit");
+			return 0;
 		}
 	}
 	if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){
@@ -100,10 +102,12 @@ ScriptSecureADM(){
 		#if defined DONT_ALLOW_LOCALHOST
 			print("[ADM] Error: This script is stolen.");
 			SendRconCommand("exit");
+			return 0;
 		#endif
 	} else if(GetServerVarAsInt("port") != FILE_SERVERPORT){
 		print("[ADM] Error: This script is stolen.");
 		SendRconCommand("exit");
+		return 0;
 	}
 
 	//Date Check
@@ -113,6 +117,7 @@ ScriptSecureADM(){
 	if(tmpdate > FILE_LICENSEID){
 		print("[ADM] Error: Script license has expired.");
 		SendRconCommand("exit");
+		return 0;
 	}
 
 	//Check server.cfg
@@ -120,6 +125,7 @@ ScriptSecureADM(){
 		if(GetMaxPlayers() != FILE_MAX_PLAYERS){
 			print("[ADM] Error: Invalid server config, check your max players.");
 			SendRconCommand("exit");
+			return 0;
 		}
 	#endif
 	
@@ -130,6 +136,7 @@ ScriptSecureADM(){
 		if(strcmp(rtemp,FILE_RCONPASS,false) != 0){
 			print("[ADM] Error: Invalid server config, check your rcon password.");
 			SendRconCommand("exit");
+			return 0;
 		}
 		rtemp = "";
 	#endif
@@ -139,11 +146,13 @@ ScriptSecureADM(){
 		if(strcmp(rtemp,FILE_LANGUAGE,false) != 0 || isnull(rtemp)){
 			print("[ADM] Error: Invalid server config, check your language.");
 			SendRconCommand("exit");
+			return 0;
 		}
 		rtemp = "";
 	#endif
 	
 	#pragma unused rtemp
+	return 1;
 }
 
 #undef FILE_SERVERIP
