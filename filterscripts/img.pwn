@@ -7,26 +7,15 @@
 
 #include <a_samp>
 #include <sscanf2>
-#include <SAM/BitFunctions>
-#include <SAM/ADM>
-#include <SAM/DoT>
+#include <SAM/BINLDR>
 
-//Check Version ADM.inc
-#if !defined _adm_encryption
-	#error You need ADM.inc v1.9
-#elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v1.9
-#elseif (ADM_Encryption_Version < 10901)
-	#error Update you ADM.inc to v1.9
-#endif
-
-//Check Version DoT.inc
-#if !defined _DoT_Loader
-	#error You need DoT.inc v1.2
-#elseif !defined DoT_Loader_Version
-	#error Update you DoT.inc to v1.2
-#elseif (DoT_Loader_Version < 10201)
-	#error Update you DoT.inc to v1.2
+//Check Version BINLDR.inc
+#if !defined _Bin_Loader
+	#error You need BINLDR.inc v2.0
+#elseif !defined Bin_Loader_Version
+	#error Update you BINLDR.inc to v2.0
+#elseif (Bin_Loader_Version < 20001)
+	#error Update you BINLDR.inc to v2.0
 #endif
 
 public OnFilterScriptInit(){

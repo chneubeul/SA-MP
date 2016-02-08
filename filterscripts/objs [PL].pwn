@@ -30,7 +30,7 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 #include <SAM/3DTryg>
 #include <SAM/ADM>
 #include <SAM/DoT>
-
+#include <SAM/BINLDR>
 
 //Check StreamerFunction.inc
 #if !defined _streamer_spec
@@ -61,11 +61,20 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 
 //Check Version DoT.inc
 #if !defined _DoT_Loader
-	#error You need DoT.inc v1.2
+	#error You need DoT.inc v1.3
 #elseif !defined DoT_Loader_Version
-	#error Update you DoT.inc to v1.2
-#elseif (DoT_Loader_Version < 10201)
-	#error Update you DoT.inc to v1.2
+	#error Update you DoT.inc to v1.3
+#elseif (DoT_Loader_Version < 10301)
+	#error Update you DoT.inc to v1.3
+#endif
+
+//Check Version BINLDR.inc
+#if !defined _Bin_Loader
+	#error You need BINLDR.inc v2.0
+#elseif !defined Bin_Loader_Version
+	#error Update you BINLDR.inc to v2.0
+#elseif (Bin_Loader_Version < 20001)
+	#error Update you BINLDR.inc to v2.0
 #endif
 
 new pliki[][32] = {

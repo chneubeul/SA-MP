@@ -1,20 +1,21 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                                        DoT Object Loader                                         *
+ *                                    Binary Object File Loader                                     *
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.3                                                                                *
+ * File Version: 2.0                                                                                *
  *                                                                                                  *
  * Object Functions:                                                                                *
- * ADM:LoadDoTMap(const name[]);                                                                    *
- * ADM:SaveDoTMap(const input[], const output[]);                                                   *
+ * LoadBinaryObjectIMG(const name[]);                                                               *
+ * SaveBinaryObjectIMG(const input[], const output[]);                                              *
+ * DecompressBinaryObjectIMG(const input[], const output[]);                                        *
  * Float:CalculateObjectDistance(objectid);                                                         *
  *                                                                                                  *
  ****************************************************************************************************/
 
 /*
-Permitted record before converting on the DoT
+Permitted record before converting
 
 CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz);
 CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid);
@@ -25,44 +26,48 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 
 Example:
 
-SaveDoTMap("Christmas.txt","Christmas.dot"); //Converting Text File Object to DoT File
-//Note: The first line of a TXT file may not contain objects required clearance!
-LoadDoTMap("Christmas.dot"); //Load DoT File
+SaveBinaryObjectIMG("Christmas.txt", "Christmas.bin"); //Converting Text File Object to Binary Object IMG (compress ratio ~34%)
+LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 
 */
 
 /*
-//Check Version DoT.inc
-#if !defined _DoT_Loader
-	#error You need DoT.inc v1.2C
-#elseif !defined DoT_Loader_Version
-	#error Update you DoT.inc to v1.2C
-#elseif (DoT_Loader_Version < 10203)
-	#error Update you DoT.inc to v1.2C
+//Check Version BINLDR.inc
+#if !defined _Bin_Loader
+	#error You need BINLDR.inc v2.0
+#elseif !defined Bin_Loader_Version
+	#error Update you BINLDR.inc to v2.0
+#elseif (Bin_Loader_Version < 20001)
+	#error Update you BINLDR.inc to v2.0
 #endif
 */
 
-
-//Check Version ADM.inc
-#if !defined _adm_encryption
-	#error You need ADM.inc v1.9
-#elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v1.9
-#elseif (ADM_Encryption_Version < 10901)
-	#error Update you ADM.inc to v1.9
-#endif
-
-#if defined _DoT_Loader
+#if defined _Bin_Loader
 	#endinput
 #endif
-#define _DoT_Loader
+#define _Bin_Loader
 
-#define DoT_Loader_Version 				(10301) //a.b[c] 10000*a+100*b+c
+#define Bin_Loader_Version 				(20001) //a.b[c] 10000*a+100*b+c
 
-#define DOT_HEADER						"DoTv1.0"
-#define DOT_HEADER_SIZE					(32)
+#define MAX_RAW_DATA					(42)
+#define MAX_BIN_FILE_SIZE				(2147483647)	//~2 GB
 
-#if !defined _Bin_Loader
+#define ERROR_CODE_BINLDR_UNEXEC		(0)		//function unexecutable
+#define ERROR_CODE_BINLDR_OK			(1)		//success
+#define ERROR_CODE_BINLDR_INPUT			(-1)	//input file not exist
+#define ERROR_CODE_BINLDR_OUTPUT		(-2)	//output file exist
+#define ERROR_CODE_BINLDR_SIZE			(-4)	//invalid file size
+#define ERROR_CODE_BINLDR_OPEN_INPUT	(-6)	//error open input file
+#define ERROR_CODE_BINLDR_OPEN_OUTPUT	(-7)	//error open output file
+
+//BitFunctions
+#define Bin_ExtractValue(%0,%1,%2,%3,%4)	((%1) = (((%0) & 0xFF000000) >>> 24),(%2) = (((%0) & 0x00FF0000) >>> 16),(%3) = (((%0) & 0x0000FF00) >>> 8),(%4) = ((%0) & 0x000000FF))
+#define Bin_ExtractFloat(%0,%1,%2,%3,%4)	((%1) = (((_:%0) & 0xFF000000) >>> 24),(%2) = (((_:%0) & 0x00FF0000) >>> 16),(%3) = (((_:%0) & 0x0000FF00) >>> 8),(%4) = ((_:%0) & 0x000000FF))
+
+#define Bin_MergeValue(%0,%1,%2,%3,%4)		((%0) = (((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
+#define Bin_MergeFloat(%0,%1,%2,%3,%4)		((%0) = Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
+
+#if !defined _DoT_Loader
 	stock Float:CalculateObjectDistance(objectid){
 		switch(objectid){
 			case
@@ -135,136 +140,161 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 	}
 #endif
 
-stock ADM:LoadDoTMap(const name[]){
+stock LoadBinaryObjectIMG(const name[]){
 	new NTTime = GetTickCount();
-	if(!fexist(name)) return ERROR_CODE_ADM_INPUT;
-	new File:NTMap = fopen(name,io_read), mod[8];
-	if(!NTMap) return ERROR_CODE_ADM_OPEN_INPUT;
-	new tempfile[80], tempkey[MAX_KEY_LEN_ADMx256];
-	for(new i = 0; i < (MAX_MODE_ADMx256*2); i++){
-		if(i >= 0 && i < 7){
-			mod[i] = fgetchar(NTMap,0,false);
-		} else if(i >= 8 && i < 32){
-			fgetchar(NTMap,0,false);
-		} else if(i == 32){
-			format(tempkey,sizeof(tempkey),"%d",fgetchar(NTMap,0,false));
-		} else {
-			format(tempkey,sizeof(tempkey),"%s %d",tempkey,fgetchar(NTMap,0,false));
+	if(!fexist(name)) return ERROR_CODE_BINLDR_INPUT;
+	new RAW[MAX_RAW_DATA], File:inpf = fopen(name,io_read);
+	if(!inpf) return ERROR_CODE_BINLDR_OPEN_INPUT;
+	new asize = flength(inpf), idx = 0, s = 0, cnt = 0;
+	if(asize > MAX_BIN_FILE_SIZE || asize < 0 || (asize % MAX_RAW_DATA) != 0){
+		fclose(inpf);
+		return ERROR_CODE_BINLDR_SIZE;
+	}
+	while(idx < asize){
+		RAW[s] = fgetchar(inpf,0,false);
+		idx++;
+		s++;
+		if(s >= MAX_RAW_DATA){
+			s = 0;
+			CreateDynamicObject(
+				((RAW[0]*256)+RAW[1]),
+				Float:((RAW[2]*16777216)+(RAW[3]*65536)+(RAW[4]*256)+RAW[5]),
+				Float:((RAW[6]*16777216)+(RAW[7]*65536)+(RAW[8]*256)+RAW[9]),
+				Float:((RAW[10]*16777216)+(RAW[11]*65536)+(RAW[12]*256)+RAW[13]),
+				Float:((RAW[14]*16777216)+(RAW[15]*65536)+(RAW[16]*256)+RAW[17]),
+				Float:((RAW[18]*16777216)+(RAW[19]*65536)+(RAW[20]*256)+RAW[21]),
+				Float:((RAW[22]*16777216)+(RAW[23]*65536)+(RAW[24]*256)+RAW[25]),
+				((RAW[26]*16777216)+(RAW[27]*65536)+(RAW[28]*256)+RAW[29]),
+				((RAW[30]*16777216)+(RAW[31]*65536)+(RAW[32]*256)+RAW[33]),
+				-1,
+				Float:((RAW[34]*16777216)+(RAW[35]*65536)+(RAW[36]*256)+RAW[37]),
+				Float:((RAW[38]*16777216)+(RAW[39]*65536)+(RAW[40]*256)+RAW[41])
+			);
+			cnt++;
 		}
-	}
-	mod[7] = EOS;
-	fclose(NTMap);
-	if(!strcmp(mod,DOT_HEADER,true)){
-	
-	} else {
-		return ERROR_CODE_ADM_OPEN_INPUT;
-	}
-	format(tempfile,sizeof(tempfile),"%s.tmp",name);
-	if(fexist(tempfile)) fremove(tempfile);
-	new ADM:edi = ADMx256(name, tempfile, tempkey);
-	if(edi != ERROR_CODE_ADM_OK){
-		if(fexist(tempfile)) fremove(tempfile);
-		return edi;
-	}
-	new File:NTObj = fopen(tempfile, io_read), buf[255], line[255], cnt = 0, lnum = 0, ecnt = 0;
-	
-	while(fread(NTObj,line)){
-		lnum++;
-		if(line[0]!='/' && strfind(line,"CreateDynamicObject",true)!=-1){
-			new objectid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = 200.0, Float:drawdistance = 0.0, Float:nul;
-			if(sscanf(line,"p<,>'('ifffffP<,)>fP<,)>D(-1)D(-1)D(-1)F(-1)F(0)p<)>F(0)", objectid, x, y, z, rx, ry, rz, worldid, interiorid, playerid, streamdistance, drawdistance, nul)){
-				if(streamdistance == -1) streamdistance = CalculateObjectDistance(objectid);
-				CreateDynamicObject(objectid,x,y,z,rx,ry,rz,worldid,interiorid,playerid,streamdistance,drawdistance);
-				cnt++;
-			} else {
-				ecnt++;
-				format(buf,sizeof buf,"%s, line %d, error in parsing: %s",name,lnum,line);
-				printf(buf);
-			}
-		}
-	}
-	fclose(NTObj);
-	fremove(tempfile);
-	format(line,sizeof line,"%s, lines: %d, objects: %d, errors %d, load time %d ms",name,lnum,cnt,ecnt,GetTickCount()-NTTime);
-	printf(line);
-	return ERROR_CODE_ADM_OK;
+	}	
+	fclose(inpf);
+	new buffer[256];
+	format(buffer,sizeof buffer,"%s, objects: %d load time %d ms",name,cnt,GetTickCount()-NTTime);
+	printf(buffer);
+	return ERROR_CODE_BINLDR_OK;
 }
 
-stock ADM:SaveDoTMap(const input[], const output[]){
-	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
-	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
+stock SaveBinaryObjectIMG(const input[], const output[]){
+	new NTTime = GetTickCount();
+	if(!fexist(input)) return ERROR_CODE_BINLDR_INPUT;
+	if(fexist(output)) return ERROR_CODE_BINLDR_OUTPUT;
 	
 	new File:InputMap = fopen(input,io_read);
-	if(!InputMap) return ERROR_CODE_ADM_OPEN_INPUT;
+	if(!InputMap) return ERROR_CODE_BINLDR_OPEN_INPUT;
 	
 	new File:OutputMap = fopen(output,io_write);
 	if(!OutputMap){
 		fclose(InputMap);
-		return ERROR_CODE_ADM_OPEN_OUTPUT;
+		return ERROR_CODE_BINLDR_OPEN_OUTPUT;
 	}
-	new mode[MAX_MODE_ADMx256],
-		tmpkey[MAX_KEY_LEN_ADMx256],
-		tmpheader[DOT_HEADER_SIZE],
-		tmpheaderkey[MAX_KEY_LEN_ADMx256],
-		ADM:dotikey = CreateADMKey(tmpkey,KEY_TYPE_ADMx256),
-		ADM:dotokey = DecodeADMKey(tmpkey,tmpheaderkey,KEY_TYPE_ADMx256);
-		
-	if(dotikey != ERROR_CODE_ADM_OK || dotokey != ERROR_CODE_ADM_OK){
-		fclose(InputMap);
-		fclose(OutputMap);
-		if(fexist(output)){
-			fremove(output);
+	new cnt = 0, line[256], lcnt = 0;
+	
+	while(fread(InputMap,line)){
+		if(line[0]!='/' && strfind(line,"CreateDynamicObject",true)!=-1){
+			new modelid, Float:x, Float:y,
+				Float:z, Float:rx, Float:ry, Float:rz,
+				worldid = -1, interiorid = -1, playerid = -1,
+				Float:streamdistance = 200.0, Float:drawdistance = 0.0,
+				Float:nul, RAW[MAX_RAW_DATA], tmp;
+				
+			if(sscanf(line,"p<,>'('ifffffP<,)>fP<,)>D(-1)D(-1)D(-1)F(-1)F(0)p<)>F(0)", modelid, x, y, z, rx, ry, rz, worldid, interiorid, playerid, streamdistance, drawdistance, nul)){
+				if(streamdistance == -1) streamdistance = CalculateObjectDistance(modelid);
+				
+				//extract object info
+				Bin_ExtractValue(modelid,tmp,tmp,RAW[0],RAW[1]);
+				Bin_ExtractFloat(x,RAW[2],RAW[3],RAW[4],RAW[5]);
+				Bin_ExtractFloat(y,RAW[6],RAW[7],RAW[8],RAW[9]);
+				Bin_ExtractFloat(z,RAW[10],RAW[11],RAW[12],RAW[13]);
+				Bin_ExtractFloat(rx,RAW[14],RAW[15],RAW[16],RAW[17]);
+				Bin_ExtractFloat(ry,RAW[18],RAW[19],RAW[20],RAW[21]);
+				Bin_ExtractFloat(rz,RAW[22],RAW[23],RAW[24],RAW[25]);
+				Bin_ExtractValue(worldid,RAW[26],RAW[27],RAW[28],RAW[29]);
+				Bin_ExtractValue(interiorid,RAW[30],RAW[31],RAW[32],RAW[33]);
+				Bin_ExtractFloat(streamdistance,RAW[34],RAW[35],RAW[36],RAW[37]);
+				Bin_ExtractFloat(drawdistance,RAW[38],RAW[39],RAW[40],RAW[41]);
+				
+				#pragma unused tmp
+				
+				for(new i = 0; i < MAX_RAW_DATA; i++){
+					fputchar(OutputMap,RAW[i],false);
+				}
+				cnt++;
+			}
 		}
-		if(dotikey != ERROR_CODE_ADM_OK){
-			return dotikey;
-		} else {
-			return dotokey;
-		}
+		lcnt++;
 	}
 	
-	sscanf(tmpheaderkey,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
-		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
-		mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15],
-		mode[16],mode[17],mode[18],mode[19],mode[20],mode[21],mode[22],mode[23],
-		mode[24],mode[25],mode[26],mode[27],mode[28],mode[29],mode[30],mode[31]
-	);
-	
-	format(tmpheader,sizeof tmpheader,"%s",DOT_HEADER);
-	
-	for(new i = 0, j = strlen(tmpheader); i < DOT_HEADER_SIZE; i++){
-		if(i < j){
-			fputchar(OutputMap,tmpheader[i],false);
-		} else {
-			fputchar(OutputMap,random(256),false);
-		}
-	}
-	
-	for(new i = DOT_HEADER_SIZE; i < (DOT_HEADER_SIZE*2); i++){
-		fputchar(OutputMap,mode[i-DOT_HEADER_SIZE],false);
-	}
-	
-	sscanf(tmpkey,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
-		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
-		mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15],
-		mode[16],mode[17],mode[18],mode[19],mode[20],mode[21],mode[22],mode[23],
-		mode[24],mode[25],mode[26],mode[27],mode[28],mode[29],mode[30],mode[31]
-	);
-	
-	new asize = flength(InputMap), idx = 0, s = 0;
-	
-	while(idx < asize){
-		fputchar(OutputMap,((fgetchar(InputMap,0,false)+mode[s]) & 0xFF),false);
-		idx++;
-		s++;
-		if(s >= MAX_MODE_ADMx256) s = 0;
-	}
+	new buffer[256];
+	new Float:ratio = ((float(flength(OutputMap))/float(flength(InputMap)))*100.0);
+	format(buffer,sizeof buffer,"%s, line: %d, objects: %d convert time %d ms ratio %.2f",input,lcnt,cnt,GetTickCount()-NTTime,ratio);
+	printf(buffer);
 	
 	fclose(InputMap);
 	fclose(OutputMap);
 	
-	return ERROR_CODE_ADM_OK;
+	return ERROR_CODE_BINLDR_OK;
 }
 
-#define DoT(%0) LoadDoTMap(%0)
+stock DecompressBinaryObjectIMG(const input[], const output[]){
+	new NTTime = GetTickCount();
+	if(!fexist(input)) return ERROR_CODE_BINLDR_INPUT;
+	if(fexist(output)) return ERROR_CODE_BINLDR_OUTPUT;
+	
+	new File:InputMap = fopen(input,io_read);
+	if(!InputMap) return ERROR_CODE_BINLDR_OPEN_INPUT;
+	
+	new File:OutputMap = fopen(output,io_write);
+	if(!OutputMap){
+		fclose(InputMap);
+		return ERROR_CODE_BINLDR_OPEN_OUTPUT;
+	}
+	fwrite(OutputMap,"//Decompress Binary Object IMG\r\n");
+	fclose(OutputMap);
+	OutputMap = fopen(output,io_append);
+	if(!OutputMap){
+		fclose(InputMap);
+		return ERROR_CODE_BINLDR_OPEN_OUTPUT;
+	}
+	new cnt = 0, line[256], asize = flength(InputMap), idx = 0, s = 0, RAW[MAX_RAW_DATA],	
+		modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid, Float:streamdistance, Float:drawdistance;
+	
+	while(idx < asize){
+		RAW[s] = fgetchar(InputMap,0,false);
+		idx++;
+		s++;
+		if(s >= MAX_RAW_DATA){
+			s = 0;
+			Bin_MergeValue(modelid,0,0,RAW[0],RAW[1]);
+			Bin_MergeFloat(x,RAW[2],RAW[3],RAW[4],RAW[5]);
+			Bin_MergeFloat(y,RAW[6],RAW[7],RAW[8],RAW[9]);
+			Bin_MergeFloat(z,RAW[10],RAW[11],RAW[12],RAW[13]);
+			Bin_MergeFloat(rx,RAW[14],RAW[15],RAW[16],RAW[17]);
+			Bin_MergeFloat(ry,RAW[18],RAW[19],RAW[20],RAW[21]);
+			Bin_MergeFloat(rz,RAW[22],RAW[23],RAW[24],RAW[25]);
+			Bin_MergeValue(worldid,RAW[26],RAW[27],RAW[28],RAW[29]);
+			Bin_MergeValue(interiorid,RAW[30],RAW[31],RAW[32],RAW[33]);
+			Bin_MergeFloat(streamdistance,RAW[34],RAW[35],RAW[36],RAW[37]);
+			Bin_MergeFloat(drawdistance,RAW[38],RAW[39],RAW[40],RAW[41]);
+			format(line,sizeof line,"CreateDynamicObject(%i,%f,%f,%f,%f,%f,%f,%d,%d,%d,%.1f,%.1f);\r\n",modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance);
+			fwrite(OutputMap,line);
+			cnt++;
+		}
+	}	
+	
+	new buffer[256], Float:ratio = ((float(flength(OutputMap))/float(flength(InputMap)))*100.0);
+	format(buffer,sizeof buffer,"%s, objects: %d convert time %d ms ratio %.2f",input,cnt,GetTickCount()-NTTime,ratio);
+	printf(buffer);
+	
+	fclose(InputMap);
+	fclose(OutputMap);
+	
+	return ERROR_CODE_BINLDR_OK;
+}
 
 //EOF
