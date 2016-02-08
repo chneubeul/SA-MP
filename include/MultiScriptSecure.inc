@@ -79,9 +79,9 @@ AntiDeAMX(){
 
 
 ScriptSecureADM(){
-	new sid = FindServerID();
-	
+
 	//IP and PORT check
+	new sid = FindServerID();
 	if(sid == INVALID_SERVERID){
 		print("[ADM] Error: This script is stolen.");
 		SendRconCommand("exit");
