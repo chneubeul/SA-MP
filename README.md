@@ -636,8 +636,18 @@ VAL: 0
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-
 Include: SAM\DoT.inc
+
+Published: N/A
+
+Description: N/A
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+Include: SAM\BINLDR.inc
 
 Published: http://forum.sa-mp.com/showthread.php?p=3653547
 
@@ -651,12 +661,7 @@ To do this we need:
 
 1. Download and install this include
 
-\#include \<SAM/BitFunctions\>
-
-\#include \<SAM/ADM\>
-
-\#include \<SAM/DoT\>
-
+\#include \<SAM/BINLDR\>
 
 
 2. Make sure that the input file contains objects
@@ -677,11 +682,11 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 
 3. Compress objects (remember to keep the original file), preferably using a simple script https://github.com/AbyssMorgan/SA-MP/blob/master/filterscripts/img.pwn
 
-new ADM:edi = SaveBinaryObjectIMG("obiekty-world.txt","obiekty-world.bin");
+new edi = SaveBinaryObjectIMG("obiekty-world.txt","obiekty-world.bin");
 
-if(edi != ERROR_CODE_ADM_OK){
+if(edi != ERROR_CODE_BINLDR_OK){
 
-	printf("Error Save Binary Object Code: %d",ADMToInt(edi));
+	printf("Error Save Binary Object Code: %d",edi);
 
 }
 
@@ -689,11 +694,11 @@ if(edi != ERROR_CODE_ADM_OK){
 
 4. Load compress object
 
-new ADM:edi = LoadBinaryObjectIMG("obiekty-world.bin");
+new edi = LoadBinaryObjectIMG("obiekty-world.bin");
 
-if(edi != ERROR_CODE_ADM_OK){
+if(edi != ERROR_CODE_BINLDR_OK){
 
-	printf("Error Load Binary Object Code: %d",ADMToInt(edi));
+	printf("Error Load Binary Object Code: %d",edi);
 
 }
 
