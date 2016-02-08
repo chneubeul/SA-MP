@@ -6,6 +6,10 @@
 //Install
 
 //#define DONT_ALLOW_LOCALHOST	//additional option
+//#define CHECK_MAX_PLAYERS		//additional option
+//#define CHECK_RCON_PASSWORD	//additional option
+//#define CHECK_SERVER_LANGUAGE	//additional option
+
 #define FILE_SERVERIP			"127.0.0.1"
 #define FILE_SERVERPORT			(7777)			
 #define FILE_LICENSEID			(20160201)		//<--- YYYYMMDD 01.02.2016 (DD.MM.YYYY)
@@ -46,18 +50,23 @@ public OnFilterScriptInit(){
 	#error Please #define FILE_LICENSEID (20160201)
 #endif
 
-#if !defined FILE_MAX_PLAYERS
-	#error Please #define FILE_MAX_PLAYERS (500)
+#if defined CHECK_MAX_PLAYERS
+	#if !defined FILE_MAX_PLAYERS
+		#error Please #define FILE_MAX_PLAYERS (500)
+	#endif
 #endif
 
-#if !defined FILE_RCONPASS
-	#error Please #define FILE_RCONPASS "123"
+#if defined CHECK_RCON_PASSWORD
+	#if !defined FILE_RCONPASS
+		#error Please #define FILE_RCONPASS "123"
+	#endif
 #endif
 
-#if !defined FILE_LANGUAGE
-	#error Please #define FILE_LANGUAGE "Polish"
+#if defined CHECK_SERVER_LANGUAGE
+	#if !defined FILE_LANGUAGE
+		#error Please #define FILE_LANGUAGE "Polish"
+	#endif
 #endif
-
 
 AntiDeAMX(){
 	new UAX[][] = { "Unarmed (Fist)", "Brass K" };
@@ -107,32 +116,50 @@ ScriptSecureADM(){
 	}
 
 	//Check server.cfg
-	if(GetMaxPlayers() != FILE_MAX_PLAYERS){
-		print("[ADM] Error: Invalid server config, check your max players.");
-		SendRconCommand("exit");
-	}
+	#if defined CHECK_MAX_PLAYERS
+		if(GetMaxPlayers() != FILE_MAX_PLAYERS){
+			print("[ADM] Error: Invalid server config, check your max players.");
+			SendRconCommand("exit");
+		}
+	#endif
 	
 	new rtemp[32];
-	GetServerVarAsString("rcon_password",rtemp,sizeof(rtemp));
-	if(strcmp(rtemp,FILE_RCONPASS,false) != 0){
-		print("[ADM] Error: Invalid server config, check your rcon password.");
-		SendRconCommand("exit");
-	}
-	rtemp = "";
 	
-	GetServerVarAsString("language",rtemp,sizeof(rtemp));
-	if(strcmp(rtemp,FILE_LANGUAGE,false) != 0 || isnull(rtemp)){
-		print("[ADM] Error: Invalid server config, check your language.");
-		SendRconCommand("exit");
-	}
-	rtemp = "";
+	#if defined CHECK_RCON_PASSWORD
+		GetServerVarAsString("rcon_password",rtemp,sizeof(rtemp));
+		if(strcmp(rtemp,FILE_RCONPASS,false) != 0){
+			print("[ADM] Error: Invalid server config, check your rcon password.");
+			SendRconCommand("exit");
+		}
+		rtemp = "";
+	#endif
+	
+	#if defined CHECK_SERVER_LANGUAGE
+		GetServerVarAsString("language",rtemp,sizeof(rtemp));
+		if(strcmp(rtemp,FILE_LANGUAGE,false) != 0 || isnull(rtemp)){
+			print("[ADM] Error: Invalid server config, check your language.");
+			SendRconCommand("exit");
+		}
+		rtemp = "";
+	#endif
+	
+	#pragma unused rtemp
 }
 
 #undef FILE_SERVERIP
 #undef FILE_SERVERPORT
 #undef FILE_LICENSEID
-#undef FILE_MAX_PLAYERS
-#undef FILE_RCONPASS
-#undef FILE_LANGUAGE
+
+#if defined FILE_MAX_PLAYERS
+	#undef FILE_MAX_PLAYERS
+#endif
+
+#if defined FILE_RCONPASS
+	#undef FILE_RCONPASS
+#endif
+
+#if defined FILE_LANGUAGE
+	#undef FILE_LANGUAGE
+#endif
 
 //EOF
