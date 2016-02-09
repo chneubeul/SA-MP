@@ -137,78 +137,76 @@ forward DestroyDynamicMine(mineid);
 forward ExplodeDynamicMine(mineid);
 forward RespawnDynamicMine(mineid);
 
-#if defined FILTERSCRIPT
-	public OnFilterScriptInit(){
-		MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
-		#if defined MDM_OnFilterScriptInit
-			MDM_OnFilterScriptInit();
-		#endif
-		return 1;
-	}
-
-	#if defined _ALS_OnFilterScriptInit
-		#undef OnFilterScriptInit
-	#else
-		#define _ALS_OnFilterScriptInit
-	#endif
-	#define OnFilterScriptInit MDM_OnFilterScriptInit
+public OnFilterScriptInit(){
+	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
 	#if defined MDM_OnFilterScriptInit
-		forward MDM_OnFilterScriptInit();
+		MDM_OnFilterScriptInit();
 	#endif
+	return 1;
+}
 
-	public OnFilterScriptExit(){
-		KillTimer(MineTimer);
-		#if defined MDM_OnFilterScriptExit
-			MDM_OnFilterScriptExit();
-		#endif
-		return 1;
-	}
-
-	#if defined _ALS_OnFilterScriptExit
-		#undef OnFilterScriptExit
-	#else
-		#define _ALS_OnFilterScriptExit
-	#endif
-	#define OnFilterScriptExit MDM_OnFilterScriptExit
-	#if defined MDM_OnFilterScriptExit
-		forward MDM_OnFilterScriptExit();
-	#endif
+#if defined _ALS_OnFilterScriptInit
+	#undef OnFilterScriptInit
 #else
-	public OnGameModeInit(){
-		MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
-		#if defined MDM_OnGameModeInit
-			MDM_OnGameModeInit();
-		#endif
-		return 1;
-	}
+	#define _ALS_OnFilterScriptInit
+#endif
+#define OnFilterScriptInit MDM_OnFilterScriptInit
+#if defined MDM_OnFilterScriptInit
+	forward MDM_OnFilterScriptInit();
+#endif
 
-	#if defined _ALS_OnGameModeInit
-		#undef OnGameModeInit
-	#else
-		#define _ALS_OnGameModeInit
+public OnFilterScriptExit(){
+	KillTimer(MineTimer);
+	#if defined MDM_OnFilterScriptExit
+		MDM_OnFilterScriptExit();
 	#endif
-	#define OnGameModeInit MDM_OnGameModeInit
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit MDM_OnFilterScriptExit
+#if defined MDM_OnFilterScriptExit
+	forward MDM_OnFilterScriptExit();
+#endif
+
+public OnGameModeInit(){
+	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
 	#if defined MDM_OnGameModeInit
-		forward MDM_OnGameModeInit();
+		MDM_OnGameModeInit();
 	#endif
+	return 1;
+}
 
-	public OnGameModeExit(){
-		KillTimer(MineTimer);
-		#if defined MDM_OnGameModeExit
-			MDM_OnGameModeExit();
-		#endif
-		return 1;
-	}
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+#else
+	#define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit MDM_OnGameModeInit
+#if defined MDM_OnGameModeInit
+	forward MDM_OnGameModeInit();
+#endif
 
-	#if defined _ALS_OnGameModeExit
-		#undef OnGameModeExit
-	#else
-		#define _ALS_OnGameModeExit
-	#endif
-	#define OnGameModeExit MDM_OnGameModeExit
+public OnGameModeExit(){
+	KillTimer(MineTimer);
 	#if defined MDM_OnGameModeExit
-		forward MDM_OnGameModeExit();
+		MDM_OnGameModeExit();
 	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeExit
+	#undef OnGameModeExit
+#else
+	#define _ALS_OnGameModeExit
+#endif
+#define OnGameModeExit MDM_OnGameModeExit
+#if defined MDM_OnGameModeExit
+	forward MDM_OnGameModeExit();
 #endif
 
 public OnDynamicMineUpdate(tec){
