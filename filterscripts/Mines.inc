@@ -1,17 +1,10 @@
 /******************************************************
  *                                                    *
- * Military Dynamic Mines System v1.2 by Abyss Morgan *
+ * Military Dynamic Mines System v1.3 by Abyss Morgan *
  *                                                    *
  ******************************************************/
 
 /*
-
-//to hook functions
-Min_OnFilterScriptInit(); //IN OnFilterScriptInit OR OnGameModeInit
-Min_OnFilterScriptExit(); //IN OnFilterScriptExit OR OnGameModeExit
-Min_OnPlayerShootDynamicObject(playerid, weaponid, objectid, x, y, z); //IN OnPlayerShootDynamicObject
-Min_OnPlayerEnterDynamicArea(playerid, areaid); //IN OnPlayerEnterDynamicArea
-
 //To add/remove mines use:
 CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance);
 DestroyDynamicMine(mineid);
@@ -55,7 +48,7 @@ new MineComponent[MAX_MINES][e_mine],
 	MineUpperBound = 0,
 	MineTimer;
 
-static const Float:Min_WeaponDamage[] = {
+static const Float:MDM_WeaponDamage[] = {
 	1.0,	// 0 - Fist
 	1.0,	// 1 - Brass knuckles
 	1.0,	// 2 - Golf club
@@ -138,26 +131,47 @@ stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,ty
 	return 1;
 }
 
-forward Min_OnFilterScriptInit();
-forward Min_OnFilterScriptExit();
 forward OnDynamicMineUpdate(tec);
 forward CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance);
 forward DestroyDynamicMine(mineid);
 forward ExplodeDynamicMine(mineid);
 forward RespawnDynamicMine(mineid);
-forward Min_OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z);
-forward Min_OnPlayerEnterDynamicArea(playerid, areaid);
 
-
-public Min_OnFilterScriptInit(){
+public OnFilterScriptInit(){
 	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
+	#if defined MDM_OnFilterScriptInit
+		MDM_OnFilterScriptInit();
+	#endif
 	return 1;
 }
 
-public Min_OnFilterScriptExit(){
+#if defined _ALS_OnFilterScriptInit
+	#undef OnFilterScriptInit
+#else
+	#define _ALS_OnFilterScriptInit
+#endif
+#define OnFilterScriptInit MDM_OnFilterScriptInit
+#if defined MDM_OnFilterScriptInit
+	forward MDM_OnFilterScriptInit();
+#endif
+
+public OnFilterScriptExit(){
 	KillTimer(MineTimer);
+	#if defined MDM_OnFilterScriptExit
+		MDM_OnFilterScriptExit();
+	#endif
 	return 1;
 }
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit MDM_OnFilterScriptExit
+#if defined MDM_OnFilterScriptExit
+	forward MDM_OnFilterScriptExit();
+#endif
 
 public OnDynamicMineUpdate(tec){
 	#pragma unused tec
@@ -240,17 +254,17 @@ public RespawnDynamicMine(mineid){
 	return 1;
 }
 
-public Min_OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z){
+public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z){
 	new mineid = (Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mineid >= 0 && mineid < MAX_MINES){
 		if(MineComponent[mineid][mine_status] == MINE_STATUS_ACTIVE){
 			if(MineComponent[mineid][mine_health] != MINE_INFINITY_HEALTH){
-				MineComponent[mineid][mine_health] -= Min_WeaponDamage[weaponid];
+				MineComponent[mineid][mine_health] -= MDM_WeaponDamage[weaponid];
 				new buffer[128];
 				if(MineComponent[mineid][mine_health] > 0){
-					format(buffer,sizeof buffer,"Mine~n~~w~%.0f HP~n~~r~~h~~h~-%.0f HP",MineComponent[mineid][mine_health],Min_WeaponDamage[weaponid]);
+					format(buffer,sizeof buffer,"Mine~n~~w~%.0f HP~n~~r~~h~~h~-%.0f HP",MineComponent[mineid][mine_health],MDM_WeaponDamage[weaponid]);
 				} else {
-					format(buffer,sizeof buffer,"Mine~n~~w~0 HP~n~~r~~h~~h~-%.0f HP",Min_WeaponDamage[weaponid]);
+					format(buffer,sizeof buffer,"Mine~n~~w~0 HP~n~~r~~h~~h~-%.0f HP",MDM_WeaponDamage[weaponid]);
 				}
 				GameTextForPlayer(playerid,buffer,500,4);
 				if(MineComponent[mineid][mine_health] <= 0.0){
@@ -259,10 +273,24 @@ public Min_OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Flo
 			}
 		}
 	}
+	#if defined MDM_OnPlayerShootDynamicObject
+		MDM_OnPlayerShootDynamicObject(playerid, weaponid, objectid, x, y, z);
+	#endif
 	return 1;
 }
 
-public Min_OnPlayerEnterDynamicArea(playerid, areaid){
+#if defined _ALS_OnPlayerShootDynamicObject
+	#undef OnPlayerShootDynamicObject
+#else
+	#define _ALS_OnPlayerShootDynamicObject
+#endif
+#define OnPlayerShootDynamicObject MDM_OnPlayerShootDynamicObject
+#if defined MDM_OnPlayerShootDynamicObject
+	forward MDM_OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z);
+#endif
+
+
+public OnPlayerEnterDynamicArea(playerid, areaid){
 	new mineid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mineid >= 0 && mineid < MAX_MINES){
 		if(MineComponent[mineid][mine_status] == MINE_STATUS_ACTIVE){
@@ -270,7 +298,20 @@ public Min_OnPlayerEnterDynamicArea(playerid, areaid){
 			ExplodeDynamicMine(mineid);
 		}
 	}	
+	#if defined MDM_OnPlayerEnterDynamicArea
+		MDM_OnPlayerEnterDynamicArea(playerid, areaid);
+	#endif
 	return 1;
 }
+
+#if defined _ALS_OnPlayerEnterDynamicArea
+	#undef OnPlayerEnterDynamicArea
+#else
+	#define _ALS_OnPlayerEnterDynamicArea
+#endif
+#define OnPlayerEnterDynamicArea MDM_OnPlayerEnterDynamicArea
+#if defined MDM_OnPlayerEnterDynamicArea
+	forward MDM_OnPlayerEnterDynamicArea(playerid, areaid);
+#endif
 
 //EOF
