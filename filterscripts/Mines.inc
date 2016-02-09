@@ -120,25 +120,23 @@ stock FindFreeMineID(){
 	return INVALID_MINE_ID;
 }
 
-#if !defined CreateExplosionForRangePoint
-	stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,type,Float:radius,Float:expradius){
-		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-			if(IsPlayerConnected(i)){
-				new Float:minex, Float:miney, Float:minez;
-				if(IsPlayerInAnyVehicle(i)){
-					GetVehiclePos(GetPlayerVehicleID(i),minex,miney,minez);
-				} else {
-					GetPlayerPos(i,minex,miney,minez);
-				}
-				new Float:distance = VectorSize(minex-x,miney-y,minez-z);
-				if((GetPlayerInterior(i) == interiorid) && (GetPlayerVirtualWorld(i) == worldid) && (distance <= radius)){
-					CreateExplosionForPlayer(i,x,y,z,type,expradius);
-				}
+stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,type,Float:radius,Float:expradius){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		if(IsPlayerConnected(i)){
+			new Float:minex, Float:miney, Float:minez;
+			if(IsPlayerInAnyVehicle(i)){
+				GetVehiclePos(GetPlayerVehicleID(i),minex,miney,minez);
+			} else {
+				GetPlayerPos(i,minex,miney,minez);
+			}
+			new Float:distance = VectorSize(minex-x,miney-y,minez-z);
+			if((GetPlayerInterior(i) == interiorid) && (GetPlayerVirtualWorld(i) == worldid) && (distance <= radius)){
+				CreateExplosionForPlayer(i,x,y,z,type,expradius);
 			}
 		}
-		return 1;
 	}
-#endif
+	return 1;
+}
 
 forward Min_OnFilterScriptInit();
 forward Min_OnFilterScriptExit();
