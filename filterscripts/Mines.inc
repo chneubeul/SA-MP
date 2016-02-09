@@ -155,6 +155,24 @@ public OnFilterScriptInit(){
 	forward MDM_OnFilterScriptInit();
 #endif
 
+public OnGameModeInit(){
+	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
+	#if defined MDM_OnGameModeInit
+		MDM_OnGameModeInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+#else
+	#define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit MDM_OnGameModeInit
+#if defined MDM_OnGameModeInit
+	forward MDM_OnGameModeInit();
+#endif
+
 public OnFilterScriptExit(){
 	KillTimer(MineTimer);
 	#if defined MDM_OnFilterScriptExit
