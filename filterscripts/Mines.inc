@@ -1,6 +1,6 @@
 /******************************************************
  *                                                    *
- * Military Dynamic Mines System v1.1 by Abyss Morgan *
+ * Military Dynamic Mines System v1.2 by Abyss Morgan *
  *                                                    *
  ******************************************************/
 
@@ -219,16 +219,11 @@ public ExplodeDynamicMine(mineid){
 		interiorid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mineid][mine_objectid],E_STREAMER_INTERIOR_ID);
 		
 	GetDynamicObjectPos(MineComponent[mineid][mine_objectid],minex,miney,minez);
-	#if defined CreateExplosionForRangePoint
-		if(worldid == -1 || interiorid == -1){
-			CreateExplosion(minex,miney,minez,MineComponent[mineid][mine_type],MineComponent[mineid][mine_explode]);
-		} else {
-			CreateExplosionForRangePoint(minex,miney,minez,worldid,interiorid,MineComponent[mineid][mine_type],200.0,MineComponent[mineid][mine_explode]);
-		}
-	#else
+	if(worldid == -1 || interiorid == -1){
 		CreateExplosion(minex,miney,minez,MineComponent[mineid][mine_type],MineComponent[mineid][mine_explode]);
-		#pragma unused interiorid
-	#endif
+	} else {
+		CreateExplosionForRangePoint(minex,miney,minez,worldid,interiorid,MineComponent[mineid][mine_type],200.0,MineComponent[mineid][mine_explode]);
+	}
 	MineComponent[mineid][mine_tickcount] = GetTickCount()+(MineComponent[mineid][mine_respawntime]*1000);
 	MineComponent[mineid][mine_status] = MINE_STATUS_DAMAGED;
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mineid][mine_objectid],E_STREAMER_WORLD_ID,worldid+10000); //hide mine
