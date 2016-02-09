@@ -1,16 +1,16 @@
 /******************************************************
  *                                                    *
- * Military Dynamic Mines System v1.0 by Abyss Morgan *
+ * Military Dynamic Mines System v1.1 by Abyss Morgan *
  *                                                    *
  ******************************************************/
 
 /*
 
 //to hook functions
-forward Min_OnFilterScriptInit(); //IN OnFilterScriptInit OR OnGameModeInit
-forward Min_OnFilterScriptExit(); //IN OnFilterScriptExit OR OnGameModeExit
-forward Min_OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z); //IN OnPlayerShootDynamicObject
-forward Min_OnPlayerEnterDynamicArea(playerid, areaid); //IN OnPlayerEnterDynamicArea
+Min_OnFilterScriptInit(); //IN OnFilterScriptInit OR OnGameModeInit
+Min_OnFilterScriptExit(); //IN OnFilterScriptExit OR OnGameModeExit
+Min_OnPlayerShootDynamicObject(playerid, weaponid, objectid, x, y, z); //IN OnPlayerShootDynamicObject
+Min_OnPlayerEnterDynamicArea(playerid, areaid); //IN OnPlayerEnterDynamicArea
 
 //To add/remove mines use:
 CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance);
@@ -122,8 +122,8 @@ stock FindFreeMineID(){
 
 #if !defined CreateExplosionForRangePoint
 	stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,type,Float:radius,Float:expradius){
-		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++)
-			new Float:minex, Float:miney, Float:minez
+		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+			new Float:minex, Float:miney, Float:minez;
 			if(IsPlayerInAnyVehicle(i)){
 				GetVehiclePos(GetPlayerVehicleID(i),minex,miney,minez);
 			} else {
