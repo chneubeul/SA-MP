@@ -225,7 +225,10 @@ public OnDynamicMineUpdate(tec){
 
 public CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance){
 	new mineid = FindFreeMineID();
-	if(mineid == INVALID_MINE_ID) return INVALID_MINE_ID;
+	if(mineid == INVALID_MINE_ID){
+		printf("[ADM] Error: Failed to CreateDynamicMine limit %d exceeded, edit Mines.inc and change MAX_MINES",MAX_MINES);
+		return INVALID_MINE_ID;
+	}
 	MineComponent[mineid][mine_objectid] = CreateDynamicObject(19602,x,y,z+MINE_Z_CORRECT,0.0,0.0,0.0,worldid,interiorid,playerid,streamdistance); //1213
 	MineComponent[mineid][mine_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
 	MineComponent[mineid][mine_health] = health;

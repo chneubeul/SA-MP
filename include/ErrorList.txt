@@ -22,5 +22,8 @@
 [ADM] Error: Invalid server config, check your rcon password.
 [ADM] Error: Invalid server config, check your language.
 
+//Mines.inc
+[ADM] Error: Failed to CreateDynamicMine limit 300 exceeded, edit Mines.inc and change MAX_MINES
+
 //Global
 [ADM] Error: Invalid MapAndreas Memory.
