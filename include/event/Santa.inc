@@ -1,5 +1,5 @@
 /*****************************************
- * Santa Gifts v1.2 made by Abyss Morgan *
+ * Santa Gifts v1.3 made by Abyss Morgan *
  *****************************************/
 
 /*
