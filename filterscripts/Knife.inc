@@ -1,13 +1,6 @@
 /******************************************
- * Knife Script v1.6 made by Abyss Morgan *
+ * Knife Script v1.7 made by Abyss Morgan *
  ******************************************/
-
-/*
-
-//to hook functions
-Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
-
-*/
 
 #if !defined Streamer_AppendArrayData
 	#error Unknown streamer version
@@ -58,10 +51,8 @@ stock GivePlayerDamage(targetid,Float:damage,playerid,weaponid){
 
 forward KnifeShot(playerid);
 forward KnifeDestroy(objectid,targetid,playerid);
-forward Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 
-public Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
-
+public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 	if(GetTickCount()-KnifeTime[playerid] >= KNIFE_REFRESH_ACTION){
 		if(GetPlayerWeapon(playerid) == 4){
 			if(newkeys == KEY_FIRE && KnifeStep[playerid] == 1){
@@ -73,8 +64,21 @@ public Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 			}
 		}
 	}
+	#if defined Knife_OnPlayerKeyStateChange
+		Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
+	#endif
 	return 1;
 }
+
+#if defined _ALS_OnPlayerKeyStateChange
+	#undef OnPlayerKeyStateChange
+#else
+	#define _ALS_OnPlayerKeyStateChange
+#endif
+#define OnPlayerKeyStateChange Knife_OnPlayerKeyStateChange
+#if defined Knife_OnPlayerKeyStateChange
+	forward Knife_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
+#endif
 
 public KnifeShot(playerid){
 	new Float:mx, Float:my, Float:mz, Float:mrz, Float:mtx, Float:mty, Float:mtz, mvw, mint, Float:trz,

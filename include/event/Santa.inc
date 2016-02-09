@@ -3,14 +3,11 @@
  *****************************************/
 
 /*
+//to hook function
+SantaPickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
 
-//to hook functions
-Santa_GameModeInit();
-Santa_FilterScriptInit();
-Santa_FilterScriptExit();
-Santa_PickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
+//edit your reward in 'SantaPickUpDynamicPickup'
 
-//edit your reward in 'Santa_PickUpDynamicPickup'
 */
 
 
@@ -37,10 +34,10 @@ Santa_PickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
 	#error You need MapAndreasEx.inc
 #endif
 
-#define	MAX_SANTA_GIFTS			(100)
-#define REFRESH_SANTA_GIFTS		(2*60*60*1000)	//2 hour
+#define	MAX_SantaGIFTS			(100)
+#define REFRESH_SantaGIFTS		(2*60*60*1000)	//2 hour
 
-new SantaGift[MAX_SANTA_GIFTS],
+new SantaGift[MAX_SantaGIFTS],
 	SantaTimer[1];
 
 //Christmas
@@ -71,40 +68,84 @@ new SantaPickupModel[][1] = {
 };
 */
 
-forward Santa_GameModeInit();
-forward Santa_FilterScriptInit();
-forward Santa_FilterScriptExit();
-forward Santa_PickUpDynamicPickup(playerid,pickupid);
-forward Santa_Reset(tec);
-forward Santa_GiftCreate(giftid);
-forward Santa_GiftReset(giftid);
+forward SantaPickUpDynamicPickup(playerid,pickupid);
+forward SantaReset(tec);
+forward SantaGiftCreate(giftid);
+forward SantaGiftReset(giftid);
 
-public Santa_GameModeInit(){
+public OnGameModeInit(){
 	if(!IsMapAndreasInit()){
 		print("[ADM] Error: Invalid MapAndreas Memory.");
 	} else {
-		for(new i = 0; i < MAX_SANTA_GIFTS; i++){
-			Santa_GiftCreate(i);
+		for(new i = 0; i < MAX_SantaGIFTS; i++){
+			SantaGiftCreate(i);
 		}
-		SantaTimer[0] = SetTimerEx("Santa_Reset",REFRESH_SANTA_GIFTS,true,"d",1);
+		SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SantaGIFTS,true,"d",1);
 	}
+	#if defined SantaOnGameModeInit
+		SantaOnGameModeInit();
+	#endif
 	return 1;
 }
 
-public Santa_FilterScriptInit(){
-	Santa_GameModeInit();
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+#else
+	#define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit SantaOnGameModeInit
+#if defined SantaOnGameModeInit
+	forward SantaOnGameModeInit();
+#endif
+
+public OnFilterScriptInit(){
+	if(!IsMapAndreasInit()){
+		print("[ADM] Error: Invalid MapAndreas Memory.");
+	} else {
+		for(new i = 0; i < MAX_SantaGIFTS; i++){
+			SantaGiftCreate(i);
+		}
+		SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SantaGIFTS,true,"d",1);
+	}
+	#if defined SantaOnFilterScriptInit
+		SantaOnFilterScriptInit();
+	#endif
 	return 1;
 }
 
-public Santa_FilterScriptExit(){
+#if defined _ALS_OnFilterScriptInit
+	#undef OnFilterScriptInit
+#else
+	#define _ALS_OnFilterScriptInit
+#endif
+#define OnFilterScriptInit SantaOnFilterScriptInit
+#if defined SantaOnFilterScriptInit
+	forward SantaOnFilterScriptInit();
+#endif
+
+
+public OnFilterScriptExit(){
 	KillTimer(SantaTimer[0]);
+	#if defined SantaOnFilterScriptExit
+		SantaOnFilterScriptExit();
+	#endif
 	return 1;
 }
 
-public Santa_PickUpDynamicPickup(playerid,pickupid){
-	for(new i = 0; i < MAX_SANTA_GIFTS; i++){
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit SantaOnFilterScriptExit
+#if defined SantaOnFilterScriptExit
+	forward SantaOnFilterScriptExit();
+#endif
+
+public SantaPickUpDynamicPickup(playerid,pickupid){
+	for(new i = 0; i < MAX_SantaGIFTS; i++){
 		if(pickupid == SantaGift[i]){
-			Santa_GiftReset(i);
+			SantaGiftReset(i);
 			
 			
 			//your reward
@@ -114,14 +155,14 @@ public Santa_PickUpDynamicPickup(playerid,pickupid){
 }
 
 
-public Santa_Reset(tec){
-	for(new i = 0; i < MAX_SANTA_GIFTS; i++){
-		Santa_GiftReset(i);
+public SantaReset(tec){
+	for(new i = 0; i < MAX_SantaGIFTS; i++){
+		SantaGiftReset(i);
 	}
 	return 1;
 }
 
-public Santa_GiftCreate(giftid){
+public SantaGiftCreate(giftid){
 	new smodel = random(sizeof(SantaPickupModel)), Float:piox, Float:pioy, Float:pioz;
 	
 	SantaErrorPos:
@@ -134,7 +175,7 @@ public Santa_GiftCreate(giftid){
 	return 1;
 }
 
-public Santa_GiftReset(giftid){
+public SantaGiftReset(giftid){
 	new smodel = random(sizeof(SantaPickupModel)), Float:piox, Float:pioy, Float:pioz;
 	
 	SantaErrorPos:
