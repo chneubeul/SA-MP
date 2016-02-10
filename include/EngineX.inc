@@ -154,7 +154,7 @@ public OnGameModeExit(){
 #define ENGINE_ELITE		6	//[Object: 14553] 				|| 5.0 Delta X
 #define ENGINE_UBOOT		7	//[Object: 9958]				|| 5.0 Delta X
 #define ENGINE_SHIP			8	//[Object: 8493]				|| 4.0 X
-#define ENGINE_MINI			9	//[Object: 2510, 2512]				|| 5.0 Delta X
+#define ENGINE_MINI			9	//[Object: 2510, 2512]			|| 5.0 Delta X
 								//[Object: 18248]				|| Not Supported
 					
 stock bool:IsPointInWaterEx(Float:x,Float:y,Float:z){
