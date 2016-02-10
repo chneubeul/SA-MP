@@ -1,6 +1,6 @@
 /******************************************************
  *                                                    *
- * Military Dynamic Mines System v1.4 by Abyss Morgan *
+ * Military Dynamic Mines System v1.5 by Abyss Morgan *
  *                                                    *
  ******************************************************/
 
