@@ -363,7 +363,7 @@ stock DeltaEngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float
 				new Float:tmpz;
 				MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
-					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX]+8,F5[rY]+12.0,F5[rZ]);
+					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
 				}
 			}
 		}
@@ -395,7 +395,7 @@ stock DeltaEngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float
 				new Float:tmpz;
 				MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
-					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX]+14.0,F5[rY]+12.0,F5[rZ]);
+					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
 				}
 			}
 		}
