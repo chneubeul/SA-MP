@@ -1,6 +1,6 @@
 /******************************************************
  *                                                    *
- * Military Dynamic Mines System v1.3 by Abyss Morgan *
+ * Military Dynamic Mines System v1.4 by Abyss Morgan *
  *                                                    *
  ******************************************************/
 
@@ -246,14 +246,11 @@ public CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Floa
 
 public DestroyDynamicMine(mineid){
 	if(mineid < 0 || mineid >= MAX_MINES) return 0;
+	if(MineComponent[mineid][mine_status] == MINE_STATUS_UNACTIVE) return 0;
 	DestroyDynamicObject(MineComponent[mineid][mine_objectid]);
 	DestroyDynamicArea(MineComponent[mineid][mine_areaid]);
-	#if !defined _streamer_spec
-		#if !defined FIX_OBJECTS
-			MineComponent[mineid][mine_objectid] = INVALID_STREAMER_ID;
-			MineComponent[mineid][mine_areaid] = INVALID_STREAMER_ID;
-		#endif
-	#endif
+	MineComponent[mineid][mine_objectid] = INVALID_STREAMER_ID;
+	MineComponent[mineid][mine_areaid] = INVALID_STREAMER_ID;
 	MineComponent[mineid][mine_health] = 0.0;
 	MineComponent[mineid][mine_maxhealth] = 0.0;
 	MineComponent[mineid][mine_explode] = 0.0;
