@@ -15,6 +15,19 @@
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
+/*
+Why delta since the fifth version ?
+
+1.0 - Do whatever you want (Sphere)
+2.0 Alfa - Turn, look straight ahead, fly. (Sphere)
+3.0 Beta - Turn, look straight ahead, fly. (Area Cube)
+4.0 Gamma X - Choose a direction, look straight ahead, fly. (Area Cube)
+5.0 Delta X - Choose a direction, slowly turn, look straight ahead, fly. (Area Cube)
+
+Why X ?
+Do not ask XD
+*/
+
 #if defined NGCM_KERNEL
 	#error Fatal error incompatible NOX
 #endif
@@ -153,7 +166,7 @@ public OnGameModeExit(){
 //#define ENGINE_COMMANDER	5	//[] (Only NGCM)				|| 4.0 X
 #define ENGINE_ELITE		6	//[Object: 14553] 				|| 5.0 Delta X
 #define ENGINE_UBOOT		7	//[Object: 9958]				|| 5.0 Delta X
-#define ENGINE_SHIP			8	//[Object: 8493]				|| 4.0 X
+#define ENGINE_SHIP			8	//[Object: 8493]				|| 4.0 X (not recommended to use version 5.0)
 #define ENGINE_MINI			9	//[Object: 2510, 2512]			|| 5.0 Delta X
 								//[Object: 18248]				|| Not Supported
 					
