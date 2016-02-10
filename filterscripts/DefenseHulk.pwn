@@ -1,3 +1,10 @@
+/******************************************************
+ *                                                    *
+ * Reaver Defense Hulk Prototype v1.0 by Abyss Morgan *
+ *                                                    *
+ ******************************************************/
+
+ 
 #include <a_samp>
 #include <streamer>
 #include <mapandreas>
