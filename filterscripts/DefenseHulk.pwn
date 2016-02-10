@@ -17,7 +17,7 @@
 #define SD_VERYHIGH					(999.0)
 
 #define MAX_DEFENSE_HULK			(3)
-#define MAX_NGC_NPC				(300)
+#define MAX_NGC_NPC					(300)
 
 #define MOB_SPEED_SLOW				(5.0)
 #define MOB_SPEED_NORMAL			(10.0)
