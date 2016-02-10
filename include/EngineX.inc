@@ -145,17 +145,17 @@ public OnGameModeExit(){
 	forward NOX_OnGameModeExit();
 #endif
 
-#define ENGINE_NORMAL 		0	//[Object: 1681 OR ANY] 	|| 5.0 Delta X
-#define ENGINE_FIGHTER		1	//[Object: 10757]			|| 5.0 Delta X
-#define ENGINE_SUPPLY		2	//[Object: 1683]			|| 5.0 Delta X
-//#define ENGINE_NGCMS		3	//[] (Only NGCM)			|| 4.0 X
-//#define ENGINE_ARCMS		4	//[] (Only NGCM)			|| 4.0 X
-//#define ENGINE_COMMANDER	5	//[] (Only NGCM)			|| 4.0 X
-#define ENGINE_ELITE		6	//[Object: 14553] 			|| 5.0 Delta X
-#define ENGINE_UBOOT		7	//[Object: 9958]			|| 5.0 Delta X
-#define ENGINE_SHIP			8	//[Object: 8493]			|| 4.0 X
-#define ENGINE_MINI			9	//[Object: 2510]			|| 5.0 Delta X
-								//[Object: 18248]			|| Not Supported
+#define ENGINE_NORMAL 		0	//[Object: 1681, 18846 OR ANY] 	|| 5.0 Delta X
+#define ENGINE_FIGHTER		1	//[Object: 10757]				|| 5.0 Delta X
+#define ENGINE_SUPPLY		2	//[Object: 1683]				|| 5.0 Delta X
+//#define ENGINE_NGCMS		3	//[] (Only NGCM)				|| 4.0 X
+//#define ENGINE_ARCMS		4	//[] (Only NGCM)				|| 4.0 X
+//#define ENGINE_COMMANDER	5	//[] (Only NGCM)				|| 4.0 X
+#define ENGINE_ELITE		6	//[Object: 14553] 				|| 5.0 Delta X
+#define ENGINE_UBOOT		7	//[Object: 9958]				|| 5.0 Delta X
+#define ENGINE_SHIP			8	//[Object: 8493]				|| 4.0 X
+#define ENGINE_MINI			9	//[Object: 2510]				|| 5.0 Delta X
+								//[Object: 18248]				|| Not Supported
 					
 stock bool:IsPointInWaterEx(Float:x,Float:y,Float:z){
 	if(IsPointInDynamicArea(InvalidPolygon[0],x,y,z)) return false;
