@@ -18,8 +18,8 @@
 /*
 Why delta since the fifth version ?
 
-1.0 - Do whatever you want (Sphere)
-2.0 Alfa - Turn, look straight ahead, fly. (Sphere)
+1.0 - Do whatever you want. (Sphere)
+2.0 Alpha - Turn, look straight ahead, fly. (Sphere)
 3.0 Beta - Turn, look straight ahead, fly. (Area Cube)
 4.0 Gamma X - Choose a direction, look straight ahead, fly. (Area Cube)
 5.0 Delta X - Choose a direction, slowly turn, look straight ahead, fly. (Area Cube)
