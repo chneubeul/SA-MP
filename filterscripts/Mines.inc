@@ -6,7 +6,7 @@
 
 /*
 //To add/remove mines use:
-CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance);
+CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object);
 DestroyDynamicMine(mineid);
 */
 
@@ -19,10 +19,14 @@ DestroyDynamicMine(mineid);
 #endif
 #define _dynamic_mine_system
 
+#define MINE_OBJECT_STANDARD		(0)
+#define MINE_OBJECT_UNDERWATER		(1)
+#define MINE_OBJECT_LASER			(3)
+#define MINE_OBJECT_PIZZA			(4)
+
 #define MAX_MINES					(300)
 #define MINE_EXTRA_ID_OFFSET		(200001)
 #define MINE_INFINITY_HEALTH		(1000000.0)
-#define MINE_Z_CORRECT				(-0.93)
 #define MINE_STATUS_UNACTIVE		(0)
 #define MINE_STATUS_ACTIVE			(1)
 #define MINE_STATUS_DAMAGED			(2)
@@ -132,7 +136,7 @@ stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,ty
 }
 
 forward OnDynamicMineUpdate(tec);
-forward CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance);
+forward CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object);
 forward DestroyDynamicMine(mineid);
 forward ExplodeDynamicMine(mineid);
 forward RespawnDynamicMine(mineid);
@@ -223,13 +227,20 @@ public OnDynamicMineUpdate(tec){
 	return 1;
 }
 
-public CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance){
+public CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object){
 	new mineid = FindFreeMineID();
 	if(mineid == INVALID_MINE_ID){
 		printf("[ADM] Error: Failed to CreateDynamicMine limit %d exceeded, edit Mines.inc and change MAX_MINES",MAX_MINES);
 		return INVALID_MINE_ID;
 	}
-	MineComponent[mineid][mine_objectid] = CreateDynamicObject(19602,x,y,z+MINE_Z_CORRECT,0.0,0.0,0.0,worldid,interiorid,playerid,streamdistance); //1213
+	switch(mine_object){
+		case MINE_OBJECT_STANDARD:		MineComponent[mineid][mine_objectid] = CreateDynamicObject(19602,x,y,z-0.93,0.0,0.0,0.0,worldid,interiorid,playerid,streamdistance); //1213
+		case MINE_OBJECT_UNDERWATER:	MineComponent[mineid][mine_objectid] = CreateDynamicObject(2918,x,y,z-0.10,0.0,0.0,0.0,worldid,interiorid,playerid,streamdistance); //1213
+		case MINE_OBJECT_LASER:			MineComponent[mineid][mine_objectid] = CreateDynamicObject(18643,x,y,z-0.09,180.0,90.0,0.0,worldid,interiorid,playerid,streamdistance); //1213
+		case MINE_OBJECT_PIZZA:			MineComponent[mineid][mine_objectid] = CreateDynamicObject(19580,x,y,z+0.05,0.0,0.0,0.0,worldid,interiorid,playerid,streamdistance); //1213
+		
+		default:						MineComponent[mineid][mine_objectid] = CreateDynamicObject(19602,x,y,z-0.93,0.0,0.0,0.0,worldid,interiorid,playerid,streamdistance); //1213
+	}
 	MineComponent[mineid][mine_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
 	MineComponent[mineid][mine_health] = health;
 	MineComponent[mineid][mine_maxhealth] = health;
