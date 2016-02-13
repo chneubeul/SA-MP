@@ -74,6 +74,7 @@ forward SantaGiftCreate(giftid);
 forward SantaGiftReset(giftid);
 
 public OnGameModeInit(){
+	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
 		print("[ADM] Error: Invalid MapAndreas Memory.");
 	} else {
