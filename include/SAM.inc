@@ -19,5 +19,5 @@
 #include "SAM/LY.inc"               //http://forum.sa-mp.com/showthread.php?t=598933
 #include "SAM/DoT.inc"              //not published
 #include "SAM/BINLDR.inc"           //http://forum.sa-mp.com/showthread.php?p=3653547
-
+#include "SAM/VehicleEx.inc"        //not published
 //EOF

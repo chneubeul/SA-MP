@@ -5,6 +5,7 @@
  * Notice:                                                                                          *
  * Fit with YSF.inc when it is before GangZoneEx.inc                                                *
  *                                                                                                  *
+ * Functions:                                                                                       *
  * IsValidGangZone(zoneid);                                                                         *
  * IsPlayerInGangZone(playerid,zoneid);                                                             *
  * IsPlayerInAnyGangZone(playerid);                                                                 *
