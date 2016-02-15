@@ -6,6 +6,7 @@
  *                                                                                                                                *
  * File Version: 2.2C                                                                                                             *
  *                                                                                                                                *
+ * Functions:                                                                                                                     *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *

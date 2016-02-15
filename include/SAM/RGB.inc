@@ -6,6 +6,7 @@
  *                                                                                                  *
  * File Version: 2.1                                                                                *
  *                                                                                                  *
+ * Functions:                                                                                       *
  * ShiftRGBAToHex(color,&red,&green,&blue,&alpha);                                                  *
  * ShiftHexToRGBA(&color,red,green,blue,alpha);                                                     *
  * ShiftRGBAToRGB(color);                                                                           *
