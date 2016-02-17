@@ -10,6 +10,7 @@
  * bool:IsPointInWaterEx(Float:x,Float:y,Float:z);                                                                                *
  * GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);                 *
  * EngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:speed);                                                  *
+ * EngineExcavatorUpdate(objectid,areaid,engineid,Float:speed);                                                                   *
  * DeltaEngineRotation(objectid,engineid,Float:speed = 0.05);                                                                     *
  * DeltaEngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:speed);                                             *
  *                                                                                                                                *
@@ -158,6 +159,7 @@ public OnGameModeExit(){
 	forward NOX_OnGameModeExit();
 #endif
 
+//Engine ID
 #define ENGINE_NORMAL 		0	//[Object: 1681, 18846 OR ANY] 	|| 5.0 Delta X
 #define ENGINE_FIGHTER		1	//[Object: 10757]				|| 5.0 Delta X
 #define ENGINE_SUPPLY		2	//[Object: 1683]				|| 5.0 Delta X
@@ -168,8 +170,21 @@ public OnGameModeExit(){
 #define ENGINE_UBOOT		7	//[Object: 9958]				|| 5.0 Delta X
 #define ENGINE_SHIP			8	//[Object: 8493]				|| 4.0 X (not recommended to use version 5.0)
 #define ENGINE_MINI			9	//[Object: 2510, 2512]			|| 5.0 Delta X
-								//[Object: 18248]				|| Not Supported
-					
+#define ENGINE_EXCAVATOR	10	//[Object: 18248]				|| 4.1 G
+
+//DeltaEngineRotation Speed
+#define DELTA_ENGINE_SPEED_NORMAL 		(0.050)
+#define DELTA_ENGINE_SPEED_FIGHTER		(0.050)
+#define DELTA_ENGINE_SPEED_SUPPLY		(0.020)
+//#define DELTA_ENGINE_SPEED_NGCMS		(0.050)
+//#define DELTA_ENGINE_SPEED_ARCMS		(0.050)
+//#define DELTA_ENGINE_SPEED_COMMANDER	(0.050)
+#define DELTA_ENGINE_SPEED_ELITE		(0.010)
+#define DELTA_ENGINE_SPEED_UBOOT		(0.005)
+#define DELTA_ENGINE_SPEED_SHIP			(0.050)
+#define DELTA_ENGINE_SPEED_MINI			(0.050)
+//#define DELTA_ENGINE_SPEED_EXCAVATOR	(0.001)
+
 stock bool:IsPointInWaterEx(Float:x,Float:y,Float:z){
 	if(IsPointInDynamicArea(InvalidPolygon[0],x,y,z)) return false;
 	if(IsPointInDynamicArea(InvalidPolygon[1],x,y,z)) return false;
@@ -301,10 +316,48 @@ stock EngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:spee
 				}
 			}
 		}
+		
+		case ENGINE_EXCAVATOR: {
+			if(!IsDynamicObjectMoving(objectid)){
+				new randRZ = random(360), randR = random(rad)+minradius, tmpRZ;
+				GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
+				CompRotation(randRZ-180,tmpRZ);
+				GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);				
+				if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
+					new Float:tmpz;
+					MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					if(tmpz > 0.0){
+						Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,randRZ);
+						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,randRZ);
+					}
+				}
+			}
+		}
 	}
 }
 
-stock DeltaEngineRotation(objectid,engineid,Float:speed = 0.05){
+stock EngineExcavatorUpdate(objectid,areaid,engineid,Float:speed){
+	new F5[e_nox_float];
+	switch(engineid){
+		case ENGINE_EXCAVATOR: {
+			if(IsDynamicObjectMoving(objectid)){
+				new randRZ;
+				Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,F5[tX]);
+				Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,F5[tY]);
+				Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,F5[tZ]);
+				randRZ = Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID);
+				if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
+					GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
+					MapAndreasFindZ(F5[X],F5[Y],F5[Z]);
+					F5[Z] += 7.0;
+					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[Z],speed,0.0,0.0,randRZ);
+				}
+			}
+		}
+	}
+}
+
+stock DeltaEngineRotation(objectid,engineid,Float:speed = 0.050){
 	new F5[e_nox_float];
 	
 	GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
@@ -344,6 +397,13 @@ stock DeltaEngineRotation(objectid,engineid,Float:speed = 0.05){
 		case ENGINE_MINI: {
 			MoveDynamicObject(objectid,F5[X],F5[Y],F5[Z],speed,F5[rX],F5[rY],F5[rZ]);
 		}
+		/*
+		//Invalid
+		case ENGINE_EXCAVATOR: {
+			Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,floatround(F5[rZ]));
+			MoveDynamicObject(objectid,F5[X],F5[Y],F5[Z],speed,0.0,0.0,F5[rZ]-180.0);
+		}
+		*/
 	}
 }
 
@@ -457,6 +517,24 @@ stock DeltaEngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float
 				}
 			}
 		}
+		
+		/*
+		//Invalid
+		case ENGINE_EXCAVATOR: {
+			new randR = random(rad)+minradius, Float:tmpRZ;
+			GetDynamicObjectRot(objectid,F5[rX],F5[rY],F5[rZ]);
+			GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
+			CompRotationFloat(F5[rZ]-180.0,tmpRZ);
+			GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
+			if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
+				new Float:tmpz;
+				MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				if(tmpz > 0.0){
+					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,F5[rZ]);
+				}
+			}
+		}
+		*/
 	}
 }
 

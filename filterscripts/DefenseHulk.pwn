@@ -1,6 +1,6 @@
 /******************************************************
  *                                                    *
- * Reaver Defense Hulk Prototype v1.0 by Abyss Morgan *
+ * Reaver Defense Hulk Prototype v1.1 by Abyss Morgan *
  *                                                    *
  ******************************************************/
 
@@ -29,7 +29,9 @@ new DefenseHulkTimer,
 	NGCFighter[MAX_NGC_NPC][4],
 	NGCFighterPool,
 	NGCCommander[MAX_NGC_NPC][4],
-	NGCCommanderPool;
+	NGCCommanderPool,
+	NGCExcavator[MAX_NGC_NPC][4],
+	NGCExcavatorPool;
 	
 forward OnMobUpdate(tec);
 
@@ -45,11 +47,15 @@ forward CommanderUpdate(mobid);
 forward CreateCommander(mobid,Float:x,Float:y,Float:z,worldid,interiorid,areaid);
 forward DestroyCommander(mobid);
 
+forward ExcavatorUpdate(mobid);
+forward CreateExcavator(mobid,Float:x,Float:y,Float:z,worldid,interiorid,areaid);
+forward DestroyExcavator(mobid);
+
 public OnFilterScriptInit(){
 	
 	DefenseHulkTimer = SetTimerEx("OnMobUpdate", 500, true, "d", 1);
 	
-	new myarea = CreateDynamicCube(-3000.0,-3000.0,0.0,3000.0,3000.0,600.0);
+	new myarea = CreateDynamicCube(-3000.0,-3000.0,-20.0,3000.0,3000.0,600.0);
 	
 	CreateDefenseHulk(0, 0.0,0.0,50.0, 0,0, myarea);
 	
@@ -61,6 +67,10 @@ public OnFilterScriptInit(){
 	
 	for(new i = 0; i < 10; i++){
 		CreateCommander(i, 0.0,0.0,50.0, 0,0, myarea);
+	}
+	
+	for(new i = 0; i < 10; i++){
+		CreateExcavator(i, 0.0,0.0,3.0, 0,0, myarea);
 	}
 	return 1;
 }
@@ -87,6 +97,12 @@ public OnMobUpdate(tec){
 	for(new i = 0; i <= NGCCommanderPool; i++){
 		if(NGCCommander[i][2] == 1){
 			CommanderUpdate(i);
+		}
+	}
+	
+	for(new i = 0; i <= NGCExcavatorPool; i++){
+		if(NGCExcavator[i][2] == 1){
+			ExcavatorUpdate(i);
 		}
 	}
 	return 1;
@@ -392,3 +408,33 @@ public DestroyCommander(mobid){
 	if(IsValidDynamicObject(NGCCommander[mobid][0])) DestroyDynamicObject(NGCCommander[mobid][0]);
 	return 1;
 }
+
+public ExcavatorUpdate(mobid){
+	if(NGCExcavator[mobid][2] == 1){
+		EngineX(NGCExcavator[mobid][0],NGCExcavator[mobid][1],ENGINE_EXCAVATOR,50,100,1.0,MOB_SPEED_SLOW);
+		EngineExcavatorUpdate(NGCExcavator[mobid][0],NGCExcavator[mobid][1],ENGINE_EXCAVATOR,MOB_SPEED_SLOW);		
+	}
+	return 1;
+}
+
+public CreateExcavator(mobid,Float:x,Float:y,Float:z,worldid,interiorid,areaid){
+	
+	NGCExcavator[mobid][0] = CreateDynamicObject(18248,x,y,z+7.0,0.0,0.0,185.0,worldid,interiorid,-1,300.0);
+	NGCExcavator[mobid][1] = areaid;
+	NGCExcavator[mobid][3] = 0;
+	
+	if(NGCExcavatorPool < mobid) NGCExcavatorPool = mobid;
+	
+	NGCExcavator[mobid][2] = 1;
+	
+	return 1;
+}
+
+public DestroyExcavator(mobid){
+	NGCExcavator[mobid][2] = 0;
+	if(IsValidDynamicObject(NGCExcavator[mobid][0])) DestroyDynamicObject(NGCExcavator[mobid][0]);
+	return 1;
+}
+
+
+
