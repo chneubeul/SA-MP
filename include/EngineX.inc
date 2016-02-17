@@ -170,7 +170,7 @@ public OnGameModeExit(){
 #define ENGINE_UBOOT		7	//[Object: 9958]				|| 5.0 Delta X
 #define ENGINE_SHIP			8	//[Object: 8493]				|| 4.0 X (not recommended to use version 5.0)
 #define ENGINE_MINI			9	//[Object: 2510, 2512]			|| 5.0 Delta X
-#define ENGINE_EXCAVATOR	10	//[Object: 18248]				|| 4.1 G
+#define ENGINE_EXCAVATOR 	10	//[Object: 18248]				|| 4.1 G
 
 //DeltaEngineRotation Speed
 #define DELTA_ENGINE_SPEED_NORMAL 		(0.050)
