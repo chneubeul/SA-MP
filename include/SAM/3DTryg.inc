@@ -80,10 +80,6 @@
 	#define PI (22/7)
 #endif
 
-#if !defined FLOAT_INFINITY
-    #define FLOAT_INFINITY (Float:0x7F800000)
-#endif
-
 #define ctg(%0,%1)			1/floattan(%0,%1)
 #define secans(%0,%1)		1/floatcos(%0,%1)
 #define cosecans(%0,%1)		1/floatsin(%0,%1)
@@ -253,7 +249,7 @@ stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Floa
 
 stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime){
 	if(speed <= 0.0){
-		rtime = _:FLOAT_INFINITY;
+		rtime = 0x7F800000;
 	} else {
 		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 		rtime = floatround((dist/speed)*1000.0);
@@ -262,7 +258,7 @@ stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed
 
 stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
 	if(rtime/1000.0 <= 0.0){
-		speed = FLOAT_INFINITY;
+		speed = Float:0x7F800000;
 		print("[ADM] Warring: Get speed error, the wrong time.");
 	} else {
 		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);

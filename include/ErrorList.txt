@@ -1,5 +1,6 @@
 ﻿//StreamerFunction.inc
 [ADM] Warring: Invalid Object Component type.
+[ADM] Warring: Your Streamer ... It is not compatible with this version Streamer Functions, update your streamer to ...
 
 //3DTryg.inc
 [ADM] Warring: Get the rotation wrong, identical points.
