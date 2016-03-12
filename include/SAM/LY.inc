@@ -111,7 +111,7 @@ stock AddSeparatorLY(string[],separator[]){
 	return tStr; 
 }  
 
-stock CalculatePercentLY(&prefix,&suffix,Float:percent = 0.0,increase = true,limitprefix = DEFAULT_MAX_LY_PREFIX){
+stock CalculatePercentLY(&prefix,&suffix,Float:percent = 0.0,bool:increase = true,limitprefix = DEFAULT_MAX_LY_PREFIX){
 	new Float:lycut = (prefix*(percent/100.0)),
 		modify_p = floatround(lycut,floatround_round),
 		modify_s = floatround((lycut-modify_p)*100) * 10000000;
