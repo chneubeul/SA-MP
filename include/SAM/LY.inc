@@ -1,22 +1,24 @@
-/****************************************************************************************************
- *                                                                                                  *
- *                                       Unsigned Long 61 bit                                       *
- *                                                                                                  *
- * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
- *                                                                                                  *
- * File Version: 1.3B                                                                               *
- *                                                                                                  *
- * Pawn Unsigned Long for 32 Bit language (precision 61-bit)                                        *
- * Available limit:                                                                                 *
- * 0 - 2 147 483 647 000 000 000                                                                    *
- * 0 - 2 000 000 000 000 000 000                                                                    *
- *                                                                                                  *
- * Functions:                                                                                       *
- * bool:IsValueContainLY(prefix,suffix,value);                                                      *
- * GetLYString(prefix,suffix,string[],maxdest = sizeof(string));                                    *
- * UpdateLY(&prefix,&suffix,value,limitprefix = DEFAULT_MAX_LY_PREFIX);                             *
- *                                                                                                  *
- ****************************************************************************************************/
+/**********************************************************************************************************************************
+ *                                                                                                                                *
+ *                                       Unsigned Long 61 bit                                                                     *
+ *                                                                                                                                *
+ * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
+ *                                                                                                                                *
+ * File Version: 1.4                                                                                                              *
+ *                                                                                                                                *
+ * Pawn Unsigned Long for 32 Bit language (precision 61-bit)                                                                      *
+ * Available limit:                                                                                                               *
+ * 0 - 2 147 483 647 000 000 000                                                                                                  *
+ * 0 - 2 000 000 000 000 000 000                                                                                                  *
+ *                                                                                                                                *
+ * Functions:                                                                                                                     *
+ * bool:IsValueContainLY(prefix,suffix,value);                                                                                    *
+ * GetLYString(prefix,suffix,string[],maxdest = sizeof(string));                                                                  *
+ * UpdateLY(&prefix,&suffix,value,limitprefix = DEFAULT_MAX_LY_PREFIX);                                                           *
+ * AddSeparatorLY(string[],separator[]);                                                                                          *
+ * CalculatePercentLY(&prefix,&suffix,Float:percent = 0.0,increase = true,limitprefix = DEFAULT_MAX_LY_PREFIX);                   *
+ *                                                                                                                                *
+ **********************************************************************************************************************************/
  
 #if defined _Long_Yoyo
 	#endinput
@@ -89,5 +91,43 @@ stock UpdateLY(&prefix,&suffix,value,limitprefix = DEFAULT_MAX_LY_PREFIX){
 	}
 	return 1;
 }
+
+stock AddSeparatorLY(string[],separator[]){ 
+	new tStr[32];
+	format(tStr,sizeof(tStr),"%s",string); 
+
+	if(strlen(tStr) < 4) return tStr; 
+	new iPos = strlen(tStr), iCount = 1; 
+
+	while(iPos > 0){ 
+		if(iCount == 4){ 
+			iCount = 0; 
+			strins(tStr,separator,iPos,1); 
+			iPos++; 
+		}
+		iCount++; 
+		iPos--; 
+	} 
+	return tStr; 
+}  
+
+stock CalculatePercentLY(&prefix,&suffix,Float:percent = 0.0,increase = true,limitprefix = DEFAULT_MAX_LY_PREFIX){
+	new Float:lycut = (prefix*(percent/100.0)),
+		modify_p = floatround(lycut,floatround_round),
+		modify_s = floatround((lycut-modify_p)*100) * 10000000;
+	
+	if(increase){
+		prefix += modify_p;
+		UpdateLY(prefix,suffix,modify_s,limitprefix);
+		modify_s = floatround(suffix*(percent/100.0));
+		UpdateLY(prefix,suffix,modify_s,limitprefix);
+	} else {
+		prefix -= modify_p;
+		UpdateLY(prefix,suffix,-modify_s,limitprefix);
+		modify_s = floatround(suffix*(percent/100.0));
+		UpdateLY(prefix,suffix,-modify_s,limitprefix);
+	}
+}
+
 
 //EOF
