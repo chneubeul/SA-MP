@@ -26,5 +26,9 @@
 //Mines.inc
 [ADM] Error: Failed to CreateDynamicMine limit 300 exceeded, edit Mines.inc and change MAX_MINES
 
+//EngineX.inc
+[ADM] Info: NGCM Mob Move Engine System ... loaded
+[ADM] Info: NGCM Mob Move Engine System ... unloaded
+
 //Global
 [ADM] Error: Invalid MapAndreas Memory.
