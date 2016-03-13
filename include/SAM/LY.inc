@@ -116,7 +116,7 @@ stock AddSeparatorLY(string[],separator[]){
 stock CalculatePercentLY(&prefix,&suffix,Float:percent = 0.0,bool:increase = true,limitprefix = DEFAULT_MAX_LY_PREFIX){
 	new Float:lycut = (prefix*(percent/100.0)),
 		modify_p = floatround(lycut),
-		modify_s = floatround((lycut-modify_p)*100) * 10000000;
+		modify_s = floatround((lycut-modify_p)*100000) * 10000;
 	
 	if(increase){
 		prefix += modify_p;
