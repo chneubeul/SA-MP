@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.9                                                                                                              *
+ * File Version: 1.9B                                                                                                             *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
  * ADM:InvertFile(const input[], const output[]);                                                                                 *
@@ -38,6 +38,7 @@
  * DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32);                                                                     *
  * bool:DumpFileClose(&index);                                                                                                    *
  * ADM:DumpFileWrite(index, string[]);                                                                                            *
+ * bool:IsDumpFileEmpty(const name[]);                                                                                            *
  *                                                                                                                                *
  * Other Functions:                                                                                                               *
  * ADMToInt(ADM:admvar);                                                                                                          *
@@ -73,11 +74,11 @@
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v1.9
+	#error You need ADM.inc v1.9B
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v1.9
-#elseif (ADM_Encryption_Version < 10901)
-	#error Update you ADM.inc to v1.9
+	#error Update you ADM.inc to v1.9B
+#elseif (ADM_Encryption_Version < 10902)
+	#error Update you ADM.inc to v1.9B
 #endif
 */
 
@@ -86,7 +87,7 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(10901) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(10902) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
 	#error Unknown sscanf version
@@ -1202,5 +1203,12 @@ stock ADM:DumpFileWrite(index, string[]){
 	}
 }
 
+stock bool:IsDumpFileEmpty(const name[]){
+	if(!IsValidDumpFile(name)) return false;
+	new File:inpf = fopen(name,io_read), asize = flength(inpf);
+	fclose(inpf);
+	if(asize > 14) return false;
+	return true;
+}
 
 //EOF
