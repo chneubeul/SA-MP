@@ -171,6 +171,7 @@ stock LoadBinaryObjectIMG(const name[]){
 				Bin_MergeFloatEx(RAW[22],RAW[23],RAW[24],RAW[25]),
 				Bin_MergeValueEx(RAW[26],RAW[27],RAW[28],RAW[29]),
 				Bin_MergeValueEx(RAW[30],RAW[31],RAW[32],RAW[33]),
+				-1,
 				Bin_MergeFloatEx(RAW[34],RAW[35],RAW[36],RAW[37]),
 				Bin_MergeFloatEx(RAW[38],RAW[39],RAW[40],RAW[41])
 			);
