@@ -4,6 +4,8 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts/Glitch%20Area%202.4     *
+ *                                                                                                  *
  * File Version: 2.4B                                                                               *
  *                                                                                                  *
  * Install information:                                                                             *

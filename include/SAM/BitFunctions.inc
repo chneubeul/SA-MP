@@ -4,7 +4,9 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 1.5B                                                                               *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ *                                                                                                  *
+ * File Version: 1.5C                                                                               *
  *                                                                                                  *
  * bit 0 - 31:                                                                                      *
  * (bit 31) --> 11111111000000001111010001010000 <-- (bit 0)                                        *
@@ -19,6 +21,8 @@
  * ExtractFloat(Float:value, &byte1, &byte2, &byte3, &byte4);                                       *
  * MergeValue(&value, byte1, byte2, byte3, byte4);                                                  *
  * MergeFloat(&Float:value, byte1, byte2, byte3, byte4);                                            *
+ * MergeValueEx(byte1, byte2, byte3, byte4);                                                        *
+ * Float:MergeFloatEx(byte1, byte2, byte3, byte4);                                                  *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -36,6 +40,9 @@
 
 #define MergeValue(%0,%1,%2,%3,%4)		((%0) = (((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 #define MergeFloat(%0,%1,%2,%3,%4)		((%0) = Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
+
+#define MergeValueEx(%1,%2,%3,%4)		(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4))
+#define MergeFloatEx(%1,%2,%3,%4)		(Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 
 stock bool:CheckValue(value){
 	new int = 0;

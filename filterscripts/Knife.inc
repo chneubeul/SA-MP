@@ -1,6 +1,10 @@
-/******************************************
- * Knife Script v1.7 made by Abyss Morgan *
- ******************************************/
+/****************************************************************************************************
+ *                                                                                                  *
+ * Knife Script v1.7 made by Abyss Morgan                                                           *
+ *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
+ *                                                                                                  *
+ ****************************************************************************************************/
 
 #if !defined Streamer_AppendArrayData
 	#error Unknown streamer version

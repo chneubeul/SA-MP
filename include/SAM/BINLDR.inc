@@ -4,7 +4,9 @@
  *                                                                                                  *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                       *
  *                                                                                                  *
- * File Version: 2.0                                                                                *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ *                                                                                                  *
+ * File Version: 2.0B                                                                               *
  *                                                                                                  *
  * Object Functions:                                                                                *
  * LoadBinaryObjectIMG(const name[]);                                                               *
@@ -37,7 +39,7 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 	#error You need BINLDR.inc v2.0
 #elseif !defined Bin_Loader_Version
 	#error Update you BINLDR.inc to v2.0
-#elseif (Bin_Loader_Version < 20001)
+#elseif (Bin_Loader_Version < 20002)
 	#error Update you BINLDR.inc to v2.0
 #endif
 */
@@ -47,7 +49,7 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 #endif
 #define _Bin_Loader
 
-#define Bin_Loader_Version 				(20001) //a.b[c] 10000*a+100*b+c
+#define Bin_Loader_Version 				(20002) //a.b[c] 10000*a+100*b+c
 
 #define MAX_RAW_DATA					(42)
 #define MAX_BIN_FILE_SIZE				(2147483647)	//~2 GB
@@ -66,6 +68,9 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 
 #define Bin_MergeValue(%0,%1,%2,%3,%4)		((%0) = (((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 #define Bin_MergeFloat(%0,%1,%2,%3,%4)		((%0) = Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
+
+#define Bin_MergeValueEx(%1,%2,%3,%4)		(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4))
+#define Bin_MergeFloatEx(%1,%2,%3,%4)		(Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 
 #if !defined _DoT_Loader
 	stock Float:CalculateObjectDistance(objectid){
@@ -157,6 +162,20 @@ stock LoadBinaryObjectIMG(const name[]){
 		if(s >= MAX_RAW_DATA){
 			s = 0;
 			CreateDynamicObject(
+				Bin_MergeValueEx(0,0,RAW[0],RAW[1]),
+				Bin_MergeFloatEx(RAW[2],RAW[3],RAW[4],RAW[5]),
+				Bin_MergeFloatEx(RAW[6],RAW[7],RAW[8],RAW[9]),
+				Bin_MergeFloatEx(RAW[10],RAW[11],RAW[12],RAW[13]),
+				Bin_MergeFloatEx(RAW[14],RAW[15],RAW[16],RAW[17]),
+				Bin_MergeFloatEx(RAW[18],RAW[19],RAW[20],RAW[21]),
+				Bin_MergeFloatEx(RAW[22],RAW[23],RAW[24],RAW[25]),
+				Bin_MergeValueEx(RAW[26],RAW[27],RAW[28],RAW[29]),
+				Bin_MergeValueEx(RAW[30],RAW[31],RAW[32],RAW[33]),
+				Bin_MergeFloatEx(RAW[34],RAW[35],RAW[36],RAW[37]),
+				Bin_MergeFloatEx(RAW[38],RAW[39],RAW[40],RAW[41])
+			);
+			/*
+			CreateDynamicObject(
 				((RAW[0]*256)+RAW[1]),
 				Float:((RAW[2]*16777216)+(RAW[3]*65536)+(RAW[4]*256)+RAW[5]),
 				Float:((RAW[6]*16777216)+(RAW[7]*65536)+(RAW[8]*256)+RAW[9]),
@@ -170,6 +189,7 @@ stock LoadBinaryObjectIMG(const name[]){
 				Float:((RAW[34]*16777216)+(RAW[35]*65536)+(RAW[36]*256)+RAW[37]),
 				Float:((RAW[38]*16777216)+(RAW[39]*65536)+(RAW[40]*256)+RAW[41])
 			);
+			*/
 			cnt++;
 		}
 	}	

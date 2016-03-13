@@ -2,6 +2,8 @@
  *                                                                                                  *
  * TextDraw Update v1.1 by Abyss Morgan                                                             *
  *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ *                                                                                                  *
  * Functions:                                                                                       *
  * CountTextDraw();                                                                                 *
  * CountPlayerTextDraw(playerid);                                                                   *

@@ -1,9 +1,13 @@
-/**********************************
- * FullServer Objects Loader v3.1 *
- * Authored by eider              *
- * Update by Abyss Morgan         *
- **********************************/
- 
+/****************************************************************************************************
+ *                                                                                                  *
+ * FullServer Objects Loader v3.1                                                                   *
+ * Authored by eider                                                                                *
+ * Update by Abyss Morgan                                                                           *
+ *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
+ *                                                                                                  *
+ ****************************************************************************************************/
+
 /*
 Dozwolone formaty
 

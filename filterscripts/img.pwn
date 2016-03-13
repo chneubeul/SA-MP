@@ -1,6 +1,10 @@
-/************************************
- * Easy IMG Creator by Abyss Morgan *
- ************************************/
+/****************************************************************************************************
+ *                                                                                                  *
+ * Easy IMG Creator by Abyss Morgan                                                                 *
+ *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
+ *                                                                                                  *
+ ****************************************************************************************************/
 
 #define INPUT_TXT		"FullServer.txt"
 #define OUTPUT_BIN		"FullServer.bin"

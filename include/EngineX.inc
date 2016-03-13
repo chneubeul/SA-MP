@@ -4,7 +4,11 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                                                             *
+ *                                                                                                                                *
  * File Version: 5.0X                                                                                                             *
+ *                                                                                                                                *
+ * Include created for the project Next Generation City Mod http://ngc.porobieni.com                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * bool:IsPointInWaterEx(Float:x,Float:y,Float:z);                                                                                *
@@ -41,11 +45,11 @@ Do not ask XD
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.1F
+	#error You need 3DTryg.inc v2.3
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.1F
-#elseif (Tryg3D_Version < 20106)
-	#error Update you 3DTryg.inc to v2.1F
+	#error Update you 3DTryg.inc to v2.3
+#elseif (Tryg3D_Version < 20301)
+	#error Update you 3DTryg.inc to v2.3
 #endif
 
 //MapAndreasEx.inc

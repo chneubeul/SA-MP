@@ -1,4 +1,11 @@
-
+/****************************************************************************************************
+ *                                                                                                  *
+ * Interior Teleport v1.0 by Abyss Morgan                                                           *
+ *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                               *
+ *                                                                                                  *
+ ****************************************************************************************************/
+ 
 enum e_interiorlist {
 	Float:X,
 	Float:Y,

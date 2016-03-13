@@ -2,6 +2,8 @@
  *                                                                                                  *
  * Vehicle Update v1.0 by Abyss Morgan                                                              *
  *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ *                                                                                                  *
  * Functions:                                                                                       *
  * GetVehiclePanels(vehicleid, &front_bumper, &rear_bumper);                                        *
  * SetVehiclePanels(vehicleid, flp, frp, rlp, rrp, windshield, front_bumper, rear_bumper);          *

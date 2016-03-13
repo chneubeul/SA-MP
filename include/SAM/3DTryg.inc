@@ -4,6 +4,8 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
+ *                                                                                                                                *
  * File Version: 2.3                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
@@ -77,13 +79,13 @@
 
 #define Tryg3D_Version		(20301) //a.b[c] 10000*a+100*b+c
 
-#if !defined PI
-	#define PI (22/7)
+#if !defined FLOAT_PI
+	#define FLOAT_PI 		(3.14159265358979323846)
 #endif
 
-#define ctg(%0,%1)			1/floattan(%0,%1)
-#define secans(%0,%1)		1/floatcos(%0,%1)
-#define cosecans(%0,%1)		1/floatsin(%0,%1)
+#define ctg(%0,%1)			(1/floattan((%0),(%1)))
+#define secans(%0,%1)		(1/floatcos((%0),(%1)))
+#define cosecans(%0,%1)		(1/floatsin((%0),(%1)))
 #define abs(%0)				(((%0) < 0)?(-(%0)):((%0)))
 
 stock Float:sqrtN(Float:value,Float:exponent){
@@ -200,12 +202,12 @@ stock GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:max
 }
 
 stock Float:ShiftDegreeToRadian(Float:deg){
-	return (deg*((PI*2)/360));
+	return (deg*((FLOAT_PI*2)/360));
 }
 
 stock Float:ShiftDegreeToRadianEx(Float:deg){
 	CompRotationFloat(deg,deg);
-	return ((360-deg)*(-((PI*2)/360)));
+	return ((360-deg)*(-((FLOAT_PI*2)/360)));
 }
 
 stock Float:ShiftDegreeToGrades(Float:deg){
@@ -213,12 +215,12 @@ stock Float:ShiftDegreeToGrades(Float:deg){
 }
 
 stock Float:ShiftRadianToDegree(Float:rad){
-	return (rad/((PI*2)/360));
+	return (rad/((FLOAT_PI*2)/360));
 }
 
 stock Float:ShiftRadianToDegreeEx(Float:rad){
 	new Float:deg;
-	CompRotationFloat(floatabs((rad/((PI*2)/360))+360),deg);
+	CompRotationFloat(floatabs((rad/((FLOAT_PI*2)/360))+360),deg);
 	return deg;
 }
 

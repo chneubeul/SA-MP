@@ -18,20 +18,20 @@
 #include <MD5>
 
 //SAM Includes
-#include "SAM/StreamerFunction.inc"
-#include "SAM/BitFunctions.inc"
-#include "SAM/RGB.inc"
-#include "SAM/3DTryg.inc"
-#include "SAM/GangZoneEx.inc"
-#include "SAM/ADM.inc"
-#include "SAM/MapAndreasEx.inc"
-#include "SAM/HTMLColor.inc"
-#include "SAM/DataConvert.inc"
-#include "SAM/TextDrawEx.inc"
-#include "SAM/LY.inc"
-#include "SAM/DoT.inc"
-#include "SAM/BINLDR.inc"
-#include "SAM/VehicleEx.inc"
+#include <SAM/StreamerFunction.inc>
+#include <SAM/BitFunctions.inc>
+#include <SAM/RGB.inc>
+#include <SAM/3DTryg.inc>
+#include <SAM/GangZoneEx.inc>
+#include <SAM/ADM.inc>
+#include <SAM/MapAndreasEx.inc>
+#include <SAM/HTMLColor.inc>
+#include <SAM/DataConvert.inc>
+#include <SAM/TextDrawEx.inc>
+#include <SAM/LY.inc>
+#include <SAM/DoT.inc>
+#include <SAM/BINLDR.inc>
+#include <SAM/VehicleEx.inc>
 
 //Other includes created by Abyss Morgan
 // Knife.inc, Santa.inc etc.

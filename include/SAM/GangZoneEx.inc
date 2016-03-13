@@ -2,6 +2,8 @@
  *                                                                                                  *
  * GangZone Update v1.2 by Abyss Morgan                                                             *
  *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ *                                                                                                  *
  * Notice:                                                                                          *
  * Fit with YSF.inc when it is before GangZoneEx.inc                                                *
  *                                                                                                  *

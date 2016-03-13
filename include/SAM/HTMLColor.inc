@@ -2,6 +2,8 @@
  *                                                                                                  *
  * HTML Colors v1.0                                                                                 *
  *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ *                                                                                                  *
  ****************************************************************************************************/
 
 #if defined _HTML_Color
