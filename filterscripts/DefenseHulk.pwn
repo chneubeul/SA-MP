@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Reaver Defense Hulk Prototype v1.1 by Abyss Morgan                                               *
+ * Reaver Defense Hulk Prototype v1.2 by Abyss Morgan                                               *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
  *                                                                                                  *
@@ -30,6 +30,8 @@ new DefenseHulkTimer,
 	DefenseHulkStatus[MAX_DEFENSE_HULK],
 	NGCFighter[MAX_NGC_NPC][4],
 	NGCFighterPool,
+	DragonHead[MAX_NGC_NPC][4],
+	DragonHeadPool,
 	NGCCommander[MAX_NGC_NPC][4],
 	NGCCommanderPool,
 	NGCExcavator[MAX_NGC_NPC][4],
@@ -53,6 +55,10 @@ forward ExcavatorUpdate(mobid);
 forward CreateExcavator(mobid,Float:x,Float:y,Float:z,worldid,interiorid,areaid);
 forward DestroyExcavator(mobid);
 
+forward DragonUpdate(mobid);
+forward CreateDragon(mobid,Float:x,Float:y,Float:z,worldid,interiorid,areaid);
+forward DestroyDragon(mobid);
+
 public OnFilterScriptInit(){
 	
 	DefenseHulkTimer = SetTimerEx("OnMobUpdate", 500, true, "d", 1);
@@ -65,6 +71,10 @@ public OnFilterScriptInit(){
 	
 	for(new i = 0; i < 10; i++){
 		CreateFighter(i, 0.0,0.0,50.0, 0,0, myarea);
+	}
+	
+	for(new i = 0; i < 10; i++){
+		CreateDragon(i, 0.0,0.0,50.0, 0,0, myarea);
 	}
 	
 	for(new i = 0; i < 10; i++){
@@ -93,6 +103,12 @@ public OnMobUpdate(tec){
 	for(new i = 0; i <= NGCFighterPool; i++){
 		if(NGCFighter[i][2] == 1){
 			FighterUpdate(i);
+		}
+	}
+	
+	for(new i = 0; i <= DragonHeadPool; i++){
+		if(DragonHead[i][2] == 1){
+			DragonUpdate(i);
 		}
 	}
 	
@@ -370,6 +386,40 @@ public DestroyFighter(mobid){
 	return 1;
 }
 
+
+public DragonUpdate(mobid){
+	if(DragonHead[mobid][2] == 1){
+		if(!IsDynamicObjectMoving(DragonHead[mobid][0])){
+			if(DragonHead[mobid][3] == 0){
+				DeltaEngineRotation(DragonHead[mobid][0],ENGINE_SUPPLY);
+				DragonHead[mobid][3] = 1;
+			} else {
+				DeltaEngineX(DragonHead[mobid][0],DragonHead[mobid][1],ENGINE_SUPPLY,50,100,5,MOB_SPEED_NORMAL);
+				DragonHead[mobid][3] = 0;
+			}
+		}
+	}
+	return 1;
+}
+
+public CreateDragon(mobid,Float:x,Float:y,Float:z,worldid,interiorid,areaid){
+	
+	DragonHead[mobid][0] = CreateDynamicObject(3528,x,y,z+3.0,0.0,0.0,90.0,worldid,interiorid,-1,300.0);
+	DragonHead[mobid][1] = areaid;
+	DragonHead[mobid][3] = 0;
+	
+	if(DragonHeadPool < mobid) DragonHeadPool = mobid;
+	
+	DragonHead[mobid][2] = 1;
+	
+	return 1;
+}
+
+public DestroyDragon(mobid){
+	DragonHead[mobid][2] = 0;
+	if(IsValidDynamicObject(DragonHead[mobid][0])) DestroyDynamicObject(DragonHead[mobid][0]);
+	return 1;
+}
 
 
 public CommanderUpdate(mobid){
