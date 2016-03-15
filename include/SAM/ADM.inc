@@ -1207,7 +1207,7 @@ stock bool:IsDumpFileEmpty(const name[]){
 	if(!IsValidDumpFile(name)) return false;
 	new File:inpf = fopen(name,io_read), asize = flength(inpf);
 	fclose(inpf);
-	if(asize > 14) return false;
+	if(asize > MAX_DUMP_HEADER_SIZE) return false;
 	return true;
 }
 

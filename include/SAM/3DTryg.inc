@@ -16,9 +16,9 @@
  * Float:secans(Float:value,anglemode:mode=radian);                                                                               *
  * Float:cosecans(Float:value,anglemode:mode=radian);                                                                             *
  * GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz);                                                     *
- * GetDistanceBetweenPoints1D(Float:x1,Float:x2);                                                                                 *
- * GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2);                                                               *
- * GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2);                                             *
+ * Float:GetDistanceBetweenPoints1D(Float:x1,Float:x2);                                                                           *
+ * Float:GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2);                                                         *
+ * Float:GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2);                                       *
  * NLTZ(value);                                                                                                                   *
  * NMTZ(value);                                                                                                                   *
  * Float:NLTZF(Float:value);                                                                                                      *
@@ -340,7 +340,7 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 //Orig: Greg James - gjames@NVIDIA.com SRC: http://www.flipcode.com/archives/Fast_Point-In-Cylinder_Test.shtml
 stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
 	new Float:dx, Float:dy, Float:dz, Float:pdx, Float:pdy, Float:pdz, Float:dot, Float:dsq, Float:lengthsq;
-		
+	
 	dx = xB - xA;
 	dy = yB - yA; 
 	dz = zB - zA;

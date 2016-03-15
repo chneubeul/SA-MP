@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
  *                                                                                                                                *
- * File Version: 1.8B                                                                                                             *
+ * File Version: 1.8C                                                                                                             *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
  * InvertFile(const char* input, const char* output);                                                                             *
@@ -74,7 +74,7 @@ using namespace std;
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(10802) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(10803) //a.b[c] 10000*a+100*b+c
 
 #define MAX_FILE_SIZE				(18446744073709551615ULL)	//~16 EB
 
@@ -900,7 +900,7 @@ int InvertString(char* input, char* output, int maxdest){
 
 int HexNegativeString(char* input, char* output, char* key, int maxdest){
 	int mode;
-	sscanf(key,"%d",mode);
+	sscanf(key,"%d",&mode);
 	if(mode < 1 || mode > 15) return ERROR_CODE_ADM_KEY;
 	int asize = strlen(input);
 	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
@@ -913,7 +913,7 @@ int HexNegativeString(char* input, char* output, char* key, int maxdest){
 
 int RollXString(char* input, char* output, char* key, int maxdest){
 	int mode;
-	sscanf(key,"%d",mode);
+	sscanf(key,"%d",&mode);
 	if(mode < 1 || mode > 255) return ERROR_CODE_ADM_KEY;
 	int asize = strlen(input);
 	if(asize > maxdest) return ERROR_CODE_ADM_DEST;

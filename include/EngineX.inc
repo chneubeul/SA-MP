@@ -58,14 +58,8 @@ Do not ask XD
 #endif
 
 #define NOX_ENGINE_X_Version		(50024)
-
 #define NOX_VERSION					"5.0 Delta X"
-
-#if defined USE_NEW_PROTOTYPE_NT
-	#define NT_VERSION				"2.0"
-#else
-	#define NT_VERSION				"1.0"
-#endif
+#define NT_VERSION					"1.0"
 
 new InvalidPolygon[2];
 
@@ -166,7 +160,7 @@ public OnGameModeExit(){
 //Engine ID
 #define ENGINE_NORMAL 		0	//[Object: 1681, 18846 OR ANY] 	|| 5.0 Delta X
 #define ENGINE_FIGHTER		1	//[Object: 10757]				|| 5.0 Delta X
-#define ENGINE_SUPPLY		2	//[Object: 1683]				|| 5.0 Delta X
+#define ENGINE_SUPPLY		2	//[Object: 1683, 3528]			|| 5.0 Delta X
 //#define ENGINE_NGCMS		3	//[] (Only NGCM)				|| 4.0 X
 //#define ENGINE_ARCMS		4	//[] (Only NGCM)				|| 4.0 X
 //#define ENGINE_COMMANDER	5	//[] (Only NGCM)				|| 4.0 X
@@ -209,6 +203,7 @@ stock EngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:spee
 	if(rad <= 0) rad = 1;
 	
 	switch(engineid){
+	
 		case ENGINE_NORMAL: {
 			if(!IsDynamicObjectMoving(objectid)){
 				new randRX = random(90)-45, randRZ = random(360), randR = random(rad)+minradius;
@@ -223,6 +218,7 @@ stock EngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:spee
 				}
 			}
 		}
+		
 		case ENGINE_FIGHTER: {
 			if(!IsDynamicObjectMoving(objectid)){
 				new randRX = random(90)-45, randRZ = random(360), randR = random(rad)+minradius, tmpRX, tmpRZ;
@@ -273,6 +269,7 @@ stock EngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:spee
 				}
 			}
 		}
+		
 		case ENGINE_UBOOT: {
 			if(!IsDynamicObjectMoving(objectid)){
 				new randRZ = random(360), randR = random(rad)+minradius, tmpRZ;
@@ -337,6 +334,7 @@ stock EngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:spee
 				}
 			}
 		}
+		
 	}
 }
 
@@ -408,6 +406,7 @@ stock DeltaEngineRotation(objectid,engineid,Float:speed = 0.050){
 			MoveDynamicObject(objectid,F5[X],F5[Y],F5[Z],speed,0.0,0.0,F5[rZ]-180.0);
 		}
 		*/
+
 	}
 }
 
@@ -416,6 +415,7 @@ stock DeltaEngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float
 	if(rad <= 0) rad = 1;
 	
 	switch(engineid){
+	
 		case ENGINE_NORMAL: {
 			new randR = random(rad)+minradius;
 			GetDynamicObjectRot(objectid,F5[rX],F5[rY],F5[rZ]);
@@ -429,6 +429,7 @@ stock DeltaEngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float
 				}
 			}
 		}
+		
 		case ENGINE_FIGHTER: {
 			new randR = random(rad)+minradius, Float:tmpRX, Float:tmpRZ;
 			GetDynamicObjectRot(objectid,F5[rX],F5[rY],F5[rZ]);
@@ -539,6 +540,7 @@ stock DeltaEngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float
 			}
 		}
 		*/
+
 	}
 }
 
