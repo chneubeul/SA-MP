@@ -104,6 +104,7 @@ public OnGameModeInit(){
 #endif
 
 public OnFilterScriptInit(){
+	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
 		print("[ADM] Error: Invalid MapAndreas Memory.");
 	} else {
