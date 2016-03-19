@@ -228,12 +228,12 @@ public OnFilterScriptInit(){
 	}
 	for(new i = 0, j = sizeof(DoTFile); i < j; i++){
 		if(fexist(DoTFile[i])){
-			DoT(DoTFile[i]);
+			LoadDoTMap(DoTFile[i],totalcnt);
 		}
 	}
 	for(new i = 0, j = sizeof(BinIMGFile); i < j; i++){
 		if(fexist(BinIMGFile[i])){
-			LoadBinaryObjectIMG(BinIMGFile[i]);
+			LoadBinaryObjectIMG(BinIMGFile[i],totalcnt);
 		}
 	}
 	if(ecnt > 0){

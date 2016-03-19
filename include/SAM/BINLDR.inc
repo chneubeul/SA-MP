@@ -6,10 +6,10 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 2.0B                                                                               *
+ * File Version: 2.0C                                                                               *
  *                                                                                                  *
  * Object Functions:                                                                                *
- * LoadBinaryObjectIMG(const name[]);                                                               *
+ * LoadBinaryObjectIMG(const name[],&count=0);                                                      *
  * SaveBinaryObjectIMG(const input[], const output[]);                                              *
  * DecompressBinaryObjectIMG(const input[], const output[]);                                        *
  * Float:CalculateObjectDistance(objectid);                                                         *
@@ -39,7 +39,7 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 	#error You need BINLDR.inc v2.0
 #elseif !defined Bin_Loader_Version
 	#error Update you BINLDR.inc to v2.0
-#elseif (Bin_Loader_Version < 20002)
+#elseif (Bin_Loader_Version < 20003)
 	#error Update you BINLDR.inc to v2.0
 #endif
 */
@@ -49,7 +49,7 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 #endif
 #define _Bin_Loader
 
-#define Bin_Loader_Version 				(20002) //a.b[c] 10000*a+100*b+c
+#define Bin_Loader_Version 				(20003) //a.b[c] 10000*a+100*b+c
 
 #define MAX_RAW_DATA					(42)
 #define MAX_BIN_FILE_SIZE				(2147483647)	//~2 GB
@@ -145,7 +145,7 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 	}
 #endif
 
-stock LoadBinaryObjectIMG(const name[]){
+stock LoadBinaryObjectIMG(const name[],&count=0){
 	new NTTime = GetTickCount();
 	if(!fexist(name)) return ERROR_CODE_BINLDR_INPUT;
 	new RAW[MAX_RAW_DATA], File:inpf = fopen(name,io_read);
@@ -198,6 +198,7 @@ stock LoadBinaryObjectIMG(const name[]){
 	new buffer[256];
 	format(buffer,sizeof buffer,"%s, objects: %d load time %d ms",name,cnt,GetTickCount()-NTTime);
 	printf(buffer);
+	count += cnt;
 	return ERROR_CODE_BINLDR_OK;
 }
 

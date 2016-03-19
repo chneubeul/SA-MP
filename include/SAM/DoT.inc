@@ -6,10 +6,10 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 1.3                                                                                *
+ * File Version: 1.3B                                                                               *
  *                                                                                                  *
  * Object Functions:                                                                                *
- * ADM:LoadDoTMap(const name[]);                                                                    *
+ * ADM:LoadDoTMap(const name[],&count=0);                                                           *
  * ADM:SaveDoTMap(const input[], const output[]);                                                   *
  * Float:CalculateObjectDistance(objectid);                                                         *
  *                                                                                                  *
@@ -36,11 +36,11 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 /*
 //Check Version DoT.inc
 #if !defined _DoT_Loader
-	#error You need DoT.inc v1.2C
+	#error You need DoT.inc v1.3B
 #elseif !defined DoT_Loader_Version
-	#error Update you DoT.inc to v1.2C
-#elseif (DoT_Loader_Version < 10203)
-	#error Update you DoT.inc to v1.2C
+	#error Update you DoT.inc to v1.3B
+#elseif (DoT_Loader_Version < 10301)
+	#error Update you DoT.inc to v1.3B
 #endif
 */
 
@@ -59,7 +59,7 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 #endif
 #define _DoT_Loader
 
-#define DoT_Loader_Version 				(10301) //a.b[c] 10000*a+100*b+c
+#define DoT_Loader_Version 				(10302) //a.b[c] 10000*a+100*b+c
 
 #define DOT_HEADER						"DoTv1.0"
 #define DOT_HEADER_SIZE					(32)
@@ -137,7 +137,7 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 	}
 #endif
 
-stock ADM:LoadDoTMap(const name[]){
+stock ADM:LoadDoTMap(const name[],&count=0){
 	new NTTime = GetTickCount();
 	if(!fexist(name)) return ERROR_CODE_ADM_INPUT;
 	new File:NTMap = fopen(name,io_read), mod[8];
@@ -267,6 +267,6 @@ stock ADM:SaveDoTMap(const input[], const output[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-#define DoT(%0) LoadDoTMap(%0)
+#define DoT(%0,%1) LoadDoTMap(%0,%1)
 
 //EOF
