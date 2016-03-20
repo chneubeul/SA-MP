@@ -5,14 +5,14 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
  * Functions:                                                                                       *
- * GetVehiclePanels(vehicleid, &front_bumper, &rear_bumper);                                        *
- * SetVehiclePanels(vehicleid, flp, frp, rlp, rrp, windshield, front_bumper, rear_bumper);          *
- * GetVehicleLights(vehicleid, &light1, &light2, &light3, &light4);                                 *
- * SetVehicleLights(vehicleid, light1, light2, light3, light4);                                     *
- * GetVehicleDoors(vehicleid, &bonnet, &boot, &driver_door, &passenger_door);                       *
- * SetVehicleDoors(vehicleid, bonnet, boot, driver_door, passenger_door);                           *
- * GetVehicleTires(vehicleid, &tire1, &tire2, &tire3, &tire4);                                      *
- * SetVehicleTires(vehicleid, tire1, tire2, tire3, tire4);                                          *
+ * GetVehiclePanels(vehicleid,&front_bumper,&rear_bumper);                                          *
+ * SetVehiclePanels(vehicleid,flp,frp,rlp,rrp,windshield,front_bumper,rear_bumper);                 *
+ * GetVehicleLights(vehicleid,&light1,&light2,&light3,&light4);                                     *
+ * SetVehicleLights(vehicleid,light1,light2,light3,light4);                                         *
+ * GetVehicleDoors(vehicleid,&bonnet,&boot,&driver_door,&passenger_door);                           *
+ * SetVehicleDoors(vehicleid,bonnet,boot,driver_door,passenger_door);                               *
+ * GetVehicleTires(vehicleid,&tire1,&tire2,&tire3,&tire4);                                          *
+ * SetVehicleTires(vehicleid,tire1,tire2,tire3,tire4);                                              *
  *                                                                                                  *
  ****************************************************************************************************/
 

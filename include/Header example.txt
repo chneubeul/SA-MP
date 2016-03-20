@@ -17,21 +17,26 @@
 #include <progress>
 #include <MD5>
 
+//Logs.inc
+#define EMPTY_LOG_BUFFER	"My Log File\n"
+
 //SAM Includes
-#include <SAM/StreamerFunction.inc>
-#include <SAM/BitFunctions.inc>
-#include <SAM/RGB.inc>
-#include <SAM/3DTryg.inc>
-#include <SAM/GangZoneEx.inc>
-#include <SAM/ADM.inc>
-#include <SAM/MapAndreasEx.inc>
-#include <SAM/HTMLColor.inc>
-#include <SAM/DataConvert.inc>
-#include <SAM/TextDrawEx.inc>
-#include <SAM/LY.inc>
-#include <SAM/DoT.inc>
-#include <SAM/BINLDR.inc>
-#include <SAM/VehicleEx.inc>
+#include <SAM/StreamerFunction>
+#include <SAM/BitFunctions>
+#include <SAM/RGB>
+#include <SAM/3DTryg>
+#include <SAM/GangZoneEx>
+#include <SAM/ADM>
+#include <SAM/MapAndreasEx>
+#include <SAM/HTMLColor>
+#include <SAM/DataConvert>
+#include <SAM/TextDrawEx>
+#include <SAM/LY>
+#include <SAM/DoT>
+#include <SAM/BINLDR>
+#include <SAM/VehicleEx>
+#include <SAM/Logs>
+#include <SAM/ATM>
 
 //Other includes created by Abyss Morgan
 // Knife.inc, Santa.inc etc.

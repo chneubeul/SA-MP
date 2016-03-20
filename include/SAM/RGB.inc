@@ -33,7 +33,7 @@
 #endif
 #define _rgb_function
 
-#define ShiftRGBAToHex(%0,%1,%2,%3,%4)	(((%1) = ((%0) >>> 24)), ((%2) = (((%0) >>> 16) & 0xFF)),((%3) = (((%0) >>> 8) & 0xFF)),((%4) = ((%0) & 0xFF)))
+#define ShiftRGBAToHex(%0,%1,%2,%3,%4)	(((%1) = ((%0) >>> 24)),((%2) = (((%0) >>> 16) & 0xFF)),((%3) = (((%0) >>> 8) & 0xFF)),((%4) = ((%0) & 0xFF)))
 #define ShiftHexToRGBA(%0,%1,%2,%3,%4)	((%0) = ((%4) & 0xFF) | (((%3) & 0xFF) << 8) | (((%2) & 0xFF) << 16) | ((%1) << 24))
 #define ShiftRGBAToRGB(%0)				(((%0) >>> 8) & 0xFFFFFF)
 #define ShiftRGBToRGBA(%0,%1)			(((%0) << 8) | (%1))

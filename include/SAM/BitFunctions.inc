@@ -18,21 +18,21 @@
  * Mode 16 (cell id 1) --> 1111111100000000 1111010001010000 <-- (cell id 0)                        *
  *                                                                                                  *
  * Bit Functions:                                                                                   *
- * GetValueBit(value, bit);                                                                         *
- * SetValueBit(&value, bit, power);  //power 0 or 1                                                 *
- * SetValueBitTrue(&value, bit);                                                                    *
- * SetValueBitFalse(&value, bit);                                                                   *
- * SetCellValue(&value, cellid, mode, power);                                                       *
- * GetCellValue(value, cellid, mode);                                                               *
+ * GetValueBit(value,bit);                                                                          *
+ * SetValueBit(&value,bit,power);  //power 0 or 1                                                   *
+ * SetValueBitTrue(&value,bit);                                                                     *
+ * SetValueBitFalse(&value,bit);                                                                    *
+ * SetCellValue(&value,cellid,mode,power);                                                          *
+ * GetCellValue(value,cellid,mode);                                                                 *
  * InvertValue(value);                                                                              *
- * InvertValueEx(value, key); //default key 0xFFFFFFFF                                              *
- * bool:CheckValue(value,&count=0); //even - false, uneven - true                                   *
- * ExtractValue(value, &byte1, &byte2, &byte3, &byte4);                                             *
- * ExtractFloat(Float:value, &byte1, &byte2, &byte3, &byte4);                                       *
- * MergeValue(&value, byte1, byte2, byte3, byte4);                                                  *
- * MergeFloat(&Float:value, byte1, byte2, byte3, byte4);                                            *
- * MergeValueEx(byte1, byte2, byte3, byte4);                                                        *
- * Float:MergeFloatEx(byte1, byte2, byte3, byte4);                                                  *
+ * InvertValueEx(value,key); //default key 0xFFFFFFFF                                               *
+ * bool:CheckValue(value,&count=0); //even - false,uneven - true                                    *
+ * ExtractValue(value,&byte1,&byte2,&byte3,&byte4);                                                 *
+ * ExtractFloat(Float:value,&byte1,&byte2,&byte3,&byte4);                                           *
+ * MergeValue(&value,byte1,byte2,byte3,byte4);                                                      *
+ * MergeFloat(&Float:value,byte1,byte2,byte3,byte4);                                                *
+ * MergeValueEx(byte1,byte2,byte3,byte4);                                                           *
+ * Float:MergeFloatEx(byte1,byte2,byte3,byte4);                                                     *
  *                                                                                                  *
  ****************************************************************************************************/
 

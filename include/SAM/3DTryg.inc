@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 2.3                                                                                                              *
+ * File Version: 2.3B                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
@@ -15,6 +15,9 @@
  * Float:ctg(Float:value,anglemode:mode=radian);                                                                                  *
  * Float:secans(Float:value,anglemode:mode=radian);                                                                               *
  * Float:cosecans(Float:value,anglemode:mode=radian);                                                                             *
+ * single_clock(max,id);                                                                                                          *
+ * even_clock(max,id);                                                                                                            *
+ * uneven_clock(max,id);                                                                                                          *
  * GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz);                                                     *
  * Float:GetDistanceBetweenPoints1D(Float:x1,Float:x2);                                                                           *
  * Float:GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2);                                                         *
@@ -64,11 +67,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.3
+	#error You need 3DTryg.inc v2.3B
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.3
-#elseif (Tryg3D_Version < 20301)
-	#error Update you 3DTryg.inc to v2.3
+	#error Update you 3DTryg.inc to v2.3B
+#elseif (Tryg3D_Version < 20302)
+	#error Update you 3DTryg.inc to v2.3B
 #endif
 */
 
@@ -77,16 +80,20 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version		(20301) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version				(20302) //a.b[c] 10000*a+100*b+c
 
 #if !defined FLOAT_PI
-	#define FLOAT_PI 		(3.14159265358979323846)
+	#define FLOAT_PI		 		(3.14159265358979323846)
 #endif
 
-#define ctg(%0,%1)			(1/floattan((%0),(%1)))
-#define secans(%0,%1)		(1/floatcos((%0),(%1)))
-#define cosecans(%0,%1)		(1/floatsin((%0),(%1)))
-#define abs(%0)				(((%0) < 0)?(-(%0)):((%0)))
+#define ctg(%0,%1)					(1/floattan((%0),(%1)))
+#define secans(%0,%1)				(1/floatcos((%0),(%1)))
+#define cosecans(%0,%1)				(1/floatsin((%0),(%1)))
+#define abs(%0)						(((%0) < 0)?(-(%0)):((%0)))
+
+#define single_clock(%1,%2)			((360.0/%1)*(%2))
+#define even_clock(%1,%2)			((360.0/%1)*(2*%2))
+#define uneven_clock(%1,%2)			((360.0/%1)*((2*%2)-1))
 
 stock Float:sqrtN(Float:value,Float:exponent){
 	return floatpower(value,(1.0/exponent));

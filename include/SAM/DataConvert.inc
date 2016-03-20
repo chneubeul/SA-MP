@@ -16,14 +16,14 @@
  * HexToInt(string[]);                                                                              * 
  * StringToInt(string[]);                                                                           *
  * bool:StringToBool(string[]);                                                                     *
- * strcopy(input[], output[]);  //string copy for warning 224: indeterminate array size             *
- * fstrcopy(input[], output[], maxdest = sizeof(output));   //fast string copy                      *
+ * strcopy(input[],output[]);  //string copy for warning 224: indeterminate array size              *
+ * fstrcopy(input[],output[],maxdest = sizeof(output));   //fast string copy                        *
  * IntToHex(int);                                                                                   *
- * ABCToCBA(input[], output[]);                                                                     *
- * AnyToInt(str[], type, &bool:flag);                                                               *
- * IntToAny(value, output[], type);                                                                 *
+ * ABCToCBA(input[],output[]);                                                                      *
+ * AnyToInt(str[],type,&bool:flag);                                                                 *
+ * IntToAny(value,output[],type);                                                                   *
  * rot13(string[]);                                                                                 *
- * code128(input[], output[]);                                                                      *
+ * code128(input[],output[]);                                                                       *
  *                                                                                                  *
  ****************************************************************************************************/
  

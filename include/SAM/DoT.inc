@@ -10,7 +10,7 @@
  *                                                                                                  *
  * Object Functions:                                                                                *
  * ADM:LoadDoTMap(const name[],&count=0);                                                           *
- * ADM:SaveDoTMap(const input[], const output[]);                                                   *
+ * ADM:SaveDoTMap(const input[],const output[]);                                                    *
  * Float:CalculateObjectDistance(objectid);                                                         *
  *                                                                                                  *
  ****************************************************************************************************/

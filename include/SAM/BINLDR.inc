@@ -10,8 +10,8 @@
  *                                                                                                  *
  * Object Functions:                                                                                *
  * LoadBinaryObjectIMG(const name[],&count=0);                                                      *
- * SaveBinaryObjectIMG(const input[], const output[]);                                              *
- * DecompressBinaryObjectIMG(const input[], const output[]);                                        *
+ * SaveBinaryObjectIMG(const input[],const output[]);                                               *
+ * DecompressBinaryObjectIMG(const input[],const output[]);                                         *
  * Float:CalculateObjectDistance(objectid);                                                         *
  *                                                                                                  *
  ****************************************************************************************************/

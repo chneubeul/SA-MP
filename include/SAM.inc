@@ -20,4 +20,6 @@
 #include "SAM/DoT.inc"              //not published
 #include "SAM/BINLDR.inc"           //http://forum.sa-mp.com/showthread.php?p=3653547
 #include "SAM/VehicleEx.inc"        //not published
+#include "SAM/Logs.inc"				//not published
+#include "SAM/ATM.inc"				//not published
 //EOF
