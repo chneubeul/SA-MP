@@ -48,6 +48,7 @@
  * ADM:CreateADMKey(key[], type, maxdest = sizeof(key));                                                                          *
  * ADM:StringToHexString(input[], output[], maxdest = sizeof(output));                                                            *
  * ADM:HexStringToString(input[], output[], maxdest = sizeof(output));                                                            *
+ * GetADMErrorName(ADM:code);                                                                                                     *
  *                                                                                                                                *
  * Return value:                                                                                                                  *
  * ERROR_CODE_ADM_UNEXEC       //function unexecutable                                                                            *
@@ -74,11 +75,11 @@
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v1.9B
+	#error You need ADM.inc v1.9C
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v1.9B
-#elseif (ADM_Encryption_Version < 10902)
-	#error Update you ADM.inc to v1.9B
+	#error Update you ADM.inc to v1.9C
+#elseif (ADM_Encryption_Version < 10903)
+	#error Update you ADM.inc to v1.9C
 #endif
 */
 
@@ -87,7 +88,7 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(10902) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(10903) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
 	#error Unknown sscanf version
@@ -144,6 +145,25 @@
 #define DUMP_HEADER_x64				"SAMP_DUMPx64  "
 #define DUMP_HEADER_x128			"SAMP_DUMPx128 "
 #define DUMP_HEADER_x256			"SAMP_DUMPx256 "
+
+new ADMErrorList[][] = {
+	"Success",					//1
+	"Function unexecutable",	//0
+	"Input file not exist",		//-1
+	"Output file exist",		//-2
+	"Invalid key",				//-3
+	"Invalid file size",		//-4
+	"Destination size",			//-5
+	"Open input file",			//-6
+	"Open output file",			//-7
+	"Invalid key type",			//-8
+	"Invalid password len",		//-9
+	"Invalid MD5 Load",			//-10
+	"Invalid dump file name",	//-11
+	"Invalid dump file index"	//-12
+};
+
+#define GetADMErrorName(%0) 		ADMErrorList[(((_:%0)*-1)+1)]
 
 #if !defined isnull
 	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
