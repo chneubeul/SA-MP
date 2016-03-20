@@ -15,6 +15,11 @@
  * MSToTime(millisecond);     //Use: %02d:%02d:%02d                                                                               *
  * SecToTimeMini(second);     //Use: %02d:%02d                                                                                    *
  * MSToTimeMini(millisecond); //Use: %02d:%02d                                                                                    *
+ * foX(variable,beginning,end);                                                                                                   *
+ * foreach(variable);                                                                                                             *
+ * KEY_PRESSED(key);                                                                                                              *
+ * KEY_RELEASED(key);                                                                                                             *
+ * KEY_HOLDING(key);                                                                                                              *
  * CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,type,Float:radius,Float:expradius);                    *
  * Float:CalculatePercent(Float:value,Float:maxvalue);                                                                            *
  * GetSAMIncludeVersion(value,name[],maxdest = sizeof(name));                                                                     *
