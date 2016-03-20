@@ -165,6 +165,8 @@ new ADMErrorList[][] = {
 
 #define GetADMErrorName(%0) 		ADMErrorList[(((_:%0)*-1)+1)]
 
+#pragma unused ADMErrorList
+
 #if !defined isnull
 	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
