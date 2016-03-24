@@ -38,10 +38,10 @@ SantaPickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
 	#error You need MapAndreasEx.inc
 #endif
 
-#define	MAX_SantaGIFTS			(100)
-#define REFRESH_SantaGIFTS		(2*60*60*1000)	//2 hour
+#define	MAX_SANTAGIFTS			(100)
+#define REFRESH_SANTAGIFTS		(2*60*60*1000)	//2 hour
 
-new SantaGift[MAX_SantaGIFTS],
+new SantaGift[MAX_SANTAGIFTS],
 	SantaTimer[1];
 
 //Christmas
@@ -82,10 +82,10 @@ public OnGameModeInit(){
 	if(!IsMapAndreasInit()){
 		print("[ADM] Error: Invalid MapAndreas Memory.");
 	} else {
-		for(new i = 0; i < MAX_SantaGIFTS; i++){
+		for(new i = 0; i < MAX_SANTAGIFTS; i++){
 			SantaGiftCreate(i);
 		}
-		SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SantaGIFTS,true,"d",1);
+		SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SANTAGIFTS,true,"d",1);
 	}
 	#if defined SantaOnGameModeInit
 		SantaOnGameModeInit();
@@ -108,10 +108,10 @@ public OnFilterScriptInit(){
 	if(!IsMapAndreasInit()){
 		print("[ADM] Error: Invalid MapAndreas Memory.");
 	} else {
-		for(new i = 0; i < MAX_SantaGIFTS; i++){
+		for(new i = 0; i < MAX_SANTAGIFTS; i++){
 			SantaGiftCreate(i);
 		}
-		SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SantaGIFTS,true,"d",1);
+		SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SANTAGIFTS,true,"d",1);
 	}
 	#if defined SantaOnFilterScriptInit
 		SantaOnFilterScriptInit();
@@ -149,7 +149,7 @@ public OnFilterScriptExit(){
 #endif
 
 public SantaPickUpDynamicPickup(playerid,pickupid){
-	for(new i = 0; i < MAX_SantaGIFTS; i++){
+	for(new i = 0; i < MAX_SANTAGIFTS; i++){
 		if(pickupid == SantaGift[i]){
 			SantaGiftReset(i);
 			
@@ -162,7 +162,7 @@ public SantaPickUpDynamicPickup(playerid,pickupid){
 
 
 public SantaReset(tec){
-	for(new i = 0; i < MAX_SantaGIFTS; i++){
+	for(new i = 0; i < MAX_SANTAGIFTS; i++){
 		SantaGiftReset(i);
 	}
 	return 1;

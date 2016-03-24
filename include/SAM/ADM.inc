@@ -182,9 +182,7 @@ new bool:DumpFileStatus[MAX_DUMP_FILE] = false,
  ********************/
 
 //Remove ADM: tag
-stock ADMToInt(ADM:admvar){
-	return (_:admvar);
-}
+#define ADMToInt(%0)				(_:%0)
 
 stock bool:IsValidADMKey(key[], type){
 	switch(type){

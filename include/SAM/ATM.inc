@@ -131,4 +131,5 @@ stock GetPlayerNick(playerid){
 	GetPlayerName(playerid,pnick,sizeof (pnick));
 	return pnick;
 }
+
 //EOF
