@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Knife Script v1.7 made by Abyss Morgan                                                           *
+ * Knife Script v1.8 made by Abyss Morgan                                                           *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
  *                                                                                                  *
@@ -122,6 +122,8 @@ public KnifeShot(playerid){
 		MoveDynamicObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,90.0+20.0,trz);
 		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"ddd",tmpobj,INVALID_PLAYER_ID,playerid);
 	} else {
+		GetPlayerPos(KnifeLockTarget[playerid],px,py,pz);
+		pvw = GetPlayerVirtualWorld(KnifeLockTarget[playerid]), pint = GetPlayerInterior(KnifeLockTarget[playerid]);
 		GetRotationFor2Point2D(mx,my,px,py,trz);
 		CompRotationFloat(trz+90.0,trz);
 		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
