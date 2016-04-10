@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.0                                                                                                              *
+ * File Version: 1.0B                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -89,15 +89,17 @@ enum e_float {
 
 stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,type,Float:radius,Float:expradius){
 	foreach(i){
-		new F4[e_float];
-		if(IsPlayerInAnyVehicle(i)){
-			GetVehiclePos(GetPlayerVehicleID(i),F4[X],F4[Y],F4[Z]);
-		} else {
-			GetPlayerPos(i,F4[X],F4[Y],F4[Z]);
-		}
-		new Float:distance = GetDistanceBetweenPoints3D(F4[X],F4[Y],F4[Z],x,y,z);
-		if((GetPlayerInterior(i) == interiorid) && (GetPlayerVirtualWorld(i) == worldid) && (distance <= radius)){
-			CreateExplosionForPlayer(i,x,y,z,type,expradius);
+		if(IsPlayerConnected(i)){
+			new F4[e_float];
+			if(IsPlayerInAnyVehicle(i)){
+				GetVehiclePos(GetPlayerVehicleID(i),F4[X],F4[Y],F4[Z]);
+			} else {
+				GetPlayerPos(i,F4[X],F4[Y],F4[Z]);
+			}
+			new Float:distance = GetDistanceBetweenPoints3D(F4[X],F4[Y],F4[Z],x,y,z);
+			if((GetPlayerInterior(i) == interiorid) && (GetPlayerVirtualWorld(i) == worldid) && (distance <= radius)){
+				CreateExplosionForPlayer(i,x,y,z,type,expradius);
+			}
 		}
 	}
 	return 1;
