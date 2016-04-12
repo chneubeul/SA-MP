@@ -67,7 +67,7 @@ stock bool:Lottery_RemovePlayer(playerid){
 	}
 	if(Lottery_Upperbound == 1 && Lottery_Status == true){
 		KillTimer(Lottery_Timer);
-		Lottery_Timer = 0x7FFFFFFF;
+		Lottery_Timer = -1;
 		Lottery_Status = false;
 		new buffer[256];
 		format(buffer,sizeof buffer,"[LOTTERY] Was interrupted due to lack of players, join now /lottery, Price %d $",LOTTERY_PRICE);
@@ -176,7 +176,7 @@ public Lottery_OnGameModeInit(){
 
 public Lottery_OnGameModeExit(){
 	KillTimer(Lottery_Timer);
-	Lottery_Timer = 0x7FFFFFFF;
+	Lottery_Timer = -1;
 	return 1;
 }
 
