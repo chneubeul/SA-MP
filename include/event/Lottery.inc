@@ -1,6 +1,10 @@
-/********************************
- * Lottery v1.0 by Abyss Morgan *
- ********************************/
+/****************************************************************************************************
+ *                                                                                                  *
+ * Lottery v1.0 made by Abyss Morgan                                                                *
+ *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
+ *                                                                                                  *
+ ****************************************************************************************************/
 
 #define LOTTERY_MIN_PLAYERS		(3)
 #define LOTTERY_START_TIME		(5*60*1000) 	//5 minutes
@@ -12,9 +16,9 @@ new Lottery_Players[MAX_PLAYERS],
 	bool:Lottery_Status = false,
 	Lottery_Timer = -1;
 
-forward Lottery_OnGameModeInit();
-forward Lottery_OnGameModeExit();
-forward Lottery_LosRandom(important);
+forward Lottery_OnGameModeInit(); 		//auto hook
+forward Lottery_OnGameModeExit(); 		//auto hook
+forward Lottery_LosRandom(important);	//auto hook
 
 stock LOT_GetPlayerNick(playerid){
 	new pnick[24];
