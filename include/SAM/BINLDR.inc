@@ -175,22 +175,6 @@ stock LoadBinaryObjectIMG(const name[],&count=0){
 				Bin_MergeFloatEx(RAW[34],RAW[35],RAW[36],RAW[37]),
 				Bin_MergeFloatEx(RAW[38],RAW[39],RAW[40],RAW[41])
 			);
-			/*
-			CreateDynamicObject(
-				((RAW[0]*256)+RAW[1]),
-				Float:((RAW[2]*16777216)+(RAW[3]*65536)+(RAW[4]*256)+RAW[5]),
-				Float:((RAW[6]*16777216)+(RAW[7]*65536)+(RAW[8]*256)+RAW[9]),
-				Float:((RAW[10]*16777216)+(RAW[11]*65536)+(RAW[12]*256)+RAW[13]),
-				Float:((RAW[14]*16777216)+(RAW[15]*65536)+(RAW[16]*256)+RAW[17]),
-				Float:((RAW[18]*16777216)+(RAW[19]*65536)+(RAW[20]*256)+RAW[21]),
-				Float:((RAW[22]*16777216)+(RAW[23]*65536)+(RAW[24]*256)+RAW[25]),
-				((RAW[26]*16777216)+(RAW[27]*65536)+(RAW[28]*256)+RAW[29]),
-				((RAW[30]*16777216)+(RAW[31]*65536)+(RAW[32]*256)+RAW[33]),
-				-1,
-				Float:((RAW[34]*16777216)+(RAW[35]*65536)+(RAW[36]*256)+RAW[37]),
-				Float:((RAW[38]*16777216)+(RAW[39]*65536)+(RAW[40]*256)+RAW[41])
-			);
-			*/
 			cnt++;
 		}
 	}	

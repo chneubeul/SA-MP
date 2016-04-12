@@ -6,7 +6,7 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 1.6                                                                                *
+ * File Version: 1.7                                                                                *
  *                                                                                                  *
  * bit 0 - 31:                                                                                      *
  * (bit 31) --> 11111111000000001111010001010000 <-- (bit 0)                                        *
@@ -22,8 +22,10 @@
  * SetValueBit(&value,bit,power);  //power 0 or 1                                                   *
  * SetValueBitTrue(&value,bit);                                                                     *
  * SetValueBitFalse(&value,bit);                                                                    *
- * SetCellValue(&value,cellid,mode,power);                                                          *
  * GetCellValue(value,cellid,mode);                                                                 *
+ * SetCellValue(&value,cellid,mode,power);                                                          *
+ * GetCellValueEx(value,offset,cellsize);                                                           *
+ * SetCellValueEx(&value,offset,cellsize,power);                                                    *
  * InvertValue(value);                                                                              *
  * InvertValueEx(value,key); //default key 0xFFFFFFFF                                               *
  * bool:CheckValue(value,&count=0); //even - false,uneven - true                                    *
@@ -52,6 +54,9 @@
 
 #define SetCellValue(%0,%1,%2,%3)		((%0) = (((%0) & ~((((0x01 << (%2))-1) << (%1)*(%2)))) | ((%3) << (%1)*(%2))))
 #define GetCellValue(%0,%1,%2)			(((%0) & (((0x01 << (%2))-1) << (%1)*(%2))) >>> ((%1)*(%2)))
+
+#define SetCellValueEx(%0,%1,%2,%3)		((%0) = (((%0) & ~((((0x01 << (%2))-1) << (%1)))) | ((%3) << (%1))))
+#define GetCellValueEx(%0,%1,%2)		(((%0) & (((0x01 << (%2))-1) << (%1))) >>> (%1))
 
 #define ExtractValue(%0,%1,%2,%3,%4)	((%1) = (((%0) & 0xFF000000) >>> 24),(%2) = (((%0) & 0x00FF0000) >>> 16),(%3) = (((%0) & 0x0000FF00) >>> 8),(%4) = ((%0) & 0x000000FF))
 #define ExtractFloat(%0,%1,%2,%3,%4)	((%1) = (((_:%0) & 0xFF000000) >>> 24),(%2) = (((_:%0) & 0x00FF0000) >>> 16),(%3) = (((_:%0) & 0x0000FF00) >>> 8),(%4) = ((_:%0) & 0x000000FF))
