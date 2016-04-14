@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 2.3B                                                                                                             *
+ * File Version: 2.3C                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
@@ -18,6 +18,7 @@
  * single_clock(max,id);                                                                                                          *
  * even_clock(max,id);                                                                                                            *
  * uneven_clock(max,id);                                                                                                          *
+ * IsEven(value);                                                                                                                 *
  * GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz);                                                     *
  * Float:GetDistanceBetweenPoints1D(Float:x1,Float:x2);                                                                           *
  * Float:GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2);                                                         *
@@ -70,7 +71,7 @@
 	#error You need 3DTryg.inc v2.3B
 #elseif !defined Tryg3D_Version
 	#error Update you 3DTryg.inc to v2.3B
-#elseif (Tryg3D_Version < 20302)
+#elseif (Tryg3D_Version < 20303)
 	#error Update you 3DTryg.inc to v2.3B
 #endif
 */
@@ -80,24 +81,40 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version				(20302) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version									(20303) //a.b[c] 10000*a+100*b+c
 
 #if !defined FLOAT_PI
-	#define FLOAT_PI		 		(3.14159265358979323846)
+	#define FLOAT_PI		 							(3.14159265358979323846)
 #endif
 
-#define ctg(%0,%1)					(1/floattan((%0),(%1)))
-#define secans(%0,%1)				(1/floatcos((%0),(%1)))
-#define cosecans(%0,%1)				(1/floatsin((%0),(%1)))
-#define abs(%0)						(((%0) < 0)?(-(%0)):((%0)))
+#define ctg(%0,%1)										(1/floattan((%0),(%1)))
+#define secans(%0,%1)									(1/floatcos((%0),(%1)))
+#define cosecans(%0,%1)									(1/floatsin((%0),(%1)))
+#define abs(%0)											(((%0) < 0)?(-(%0)):((%0)))
 
-#define single_clock(%1,%2)			((360.0/%1)*(%2))
-#define even_clock(%1,%2)			((360.0/%1)*(2*%2))
-#define uneven_clock(%1,%2)			((360.0/%1)*((2*%2)-1))
+#define single_clock(%1,%2)								((360.0/%1)*(%2))
+#define even_clock(%1,%2)								((360.0/%1)*(2*%2))
+#define uneven_clock(%1,%2)								((360.0/%1)*((2*%2)-1))
 
-stock Float:sqrtN(Float:value,Float:exponent){
-	return floatpower(value,(1.0/exponent));
-}
+#define	sqrtN(%0,%1)									floatpower((%0),(1.0/(%1)))
+
+#define GetDistanceBetweenPoints1D(%1,%2)				VectorSize((%1)-(%2),0.0,0.0)
+#define GetDistanceBetweenPoints2D(%1,%2,%3,%4)			VectorSize((%1)-(%3),(%2)-(%4),0.0)
+#define GetDistanceBetweenPoints3D(%1,%2,%3,%4,%5,%6)	VectorSize((%1)-(%4),(%2)-(%5),(%3)-(%6))
+
+//NotLessThanZero
+#define NLTZ(%0)										(((%0) < 0)?(0):(%0))
+
+//NotMoreThanZero
+#define NMTZ(%0)										(((%0) > 0)?(0):(%0))
+
+//NotLessThanZeroFloat
+#define NLTZF(%0)										(((%0) < 0.0)?(0.0):(%0))
+
+//NotMoreThanZeroFloat
+#define NMTZF(%0)										(((%0) > 0.0)?(0.0):(%0))
+
+#define IsEven(%0)										((((%0) % 2) == 0)?(true):(false))
 
 stock power(value,Float:exponent){
 	return floatround(floatpower(value,exponent));
@@ -110,41 +127,6 @@ stock GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz){
 	tz = z + (random(rand)-range);
 }
 
-stock Float:GetDistanceBetweenPoints1D(Float:x1,Float:x2){
-	return VectorSize(x1-x2,0.0,0.0);
-}
-
-stock Float:GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2){
-	return VectorSize(x1-x2,y1-y2,0.0);
-}
-
-stock Float:GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2){
-	return VectorSize(x1-x2,y1-y2,z1-z2);
-}
-
-//NotLessThanZero
-stock NLTZ(value){
-	if(value < 0) value = 0;
-	return value;
-}
-
-//NotMoreThanZero
-stock NMTZ(value){
-	if(value > 0) value = 0;
-	return value;
-}
-
-//NotLessThanZeroFloat
-stock Float:NLTZF(Float:value){
-	if(value < 0.0) value = 0.0;
-	return value;
-}
-
-//NotMoreThanZeroFloat
-stock Float:NMTZF(Float:value){
-	if(value > 0.0) value = 0.0;
-	return value;
-}
 
 stock CompRotation(rotation,&cr){
 	cr = rotation;

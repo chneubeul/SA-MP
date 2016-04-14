@@ -6,7 +6,7 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 1.3                                                                                *
+ * File Version: 1.4                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileHandleID(File:handle);                                                                    *
@@ -24,6 +24,8 @@
  * IntToAny(value,output[],type);                                                                   *
  * rot13(string[]);                                                                                 *
  * code128(input[],output[]);                                                                       *
+ * swap_int({Float,_}:int1,{Float,_}:int2);                                                         *
+ * swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2));             *
  *                                                                                                  *
  ****************************************************************************************************/
  
@@ -37,6 +39,19 @@
 #define INVALID_FILE_HANDLE			(File:0)
 #define GetFileHandleID(%0)			(_:%0)
 #define StringToInt(%0)				strval(%0)
+
+//swapvars by Crayder
+#define swap_int(%0,%1)				(((%0) ^= (%1)), ((%1) ^= (%0)), ((%0) ^= (%1)))
+
+stock bool:swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2)){
+	if(dest1 < strlen(string2) || dest2 < strlen(string1)) return false;
+	new swap_size = dest1, tmp = dest2;
+	if(tmp > swap_size) swap_size = tmp;
+	for(new i = 0; i < swap_size; i++){
+		swap_int(string1[i],string2[i]);
+	}
+	return true;
+}
 
 stock GetFileID(File:handle){
 	if(handle == INVALID_FILE_HANDLE){

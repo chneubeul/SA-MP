@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.0B                                                                                                             *
+ * File Version: 1.1                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -25,6 +25,8 @@
  * GetSAMIncludeVersion(value,name[],maxdest = sizeof(name));                                                                     *
  * SetPlayerWorldBoundsEx(playerid,Float:minx,Float:miny,Float:maxx,Float:maxy);                                                  *
  * GetPlayerNick(playerid);                                                                                                       *
+ * CrashPlayer(playerid);                                                                                                         *
+ * GetPlayerID(name[]);                                                                                                           *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -132,6 +134,19 @@ stock GetPlayerNick(playerid){
 	new pnick[24];
 	GetPlayerName(playerid,pnick,sizeof (pnick));
 	return pnick;
+}
+
+stock GetPlayerID(name[]){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		if(IsPlayerConnected(i)){
+			if(!strcmp(name,GetPlayerNick(i),false)) return i;
+		}
+	}
+	return INVALID_PLAYER_ID;
+}
+
+stock CrashPlayer(playerid){
+	GameTextForPlayer(playerid, "~yw~~~~/~al that ~shit", 1000, 1);
 }
 
 //EOF
