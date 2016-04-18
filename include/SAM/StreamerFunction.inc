@@ -1,140 +1,140 @@
-/**********************************************************************************************************************************
- *                                                                                                                                *
- *                                                  Streamer Special Functions                                                    *
- *                                                                                                                                *
- * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
- *                                                                                                                                *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
- *                                                                                                                                *
- * File Version: 2.2                                                                                                              *
- * Streamer Version: 2.8.0                                                                                                        *
- *                                                                                                                                *
- * Objects Functions:                                                                                                             *
- * GetDynamicObjectModel(objectid);                                                                                               *
- * SetDynamicObjectModel(objectid,modelid);                                                                                       *
- * GetDynamicObjectVW(objectid);                                                                                                  *
- * SetDynamicObjectVW(objectid,worldid);                                                                                          *
- * GetDynamicObjectINT(objectid);                                                                                                 *
- * SetDynamicObjectINT(objectid,interiorid);                                                                                      *
- * GetDynamicObjectSD(objectid,&Float:streamdistance);                                                                            *
- * SetDynamicObjectSD(objectid,Float:streamdistance);                                                                             *
- * GetDynamicObjectDD(objectid,&Float:drawdistance);                                                                              *
- * SetDynamicObjectDD(objectid,Float:drawdistance);                                                                               *
- * GetDynamicObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                  *
- * SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                        *
- * GetDynamicObjectMoveSpeed(objectid,&Float:speed);                                                                              *
- * SetDynamicObjectMoveSpeed(objectid,Float:speed);                                                                               *
- * GetDynamicObjectMovePos(objectid,&Float:x,&Float:y,&Float:z);                                                                  *
- * SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z);                                                                     *
- * GetDynamicObjectMoveRot(objectid,&Float:rx,&Float:ry,&Float:rz);                                                               *
- * SetDynamicObjectMoveRot(objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0);                                    *
- * GetDynamicObjectMoveTime(objectid,&objstate,&rtime);                                                                           *
- * SetDynamicObjectAttachSync(objectid,syncrotation);                                                                             *
- * ResetDynamicObjectMaterial(objectid,materialindex);                                                                            *
- * ResetDynamicObjectMaterialAll(objectid);                                                                                       *
- * DeattachObjectDynamicObject(objectid);                                                                                         *
- * DeattachDynamicObjectComponent(objectid,type);                                                                                 *
- * DestroyDynamicObjectComponent(objectid,type);                                                                                  *
- * RebuildDynamicObject(objectid,...);                                                                                            *
- * GetDynamicObjectArea(objectid);                                                                                                *
- * SetDynamicObjectArea(objectid,areaid);                                                                                         *
- *                                                                                                                                *
- * SAMP Functions:                                                                                                                *
- * GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                         *
- * SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                               *
- * CountObjects();                                                                                                                *
- * CountVehicles();                                                                                                               *
- * CountPlayerObjects();                                                                                                          *
- * DestroyObjects();                                                                                                              *
- * DestroyVehicles();                                                                                                             *
- * DestroyPlayerObjects();                                                                                                        *
- * GangZoneDestroyAll();                                                                                                          *
- *                                                                                                                                *
- * Cube Functions:                                                                                                                *
- * DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1);   *
- * DestroyDynamicObjectsInCubeFM(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1); *
- * IsPointInArea(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                      *
- * IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,vw1,int1,vw2,int2);  *
- *                                                                                                                                *
- * Vehicle Functions:                                                                                                             *
- * DestroyVehicleDynamicObject(vehicleid);                                                                                        *
- * DeattachVehicleDynamicObject(vehicleid);                                                                                       *
- *                                                                                                                                *
- * Check Point Functions:                                                                                                         *
- * SetDynamicCPSize(checkpointid,Float:size);                                                                                     *
- * GetDynamicCPPos(checkpointid,&Float:x,&Float:y,&Float:z);                                                                      *
- * SetDynamicCPPos(checkpointid,Float:x,Float:y,Float:z);                                                                         *
- * GetDynamicCPArea(checkpointid);                                                                                                *
- * SetDynamicCPArea(checkpointid,areaid);                                                                                         *
- *                                                                                                                                *
- * Race Check Point Functions:                                                                                                    *
- * SetDynamicRaceCPSize(checkpointid,Float:size);                                                                                 *
- * GetDynamicRaceCPPos(checkpointid,&Float:x,&Float:y,&Float:z);                                                                  *
- * SetDynamicRaceCPPos(checkpointid,Float:x,Float:y,Float:z);                                                                     *
- * GetDynamicRaceCPArea(checkpointid);                                                                                            *
- * SetDynamicRaceCPArea(checkpointid,areaid);                                                                                     *
- *                                                                                                                                *
- * Player Functions:                                                                                                              *
- * DestroyPlayerDynamicObject(playerid);                                                                                          *
- * DeattachPlayerDynamicObject(playerid);                                                                                         *
- *                                                                                                                                *
- * MapIcon Functions:                                                                                                             *
- * SetDynamicMapIconColor(iconid,color);                                                                                          *
- * GetDynamicMapIconColor(iconid);                                                                                                *
- * GetDynamicMapIconPos(iconid,&Float:x,&Float:y,&Float:z);                                                                       *
- * SetDynamicMapIconPos(iconid,Float:x,Float:y,Float:z);                                                                          *
- * GetDynamicMapIconArea(iconid);                                                                                                 *
- * SetDynamicMapIconArea(iconid,areaid);                                                                                          *
- *                                                                                                                                *
- * Pickup Functions:                                                                                                              *
- * GetDynamicPickupPos(pickupid,&Float:x,&Float:y,&Float:z);                                                                      *
- * SetDynamicPickupPos(pickupid,Float:x,Float:y,Float:z);                                                                         *
- * GetDynamicPickupModel(pickupid);                                                                                               *
- * SetDynamicPickupModel(pickupid,modelid);                                                                                       *
- * GetDynamicPickupVW(pickupid);                                                                                                  *
- * SetDynamicPickupVW(pickupid,worldid);                                                                                          *
- * GetDynamicPickupINT(pickupid);                                                                                                 *
- * SetDynamicPickupINT(pickupid,interiorid);                                                                                      *
- * GetDynamicPickupType(pickupid);                                                                                                *
- * SetDynamicPickupType(pickupid,type);                                                                                           *
- * GetDynamicPickupArea(pickupid);                                                                                                *
- * SetDynamicPickupArea(pickupid,areaid);                                                                                         *
- *                                                                                                                                *
- * 3DText Functions:                                                                                                              *
- * GetDynamic3DTextPos(Text3D:id,&Float:x,&Float:y,&Float:z);                                                                     *
- * SetDynamic3DTextPos(Text3D:id,Float:x,Float:y,Float:z);                                                                        *
- * GetDynamic3DTextArea(Text3D:id);                                                                                               *
- * SetDynamic3DTextArea(Text3D:id,areaid);                                                                                        *
- *                                                                                                                                *
- * Pool Size Functions:                                                                                                           *
- * GetDynamicObjectPoolSize();                                                                                                    *
- * GetDynamicPickupPoolSize();                                                                                                    *
- * GetDynamicCPPoolSize();                                                                                                        *
- * GetDynamicRaceCPPoolSize();                                                                                                    *
- * GetDynamicMapIconPoolSize();                                                                                                   *
- * GetDynamic3DTextPoolSize();                                                                                                    *
- * GetDynamicAreaPoolSize();                                                                                                      *
- *                                                                                                                                *
- * Update Functions:                                                                                                              *
- * UpdateAllDynamicElements();                                                                                                    *
- * UpdateAllDynamicObjects();                                                                                                     *
- * UpdateAllDynamicPickups();                                                                                                     *
- * UpdateAllDynamicCPs();                                                                                                         *
- * UpdateAllDynamicRaceCPs();                                                                                                     *
- * UpdateAllDynamicMapIcons();                                                                                                    *
- * UpdateAllDynamic3DTextLabels();                                                                                                *
- * UpdateAllDynamicAreas();                                                                                                       *
- *                                                                                                                                *
- * Foreach Functions:                                                                                                             *
- * ForDynamicObjects(variable);                                                                                                   *
- * ForDynamicPickups(variable);                                                                                                   *
- * ForDynamicCPs(variable);                                                                                                       *
- * ForDynamicRaceCPs(variable);                                                                                                   *
- * ForDynamicMapIcons(variable);                                                                                                  *
- * ForDynamic3DTextLabels(variable);                                                                                              *
- * ForDynamicAreas(variable);                                                                                                     *
- *                                                                                                                                *
- **********************************************************************************************************************************/
+/*******************************************************************************************************************************************
+ *                                                                                                                                         *
+ *                                                       Streamer Special Functions                                                        *
+ *                                                                                                                                         *
+ * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                              *
+ *                                                                                                                                         *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
+ *                                                                                                                                         *
+ * File Version: 2.2                                                                                                                       *
+ * Streamer Version: 2.8.0                                                                                                                 *
+ *                                                                                                                                         *
+ * Objects Functions:                                                                                                                      *
+ * GetDynamicObjectModel(objectid);                                                                                                        *
+ * SetDynamicObjectModel(objectid,modelid);                                                                                                *
+ * GetDynamicObjectVW(objectid);                                                                                                           *
+ * SetDynamicObjectVW(objectid,worldid);                                                                                                   *
+ * GetDynamicObjectINT(objectid);                                                                                                          *
+ * SetDynamicObjectINT(objectid,interiorid);                                                                                               *
+ * GetDynamicObjectSD(objectid,&Float:streamdistance);                                                                                     *
+ * SetDynamicObjectSD(objectid,Float:streamdistance);                                                                                      *
+ * GetDynamicObjectDD(objectid,&Float:drawdistance);                                                                                       *
+ * SetDynamicObjectDD(objectid,Float:drawdistance);                                                                                        *
+ * GetDynamicObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                           *
+ * SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                                 *
+ * GetDynamicObjectMoveSpeed(objectid,&Float:speed);                                                                                       *
+ * SetDynamicObjectMoveSpeed(objectid,Float:speed);                                                                                        *
+ * GetDynamicObjectMovePos(objectid,&Float:x,&Float:y,&Float:z);                                                                           *
+ * SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z);                                                                              *
+ * GetDynamicObjectMoveRot(objectid,&Float:rx,&Float:ry,&Float:rz);                                                                        *
+ * SetDynamicObjectMoveRot(objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0);                                             *
+ * GetDynamicObjectMoveTime(objectid,&objstate,&rtime);                                                                                    *
+ * SetDynamicObjectAttachSync(objectid,syncrotation);                                                                                      *
+ * ResetDynamicObjectMaterial(objectid,materialindex);                                                                                     *
+ * ResetDynamicObjectMaterialAll(objectid);                                                                                                *
+ * DeattachObjectDynamicObject(objectid);                                                                                                  *
+ * DeattachDynamicObjectComponent(objectid,type);                                                                                          *
+ * DestroyDynamicObjectComponent(objectid,type);                                                                                           *
+ * RebuildDynamicObject(objectid,...);                                                                                                     *
+ * GetDynamicObjectArea(objectid);                                                                                                         *
+ * SetDynamicObjectArea(objectid,areaid);                                                                                                  *
+ *                                                                                                                                         *
+ * SAMP Functions:                                                                                                                         *
+ * GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                                  *
+ * SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                                        *
+ * CountObjects();                                                                                                                         *
+ * CountVehicles();                                                                                                                        *
+ * CountPlayerObjects();                                                                                                                   *
+ * DestroyObjects();                                                                                                                       *
+ * DestroyVehicles();                                                                                                                      *
+ * DestroyPlayerObjects();                                                                                                                 *
+ * GangZoneDestroyAll();                                                                                                                   *
+ *                                                                                                                                         *
+ * Cube Functions:                                                                                                                         *
+ * DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1);            *
+ * DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1);  *
+ * IsPointInArea(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                               *
+ * IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,vw1,int1,vw2,int2);           *
+ *                                                                                                                                         *
+ * Vehicle Functions:                                                                                                                      *
+ * DestroyVehicleDynamicObject(vehicleid);                                                                                                 *
+ * DeattachVehicleDynamicObject(vehicleid);                                                                                                *
+ *                                                                                                                                         *
+ * Check Point Functions:                                                                                                                  *
+ * SetDynamicCPSize(checkpointid,Float:size);                                                                                              *
+ * GetDynamicCPPos(checkpointid,&Float:x,&Float:y,&Float:z);                                                                               *
+ * SetDynamicCPPos(checkpointid,Float:x,Float:y,Float:z);                                                                                  *
+ * GetDynamicCPArea(checkpointid);                                                                                                         *
+ * SetDynamicCPArea(checkpointid,areaid);                                                                                                  *
+ *                                                                                                                                         *
+ * Race Check Point Functions:                                                                                                             *
+ * SetDynamicRaceCPSize(checkpointid,Float:size);                                                                                          *
+ * GetDynamicRaceCPPos(checkpointid,&Float:x,&Float:y,&Float:z);                                                                           *
+ * SetDynamicRaceCPPos(checkpointid,Float:x,Float:y,Float:z);                                                                              *
+ * GetDynamicRaceCPArea(checkpointid);                                                                                                     *
+ * SetDynamicRaceCPArea(checkpointid,areaid);                                                                                              *
+ *                                                                                                                                         *
+ * Player Functions:                                                                                                                       *
+ * DestroyPlayerDynamicObject(playerid);                                                                                                   *
+ * DeattachPlayerDynamicObject(playerid);                                                                                                  *
+ *                                                                                                                                         *
+ * MapIcon Functions:                                                                                                                      *
+ * SetDynamicMapIconColor(iconid,color);                                                                                                   *
+ * GetDynamicMapIconColor(iconid);                                                                                                         *
+ * GetDynamicMapIconPos(iconid,&Float:x,&Float:y,&Float:z);                                                                                *
+ * SetDynamicMapIconPos(iconid,Float:x,Float:y,Float:z);                                                                                   *
+ * GetDynamicMapIconArea(iconid);                                                                                                          *
+ * SetDynamicMapIconArea(iconid,areaid);                                                                                                   *
+ *                                                                                                                                         *
+ * Pickup Functions:                                                                                                                       *
+ * GetDynamicPickupPos(pickupid,&Float:x,&Float:y,&Float:z);                                                                               *
+ * SetDynamicPickupPos(pickupid,Float:x,Float:y,Float:z);                                                                                  *
+ * GetDynamicPickupModel(pickupid);                                                                                                        *
+ * SetDynamicPickupModel(pickupid,modelid);                                                                                                *
+ * GetDynamicPickupVW(pickupid);                                                                                                           *
+ * SetDynamicPickupVW(pickupid,worldid);                                                                                                   *
+ * GetDynamicPickupINT(pickupid);                                                                                                          *
+ * SetDynamicPickupINT(pickupid,interiorid);                                                                                               *
+ * GetDynamicPickupType(pickupid);                                                                                                         *
+ * SetDynamicPickupType(pickupid,type);                                                                                                    *
+ * GetDynamicPickupArea(pickupid);                                                                                                         *
+ * SetDynamicPickupArea(pickupid,areaid);                                                                                                  *
+ *                                                                                                                                         *
+ * 3DText Functions:                                                                                                                       *
+ * GetDynamic3DTextPos(Text3D:id,&Float:x,&Float:y,&Float:z);                                                                              *
+ * SetDynamic3DTextPos(Text3D:id,Float:x,Float:y,Float:z);                                                                                 *
+ * GetDynamic3DTextArea(Text3D:id);                                                                                                        *
+ * SetDynamic3DTextArea(Text3D:id,areaid);                                                                                                 *
+ *                                                                                                                                         *
+ * Pool Size Functions:                                                                                                                    *
+ * GetDynamicObjectPoolSize();                                                                                                             *
+ * GetDynamicPickupPoolSize();                                                                                                             *
+ * GetDynamicCPPoolSize();                                                                                                                 *
+ * GetDynamicRaceCPPoolSize();                                                                                                             *
+ * GetDynamicMapIconPoolSize();                                                                                                            *
+ * GetDynamic3DTextPoolSize();                                                                                                             *
+ * GetDynamicAreaPoolSize();                                                                                                               *
+ *                                                                                                                                         *
+ * Update Functions:                                                                                                                       *
+ * UpdateAllDynamicElements();                                                                                                             *
+ * UpdateAllDynamicObjects();                                                                                                              *
+ * UpdateAllDynamicPickups();                                                                                                              *
+ * UpdateAllDynamicCPs();                                                                                                                  *
+ * UpdateAllDynamicRaceCPs();                                                                                                              *
+ * UpdateAllDynamicMapIcons();                                                                                                             *
+ * UpdateAllDynamic3DTextLabels();                                                                                                         *
+ * UpdateAllDynamicAreas();                                                                                                                *
+ *                                                                                                                                         *
+ * Foreach Functions:                                                                                                                      *
+ * ForDynamicObjects(variable);                                                                                                            *
+ * ForDynamicPickups(variable);                                                                                                            *
+ * ForDynamicCPs(variable);                                                                                                                *
+ * ForDynamicRaceCPs(variable);                                                                                                            *
+ * ForDynamicMapIcons(variable);                                                                                                           *
+ * ForDynamic3DTextLabels(variable);                                                                                                       *
+ * ForDynamicAreas(variable);                                                                                                              *
+ *                                                                                                                                         *
+ *******************************************************************************************************************************************/
 
 /*
 //Check Version StreamerFunction.inc
