@@ -241,13 +241,13 @@ stock bool:IsValidStreamer(version){
 #define GetDynamicAreaPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_AREA)
 
 //Foreach
-#define ForDynamicObjects(%1)				for(new %1 = 0, p_%1 = GetDynamicObjectPoolSize(); %1 <= p_%1; %1++)
-#define ForDynamicPickups(%1)				for(new %1 = 0, p_%1 = GetDynamicPickupPoolSize(); %1 <= p_%1; %1++)
-#define ForDynamicCPs(%1)					for(new %1 = 0, p_%1 = GetDynamicCPPoolSize(); %1 <= p_%1; %1++)
-#define ForDynamicRaceCPs(%1)				for(new %1 = 0, p_%1 = GetDynamicRaceCPPoolSize(); %1 <= p_%1; %1++)
-#define ForDynamicMapIcons(%1)				for(new %1 = 0, p_%1 = GetDynamicMapIconPoolSize(); %1 <= p_%1; %1++)
-#define ForDynamic3DTextLabels(%1)			for(new %1 = 0, p_%1 = GetDynamic3DTextPoolSize(); %1 <= p_%1; %1++)
-#define ForDynamicAreas(%1)					for(new %1 = 0, p_%1 = GetDynamicAreaPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicObjects(%1)				for(new %1 = 1, p_%1 = GetDynamicObjectPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicPickups(%1)				for(new %1 = 1, p_%1 = GetDynamicPickupPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicCPs(%1)					for(new %1 = 1, p_%1 = GetDynamicCPPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicRaceCPs(%1)				for(new %1 = 1, p_%1 = GetDynamicRaceCPPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicMapIcons(%1)				for(new %1 = 1, p_%1 = GetDynamicMapIconPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamic3DTextLabels(%1)			for(new %1 = 1, p_%1 = GetDynamic3DTextPoolSize(); %1 <= p_%1; %1++)
+#define ForDynamicAreas(%1)					for(new %1 = 1, p_%1 = GetDynamicAreaPoolSize(); %1 <= p_%1; %1++)
 
 stock SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
 	SetDynamicObjectPos(objectid,x,y,z);
