@@ -499,7 +499,7 @@ stock SetDynamic3DTextPos(Text3D:id,Float:x,Float:y,Float:z){
 
 stock DestroyDynamicObjectComponent(objectid,type){
 	new max_dobj = Streamer_GetUpperBound(type);
-	for(new i = 0; i < max_dobj; i++){
+	for(new i = 1; i < max_dobj; i++){
 		if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == objectid){
 			switch(type){
 				case STREAMER_TYPE_OBJECT:	if(IsValidDynamicObject(i)) DestroyDynamicObject(i);
@@ -512,7 +512,7 @@ stock DestroyDynamicObjectComponent(objectid,type){
 
 stock DeattachDynamicObjectComponent(objectid,type){
 	new max_dobj = Streamer_GetUpperBound(type);
-	for(new i = 0; i < max_dobj; i++){
+	for(new i = 1; i < max_dobj; i++){
 		if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == objectid){
 			switch(type){
 				case STREAMER_TYPE_OBJECT:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID);
