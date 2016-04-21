@@ -36,28 +36,32 @@
 #define _ATM_Core
 
 #if !defined isnull
-	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+	#define isnull(%1) 				((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+#endif
+
+#if !defined function
+	#define function%0(%1)			forward %0(%1); public %0(%1)
 #endif
 
 #if !defined SecToTimeDay
 	//%d:%02d:%02d:%02d
-	#define SecToTimeDay(%0)			((%0) / 86400),(((%0) % 86400) / 3600),((((%0) % 86400) % 3600) / 60),((((%0) % 86400) % 3600) % 60)
-	#define MSToTimeDay(%0)				SecToTimeDay((%0)/1000)
+	#define SecToTimeDay(%0)		((%0) / 86400),(((%0) % 86400) / 3600),((((%0) % 86400) % 3600) / 60),((((%0) % 86400) % 3600) % 60)
+	#define MSToTimeDay(%0)			SecToTimeDay((%0)/1000)
 	//%02d:%02d:%02d
-	#define SecToTime(%0)				((%0) / 3600),(((%0) % 3600) / 60),(((%0) % 3600) % 60)
-	#define MSToTime(%0)				SecToTime((%0)/1000)
+	#define SecToTime(%0)			((%0) / 3600),(((%0) % 3600) / 60),(((%0) % 3600) % 60)
+	#define MSToTime(%0)			SecToTime((%0)/1000)
 	//%02d:%02d
-	#define SecToTimeMini(%0)			((%0) / 60),((%0) % 60)
-	#define MSToTimeMini(%0)			SecToTimeMini((%0)/1000)
+	#define SecToTimeMini(%0)		((%0) / 60),((%0) % 60)
+	#define MSToTimeMini(%0)		SecToTimeMini((%0)/1000)
 #endif
 
 //value bigger than possible
 #if !defined VBTP
-	#define VBTP 						(0x7FFFFFFF)
+	#define VBTP 					(0x7FFFFFFF)
 #endif
 
 #if !defined FLOAT_NAN
-	#define FLOAT_NAN 					(Float:0xFFFFFFFF)
+	#define FLOAT_NAN 				(Float:0xFFFFFFFF)
 #endif
 
 #define SD_TINY						(5.0)

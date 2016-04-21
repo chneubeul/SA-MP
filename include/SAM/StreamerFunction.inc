@@ -157,7 +157,7 @@
 #define _streamer_spec
 
 #define Streamer_Spec_Version 		(20201) //a.b[c] 10000*a+100*b+c
-#define Valid_Streamer_Version 		(0x280001) //a.b[c] 10000*a+100*b+c
+#define Valid_Streamer_Version 		(0x280001)
 
 #if !defined INVALID_STREAMER_ID
 	#define INVALID_STREAMER_ID 0

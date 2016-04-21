@@ -1,9 +1,9 @@
 /**********************************
- *								*
- *   @Author:	  ZeeX		   *
- *   @Version:	 0.3.1		  *
- *   @Released:	31/10/2009	 *
- *								*
+ *								  *
+ *   @Author:	  ZeeX		      *
+ *   @Version:	 0.3.1		      *
+ *   @Released:	31/10/2009	      *
+ *								  *
  **********************************/
 
 #if defined _zcmd_included
@@ -89,9 +89,9 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	new 
 		pos,
 		funcname[MAX_FUNC_NAME];
-	while (cmdtext[++pos] > ' ')
+	while (cmdtext[++pos] > ' ' && pos < MAX_FUNC_NAME-4)
 	{
-		funcname[pos-1] = tolower(cmdtext[pos]); 
+		funcname[pos-1] = tolower(cmdtext[pos]);
 	}
 	format(funcname, sizeof(funcname), "cmd_%s", funcname);
 	while (cmdtext[pos] == ' ') pos++;
