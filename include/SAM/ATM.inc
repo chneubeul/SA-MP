@@ -43,6 +43,10 @@
 	#define function%0(%1)			forward %0(%1); public %0(%1)
 #endif
 
+#if !defined exec
+	#define exec%0(%1)%2(%3)		forward %0(%1); public %0(%1){ return %2(%3); }
+#endif
+
 #if !defined SecToTimeDay
 	//%d:%02d:%02d:%02d
 	#define SecToTimeDay(%0)		((%0) / 86400),(((%0) % 86400) / 3600),((((%0) % 86400) % 3600) / 60),((((%0) % 86400) % 3600) % 60)

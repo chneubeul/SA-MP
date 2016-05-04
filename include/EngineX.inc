@@ -13,10 +13,10 @@
  * Functions:                                                                                                                     *
  * bool:IsPointInWaterEx(Float:x,Float:y,Float:z);                                                                                *
  * GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);                 *
- * EngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:speed);                                                  *
- * EngineExcavatorUpdate(objectid,areaid,engineid,Float:speed);                                                                   *
- * DeltaEngineRotation(objectid,engineid,Float:speed = 0.05);                                                                     *
- * DeltaEngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:speed);                                             *
+ * EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed);                                          *
+ * EngineExcavatorUpdate(objectid,areaid,EngineX:engineid,Float:speed);                                                           *
+ * DeltaEngineRotation(objectid,EngineX:engineid,Float:speed = 0.05);                                                             *
+ * DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed);                                     *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -158,17 +158,17 @@ public OnGameModeExit(){
 #endif
 
 //Engine ID
-#define ENGINE_NORMAL 		0	//[Object: 1681, 18846 OR ANY] 	|| 5.0 Delta X
-#define ENGINE_FIGHTER		1	//[Object: 10757]				|| 5.0 Delta X
-#define ENGINE_SUPPLY		2	//[Object: 1683, 3528]			|| 5.0 Delta X
-//#define ENGINE_NGCMS		3	//[] (Only NGCM)				|| 4.0 X
-//#define ENGINE_ARCMS		4	//[] (Only NGCM)				|| 4.0 X
-//#define ENGINE_COMMANDER	5	//[] (Only NGCM)				|| 4.0 X
-#define ENGINE_ELITE		6	//[Object: 14553] 				|| 5.0 Delta X
-#define ENGINE_UBOOT		7	//[Object: 9958]				|| 5.0 Delta X
-#define ENGINE_SHIP			8	//[Object: 8493]				|| 4.0 X (not recommended to use version 5.0)
-#define ENGINE_MINI			9	//[Object: 2510, 2512]			|| 5.0 Delta X
-#define ENGINE_EXCAVATOR 	10	//[Object: 18248]				|| 4.1 G
+#define ENGINE_NORMAL 					(EngineX:0)		//[Object: 1681, 18846 OR ANY] 	|| 5.0 Delta X
+#define ENGINE_FIGHTER					(EngineX:1)		//[Object: 10757]				|| 5.0 Delta X
+#define ENGINE_SUPPLY					(EngineX:2)		//[Object: 1683, 3528]			|| 5.0 Delta X
+//#define ENGINE_NGCMS					(EngineX:3)		//[] (Only NGCM)				|| 4.0 X
+//#define ENGINE_ARCMS					(EngineX:4)		//[] (Only NGCM)				|| 4.0 X
+//#define ENGINE_COMMANDER				(EngineX:5)		//[] (Only NGCM)				|| 4.0 X
+#define ENGINE_ELITE					(EngineX:6)		//[Object: 14553] 				|| 5.0 Delta X
+#define ENGINE_UBOOT					(EngineX:7)		//[Object: 9958]				|| 5.0 Delta X
+#define ENGINE_SHIP						(EngineX:8)		//[Object: 8493]				|| 4.0 X (not recommended to use version 5.0)
+#define ENGINE_MINI						(EngineX:9)		//[Object: 2510, 2512]			|| 5.0 Delta X
+#define ENGINE_EXCAVATOR 				(EngineX:10)	//[Object: 18248]				|| 4.1 G
 
 //DeltaEngineRotation Speed
 #define DELTA_ENGINE_SPEED_NORMAL 		(0.050)
@@ -198,7 +198,7 @@ stock GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Floa
 	}
 }
 
-stock EngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:speed){
+stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed){
 	new rad = maxradius-minradius, F5[e_nox_float];
 	if(rad <= 0) rad = 1;
 	
@@ -338,7 +338,7 @@ stock EngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:spee
 	}
 }
 
-stock EngineExcavatorUpdate(objectid,areaid,engineid,Float:speed){
+stock EngineExcavatorUpdate(objectid,areaid,EngineX:engineid,Float:speed){
 	new F5[e_nox_float];
 	switch(engineid){
 		case ENGINE_EXCAVATOR: {
@@ -359,7 +359,7 @@ stock EngineExcavatorUpdate(objectid,areaid,engineid,Float:speed){
 	}
 }
 
-stock DeltaEngineRotation(objectid,engineid,Float:speed = 0.050){
+stock DeltaEngineRotation(objectid,EngineX:engineid,Float:speed = 0.050){
 	new F5[e_nox_float];
 	
 	GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
@@ -410,7 +410,7 @@ stock DeltaEngineRotation(objectid,engineid,Float:speed = 0.050){
 	}
 }
 
-stock DeltaEngineX(objectid,areaid,engineid,minradius,maxradius,Float:minz,Float:speed){
+stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed){
 	new rad = maxradius-minradius, F5[e_nox_float];
 	if(rad <= 0) rad = 1;
 	

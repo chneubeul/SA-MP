@@ -94,6 +94,8 @@
 	#error Unknown sscanf version
 #endif
 
+#define ADM::						ADM:
+
 #define MAX_FILE_SIZE				(2147483647)	//~2 GB
 
 #define KEY_TYPE_UNKNOWN			(0)

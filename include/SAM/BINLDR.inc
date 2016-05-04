@@ -49,18 +49,18 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 #endif
 #define _Bin_Loader
 
-#define Bin_Loader_Version 				(20003) //a.b[c] 10000*a+100*b+c
+#define Bin_Loader_Version 					(20003) //a.b[c] 10000*a+100*b+c
 
-#define MAX_RAW_DATA					(42)
-#define MAX_BIN_FILE_SIZE				(2147483647)	//~2 GB
+#define MAX_RAW_DATA						(42)
+#define MAX_BIN_FILE_SIZE					(2147483647)	//~2 GB
 
-#define ERROR_CODE_BINLDR_UNEXEC		(0)		//function unexecutable
-#define ERROR_CODE_BINLDR_OK			(1)		//success
-#define ERROR_CODE_BINLDR_INPUT			(-1)	//input file not exist
-#define ERROR_CODE_BINLDR_OUTPUT		(-2)	//output file exist
-#define ERROR_CODE_BINLDR_SIZE			(-4)	//invalid file size
-#define ERROR_CODE_BINLDR_OPEN_INPUT	(-6)	//error open input file
-#define ERROR_CODE_BINLDR_OPEN_OUTPUT	(-7)	//error open output file
+#define ERROR_CODE_BINLDR_UNEXEC			(0)		//function unexecutable
+#define ERROR_CODE_BINLDR_OK				(1)		//success
+#define ERROR_CODE_BINLDR_INPUT				(-1)	//input file not exist
+#define ERROR_CODE_BINLDR_OUTPUT			(-2)	//output file exist
+#define ERROR_CODE_BINLDR_SIZE				(-4)	//invalid file size
+#define ERROR_CODE_BINLDR_OPEN_INPUT		(-6)	//error open input file
+#define ERROR_CODE_BINLDR_OPEN_OUTPUT		(-7)	//error open output file
 
 //BitFunctions
 #define Bin_ExtractValue(%0,%1,%2,%3,%4)	((%1) = (((%0) & 0xFF000000) >>> 24),(%2) = (((%0) & 0x00FF0000) >>> 16),(%3) = (((%0) & 0x0000FF00) >>> 8),(%4) = ((%0) & 0x000000FF))
