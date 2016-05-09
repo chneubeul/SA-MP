@@ -17,6 +17,7 @@
  * MSToTimeMini(millisecond); //Use: %02d:%02d                                                                                    *
  * foX(variable,beginning,end);                                                                                                   *
  * foreach(variable);                                                                                                             *
+ * randomex(min,max);                                                                                                             *
  * KEY_PRESSED(key);                                                                                                              *
  * KEY_RELEASED(key);                                                                                                             *
  * KEY_HOLDING(key);                                                                                                              *
@@ -46,6 +47,8 @@
 #if !defined exec
 	#define exec%0(%1)%2(%3)		forward %0(%1); public %0(%1){ return %2(%3); }
 #endif
+
+#define randomex(%0,%1) 			(random(%1-(%0)+1)+%0)
 
 #if !defined SecToTimeDay
 	//%d:%02d:%02d:%02d
