@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.1                                                                                                              *
+ * File Version: 1.2                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -51,7 +51,7 @@
 #define PubFunction:{%0,%1}			exec %0 %1
 #define ServerPubVar:{%1,%2}		forward v_%1(); public v_%1(){ return (%2); }
 #define GetServerPubVar(%1)			CallRemoteFunction("v_"#%1"","")
-#define PlayerPubVar:{%1,%2}		forward v_%1(playerid); public v_%1(playerid){ return (%2)[playerid]; }
+#define PlayerPubVar:{%1,%2}		forward v_%1(playerid); public v_%1(playerid){ return (%2); }
 #define GetPlayerPubVar(%0,%1)		CallRemoteFunction("v_"#%1"","d",%0)
 
 #define randomex(%0,%1) 			(random(%1-(%0)+1)+%0)
@@ -148,7 +148,7 @@ stock SetPlayerWorldBoundsEx(playerid,Float:minx,Float:miny,Float:maxx,Float:max
 }
 
 stock GetPlayerNick(playerid){
-	new pnick[24];
+	new pnick[MAX_PLAYER_NAME];
 	GetPlayerName(playerid,pnick,sizeof (pnick));
 	return pnick;
 }
