@@ -48,6 +48,12 @@
 	#define exec%0(%1)%2(%3)		forward %0(%1); public %0(%1){ return %2(%3); }
 #endif
 
+#define PubFunction:{%0,%1}			exec %0 %1
+#define ServerPubVar:{%1,%2}		forward v_%1(); public v_%1(){ return (%2); }
+#define GetServerPubVar(%1)			CallRemoteFunction("v_"#%1"","")
+#define PlayerPubVar:{%1,%2}		forward v_%1(playerid); public v_%1(playerid){ return (%2)[playerid]; }
+#define GetPlayerPubVar(%0,%1)		CallRemoteFunction("v_"#%1"","d",%0)
+
 #define randomex(%0,%1) 			(random(%1-(%0)+1)+%0)
 
 #if !defined SecToTimeDay
