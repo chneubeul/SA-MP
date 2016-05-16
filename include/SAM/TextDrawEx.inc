@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * TextDraw Update v1.1 by Abyss Morgan                                                             *
+ * TextDraw Update v1.2 by Abyss Morgan                                                             *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
@@ -18,13 +18,8 @@
 new TextDrawCount = 0,
 	PlayerTextDrawCount[MAX_PLAYERS];
 
-stock CountTextDraw(){
-	return TextDrawCount;
-}
-	
-stock CountPlayerTextDraw(playerid){
-	return PlayerTextDrawCount[playerid];
-}
+#define CountTextDraw()				(TextDrawCount)
+#define CountPlayerTextDraw(%0)		(PlayerTextDrawCount[(%0)])
 
 //TextDrawCreate
 stock Text:AC_TextDrawCreate(Float:x,Float:y,text[]){

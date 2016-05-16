@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.9C                                                                                                             *
+ * File Version: 2.0                                                                                                              *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
  * ADM:InvertFile(const input[], const output[]);                                                                                 *
@@ -29,16 +29,17 @@
  * ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output));                       *
  *                                                                                                                                *
  * Dump Functions:                                                                                                                *
- * FindFreeDumpFileID();                                                                                                          *
+ * DMP:FindFreeDumpFileID();                                                                                                      *
  * GetDumpFileType(const name[]);                                                                                                 *
- * bool:IsDumpFileOpen(index);                                                                                                    *
+ * bool:IsDumpFileOpen(DMP:index);                                                                                                *
  * bool:IsValidDumpFile(const name[]);                                                                                            *
- * DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32);                                                                   *
- * bool:DumpFileDestroy(&index);                                                                                                  *
- * DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32);                                                                     *
- * bool:DumpFileClose(&index);                                                                                                    *
- * ADM:DumpFileWrite(index, string[]);                                                                                            *
+ * DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32);                                                               *
+ * bool:DumpFileDestroy(&DMP:index);                                                                                              *
+ * DMP:DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32);                                                                 *
+ * bool:DumpFileClose(&DMP:index);                                                                                                *
+ * ADM:DumpFileWrite(DMP:index, string[]);                                                                                        *
  * bool:IsDumpFileEmpty(const name[]);                                                                                            *
+ * DMPToInt(DMP:dmpvar);                                                                                                          *
  *                                                                                                                                *
  * Other Functions:                                                                                                               *
  * ADMToInt(ADM:admvar);                                                                                                          *
@@ -75,11 +76,11 @@
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v1.9C
+	#error You need ADM.inc v2.0
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v1.9C
-#elseif (ADM_Encryption_Version < 10903)
-	#error Update you ADM.inc to v1.9C
+	#error Update you ADM.inc to v2.0
+#elseif (ADM_Encryption_Version < 20001)
+	#error Update you ADM.inc to v2.0
 #endif
 */
 
@@ -88,13 +89,15 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(10903) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(20001) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
 	#error Unknown sscanf version
 #endif
 
 #define ADM::						ADM:
+#define DMP::						DMP:
+#define DUMP						DMP
 
 #define MAX_FILE_SIZE				(2147483647)	//~2 GB
 
@@ -137,11 +140,11 @@
 #define ERROR_CODE_ADM_DMP_NAME		(ADM:-11)	//invalid dump file name
 #define ERROR_CODE_ADM_DMP_IDX		(ADM:-12)	//invalid dump file index
 
-#define MAX_DUMP_FILE				(100)
+#define MAX_DUMP_FILE				(DMP:100)
 #define MAX_DUMP_FILE_NAME			(80)
 #define MAX_DUMP_HEADER_SIZE		(14)
 
-#define INVALID_DUMP_FILE			(-1)
+#define INVALID_DUMP_FILE			(DMP:-1)
 
 #define DUMP_HEADER_x32				"SAMP_DUMPx32  "
 #define DUMP_HEADER_x64				"SAMP_DUMPx64  "
@@ -185,6 +188,9 @@ new bool:DumpFileStatus[MAX_DUMP_FILE] = false,
 
 //Remove ADM: tag
 #define ADMToInt(%0)				(_:%0)
+
+//Remove DMP: tag
+#define DMPToInt(%0)				(_:%0)
 
 stock bool:IsValidADMKey(key[], type){
 	switch(type){
@@ -1049,20 +1055,20 @@ stock ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output)){
  * Dump Functions   *
  ********************/
  
-stock FindFreeDumpFileID(){
-	for(new i = 0; i < MAX_DUMP_FILE; i++){
+stock DMP:FindFreeDumpFileID(){
+	for(new DMP:i = DMP:0; i < MAX_DUMP_FILE; i = DMP:(DMPToInt(i)+1)){
 		if(DumpFileStatus[i] == false) return i;
 	}
 	return INVALID_DUMP_FILE;
 }
 
-stock bool:IsDumpFileOpen(index){
-	if(index < 0 || index >= MAX_DUMP_FILE) return false;
+stock bool:IsDumpFileOpen(DMP:index){
+	if(index < DMP:0 || index >= MAX_DUMP_FILE) return false;
 	if(!fexist(DumpFileName[index])) return false;
 	return DumpFileStatus[index];
 }
 
-stock DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
+stock DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
 	if(fexist(name)) return INVALID_DUMP_FILE;
 	new File:dmpfile = fopen(name,io_write);
 	if(dmpfile){
@@ -1077,7 +1083,7 @@ stock DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
 			fputchar(dmpfile,buffer[i],false);
 		}
 		fclose(dmpfile);
-		new idx = FindFreeDumpFileID();
+		new DMP:idx = FindFreeDumpFileID();
 		if(idx == INVALID_DUMP_FILE) return INVALID_DUMP_FILE;
 		DumpFileStatus[idx] = true;
 		DumpFileType[idx] = type;
@@ -1089,7 +1095,7 @@ stock DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
 	}
 }
 
-stock bool:DumpFileDestroy(&index){
+stock bool:DumpFileDestroy(&DMP:index){
 	if(index < 0 || index >= MAX_DUMP_FILE) return false;
 	new tid = fremove(DumpFileName[index]);
 	DumpFileName[index] = "";
@@ -1152,10 +1158,10 @@ stock GetDumpFileType(const name[]){
 	}
 }
 
-stock DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32){
+stock DMP:DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32){
 	if(!fexist(name)) return INVALID_DUMP_FILE;
 	if(!IsValidDumpFile(name))return INVALID_DUMP_FILE;
-	new idx = FindFreeDumpFileID();
+	new DMP:idx = FindFreeDumpFileID();
 	if(idx == INVALID_DUMP_FILE) return INVALID_DUMP_FILE;
 	DumpFileStatus[idx] = true;
 	DumpFileType[idx] = type;
@@ -1164,8 +1170,8 @@ stock DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32){
 	return idx;
 }
 
-stock bool:DumpFileClose(&index){
-	if(index < 0 || index >= MAX_DUMP_FILE) return false;
+stock bool:DumpFileClose(&DMP:index){
+	if(index < DMP:0 || index >= MAX_DUMP_FILE) return false;
 	DumpFileName[index] = "";
 	DumpFileKey[index] = "";
 	DumpFileStatus[index] = false;
@@ -1174,8 +1180,8 @@ stock bool:DumpFileClose(&index){
 	return true;
 }
 
-stock ADM:DumpFileWrite(index, string[]){
-	if(index < 0 || index >= MAX_DUMP_FILE) return ERROR_CODE_ADM_DMP_IDX;
+stock ADM:DumpFileWrite(DMP:index, string[]){
+	if(index < DMP:0 || index >= MAX_DUMP_FILE) return ERROR_CODE_ADM_DMP_IDX;
 	if(isnull(DumpFileName[index])) return ERROR_CODE_ADM_DMP_NAME;
 	if(!IsValidADMKey(DumpFileKey[index],DumpFileType[index])) return ERROR_CODE_ADM_KEY;
 	new File:dmpfile = fopen(DumpFileName[index],io_append);

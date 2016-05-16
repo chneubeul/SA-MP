@@ -139,11 +139,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.1D
+	#error You need StreamerFunction.inc v2.2
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.1D
-#elseif (Streamer_Spec_Version < 20104)
-	#error Update you StreamerFunction.inc to v2.1D
+	#error Update you StreamerFunction.inc to v2.2
+#elseif (Streamer_Spec_Version < 20201)
+	#error Update you StreamerFunction.inc to v2.2
 #endif
 */
 

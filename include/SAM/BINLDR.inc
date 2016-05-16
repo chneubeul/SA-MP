@@ -6,13 +6,14 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 2.0C                                                                               *
+ * File Version: 2.1                                                                                *
  *                                                                                                  *
  * Object Functions:                                                                                *
- * LoadBinaryObjectIMG(const name[],&count=0);                                                      *
- * SaveBinaryObjectIMG(const input[],const output[]);                                               *
- * DecompressBinaryObjectIMG(const input[],const output[]);                                         *
+ * IMG:LoadBinaryObjectIMG(const name[],&count=0);                                                  *
+ * IMG:SaveBinaryObjectIMG(const input[],const output[]);                                           *
+ * IMG:DecompressBinaryObjectIMG(const input[],const output[]);                                     *
  * Float:CalculateObjectDistance(objectid);                                                         *
+ * IMGToInt(IMG:imgvar);                                                                            *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -36,11 +37,11 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 /*
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error You need BINLDR.inc v2.0
+	#error You need BINLDR.inc v2.1
 #elseif !defined Bin_Loader_Version
-	#error Update you BINLDR.inc to v2.0
-#elseif (Bin_Loader_Version < 20003)
-	#error Update you BINLDR.inc to v2.0
+	#error Update you BINLDR.inc to v2.1
+#elseif (Bin_Loader_Version < 20101)
+	#error Update you BINLDR.inc to v2.1
 #endif
 */
 
@@ -49,18 +50,25 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 #endif
 #define _Bin_Loader
 
-#define Bin_Loader_Version 					(20003) //a.b[c] 10000*a+100*b+c
+#define Bin_Loader_Version 					(20101) //a.b[c] 10000*a+100*b+c
+
+#if !defined sscanf
+	#error Unknown sscanf version
+#endif
+
 
 #define MAX_RAW_DATA						(42)
 #define MAX_BIN_FILE_SIZE					(2147483647)	//~2 GB
 
-#define ERROR_CODE_BINLDR_UNEXEC			(0)		//function unexecutable
-#define ERROR_CODE_BINLDR_OK				(1)		//success
-#define ERROR_CODE_BINLDR_INPUT				(-1)	//input file not exist
-#define ERROR_CODE_BINLDR_OUTPUT			(-2)	//output file exist
-#define ERROR_CODE_BINLDR_SIZE				(-4)	//invalid file size
-#define ERROR_CODE_BINLDR_OPEN_INPUT		(-6)	//error open input file
-#define ERROR_CODE_BINLDR_OPEN_OUTPUT		(-7)	//error open output file
+#define IMG::								IMG:
+
+#define ERROR_CODE_BINLDR_UNEXEC			(IMG:0)		//function unexecutable
+#define ERROR_CODE_BINLDR_OK				(IMG:1)		//success
+#define ERROR_CODE_BINLDR_INPUT				(IMG:-1)	//input file not exist
+#define ERROR_CODE_BINLDR_OUTPUT			(IMG:-2)	//output file exist
+#define ERROR_CODE_BINLDR_SIZE				(IMG:-4)	//invalid file size
+#define ERROR_CODE_BINLDR_OPEN_INPUT		(IMG:-6)	//error open input file
+#define ERROR_CODE_BINLDR_OPEN_OUTPUT		(IMG:-7)	//error open output file
 
 //BitFunctions
 #define Bin_ExtractValue(%0,%1,%2,%3,%4)	((%1) = (((%0) & 0xFF000000) >>> 24),(%2) = (((%0) & 0x00FF0000) >>> 16),(%3) = (((%0) & 0x0000FF00) >>> 8),(%4) = ((%0) & 0x000000FF))
@@ -71,6 +79,9 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 
 #define Bin_MergeValueEx(%1,%2,%3,%4)		(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4))
 #define Bin_MergeFloatEx(%1,%2,%3,%4)		(Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
+
+//Remove IMG: tag
+#define IMGToInt(%0)				(_:%0)
 
 #if !defined _DoT_Loader
 	stock Float:CalculateObjectDistance(objectid){
@@ -145,7 +156,7 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 	}
 #endif
 
-stock LoadBinaryObjectIMG(const name[],&count=0){
+stock IMG:LoadBinaryObjectIMG(const name[],&count=0){
 	new NTTime = GetTickCount();
 	if(!fexist(name)) return ERROR_CODE_BINLDR_INPUT;
 	new RAW[MAX_RAW_DATA], File:inpf = fopen(name,io_read);
@@ -186,7 +197,7 @@ stock LoadBinaryObjectIMG(const name[],&count=0){
 	return ERROR_CODE_BINLDR_OK;
 }
 
-stock SaveBinaryObjectIMG(const input[], const output[]){
+stock IMG:SaveBinaryObjectIMG(const input[], const output[]){
 	new NTTime = GetTickCount();
 	if(!fexist(input)) return ERROR_CODE_BINLDR_INPUT;
 	if(fexist(output)) return ERROR_CODE_BINLDR_OUTPUT;
@@ -247,7 +258,7 @@ stock SaveBinaryObjectIMG(const input[], const output[]){
 	return ERROR_CODE_BINLDR_OK;
 }
 
-stock DecompressBinaryObjectIMG(const input[], const output[]){
+stock IMG:DecompressBinaryObjectIMG(const input[], const output[]){
 	new NTTime = GetTickCount();
 	if(!fexist(input)) return ERROR_CODE_BINLDR_INPUT;
 	if(fexist(output)) return ERROR_CODE_BINLDR_OUTPUT;

@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * FullServer Objects Loader v3.1                                                                   *
+ * FullServer Objects Loader v3.2                                                                   *
  * Authored by eider                                                                                *
  * Update by Abyss Morgan                                                                           *
  *                                                                                                  *
@@ -74,11 +74,11 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error You need BINLDR.inc v2.0
+	#error You need BINLDR.inc v2.1
 #elseif !defined Bin_Loader_Version
-	#error Update you BINLDR.inc to v2.0
-#elseif (Bin_Loader_Version < 20001)
-	#error Update you BINLDR.inc to v2.0
+	#error Update you BINLDR.inc to v2.1
+#elseif (Bin_Loader_Version < 20101)
+	#error Update you BINLDR.inc to v2.1
 #endif
 
 new pliki[][32] = {
@@ -228,12 +228,18 @@ public OnFilterScriptInit(){
 	}
 	for(new i = 0, j = sizeof(DoTFile); i < j; i++){
 		if(fexist(DoTFile[i])){
-			LoadDoTMap(DoTFile[i],totalcnt);
+			new ADM:edi = LoadDoTMap(DoTFile[i],totalcnt);
+			if(edi != ERROR_CODE_ADM_OK){
+				printf("DoT '%s' loading failed, code: %d",DoTFile[i],ADMToInt(edi));
+			}
 		}
 	}
 	for(new i = 0, j = sizeof(BinIMGFile); i < j; i++){
 		if(fexist(BinIMGFile[i])){
-			LoadBinaryObjectIMG(BinIMGFile[i],totalcnt);
+			new IMG:edi = LoadBinaryObjectIMG(BinIMGFile[i],totalcnt);
+			if(edi != ERROR_CODE_BINLDR_OK){
+				printf("IMG '%s' loading failed, code: %d",BinIMGFile[i],IMGToInt(edi));
+			}
 		}
 	}
 	if(ecnt > 0){
