@@ -203,18 +203,21 @@ public OnGameModeExit(){
 #define DELTA_ENGINE_SPEED_UNDERDUDE	(0.050)
 
 stock bool:IsPointInWaterEx(Float:x,Float:y,Float:z){
+	if(!EngineXLoaded) return false;
 	if(IsPointInDynamicArea(InvalidPolygon[0],x,y,z)) return false;
 	if(IsPointInDynamicArea(InvalidPolygon[1],x,y,z)) return false;
 	return true;
 }
 
 stock GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0){
+	if(!EngineXLoaded) return 0;
 	GetRandomClockPos(x,y,z,radius,tx,ty,tz,trz,rz);
 	new Float:tmpz;
 	MapAndreasFindZ(tx,ty,tmpz);
 	if(tz < tmpz+50.0){
 		tz += 50.0;
 	}
+	return 1;
 }
 
 stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed){
