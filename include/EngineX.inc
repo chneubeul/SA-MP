@@ -57,11 +57,12 @@ Do not ask XD
 	#error You need MapAndreasEx.inc
 #endif
 
-#define NOX_ENGINE_X_Version		(50024)
-#define NOX_VERSION					"5.0 Delta X"
+#define NOX_ENGINE_X_Version		(51024)
+#define NOX_VERSION					"5.1 Delta X"
 #define NT_VERSION					"1.0"
 
-new InvalidPolygon[2];
+new InvalidPolygon[2],
+	bool:EngineXLoaded = false;
 
 enum e_nox_float {
 	Float:X,
@@ -75,11 +76,34 @@ enum e_nox_float {
 	Float:tZ
 }
 
-public OnFilterScriptInit(){
+forward OnEngineXInit();
+forward OnEngineXExit();
+
+public OnEngineXInit(){
 	SafeMapAndreasInit();
+	if(!IsMapAndreasInit()){
+		printf("[ADM] Error: Invalid MapAndreas Memory");
+		printf("[ADM] Error: NGCM Mob Move Engine System %s not loaded",NOX_VERSION);
+		return 0;
+	}
 	InvalidPolygon[0] = CreateDynamicRectangle(398.0,689.0,808.0,1031.0,-1,-1,-1);		//Kanion blokada
 	InvalidPolygon[1] = CreateDynamicRectangle(-1407.0,1979.0,-445.0,2843.0,-1,-1,-1);	//Tama Blokada
 	printf("[ADM] Info: NGCM Mob Move Engine System %s loaded",NOX_VERSION);
+	EngineXLoaded = true;
+	return 1;
+}
+
+public OnEngineXExit(){
+	if(!EngineXLoaded) return 0;
+	if(IsValidDynamicArea(InvalidPolygon[0])) DestroyDynamicArea(InvalidPolygon[0]);
+	if(IsValidDynamicArea(InvalidPolygon[1])) DestroyDynamicArea(InvalidPolygon[1]);
+	printf("[ADM] Info: NGCM Mob Move Engine System %s unloaded",NOX_VERSION);
+	EngineXLoaded = false;
+	return 1;
+}
+
+public OnFilterScriptInit(){
+	OnEngineXInit();
 	#if defined NOX_OnFilterScriptInit
 		NOX_OnFilterScriptInit();
 	#endif
@@ -97,9 +121,7 @@ public OnFilterScriptInit(){
 #endif
 
 public OnFilterScriptExit(){
-	if(IsValidDynamicArea(InvalidPolygon[0])) DestroyDynamicArea(InvalidPolygon[0]);
-	if(IsValidDynamicArea(InvalidPolygon[1])) DestroyDynamicArea(InvalidPolygon[1]);
-	printf("[ADM] Info: NGCM Mob Move Engine System %s unloaded",NOX_VERSION);
+	OnEngineXExit();
 	#if defined NOX_OnFilterScriptExit
 		NOX_OnFilterScriptExit();
 	#endif
@@ -117,10 +139,7 @@ public OnFilterScriptExit(){
 #endif
 
 public OnGameModeInit(){
-	SafeMapAndreasInit();
-	InvalidPolygon[0] = CreateDynamicRectangle(398.0,689.0,808.0,1031.0,-1,-1,-1);		//Kanion blokada
-	InvalidPolygon[1] = CreateDynamicRectangle(-1407.0,1979.0,-445.0,2843.0,-1,-1,-1);	//Tama Blokada
-	printf("[ADM] Info: NGCM Mob Move Engine System %s loaded",NOX_VERSION);
+	OnEngineXInit();
 	#if defined NOX_OnGameModeInit
 		NOX_OnGameModeInit();
 	#endif
@@ -138,9 +157,7 @@ public OnGameModeInit(){
 #endif
 
 public OnGameModeExit(){
-	if(IsValidDynamicArea(InvalidPolygon[0])) DestroyDynamicArea(InvalidPolygon[0]);
-	if(IsValidDynamicArea(InvalidPolygon[1])) DestroyDynamicArea(InvalidPolygon[1]);
-	printf("[ADM] Info: NGCM Mob Move Engine System %s unloaded",NOX_VERSION);
+	OnEngineXExit();
 	#if defined NOX_OnGameModeExit
 		NOX_OnGameModeExit();
 	#endif
@@ -168,7 +185,8 @@ public OnGameModeExit(){
 #define ENGINE_UBOOT					(EngineX:7)		//[Object: 9958]				|| 5.0 Delta X
 #define ENGINE_SHIP						(EngineX:8)		//[Object: 8493]				|| 4.0 X (not recommended to use version 5.0)
 #define ENGINE_MINI						(EngineX:9)		//[Object: 2510, 2512]			|| 5.0 Delta X
-#define ENGINE_EXCAVATOR 				(EngineX:10)	//[Object: 18248]				|| 4.1 G
+#define ENGINE_EXCAVATOR 				(EngineX:10)	//[Object: 18248]				|| 4.1 G (Ground)
+#define ENGINE_UNDERDUDE				(EngineX:11)	//[Object: 1379]				|| 5.1 U (Underwater)
 
 //DeltaEngineRotation Speed
 #define DELTA_ENGINE_SPEED_NORMAL 		(0.050)
@@ -182,6 +200,7 @@ public OnGameModeExit(){
 #define DELTA_ENGINE_SPEED_SHIP			(0.050)
 #define DELTA_ENGINE_SPEED_MINI			(0.050)
 //#define DELTA_ENGINE_SPEED_EXCAVATOR	(0.001)
+#define DELTA_ENGINE_SPEED_UNDERDUDE	(0.050)
 
 stock bool:IsPointInWaterEx(Float:x,Float:y,Float:z){
 	if(IsPointInDynamicArea(InvalidPolygon[0],x,y,z)) return false;
@@ -199,6 +218,7 @@ stock GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Floa
 }
 
 stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed){
+	if(!EngineXLoaded) return 0;
 	new rad = maxradius-minradius, F5[e_nox_float];
 	if(rad <= 0) rad = 1;
 	
@@ -206,7 +226,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 	
 		case ENGINE_NORMAL: {
 			if(!IsDynamicObjectMoving(objectid)){
-				new randRX = random(90)-45, randRZ = random(360), randR = random(rad)+minradius;
+				new randRX = random(91)-45, randRZ = random(360), randR = random(rad)+minradius;
 				GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],randRX,randRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
@@ -221,7 +241,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 		
 		case ENGINE_FIGHTER: {
 			if(!IsDynamicObjectMoving(objectid)){
-				new randRX = random(90)-45, randRZ = random(360), randR = random(rad)+minradius, tmpRX, tmpRZ;
+				new randRX = random(91)-45, randRZ = random(360), randR = random(rad)+minradius, tmpRX, tmpRZ;
 				GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
 				CompRotation((-1)*(randRX+8),tmpRX);
 				CompRotation(randRZ-180,tmpRZ);
@@ -238,7 +258,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 		
 		case ENGINE_SUPPLY: {
 			if(!IsDynamicObjectMoving(objectid)){
-				new randRX = random(90)-45, randRZ = random(360), randR = random(rad)+minradius, tmpRX, tmpRZ;
+				new randRX = random(91)-45, randRZ = random(360), randR = random(rad)+minradius, tmpRX, tmpRZ;
 				GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
 				CompRotation((-1)*(randRX),tmpRX);
 				CompRotation(randRZ-90,tmpRZ);
@@ -255,7 +275,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 		
 		case ENGINE_ELITE: {
 			if(!IsDynamicObjectMoving(objectid)){
-				new randRX = random(90)-45, randRZ = random(360), randR = random(rad)+minradius, tmpRX, tmpRZ;
+				new randRX = random(91)-45, randRZ = random(360), randR = random(rad)+minradius, tmpRX, tmpRZ;
 				GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
 				CompRotation((-1)*(randRX+14),tmpRX);
 				CompRotation(randRZ-180,tmpRZ);
@@ -303,7 +323,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 	
 		case ENGINE_MINI: {
 			if(!IsDynamicObjectMoving(objectid)){
-				new randRX = random(90)-45, randRZ = random(360), randR = random(rad)+minradius, tmpRX, tmpRZ;
+				new randRX = random(91)-45, randRZ = random(360), randR = random(rad)+minradius, tmpRX, tmpRZ;
 				GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
 				CompRotation((-1)*(randRX),tmpRX);
 				CompRotation(randRZ-180,tmpRZ);
@@ -335,10 +355,27 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 			}
 		}
 		
+		case ENGINE_UNDERDUDE: {
+			if(!IsDynamicObjectMoving(objectid)){
+				new randRX = random(51)-25, randRZ = random(360), randR = random(rad)+minradius;
+				GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
+				GetPointInFront3D(F5[X],F5[Y],F5[Z],randRX,randRZ,randR,F5[tX],F5[tY],F5[tZ]);
+				if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
+					new Float:tmpz;
+					MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					if(tmpz == 0.0 && F5[tZ] < 0.0){
+						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX,0.0,randRZ);
+					}
+				}
+			}
+		}
+		
 	}
+	return 1;
 }
 
 stock EngineExcavatorUpdate(objectid,areaid,EngineX:engineid,Float:speed){
+	if(!EngineXLoaded) return 0;
 	new F5[e_nox_float];
 	switch(engineid){
 		case ENGINE_EXCAVATOR: {
@@ -357,14 +394,21 @@ stock EngineExcavatorUpdate(objectid,areaid,EngineX:engineid,Float:speed){
 			}
 		}
 	}
+	return 1;
 }
 
 stock DeltaEngineRotation(objectid,EngineX:engineid,Float:speed = 0.050){
+	if(!EngineXLoaded) return 0;
 	new F5[e_nox_float];
 	
 	GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
-	F5[rX] = random(90)-45;
-	F5[rY] = random(20)-10;
+	if(engineid == ENGINE_UNDERDUDE){
+		F5[rX] = random(51)-25;
+		F5[rY] = 0.0;
+	} else {
+		F5[rX] = random(91)-45;
+		F5[rY] = random(20)-10;
+	}
 	F5[rZ] = random(360);
 	
 	if(engineid == ENGINE_SHIP || engineid == ENGINE_UBOOT){
@@ -406,11 +450,15 @@ stock DeltaEngineRotation(objectid,EngineX:engineid,Float:speed = 0.050){
 			MoveDynamicObject(objectid,F5[X],F5[Y],F5[Z],speed,0.0,0.0,F5[rZ]-180.0);
 		}
 		*/
-
+		case ENGINE_UNDERDUDE: {
+			MoveDynamicObject(objectid,F5[X],F5[Y],F5[Z],speed,F5[rX],F5[rY],F5[rZ]);
+		}
 	}
+	return 1;
 }
 
 stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed){
+	if(!EngineXLoaded) return 0;
 	new rad = maxradius-minradius, F5[e_nox_float];
 	if(rad <= 0) rad = 1;
 	
@@ -540,8 +588,23 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			}
 		}
 		*/
-
+		
+		case ENGINE_UNDERDUDE: {
+			new randR = random(rad)+minradius;
+			GetDynamicObjectRot(objectid,F5[rX],F5[rY],F5[rZ]);
+			GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
+			GetPointInFront3D(F5[X],F5[Y],F5[Z],F5[rX],F5[rZ],randR,F5[tX],F5[tY],F5[tZ]);
+			if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
+				new Float:tmpz;
+				MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				if(tmpz == 0.0 && F5[tZ] < 0.0){
+					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
+				}
+			}
+		}
+		
 	}
+	return 1;
 }
 
 
