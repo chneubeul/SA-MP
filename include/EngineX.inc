@@ -299,7 +299,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 				if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
 					MapAndreasFindZ(F5[tX],F5[tY],tmpz);
-					if(tmpz == 0.0){
+					if(tmpz == 0.0 && IsPointInWaterEx(F5[tX],F5[tY],tmpz)){
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,randRZ);
 					}
 				}
@@ -314,7 +314,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 				if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
 					MapAndreasFindZ(F5[tX],F5[tY],tmpz);
-					if((tmpz == 0.0) && IsPointInWaterEx(F5[tX],F5[tY],tmpz)){
+					if(tmpz == 0.0 && IsPointInWaterEx(F5[tX],F5[tY],tmpz)){
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,randRZ);
 					}
 				}
@@ -363,7 +363,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 				if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
 					MapAndreasFindZ(F5[tX],F5[tY],tmpz);
-					if(tmpz == 0.0 && F5[tZ] < 0.0){
+					if(tmpz == 0.0 && F5[tZ] < 0.0 && IsPointInWaterEx(F5[tX],F5[tY],tmpz)){
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX,0.0,randRZ);
 					}
 				}
@@ -535,7 +535,7 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
 				MapAndreasFindZ(F5[tX],F5[tY],tmpz);
-				if(tmpz == 0.0){
+				if(tmpz == 0.0 && IsPointInWaterEx(F5[tX],F5[tY],tmpz)){
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,F5[rZ]);
 				}
 			}
@@ -549,7 +549,7 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
 				MapAndreasFindZ(F5[tX],F5[tY],tmpz);
-				if((tmpz == 0.0) && IsPointInWaterEx(F5[tX],F5[tY],tmpz)){
+				if(tmpz == 0.0 && IsPointInWaterEx(F5[tX],F5[tY],tmpz)){
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,F5[rZ]);
 				}
 			}
@@ -597,7 +597,7 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
 				MapAndreasFindZ(F5[tX],F5[tY],tmpz);
-				if(tmpz == 0.0 && F5[tZ] < 0.0){
+				if(tmpz == 0.0 && F5[tZ] < 0.0 && IsPointInWaterEx(F5[tX],F5[tY],tmpz)){
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
 				}
 			}
