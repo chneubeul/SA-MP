@@ -6,8 +6,8 @@
  *                                                                                                                                         *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
- * File Version: 2.2                                                                                                                       *
- * Streamer Version: 2.8.0                                                                                                                 *
+ * File Version: 2.3                                                                                                                       *
+ * Streamer Version: 2.8.1                                                                                                                 *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
  * GetDynamicObjectModel(objectid);                                                                                                        *
@@ -38,6 +38,8 @@
  * RebuildDynamicObject(objectid,...);                                                                                                     *
  * GetDynamicObjectArea(objectid);                                                                                                         *
  * SetDynamicObjectArea(objectid,areaid);                                                                                                  *
+ * GetDynamicObjectPriority(objectid);                                                                                                     *
+ * SetDynamicObjectPriority(objectid,priority);                                                                                            *
  *                                                                                                                                         *
  * SAMP Functions:                                                                                                                         *
  * GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                                  *
@@ -66,6 +68,8 @@
  * SetDynamicCPPos(checkpointid,Float:x,Float:y,Float:z);                                                                                  *
  * GetDynamicCPArea(checkpointid);                                                                                                         *
  * SetDynamicCPArea(checkpointid,areaid);                                                                                                  *
+ * GetDynamicCPPriority(checkpointid);                                                                                                     *
+ * SetDynamicCPPriority(checkpointid,priority);                                                                                            *
  *                                                                                                                                         *
  * Race Check Point Functions:                                                                                                             *
  * SetDynamicRaceCPSize(checkpointid,Float:size);                                                                                          *
@@ -73,6 +77,8 @@
  * SetDynamicRaceCPPos(checkpointid,Float:x,Float:y,Float:z);                                                                              *
  * GetDynamicRaceCPArea(checkpointid);                                                                                                     *
  * SetDynamicRaceCPArea(checkpointid,areaid);                                                                                              *
+ * GetDynamicRaceCPPriority(checkpointid);                                                                                                 *
+ * SetDynamicRaceCPPriority(checkpointid,priority);                                                                                        *
  *                                                                                                                                         *
  * Player Functions:                                                                                                                       *
  * DestroyPlayerDynamicObject(playerid);                                                                                                   *
@@ -85,6 +91,8 @@
  * SetDynamicMapIconPos(iconid,Float:x,Float:y,Float:z);                                                                                   *
  * GetDynamicMapIconArea(iconid);                                                                                                          *
  * SetDynamicMapIconArea(iconid,areaid);                                                                                                   *
+ * GetDynamicMapIconPriority(iconid);                                                                                                      *
+ * SetDynamicMapIconPriority(iconid,priority);                                                                                             *
  *                                                                                                                                         *
  * Pickup Functions:                                                                                                                       *
  * GetDynamicPickupPos(pickupid,&Float:x,&Float:y,&Float:z);                                                                               *
@@ -99,12 +107,16 @@
  * SetDynamicPickupType(pickupid,type);                                                                                                    *
  * GetDynamicPickupArea(pickupid);                                                                                                         *
  * SetDynamicPickupArea(pickupid,areaid);                                                                                                  *
+ * GetDynamicPickupPriority(pickupid);                                                                                                     *
+ * SetDynamicPickupPriority(pickupid,priority);                                                                                            *
  *                                                                                                                                         *
  * 3DText Functions:                                                                                                                       *
  * GetDynamic3DTextPos(Text3D:id,&Float:x,&Float:y,&Float:z);                                                                              *
  * SetDynamic3DTextPos(Text3D:id,Float:x,Float:y,Float:z);                                                                                 *
  * GetDynamic3DTextArea(Text3D:id);                                                                                                        *
  * SetDynamic3DTextArea(Text3D:id,areaid);                                                                                                 *
+ * GetDynamic3DTextPriority(Text3D:id);                                                                                                    *
+ * SetDynamic3DTextPriority(Text3D:id,priority);                                                                                           *
  *                                                                                                                                         *
  * Pool Size Functions:                                                                                                                    *
  * GetDynamicObjectPoolSize();                                                                                                             *
@@ -139,11 +151,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.2
+	#error You need StreamerFunction.inc v2.3
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.2
-#elseif (Streamer_Spec_Version < 20201)
-	#error Update you StreamerFunction.inc to v2.2
+	#error Update you StreamerFunction.inc to v2.3
+#elseif (Streamer_Spec_Version < 20301)
+	#error Update you StreamerFunction.inc to v2.3
 #endif
 */
 
@@ -156,8 +168,8 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 		(20201) //a.b[c] 10000*a+100*b+c
-#define Valid_Streamer_Version 		(0x280001)
+#define Streamer_Spec_Version 		(20301) //a.b[c] 10000*a+100*b+c
+#define Valid_Streamer_Version 		(0x281001)
 
 #if !defined INVALID_STREAMER_ID
 	#define INVALID_STREAMER_ID 0
@@ -198,6 +210,8 @@ stock bool:IsValidStreamer(version){
 #define SetDynamicObjectAttachSync(%1,%2)	Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_SYNC_ROTATION,%2)
 #define GetDynamicObjectArea(%1)			Streamer_GetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_AREA_ID)
 #define SetDynamicObjectArea(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_AREA_ID,%2)
+#define GetDynamicObjectPriority(%1)		Streamer_GetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_PRIORITY)
+#define SetDynamicObjectPriority(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_PRIORITY,%2)
 
 //DynamicPickup
 #define GetDynamicPickupModel(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_MODEL_ID)
@@ -210,26 +224,36 @@ stock bool:IsValidStreamer(version){
 #define SetDynamicPickupType(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_TYPE,%2)
 #define GetDynamicPickupArea(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_AREA_ID)
 #define SetDynamicPickupArea(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_AREA_ID,%2)
+#define GetDynamicPickupPriority(%1)		Streamer_GetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_PRIORITY)
+#define SetDynamicPickupPriority(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_PICKUP,%1,E_STREAMER_PRIORITY,%2)
 
 //DynamicCP
 #define SetDynamicCPSize(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_CP,%1,E_STREAMER_SIZE,%2)
 #define GetDynamicCPArea(%1)				Streamer_GetIntData(STREAMER_TYPE_CP,%1,E_STREAMER_AREA_ID)
 #define SetDynamicCPArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_CP,%1,E_STREAMER_AREA_ID,%2)
+#define GetDynamicCPPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_CP,%1,E_STREAMER_PRIORITY)
+#define SetDynamicCPPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_CP,%1,E_STREAMER_PRIORITY,%2)
 
 //DynamicRaceCP
 #define SetDynamicRaceCPSize(%1,%2)			Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,%1,E_STREAMER_SIZE,%2)
 #define GetDynamicRaceCPArea(%1)			Streamer_GetIntData(STREAMER_TYPE_RACE_CP,%1,E_STREAMER_AREA_ID)
 #define SetDynamicRaceCPArea(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_RACE_CP,%1,E_STREAMER_AREA_ID,%2)
+#define GetDynamicRaceCPPriority(%1)		Streamer_GetIntData(STREAMER_TYPE_RACE_CP,%1,E_STREAMER_PRIORITY)
+#define SetDynamicRaceCPPriority(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_RACE_CP,%1,E_STREAMER_PRIORITY,%2)
 
 //DynamicMapIcon
 #define SetDynamicMapIconColor(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_COLOR,%2)
 #define GetDynamicMapIconColor(%1)			Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_COLOR)
 #define GetDynamicMapIconArea(%1)			Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_AREA_ID)
 #define SetDynamicMapIconArea(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_AREA_ID,%2)
+#define GetDynamicMapIconPriority(%1)		Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_PRIORITY)
+#define SetDynamicMapIconPriority(%1,%2)	Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,%1,E_STREAMER_PRIORITY,%2)
 
 //3DText
 #define GetDynamic3DTextArea(%1)			Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,%1,E_STREAMER_AREA_ID)
 #define SetDynamic3DTextArea(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,%1,E_STREAMER_AREA_ID,%2)
+#define GetDynamic3DTextPriority(%1)		Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,%1,E_STREAMER_PRIORITY)
+#define SetDynamic3DTextPriority(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,%1,E_STREAMER_PRIORITY,%2)
 
 //PoolSize
 #define GetDynamicObjectPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_OBJECT)
