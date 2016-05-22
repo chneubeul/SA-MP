@@ -6,8 +6,8 @@
  *                                                                                                                                         *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
- * File Version: 2.3                                                                                                                       *
- * Streamer Version: 2.8.1                                                                                                                 *
+ * File Version: 2.2                                                                                                                       *
+ * Streamer Version: 2.8.0                                                                                                                 *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
  * GetDynamicObjectModel(objectid);                                                                                                        *
@@ -151,11 +151,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.3
+	#error You need StreamerFunction.inc v2.2
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.3
-#elseif (Streamer_Spec_Version < 20301)
-	#error Update you StreamerFunction.inc to v2.3
+	#error Update you StreamerFunction.inc to v2.2
+#elseif (Streamer_Spec_Version < 20201)
+	#error Update you StreamerFunction.inc to v2.2
 #endif
 */
 
@@ -168,8 +168,8 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 		(20301) //a.b[c] 10000*a+100*b+c
-#define Valid_Streamer_Version 		(0x281001)
+#define Streamer_Spec_Version 		(20201) //a.b[c] 10000*a+100*b+c
+#define Valid_Streamer_Version 		(0x280001)
 
 #if !defined INVALID_STREAMER_ID
 	#define INVALID_STREAMER_ID 0
