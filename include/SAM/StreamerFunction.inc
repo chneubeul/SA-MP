@@ -1056,8 +1056,8 @@ public OnPlayerLeaveDynamicArea(playerid,areaid){
 
 //Hook Init
 public OnFilterScriptInit(){
-	if(!IsValidStreamer(Valid_Streamer_Version)){
-		printf("[ADM] Warring: Your Streamer 0x%x It is not compatible with this version Streamer Functions, update your streamer to 0x%x",Streamer_IncludeFileVersion,Valid_Streamer_Version);
+	if(!IsValidStreamer(GetValidStreamerVersion())){
+		printf("[ADM] Warring: Your Streamer 0x%x It is not compatible with this version Streamer Functions, update your streamer to 0x%x",GetStreamerVersion(),GetValidStreamerVersion());
 	}
 	#if defined SSpec_OnFilterScriptInit
 		SSpec_OnFilterScriptInit();
@@ -1076,8 +1076,8 @@ public OnFilterScriptInit(){
 #endif
 
 public OnGameModeInit(){
-	if(!IsValidStreamer(Valid_Streamer_Version)){
-		printf("[ADM] Warring: Your Streamer 0x%x It is not compatible with this version Streamer Functions, update your streamer to 0x%x",Streamer_IncludeFileVersion,Valid_Streamer_Version);
+	if(!IsValidStreamer(GetValidStreamerVersion())){
+		printf("[ADM] Warring: Your Streamer 0x%x It is not compatible with this version Streamer Functions, update your streamer to 0x%x",GetStreamerVersion(),GetValidStreamerVersion());
 	}
 	#if defined SSpec_OnGameModeInit
 		SSpec_OnGameModeInit();
