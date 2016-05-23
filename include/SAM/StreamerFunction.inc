@@ -1095,5 +1095,4 @@ public OnGameModeInit(){
 	forward SSpec_OnGameModeInit();
 #endif
 
-
 //EOF
