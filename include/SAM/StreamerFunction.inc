@@ -6,7 +6,7 @@
  *                                                                                                                                         *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
- * File Version: 2.3                                                                                                                       *
+ * File Version: 2.3B                                                                                                                      *
  * Streamer Version: 2.8.1                                                                                                                 *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
@@ -222,17 +222,18 @@
  * bool:IsValidStreamer(version);                                                                                                          *
  * GetStreamerVersion();                                                                                                                   *
  * GetValidStreamerVersion();                                                                                                              *
+ * GetStreamerVersionName(name[], value = 0xFFFFFFFF, maxdest = sizeof name);                                                              *
  *                                                                                                                                         *
  *******************************************************************************************************************************************/
 
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.3
+	#error You need StreamerFunction.inc v2.3B
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.3
-#elseif (Streamer_Spec_Version < 20301)
-	#error Update you StreamerFunction.inc to v2.3
+	#error Update you StreamerFunction.inc to v2.3B
+#elseif (Streamer_Spec_Version < 20302)
+	#error Update you StreamerFunction.inc to v2.3B
 #endif
 */
 
@@ -245,7 +246,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 					(20301) //a.b[c] 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20302) //a.b[c] 10000*a+100*b+c
 #define Valid_Streamer_Version 					(0x281001)
 
 #if !defined INVALID_STREAMER_ID
@@ -281,6 +282,17 @@
 stock bool:IsValidStreamer(version){
 	if(GetStreamerVersion() < version) return false;
 	return true;
+}
+
+stock GetStreamerVersionName(name[], value = 0xFFFFFFFF, maxdest = sizeof name){
+	if(value == 0xFFFFFFFF) value = GetStreamerVersion();
+	new str[10], ver1, ver2, ver3, ver4;
+	format(str,sizeof(str),"%x",value);
+	ver1 = (str[0]-48);
+	ver2 = (str[1]-48);
+	ver3 = (str[2]-48);
+	ver4 = (((str[3]-48)*100) + ((str[4]-48)*10) + (str[5]-48));
+	format(name,maxdest,"%d.%d.%dr%d",ver1,ver2,ver3,ver4);
 }
 
 #define MOVE_OBJECT_STATE_STOP					(0)
@@ -1033,7 +1045,6 @@ public OnPlayerEnterDynamicArea(playerid,areaid){
 	forward SSpec_OnPlayerEnterDynamicArea(playerid,areaid);
 #endif
 
-
 public OnPlayerLeaveDynamicArea(playerid,areaid){
 	CallLocalFunction("OnPlayerEnterAntiArea","dd",playerid,areaid);
 	#if defined SSpec_OnPlayerLeaveDynamicArea
@@ -1052,13 +1063,18 @@ public OnPlayerLeaveDynamicArea(playerid,areaid){
 	forward SSpec_OnPlayerLeaveDynamicArea(playerid,areaid);
 #endif
 
-
+stock CheckStreamerVersion(){
+	if(!IsValidStreamer(GetValidStreamerVersion())){
+		new str1[32], str2[32];
+		GetStreamerVersionName(str1,GetStreamerVersion());
+		GetStreamerVersionName(str2,GetValidStreamerVersion());
+		printf("[ADM] Warring: Your Streamer %s It is not compatible with this version Streamer Functions, update your streamer to %s",str1,str2);
+	}
+}
 
 //Hook Init
 public OnFilterScriptInit(){
-	if(!IsValidStreamer(GetValidStreamerVersion())){
-		printf("[ADM] Warring: Your Streamer 0x%x It is not compatible with this version Streamer Functions, update your streamer to 0x%x",GetStreamerVersion(),GetValidStreamerVersion());
-	}
+	CheckStreamerVersion();
 	#if defined SSpec_OnFilterScriptInit
 		SSpec_OnFilterScriptInit();
 	#endif
@@ -1076,9 +1092,7 @@ public OnFilterScriptInit(){
 #endif
 
 public OnGameModeInit(){
-	if(!IsValidStreamer(GetValidStreamerVersion())){
-		printf("[ADM] Warring: Your Streamer 0x%x It is not compatible with this version Streamer Functions, update your streamer to 0x%x",GetStreamerVersion(),GetValidStreamerVersion());
-	}
+	CheckStreamerVersion();
 	#if defined SSpec_OnGameModeInit
 		SSpec_OnGameModeInit();
 	#endif
