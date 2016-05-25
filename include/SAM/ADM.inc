@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 2.0                                                                                                              *
+ * File Version: 2.1                                                                                                              *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
  * ADM:InvertFile(const input[], const output[]);                                                                                 *
@@ -76,11 +76,11 @@
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v2.0
+	#error You need ADM.inc v2.1
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v2.0
-#elseif (ADM_Encryption_Version < 20001)
-	#error Update you ADM.inc to v2.0
+	#error Update you ADM.inc to v2.1
+#elseif (ADM_Encryption_Version < 20101)
+	#error Update you ADM.inc to v2.1
 #endif
 */
 
@@ -89,7 +89,7 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(20001) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(20101) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
 	#error Unknown sscanf version
