@@ -67,6 +67,12 @@
  * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
  * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
  *                                                                                                                                *
+ * Deprecated Functions:                                                                                                          *
+ * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                          *
+ * GetPointInFront            -> GetPointInFront3D                                                                                *
+ * GetPointInFrontOfCamera    -> GetPointInFrontOfCamera3D                                                                        *
+ * GetDistanceBetweenPoints   -> GetDistanceBetweenPoints3D                                                                       *
+ *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
