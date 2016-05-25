@@ -6,19 +6,19 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 2.2                                                                                *
+ * File Version: 2.3                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
- * ShiftRGBAToHex(color,&red,&green,&blue,&alpha);                                                  *
- * ShiftHexToRGBA(&color,red,green,blue,alpha);                                                     *
- * ShiftRGBToHex(color,&red,&green,&blue);                                                          *
- * ShiftHexToRGB(&color,red,green,blue);                                                            *
- * ShiftRGBAToRGB(color);                                                                           *
- * ShiftRGBToRGBA(color,alpha);                                                                     *
- * ShiftRGBToARGB(color,alpha);                                                                     *
- * ShiftARGBToRGB(color);                                                                           *
- * ShiftRGBAToARGB(color);                                                                          *
- * ShiftARGBToRGBA(color);                                                                          *
+ * RGBAToHex(color,&red,&green,&blue,&alpha);                                                       *
+ * HexToRGBA(&color,red,green,blue,alpha);                                                          *
+ * RGBToHex(color,&red,&green,&blue);                                                               *
+ * HexToRGB(&color,red,green,blue);                                                                 *
+ * RGBAToRGB(color);                                                                                *
+ * RGBToRGBA(color,alpha);                                                                          *
+ * RGBToARGB(color,alpha);                                                                          *
+ * ARGBToRGB(color);                                                                                *
+ * RGBAToARGB(color);                                                                               *
+ * ARGBToRGBA(color);                                                                               *
  * GetRFromRGBA(color);    //RGBA:0xFAB0A0FF R:0xFA000000                                           *
  * GetGFromRGBA(color);    //RGBA:0xFAB0A0FF G:0x00B00000                                           *
  * GetBFromRGBA(color);    //RGBA:0xFAB0A0FF B:0x0000A000                                           *
@@ -66,5 +66,16 @@ stock GetColor(color){
     format(string,sizeof(string),"{%06x}",ShiftRGBAToRGB(color));
     return string;
 }
+
+#define RGBAToHex						ShiftRGBAToHex
+#define HexToRGBA						ShiftHexToRGBA
+#define RGBToHex						ShiftRGBToHex
+#define HexToRGB						ShiftHexToRGB
+#define RGBAToRGB						ShiftRGBAToRGB
+#define RGBToRGBA						ShiftRGBToRGBA
+#define RGBToARGB						ShiftRGBToARGB
+#define ARGBToRGB						ShiftARGBToRGB
+#define RGBAToARGB						ShiftRGBAToARGB
+#define ARGBToRGBA						ShiftARGBToRGBA
 
 //EOF
