@@ -9,25 +9,25 @@
  * File Version: 2.3                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
- * RGBAToHex(color,&red,&green,&blue,&alpha);                                                       *
- * HexToRGBA(&color,red,green,blue,alpha);                                                          *
- * RGBToHex(color,&red,&green,&blue);                                                               *
- * HexToRGB(&color,red,green,blue);                                                                 *
- * RGBAToRGB(color);                                                                                *
- * RGBToRGBA(color,alpha);                                                                          *
- * RGBToARGB(color,alpha);                                                                          *
- * ARGBToRGB(color);                                                                                *
- * RGBAToARGB(color);                                                                               *
- * ARGBToRGBA(color);                                                                               *
- * GetRFromRGBA(color);    //RGBA:0xFAB0A0FF R:0xFA000000                                           *
- * GetGFromRGBA(color);    //RGBA:0xFAB0A0FF G:0x00B00000                                           *
- * GetBFromRGBA(color);    //RGBA:0xFAB0A0FF B:0x0000A000                                           *
- * GetAFromRGBA(color);    //RGBA:0xFAB0A0FF A:0x000000FF                                           *
- * GetRHexFromRGBA(color); //RGBA:0xFAB0A0FF R:0xFA                                                 *
- * GetGHexFromRGBA(color); //RGBA:0xFAB0A0FF G:0xB0                                                 *
- * GetBHexFromRGBA(color); //RGBA:0xFAB0A0FF B:0xA0                                                 *
- * GetAHexFromRGBA(color); //RGBA:0xFAB0A0FF A:0xFF                                                 *
- * GetColor(color);        //Return {RGB}                                                           *
+ * RGBAToHex(color,&red,&green,&blue,&alpha); //ShiftRGBAToHex                                      *
+ * HexToRGBA(&color,red,green,blue,alpha);    //ShiftHexToRGBA                                      *
+ * RGBToHex(color,&red,&green,&blue);         //ShiftRGBToHex                                       *
+ * HexToRGB(&color,red,green,blue);           //ShiftHexToRGB                                       *
+ * RGBAToRGB(color);                          //ShiftRGBAToRGB                                      *
+ * RGBToRGBA(color,alpha);                    //ShiftRGBToRGBA                                      *
+ * RGBToARGB(color,alpha);                    //ShiftRGBToARGB                                      *
+ * ARGBToRGB(color);                          //ShiftARGBToRGB                                      *
+ * RGBAToARGB(color);                         //ShiftRGBAToARGB                                     *
+ * ARGBToRGBA(color);                         //ShiftARGBToRGBA                                     *
+ * GetRFromRGBA(color);                       //RGBA:0xFAB0A0FF R:0xFA000000                        *
+ * GetGFromRGBA(color);                       //RGBA:0xFAB0A0FF G:0x00B00000                        *
+ * GetBFromRGBA(color);                       //RGBA:0xFAB0A0FF B:0x0000A000                        *
+ * GetAFromRGBA(color);                       //RGBA:0xFAB0A0FF A:0x000000FF                        *
+ * GetRHexFromRGBA(color);                    //RGBA:0xFAB0A0FF R:0xFA                              *
+ * GetGHexFromRGBA(color);                    //RGBA:0xFAB0A0FF G:0xB0                              *
+ * GetBHexFromRGBA(color);                    //RGBA:0xFAB0A0FF B:0xA0                              *
+ * GetAHexFromRGBA(color);                    //RGBA:0xFAB0A0FF A:0xFF                              *
+ * GetColor(color);                           //Return {RGB}                                        *
  *                                                                                                  *
  ****************************************************************************************************/
 
