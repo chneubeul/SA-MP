@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Easy IMG Creator by Abyss Morgan                                                                 *
+ * Easy IMG Creator v1.0 made by Abyss Morgan                                                       *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
  *                                                                                                  *

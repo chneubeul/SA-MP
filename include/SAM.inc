@@ -1,6 +1,8 @@
-/*******************************
- * SAM Include by Abyss Morgan *
- *******************************/
+/************************************
+ *                                  *
+ * SAM Include made by Abyss Morgan *
+ *                                  *
+ ************************************/
 
 #if !defined MD5_Hash
 	#tryinclude	<MD5>

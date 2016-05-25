@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Script Secure v3.0 by Abyss Morgan                                                               *
+ * Script Secure v3.0 made by Abyss Morgan                                                          *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                               *
  *                                                                                                  *

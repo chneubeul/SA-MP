@@ -1,6 +1,8 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                                 Bomber NGC v1.0 by Abyss Morgan                                  *
+ * Bomber NGC v1.0 made by Abyss Morgan                                                             *
+ *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts/Bomber                  *
  *                                                                                                  *
  ****************************************************************************************************/
 

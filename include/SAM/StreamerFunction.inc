@@ -2,11 +2,11 @@
  *                                                                                                                                         *
  *                                                       Streamer Special Functions                                                        *
  *                                                                                                                                         *
- * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                              *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                                     *
  *                                                                                                                                         *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
- * File Version: 2.3B                                                                                                                      *
+ * File Version: 2.3C                                                                                                                      *
  * Streamer Version: 2.8.1                                                                                                                 *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
@@ -46,10 +46,10 @@
  * SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                                                        *
  * CountObjects();                                                                                                                         *
  * CountVehicles();                                                                                                                        *
- * CountPlayerObjects();                                                                                                                   *
+ * CountPlayerObjects(playerid,bool:streamer = false);                                                                                     *
  * DestroyObjects();                                                                                                                       *
  * DestroyVehicles();                                                                                                                      *
- * DestroyPlayerObjects();                                                                                                                 *
+ * DestroyPlayerObjects(playerid,bool:streamer = false);                                                                                   *
  * GangZoneDestroyAll();                                                                                                                   *
  *                                                                                                                                         *
  * Cube Functions:                                                                                                                         *
@@ -229,11 +229,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.3B
+	#error You need StreamerFunction.inc v2.3C
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.3B
-#elseif (Streamer_Spec_Version < 20302)
-	#error Update you StreamerFunction.inc to v2.3B
+	#error Update you StreamerFunction.inc to v2.3C
+#elseif (Streamer_Spec_Version < 20303)
+	#error Update you StreamerFunction.inc to v2.3C
 #endif
 */
 
@@ -246,7 +246,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 					(20302) //a.b[c] 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20303) //a.b[c] 10000*a+100*b+c
 #define Valid_Streamer_Version 					(0x281001)
 
 #if !defined INVALID_STREAMER_ID
@@ -490,17 +490,37 @@ stock GangZoneDestroyAll(){
 	}
 }
 
-stock CountPlayerObjects(){
+stock CountPlayerObjects(playerid,bool:streamer = false){
 	new count = 0;
 	for(new i = 0; i <= MAX_OBJECTS; i++){
-		if(IsValidPlayerObject(i)) count += 1;
+		if(streamer){
+			if(IsValidPlayerObject(playerid,i)){
+				count += 1;
+			}
+		} else {
+			if(Streamer_GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID){
+				if(IsValidPlayerObject(playerid,i)){
+					count += 1;
+				}
+			}
+		}
 	}
 	return count;
 }
 
-stock DestroyPlayerObjects(){
+stock DestroyPlayerObjects(playerid,bool:streamer = false){
 	for(new i = 0; i <= MAX_OBJECTS; i++){
-		if(IsValidPlayerObject(i)) DestroyPlayerObject(i);
+		if(streamer){
+			if(IsValidPlayerObject(playerid,i)){
+				DestroyPlayerObject(playerid,i);
+			}
+		} else {
+			if(Streamer_GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID){
+				if(IsValidPlayerObject(playerid,i)){
+					DestroyPlayerObject(playerid,i);
+				}
+			}
+		}
 	}
 }
 
@@ -750,9 +770,6 @@ stock SetDynamicCubePos(areaid,Float:minx,Float:miny,Float:minz,Float:maxx,Float
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
 }
 
-#define GetDynamicCuboidPos 					GetDynamicCubePos
-#define SetDynamicCuboidPos						SetDynamicCubePos
-
 stock GetDynamicRectanglePos(areaid,&Float:minx,&Float:miny,&Float:maxx,&Float:maxy){
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
@@ -874,6 +891,11 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	}
 	SetDynamicObjectModel(objectid,GetDynamicObjectModel(objectid));
 }
+
+
+#define GetDynamicCuboidPos 					GetDynamicCubePos
+#define SetDynamicCuboidPos						SetDynamicCubePos
+
 
 //Fix Destroy Objects
 #if defined FIX_OBJECTS

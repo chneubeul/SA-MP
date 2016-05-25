@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * GangZone Update v1.2 by Abyss Morgan                                                             *
+ * GangZone Update v1.2 made by Abyss Morgan                                                        *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *

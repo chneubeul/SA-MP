@@ -2,11 +2,11 @@
  *                                                                                                                                *
  *                                                       3D Tryg Functions                                                        *
  *                                                                                                                                *
- * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 2.4                                                                                                              *
+ * File Version: 2.4B                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
@@ -49,10 +49,10 @@
  * ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz);                         *
  * ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3);                       *
  * GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime);                                            *
- * GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                                    *
+ * Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                              *
  * GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz);                                                                   *
  * GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz);                                                                         *
- * GetPlayerCameraZAngle(playerid,&Float:rz);                                                                                     *
+ * Float:GetPlayerCameraZAngle(playerid,&Float:rz=Float:0);                                                                       *
  * QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz);                                                *
  * GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty);                               *
  * GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz);   *
@@ -65,17 +65,18 @@
  * bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);        *
  * bool:IsProbable(chance);                                                                                                       *
  * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
+ * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.4
+	#error You need 3DTryg.inc v2.4B
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.4
-#elseif (Tryg3D_Version < 20401)
-	#error Update you 3DTryg.inc to v2.4
+	#error Update you 3DTryg.inc to v2.4B
+#elseif (Tryg3D_Version < 20402)
+	#error Update you 3DTryg.inc to v2.4B
 #endif
 */
 
@@ -84,16 +85,11 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20401) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version									(20402) //a.b[c] 10000*a+100*b+c
 
 #if !defined FLOAT_PI
 	#define FLOAT_PI		 							(3.14159265358979323846)
 #endif
-
-#define GetXYInFrontOfPlayer							GetPointInFrontOfPlayer
-#define GetPointInFront									GetPointInFront3D
-#define GetPointInFrontOfCamera							GetPointInFrontOfCamera3D
-#define GetDistanceBetweenPoints						GetDistanceBetweenPoints3D
 
 #define ctg(%0,%1)										(1.0/floattan((%0),(%1)))
 #define secans(%0,%1)									(1.0/floatcos((%0),(%1)))
@@ -184,6 +180,13 @@ stock Float:GetPointInFrontOfPlayer(playerid,&Float:x,&Float:y,Float:radius){
 	return rz;
 }
 
+stock Float:GetPlayerCameraZAngle(playerid,&Float:rz=Float:0){
+	new Float:mx,Float:my,Float:mz;
+	GetPlayerCameraFrontVector(playerid,mx,my,mz);
+	CompRotationFloat((atan2(my,mx)-90.0),rz);
+	return rz;
+}
+
 stock Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius){
 	new Float:x,Float:y,Float:rz;
 	GetPlayerCameraPos(playerid,x,y,rz);
@@ -193,12 +196,10 @@ stock Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius)
 }
 
 stock GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=Float:0,&Float:rz=Float:0){
-	new Float:x,Float:y,Float:z,Float:trx,Float:trz;
+	new Float:x,Float:y,Float:z;
 	GetPlayerCameraPos(playerid,x,y,z);
-	GetPlayerCameraRotation(playerid,trx,trz);
-	GetPointInFront3D(x,y,z,trx,trz,radius,tx,ty,tz);
-	rx = trx;
-	rz = trz;
+	GetPlayerCameraRotation(playerid,rx,rz);
+	GetPointInFront3D(x,y,z,rx,rz,radius,tx,ty,tz);
 }
 
 //new code version support 3D made by Abyss Morgan
@@ -208,8 +209,6 @@ stock GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,
 		CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
 		CompRotationFloat((atan2(ty-y,tx-x)-90),rz);
 	} else {
-		rx = 0.0;
-		rz = 0.0;
 		print("[ADM] Warring: Get the rotation wrong, identical points.");
 	}
 }
@@ -223,13 +222,9 @@ stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty
 }
 
 stock GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:x,&Float:y,&Float:z){
-	new cx,cy,cz;
-	cx = floatround(floatsqroot(floatpower(minx-maxx,2)))+1;
-	cy = floatround(floatsqroot(floatpower(miny-maxy,2)))+1;
-	cz = floatround(floatsqroot(floatpower(minz-maxz,2)))+1;
-	x = random(cx)+minx;
-	y = random(cy)+miny;
-	z = random(cz)+minz;
+	x = random(floatround(floatsqroot(floatpower(minx-maxx,2)))+1)+minx;
+	y = random(floatround(floatsqroot(floatpower(miny-maxy,2)))+1)+miny;
+	z = random(floatround(floatsqroot(floatpower(minz-maxz,2)))+1)+minz;
 }
 
 stock ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz){
@@ -244,22 +239,24 @@ stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Floa
 	rotation1 = ShiftDegreeToRadianEx(rz);
 }
 
-stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime){
+stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime=0){
 	if(speed <= 0.0){
 		rtime = 0x7F800000;
 	} else {
 		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 		rtime = floatround((dist/speed)*1000.0);
 	}
+	return rtime;
 }
 
-stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
+stock Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
 	if(rtime/1000.0 <= 0.0){
 		speed = Float:0x7F800000;
 		print("[ADM] Warring: Get speed error, the wrong time.");
 	} else {
 		speed = (GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz)/(rtime/1000.0));
 	}
+	return speed;
 }
 
 //Prototype function v2.0
@@ -285,12 +282,6 @@ stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
 	new Float:mx,Float:my,Float:mz;
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
 	CompRotationFloat(-(acos(mz)-90.0),rx);
-	CompRotationFloat((atan2(my,mx)-90.0),rz);
-}
-
-stock GetPlayerCameraZAngle(playerid,&Float:rz){
-	new Float:mx,Float:my,Float:mz;
-	GetPlayerCameraFrontVector(playerid,mx,my,mz);
 	CompRotationFloat((atan2(my,mx)-90.0),rz);
 }
 
@@ -406,5 +397,32 @@ stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry){
 	GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,ry,tmp);
 	#pragma unused tmp
 }
+
+stock GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance){
+	new Float:tmpz;
+	MapAndreas_FindZ_For2DCoord(x,y,tmpz);
+	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,x,y,tmpz),
+		Float:cos = floatcos(rx+90.0,degrees),
+		Float:dist;
+	if(cos == 0.0){
+		dist = radius;
+	} else {
+		dist = floatabs(radius/cos);
+	}
+	if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
+		dist = max_distance;
+	}
+	GetPointInFront3D(x,y,z,rx,rz,dist,tx,ty,tz);
+	if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
+
+	} else {
+		MapAndreas_FindZ_For2DCoord(tx,ty,tz);
+	}
+}
+
+#define GetXYInFrontOfPlayer							GetPointInFrontOfPlayer
+#define GetPointInFront									GetPointInFront3D
+#define GetPointInFrontOfCamera							GetPointInFrontOfCamera3D
+#define GetDistanceBetweenPoints						GetDistanceBetweenPoints3D
 
 //EOF

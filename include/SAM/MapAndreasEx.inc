@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * MapAndreas Update v1.1 by Abyss Morgan                                                           *
+ * MapAndreas Update v1.1 made by Abyss Morgan                                                      *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *

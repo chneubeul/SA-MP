@@ -2,7 +2,7 @@
  *                                                                                                                                *
  *                                            NGCM Mob Move Engine System 5.1 Delta X                                             *
  *                                                                                                                                *
- * Copyright © 2014 - 2017 Abyss Morgan. All rights reserved.                                                                     *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                                                             *
  *                                                                                                                                *
