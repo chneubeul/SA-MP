@@ -108,7 +108,7 @@ CMD:checkplayer(playerid,params[]){
 	new name[MAX_PLAYER_NAME], cnt = 0, cnt2 = 0, buffer[256];
 	GetPlayerName(userid,name,sizeof(name));
 	cnt = CheckPlayerObject(userid);
-	cnt2 = Streamer_CountVisibleItems(userid,STREAMER_TYPE_OBJECT,1)+AST_CountPlayerObjects(playerid,false);
+	cnt2 = Streamer_CountVisibleItems(userid,STREAMER_TYPE_OBJECT,1)+AST_CountPlayerObjects(userid,false);
 	
 	format(buffer,sizeof(buffer),"(%d)%s PlayerObject: %d / %d illegal: %d",userid,name,cnt+cnt2,cnt2,cnt);
 	if(cnt == 0){
