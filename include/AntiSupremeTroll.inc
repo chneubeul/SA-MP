@@ -1,10 +1,15 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Anti Supreme Troll v1.1 made by Abyss Morgan                                                     *
+ * Anti Supreme Troll + Object Finder Detect                                                        *
+ *                                                                                                  *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                               *
- *                                                                                                  * 
- * Warring: Include this has not been tested!                                                       *
+ *                                                                                                  *
+ * File Version: 1.2                                                                                *
+ *                                                                                                  *
+ * Cheat Info:                                                                                      *
+ * http://www.mpgh.net/forum/showthread.php?t=883161                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * CheckPlayerObject(playerid);                                                                     *
@@ -14,13 +19,12 @@
  * /checkplayer <id>                                                                                *
  * /cleanillegalobj <id / all>                                                                      *
  *                                                                                                  *
+ * Block Command:                                                                                   *
+ * /trollinfo, /pos, /dpos, /r2, /fw, /ccars, /hp, /hpu, /tp, /sm, /showid, /showcarid, /s1, /s2,   *
+ * /s3, /s4, /s5, /s6, /s7, /s8, /s9, /sswitch, /lag, /col, /fwh, /bm, /reu, /tpall, /hpall, /thr,  *
+ * /small, /smallc, /safe, /objectid, /oy, /or, /ob, /ov, /og, /ow, /oreset, /otog                  *
+ *                                                                                                  *
  ****************************************************************************************************/
-
-/*
-
-http://www.mpgh.net/forum/showthread.php?t=883161
-
-*/
 
 #if defined _anti_supreme_troll
 	#endinput
@@ -172,6 +176,16 @@ CMD:thr(playerid,params[])			return OnSupremeTrollCMD(playerid,"thr",params);
 CMD:small(playerid,params[])		return OnSupremeTrollCMD(playerid,"small",params);
 CMD:smallc(playerid,params[])		return OnSupremeTrollCMD(playerid,"smallc",params);
 CMD:safe(playerid,params[])			return OnSupremeTrollCMD(playerid,"safe",params);
+
+CMD:objectid(playerid,params[])		return OnSupremeTrollCMD(playerid,"objectid",params);
+CMD:oy(playerid,params[])			return OnSupremeTrollCMD(playerid,"oy",params);
+CMD:or(playerid,params[])			return OnSupremeTrollCMD(playerid,"or",params);
+CMD:ob(playerid,params[])			return OnSupremeTrollCMD(playerid,"ob",params);
+CMD:ov(playerid,params[])			return OnSupremeTrollCMD(playerid,"ov",params);
+CMD:og(playerid,params[])			return OnSupremeTrollCMD(playerid,"og",params);
+CMD:ow(playerid,params[])			return OnSupremeTrollCMD(playerid,"ow",params);
+CMD:oreset(playerid,params[])		return OnSupremeTrollCMD(playerid,"oreset",params);
+CMD:otog(playerid,params[])			return OnSupremeTrollCMD(playerid,"otog",params);
 
 
 //DestroyPlayerObject
