@@ -41,18 +41,12 @@
 
 new PlayerObj[MAX_PLAYERS][32]; // Compressed Data 1000*1000 -> 1000*32
 
-stock AST_CountPlayerObjects(playerid,bool:streamer = false){
+stock AST_CountPlayerObjects(playerid){
 	new count = 0;
 	for(new i = 0; i <= MAX_OBJECTS; i++){
-		if(streamer){
+		if(Streamer_GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID && AST_GetValueBit(PlayerObj[playerid][GetPlayerObjAddress(i)],GetPlayerObjBit(i)) == 1){
 			if(IsValidPlayerObject(playerid,i)){
 				count += 1;
-			}
-		} else {
-			if(Streamer_GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID && AST_GetValueBit(PlayerObj[playerid][GetPlayerObjAddress(i)],GetPlayerObjBit(i)) == 1){
-				if(IsValidPlayerObject(playerid,i)){
-					count += 1;
-				}
 			}
 		}
 	}
@@ -111,7 +105,7 @@ CMD:checkplayer(playerid,params[]){
 	new name[MAX_PLAYER_NAME], cnt = 0, cnt2 = 0, buffer[256];
 	GetPlayerName(userid,name,sizeof(name));
 	cnt = CheckPlayerObject(userid);
-	cnt2 = Streamer_CountVisibleItems(userid,STREAMER_TYPE_OBJECT,1)+AST_CountPlayerObjects(userid,false);
+	cnt2 = Streamer_CountVisibleItems(userid,STREAMER_TYPE_OBJECT,1)+AST_CountPlayerObjects(userid);
 	
 	format(buffer,sizeof(buffer),"(%d)%s PlayerObject: %d / %d illegal: %d",userid,name,cnt+cnt2,cnt2,cnt);
 	if(cnt == 0){
