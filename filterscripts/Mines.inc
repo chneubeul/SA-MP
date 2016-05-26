@@ -16,6 +16,10 @@ DestroyDynamicMine(mineid);
 	#error Unknown streamer version
 #endif
 
+#if !defined _ATM_Core
+	#error You need ATM.inc
+#endif
+
 #if defined _dynamic_mine_system
 	#endinput
 #endif
@@ -117,24 +121,6 @@ stock FindFreeMineID(){
 		if(MineComponent[i][mine_objectid] == 0) return i;
 	}
 	return INVALID_MINE_ID;
-}
-
-stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,type,Float:radius,Float:expradius){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		if(IsPlayerConnected(i)){
-			new Float:minex, Float:miney, Float:minez;
-			if(IsPlayerInAnyVehicle(i)){
-				GetVehiclePos(GetPlayerVehicleID(i),minex,miney,minez);
-			} else {
-				GetPlayerPos(i,minex,miney,minez);
-			}
-			new Float:distance = VectorSize(minex-x,miney-y,minez-z);
-			if((GetPlayerInterior(i) == interiorid) && (GetPlayerVirtualWorld(i) == worldid) && (distance <= radius)){
-				CreateExplosionForPlayer(i,x,y,z,type,expradius);
-			}
-		}
-	}
-	return 1;
 }
 
 forward OnDynamicMineUpdate(tec);
