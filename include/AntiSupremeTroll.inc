@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Anti Supreme Troll v1.0 made by Abyss Morgan                                                     *
+ * Anti Supreme Troll v1.1 made by Abyss Morgan                                                     *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                               *
  *                                                                                                  * 
@@ -8,9 +8,11 @@
  *                                                                                                  *
  * Functions:                                                                                       *
  * CheckPlayerObject(playerid);                                                                     *
+ * DestroyIllegalPlayerObject(playerid);                                                            *
  *                                                                                                  *
  * Command:                                                                                         *
  * /checkplayer <id>                                                                                *
+ * /cleanillegalobj <id / all>                                                                      *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -54,6 +56,14 @@ stock AST_CountPlayerObjects(playerid,bool:streamer = false){
 
 new PlayerObj[MAX_PLAYERS][32]; // Compressed Data 1000*1000 -> 1000*32
 
+stock SendClientMessageToAdmin(color,message[]){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		if(IsPlayerConnected(i) && IsPlayerAdmin(i)){
+			SendClientMessage(i,color,message);
+		}
+	}
+}
+
 stock CheckPlayerObject(playerid){
 	new cnt = 0;
 	for(new i = 0; i < MAX_OBJECTS; i++){
@@ -66,12 +76,23 @@ stock CheckPlayerObject(playerid){
 	return cnt;
 }
 
+stock DestroyIllegalPlayerObject(playerid){
+	for(new i = 0; i < MAX_OBJECTS; i++){
+		if(Streamer_GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID && AST_GetValueBit(PlayerObj[playerid][GetPlayerObjAddress(i)],GetPlayerObjBit(i)) == 0){
+			if(IsValidPlayerObject(playerid,i)){
+				DestroyPlayerObject(playerid,i);
+			}
+		}
+	}
+}
+
 stock OnSupremeTrollCMD(playerid,cmdtext[],params[]){
 	new buffer[200], name[MAX_PLAYER_NAME];
 	GetPlayerName(playerid,name,sizeof(name));
 	format(buffer,sizeof(buffer),"[HACK DETECT] (%d)%s used the command '%s' params '%s'",playerid,name,cmdtext,params);
-	SendClientMessageToAll(0xFF0000FF,buffer);
+	SendClientMessageToAdmin(0xFF0000FF,buffer);
 	printf(buffer);
+	GameTextForPlayer(playerid, "~yw~~~~/~al that ~shit", 1000, 1); //This is sparta !! (Crash Player)
 	return 1;
 }
 
@@ -79,11 +100,9 @@ CMD:checkplayer(playerid,params[]){
 	if(!IsPlayerAdmin(playerid)) return 0;
 	new userid;
 	if(sscanf(params,"d",userid)){
-		SendClientMessage(playerid,0xFF0000FF,"››› Use /checkplayer <id>");
-		return 1;
+		return SendClientMessage(playerid,0xFF0000FF,"››› Use /checkplayer <id>");
 	} else if(!IsPlayerConnected(userid)){
-		SendClientMessage(playerid,0xFF0000FF,"››› Player not found");
-		return 1;
+		return SendClientMessage(playerid,0xFF0000FF,"››› Player not found");
 	}
 	new name[MAX_PLAYER_NAME], cnt = 0, cnt2 = 0, buffer[256];
 	GetPlayerName(userid,name,sizeof(name));
@@ -95,6 +114,26 @@ CMD:checkplayer(playerid,params[]){
 		SendClientMessage(playerid,0xFFFFFFFF,buffer);
 	} else {
 		SendClientMessage(playerid,0xFF0000FF,buffer);
+	}
+	return 1;
+}
+
+CMD:cleanillegalobj(playerid,params[]){
+	if(!IsPlayerAdmin(playerid)) return 0;
+	new tmp_userid[16], userid;
+	if(sscanf(params,"s[16]",tmp_userid)) return SendClientMessage(playerid,0xFF0000FF,"››› Use /cleanillegalobj <id / all>");
+	if(!strcmp(tmp_userid,"all",true)){
+		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+			if(IsPlayerConnected(i)){
+				DestroyIllegalPlayerObject(i);
+			}
+		}
+	} else {
+		userid = strval(tmp_userid);
+		if(!IsPlayerConnected(userid)){
+			return SendClientMessage(playerid,0xFF0000FF,"››› Player not found");
+		}
+		DestroyIllegalPlayerObject(userid);
 	}
 	return 1;
 }
@@ -112,6 +151,14 @@ CMD:sm(playerid,params[])			return OnSupremeTrollCMD(playerid,"sm",params);
 CMD:showid(playerid,params[])		return OnSupremeTrollCMD(playerid,"showid",params);
 CMD:showcarid(playerid,params[])	return OnSupremeTrollCMD(playerid,"showcarid",params);
 CMD:s1(playerid,params[])			return OnSupremeTrollCMD(playerid,"s1",params);
+CMD:s2(playerid,params[])			return OnSupremeTrollCMD(playerid,"s2",params);
+CMD:s3(playerid,params[])			return OnSupremeTrollCMD(playerid,"s3",params);
+CMD:s4(playerid,params[])			return OnSupremeTrollCMD(playerid,"s4",params);
+CMD:s5(playerid,params[])			return OnSupremeTrollCMD(playerid,"s5",params);
+CMD:s6(playerid,params[])			return OnSupremeTrollCMD(playerid,"s6",params);
+CMD:s7(playerid,params[])			return OnSupremeTrollCMD(playerid,"s7",params);
+CMD:s8(playerid,params[])			return OnSupremeTrollCMD(playerid,"s8",params);
+CMD:s9(playerid,params[])			return OnSupremeTrollCMD(playerid,"s9",params);
 CMD:sswitch(playerid,params[])		return OnSupremeTrollCMD(playerid,"sswitch",params);
 CMD:lag(playerid,params[])			return OnSupremeTrollCMD(playerid,"lag",params);
 CMD:col(playerid,params[])			return OnSupremeTrollCMD(playerid,"col",params);

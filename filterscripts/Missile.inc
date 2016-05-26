@@ -37,6 +37,7 @@ MissileDestroy(mobid);
 
 #define MISSILE_OBJECT_NORMAL			(0)
 #define MISSILE_OBJECT_BIG				(1)
+#define MISSILE_OBJECT_HYDRA			(2)
 
 #define MAX_MISSILE						(2048)
 #define MISSILE_EXTRA_ID_OFFSET			(300001)
@@ -79,11 +80,18 @@ public MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed
 	
 	new Float:rx, Float:rz;
 	GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz);
-	CompRotationFloat(rz-90.0,rz);
-	
 	switch(missile_object){
-		case MISSILE_OBJECT_NORMAL:		MissileComponent[mobid][missile_objectid] = CreateDynamicObject(3790,x,y,z,0.0,rx,rz,worldid,interiorid,playerid,streamdistance);
-		case MISSILE_OBJECT_BIG:		MissileComponent[mobid][missile_objectid] = CreateDynamicObject(3786,x,y,z,0.0,rx,rz,worldid,interiorid,playerid,streamdistance);
+		case MISSILE_OBJECT_NORMAL: {
+			CompRotationFloat(rz-90.0,rz);
+			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(3790,x,y,z,0.0,rx,rz,worldid,interiorid,playerid,streamdistance);
+		}
+		case MISSILE_OBJECT_BIG: {
+			CompRotationFloat(rz-90.0,rz);
+			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(3786,x,y,z,0.0,rx,rz,worldid,interiorid,playerid,streamdistance);
+		}
+		case MISSILE_OBJECT_HYDRA: {
+			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(345,x,y,z,0.0,rx,rz,worldid,interiorid,playerid,streamdistance);
+		}
 	}
 	
 	MissileComponent[mobid][missile_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
