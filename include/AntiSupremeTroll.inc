@@ -92,7 +92,8 @@ stock OnSupremeTrollCMD(playerid,cmdtext[],params[]){
 	format(buffer,sizeof(buffer),"[HACK DETECT] (%d)%s used the command '%s' params '%s'",playerid,name,cmdtext,params);
 	SendClientMessageToAdmin(0xFF0000FF,buffer);
 	printf(buffer);
-	GameTextForPlayer(playerid, "~yw~~~~/~al that ~shit", 1000, 1); //This is sparta !! (Crash Player)
+	GameTextForPlayer(playerid, "~yw~~~~/~al that ~shit", 1000, 1);
+	Kick(playerid); //This is sparta !!
 	return 1;
 }
 
