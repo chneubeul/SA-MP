@@ -6,7 +6,7 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                               *
  *                                                                                                  *
- * File Version: 1.2                                                                                *
+ * File Version: 1.2B                                                                               *
  *                                                                                                  *
  * Cheat Info:                                                                                      *
  * http://www.mpgh.net/forum/showthread.php?t=883161                                                *
@@ -39,7 +39,8 @@
 #define AST_GetValueBit(%0,%1)			((%0) >>> (%1) & 0x01)
 #define AST_SetValueBit(%0,%1,%2)		((%0) = (((%0) & ~(0x01 << (%1))) | ((0x01 << (%1))*(%2))))
 
-//StreamerFunction.inc
+new PlayerObj[MAX_PLAYERS][32]; // Compressed Data 1000*1000 -> 1000*32
+
 stock AST_CountPlayerObjects(playerid,bool:streamer = false){
 	new count = 0;
 	for(new i = 0; i <= MAX_OBJECTS; i++){
@@ -48,7 +49,7 @@ stock AST_CountPlayerObjects(playerid,bool:streamer = false){
 				count += 1;
 			}
 		} else {
-			if(Streamer_GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID){
+			if(Streamer_GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID && AST_GetValueBit(PlayerObj[playerid][GetPlayerObjAddress(i)],GetPlayerObjBit(i)) == 1){
 				if(IsValidPlayerObject(playerid,i)){
 					count += 1;
 				}
@@ -57,8 +58,6 @@ stock AST_CountPlayerObjects(playerid,bool:streamer = false){
 	}
 	return count;
 }
-
-new PlayerObj[MAX_PLAYERS][32]; // Compressed Data 1000*1000 -> 1000*32
 
 stock SendClientMessageToAdmin(color,message[]){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
