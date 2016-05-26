@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.2                                                                                                              *
+ * File Version: 1.2B                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -26,7 +26,6 @@
  * GetSAMIncludeVersion(value,name[],maxdest = sizeof(name));                                                                     *
  * SetPlayerWorldBoundsEx(playerid,Float:minx,Float:miny,Float:maxx,Float:maxy);                                                  *
  * GetPlayerNick(playerid);                                                                                                       *
- * CrashPlayer(playerid);                                                                                                         *
  * GetPlayerID(name[]);                                                                                                           *
  *                                                                                                                                *
  **********************************************************************************************************************************/
@@ -160,10 +159,6 @@ stock GetPlayerID(name[]){
 		}
 	}
 	return INVALID_PLAYER_ID;
-}
-
-stock CrashPlayer(playerid){
-	GameTextForPlayer(playerid, "~yw~~~~/~al that ~shit", 1000, 1);
 }
 
 //EOF
