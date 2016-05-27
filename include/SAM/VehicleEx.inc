@@ -16,6 +16,11 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if defined _Vehicle_Ex
+	#endinput
+#endif
+#define _Vehicle_Ex
+
 stock GetVehiclePanels(vehicleid, &front_bumper, &rear_bumper){
 	new panels, doors, lights, tires;
 	GetVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
@@ -77,3 +82,5 @@ stock SetVehicleTires(vehicleid, tire1, tire2, tire3, tire4){
 	tires = (tire1 | (tire2 << 1) | (tire3 << 2) | (tire4 << 3));
 	UpdateVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
 }
+
+//EOF

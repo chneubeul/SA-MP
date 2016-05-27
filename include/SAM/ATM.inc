@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.2B                                                                                                             *
+ * File Version: 1.2C                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -98,10 +98,30 @@
 #define KEY_RELEASED(%0)			(((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
 #define KEY_HOLDING(%0) 			((newkeys & (%0)) == (%0))
 
+#define CalculatePercent(%0,%1)		(((%0)/(%1))*100.0)
+
+enum e_Vectors {
+	Float:X, Float:Y, Float:Z, Float:A
+}
+
 enum e_float {
 	Float:X, Float:Y, Float:Z,
 	Float:rX, Float:rY, Float:rZ,
+	
 	Float:tX, Float:tY, Float:tZ,
+	
+	VW, INT, Float:SPEED
+}
+
+enum e_long_float {
+	Float:X, Float:Y, Float:Z,
+	Float:rX, Float:rY, Float:rZ,
+	
+	Float:tX, Float:tY, Float:tZ,
+	Float:trX, Float:trY, Float:trZ,
+	
+	Float:VecX, Float:VecVY, Float:VecVZ,
+	
 	VW, INT, Float:SPEED
 }
 
@@ -121,10 +141,6 @@ stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,ty
 		}
 	}
 	return 1;
-}
-
-stock Float:CalculatePercent(Float:value,Float:maxvalue){ 
-    return ((value/maxvalue)*100.0); 
 }
 
 stock GetSAMIncludeVersion(value,name[],maxdest = sizeof(name)){

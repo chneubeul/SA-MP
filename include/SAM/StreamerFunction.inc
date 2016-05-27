@@ -222,7 +222,7 @@
  * bool:IsValidStreamer(version);                                                                                                          *
  * GetStreamerVersion();                                                                                                                   *
  * GetValidStreamerVersion();                                                                                                              *
- * GetStreamerVersionName(name[], value = 0xFFFFFFFF, maxdest = sizeof name);                                                              *
+ * GetStreamerVersionName(name[], value = GET_STREAMER_VERSION, maxdest = sizeof name);                                                    *
  *                                                                                                                                         *
  *******************************************************************************************************************************************/
 
@@ -276,28 +276,14 @@
 	#define FIX_OBJECTS
 #endif
 
-#define GetStreamerVersion()					(Streamer_IncludeFileVersion)
-#define GetValidStreamerVersion()				(Valid_Streamer_Version)
-
-stock bool:IsValidStreamer(version){
-	if(GetStreamerVersion() < version) return false;
-	return true;
-}
-
-stock GetStreamerVersionName(name[], value = 0xFFFFFFFF, maxdest = sizeof name){
-	if(value == 0xFFFFFFFF) value = GetStreamerVersion();
-	new str[10], ver1, ver2, ver3, ver4;
-	format(str,sizeof(str),"%x",value);
-	ver1 = (str[0]-48);
-	ver2 = (str[1]-48);
-	ver3 = (str[2]-48);
-	ver4 = (((str[3]-48)*100) + ((str[4]-48)*10) + (str[5]-48));
-	format(name,maxdest,"%d.%d.%dr%d",ver1,ver2,ver3,ver4);
-}
+#define GET_STREAMER_VERSION					(0xFFFFFFFF)
 
 #define MOVE_OBJECT_STATE_STOP					(0)
 #define MOVE_OBJECT_STATE_MOVED					(1)
 #define MOVE_OBJECT_STATE_INVALID				(2)
+
+#define GetStreamerVersion()					(Streamer_IncludeFileVersion)
+#define GetValidStreamerVersion()				(Valid_Streamer_Version)
 
 //DynamicObject
 #define GetDynamicObjectModel(%1)				Streamer_GetIntData(STREAMER_TYPE_OBJECT,%1,E_STREAMER_MODEL_ID)
@@ -435,6 +421,18 @@ stock GetStreamerVersionName(name[], value = 0xFFFFFFFF, maxdest = sizeof name){
 #define ForDynamicMapIcons(%1)					for(new %1 = 1, p_%1 = GetDynamicMapIconPoolSize(); %1 <= p_%1; %1++)
 #define ForDynamic3DTextLabels(%1)				for(new %1 = 1, p_%1 = GetDynamic3DTextPoolSize(); %1 <= p_%1; %1++)
 #define ForDynamicAreas(%1)						for(new %1 = 1, p_%1 = GetDynamicAreaPoolSize(); %1 <= p_%1; %1++)
+
+stock bool:IsValidStreamer(version){
+	if(GetStreamerVersion() < version) return false;
+	return true;
+}
+
+stock GetStreamerVersionName(name[], value = GET_STREAMER_VERSION, maxdest = sizeof name){
+	if(value == GET_STREAMER_VERSION) value = GetStreamerVersion();
+	new str[10];
+	format(str,sizeof(str),"%x",value);
+	format(name,maxdest,"%d.%d.%dr%d",(str[0]-48),(str[1]-48),(str[2]-48),(((str[3]-48)*100) + ((str[4]-48)*10) + (str[5]-48)));
+}
 
 stock SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
 	SetDynamicObjectPos(objectid,x,y,z);

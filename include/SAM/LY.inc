@@ -148,4 +148,5 @@ stock GetPercentLY(prefix,suffix,&o_prefix,&o_suffix,Float:percent = 0.0,limitpr
 	UpdateLY(o_prefix,o_suffix,modify_s,limitprefix);
 
 }
+
 //EOF

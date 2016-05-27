@@ -15,22 +15,8 @@
 	#error Update you 3DTryg.inc to v2.1b
 #endif
 
-#if !defined e_float
-	//ATM Standard 1.1
-	enum e_float {
-		Float:X,
-		Float:Y,
-		Float:Z,
-		Float:rX,
-		Float:rY,
-		Float:rZ,
-		Float:tX,
-		Float:tY,
-		Float:tZ,
-		VW,
-		INT,
-		SPEED
-	}
+#if !defined _ATM_Core
+	#error You need ATM.inc
 #endif
 
 #define FIREWORK_ELEMENT			(256)

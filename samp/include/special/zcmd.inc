@@ -1,9 +1,9 @@
 /**********************************
- *								  *
- *   @Author:	  ZeeX		      *
- *   @Version:	 0.3.1		      *
- *   @Released:	31/10/2009	      *
- *								  *
+ *                                *
+ *   @Author:   ZeeX              *
+ *   @Version:  0.3.1             *
+ *   @Released: 31/10/2009        *
+ *                                *
  **********************************/
 
 #if defined _zcmd_included

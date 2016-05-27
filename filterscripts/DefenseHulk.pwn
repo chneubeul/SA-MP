@@ -488,5 +488,4 @@ public DestroyExcavator(mobid){
 	return 1;
 }
 
-
-
+//EOF

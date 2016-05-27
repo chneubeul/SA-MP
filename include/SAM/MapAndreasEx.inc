@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * MapAndreas Update v1.1 made by Abyss Morgan                                                      *
+ * MapAndreas Update v1.2 made by Abyss Morgan                                                      *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
@@ -8,8 +8,8 @@
  *                                                                                                  *
  * Functions:                                                                                       *
  * bool:IsMapAndreasInit();                                                                         *
- * SafeMapAndreasInit();                                                                            *
- * MapAndreasFindZ(Float:x,Float:y,&Float:z);                                                       *
+ * SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(name));                   *
+ * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=Float:0);                                         *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -22,12 +22,13 @@
 	#error Unknown MapAndreas Version
 #endif
 
-stock MapAndreasFindZ(Float:x,Float:y,&Float:z){
+stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=Float:0){
 	if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
 		z = 0.0;
 	} else {
 		MapAndreas_FindZ_For2DCoord(x,y,z);
 	}
+	return z;
 }
 
 stock bool:IsMapAndreasInit(){
@@ -37,11 +38,11 @@ stock bool:IsMapAndreasInit(){
 	return true;
 }
 
-stock SafeMapAndreasInit(){
+stock SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(name)){
 	//check MapAndreas Init
 	new bool:MapAndreasLastStat = false;
 	if(!IsMapAndreasInit()){
-		MapAndreas_Init(MAP_ANDREAS_MODE_FULL);
+		MapAndreas_Init(mode,name,len);
 		MapAndreasLastStat = true;
 	}
 	if(!IsMapAndreasInit()){

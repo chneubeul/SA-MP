@@ -6,7 +6,7 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 1.4                                                                                *
+ * File Version: 1.5                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileHandleID(File:handle);                                                                    *
@@ -33,6 +33,10 @@
 	#endinput
 #endif
 #define _Data_Convert
+
+#if !defined sscanf
+	#error Unknown sscanf version
+#endif
 
 #define FIRST_FILE_ADDRESS			(0x004E5A18)
 #define INVALID_FILE_ID				(0xFFB1A5E7)
@@ -62,13 +66,8 @@ stock GetFileID(File:handle){
 }
 
 stock BinToInt(string[]){
-	if(strlen(string) == 0) return -1;
 	new int = 0;
-	for(new i = strlen(string)-1, j = i; i >= 0; i--){
-		if(string[i] == '1'){
-			int += floatround(floatpower(2,j-i));
-		}
-	}
+	sscanf(string","b",int);
 	return int;
 }
 
@@ -102,41 +101,16 @@ stock fstrcopy(input[], output[], maxdest = sizeof(output)){
 }
 
 stock HexToInt(string[]){
-	if(string[0] == 0) return 0;
-	new cur = 1, res = 0;
-	for(new i = strlen(string)-1; i >= 0; i--){
-		if(string[i] < 58){
-			res = res + cur * (string[i] - 48);
-		} else {
-			res = res + cur * (string[i] - 55);
-		}
-		cur = cur * 16;
-	}
-	return res;
+	new int = 0;
+	sscanf(string,"x",int);
+	return int;
 }
 
 stock IntToHex(int){
-	new buffer[8], i = 0, result[8], g = 0;
-	while(int > 0){
-		new tmp = int % 16;
-
-		if(tmp < 10){
-			buffer[i] = tmp + 48;
-		} else {
-			buffer[i] = tmp + 55;
-		}
-		i++;
-		int = int / 16;
-	}
-	for(i = strlen(buffer)-1; i >= 0; i--){
-		result[g++] = buffer[i];
-	}
-	while(strlen(result) < 6){
-		strins(result, "0", 0);
-	}
+	new result[8];
+	format(result,sizeof(result),"%06x",int);
 	return result;
 }
-
 
 stock ABCToCBA(input[], output[]){
 	for(new i = 0, j = strlen(input); i < j; i++){

@@ -175,3 +175,5 @@ public OnPlayerEnterDynamicArea(playerid, areaid){
 #if defined MIS_OnPlayerEnterDynamicArea
 	forward MIS_OnPlayerEnterDynamicArea(playerid, areaid);
 #endif
+
+//EOF

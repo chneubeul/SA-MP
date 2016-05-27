@@ -32,6 +32,8 @@
 //EngineX.inc
 [ADM] Info: NGCM Mob Move Engine System ... loaded
 [ADM] Info: NGCM Mob Move Engine System ... unloaded
+[ADM] Error: NGCM Mob Move Engine System ... not loaded.
 
 //Global
 [ADM] Error: Invalid MapAndreas Memory.
+

@@ -209,7 +209,6 @@ public Lottery_LosRandom(important){
 	return 1;
 }
 
-
 CMD:lottery(playerid){
 	if(IsPlayerInLottery(playerid)) return SendClientMessage(playerid,0xFFFFFFFF,"You are already joined to the lottery");
 	if(GetPlayerMoney(playerid) < LOTTERY_PRICE){
@@ -229,6 +228,5 @@ CMD:lottery(playerid){
 	Lottery_AddPlayer(playerid);
 	return 1;
 }
-
 
 //EOF
