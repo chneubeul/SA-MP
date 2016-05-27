@@ -120,7 +120,7 @@ enum e_long_float {
 	Float:tX, Float:tY, Float:tZ,
 	Float:trX, Float:trY, Float:trZ,
 	
-	Float:VecX, Float:VecVY, Float:VecVZ,
+	Float:VecX, Float:VecY, Float:VecZ,
 	
 	VW, INT, Float:SPEED
 }
@@ -164,7 +164,7 @@ stock SetPlayerWorldBoundsEx(playerid,Float:minx,Float:miny,Float:maxx,Float:max
 
 stock GetPlayerNick(playerid){
 	new pnick[MAX_PLAYER_NAME];
-	GetPlayerName(playerid,pnick,sizeof (pnick));
+	GetPlayerName(playerid,pnick,sizeof(pnick));
 	return pnick;
 }
 
