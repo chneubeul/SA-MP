@@ -70,7 +70,6 @@ stock FindFreeMissileID(){
 forward MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz);
 forward MissileDestroy(mobid);
 
-
 public MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz){
 	new mobid = FindFreeMissileID();
 	if(mobid == INVALID_MISSILE_ID){

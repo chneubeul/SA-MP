@@ -6,19 +6,22 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 1.5                                                                                *
+ * File Version: 1.5B                                                                               *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileHandleID(File:handle);                                                                    *
  * GetFileID(File:handle);                                                                          *
- * BinToInt(string[]);                                                                              *
  * BoolToInt(bool:boolean);                                                                         *
- * HexToInt(string[]);                                                                              * 
- * StringToInt(string[]);                                                                           *
  * bool:StringToBool(string[]);                                                                     *
+ * StringToInt(string[]);                                                                           *
+ * BinToInt(string[]);                                                                              *
+ * IntToBin(value);                                                                                 *
+ * HexToInt(string[]);                                                                              * 
+ * IntToHex(int);                                                                                   *
+ * HexToBin(string[]);                                                                              * 
+ * BinToHex(string[]);                                                                              *
  * strcopy(input[],output[]);  //string copy for warning 224: indeterminate array size              *
  * fstrcopy(input[],output[],maxdest = sizeof(output));   //fast string copy                        *
- * IntToHex(int);                                                                                   *
  * ABCToCBA(input[],output[]);                                                                      *
  * AnyToInt(str[],type,&bool:flag);                                                                 *
  * IntToAny(value,output[],type);                                                                   *
@@ -71,6 +74,26 @@ stock BinToInt(string[]){
 	return int;
 }
 
+stock HexToBin(string[]){
+	new str[34];
+	sscanf(string,"x",value);
+	format(str,sizeof(str),"%b",value);
+	return str;
+}
+
+stock BinToHex(string[]){
+	new str[10], value = 0;
+	sscanf(string,"b",value);
+	format(str,sizeof(str),"%06x",value);
+	return str;
+}
+
+stock IntToBin(value){
+	new string[34];
+	format(string,sizeof(string),"%b",value);
+	return string;
+}
+
 stock BoolToInt(bool:boolean){
 	if(boolean){
 		return 1;
@@ -107,7 +130,7 @@ stock HexToInt(string[]){
 }
 
 stock IntToHex(int){
-	new result[8];
+	new result[10];
 	format(result,sizeof(result),"%06x",int);
 	return result;
 }

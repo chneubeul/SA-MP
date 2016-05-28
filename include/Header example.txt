@@ -17,6 +17,9 @@
 #include <progress>
 #include <MD5>
 
+//3DTryg.inc Config
+//#define USE_OLD_PROTOTYPE_FUNCTION
+
 //Logs.inc
 #define EMPTY_LOG_BUFFER	"My Log File\n"
 

@@ -53,7 +53,7 @@
 #define PlayerPubVar:{%1,%2}		forward v_%1(playerid); public v_%1(playerid){ return (%2); }
 #define GetPlayerPubVar(%0,%1)		CallRemoteFunction("v_"#%1"","d",%0)
 
-#define randomex(%0,%1) 			(random(%1-(%0)+1)+%0)
+#define randomex(%0,%1) 			(random((%1)-(%0)+1)+(%0))
 
 #if !defined SecToTimeDay
 	//%d:%02d:%02d:%02d

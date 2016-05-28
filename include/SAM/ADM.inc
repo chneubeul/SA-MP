@@ -168,7 +168,7 @@ new ADMErrorList[][] = {
 	"Invalid dump file index"	//-12
 };
 
-#define GetADMErrorName(%0) 		ADMErrorList[(((_:%0)*-1)+1)]
+#define GetADMErrorName(%0) 		ADMErrorList[(((_:(%0))*-1)+1)]
 
 #pragma unused ADMErrorList
 

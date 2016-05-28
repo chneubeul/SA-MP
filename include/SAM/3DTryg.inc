@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 2.4B                                                                                                             *
+ * File Version: 2.4C                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
@@ -66,6 +66,8 @@
  * bool:IsProbable(chance);                                                                                                       *
  * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
  * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
+ * Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=Float:0);                                                        *
+ * Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=Float:0);                                                        *
  *                                                                                                                                *
  * Deprecated Functions:                                                                                                          *
  * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                          *
@@ -73,16 +75,19 @@
  * GetPointInFrontOfCamera    -> GetPointInFrontOfCamera3D                                                                        *
  * GetDistanceBetweenPoints   -> GetDistanceBetweenPoints3D                                                                       *
  *                                                                                                                                *
+ * Old prototype:                                                                                                                 *
+ * GetAngle                   -> GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D                             *
+ *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.4B
+	#error You need 3DTryg.inc v2.4C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.4B
-#elseif (Tryg3D_Version < 20402)
-	#error Update you 3DTryg.inc to v2.4B
+	#error Update you 3DTryg.inc to v2.4C
+#elseif (Tryg3D_Version < 20403)
+	#error Update you 3DTryg.inc to v2.4C
 #endif
 */
 
@@ -91,7 +96,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20402) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version									(20403) //a.b[c] 10000*a+100*b+c
 
 #if !defined FLOAT_PI
 	#define FLOAT_PI		 							(3.14159265358979323846)
@@ -102,9 +107,9 @@
 #define cosecans(%0,%1)									(1.0/floatsin((%0),(%1)))
 #define abs(%0)											(((%0) < 0)?(-(%0)):((%0)))
 
-#define single_clock(%1,%2)								((360.0/%1)*(%2))
-#define even_clock(%1,%2)								((360.0/%1)*(2*%2))
-#define uneven_clock(%1,%2)								((360.0/%1)*((2*%2)-1))
+#define single_clock(%1,%2)								((360.0/(%1))*(%2))
+#define even_clock(%1,%2)								((360.0/(%1))*(2*(%2)))
+#define uneven_clock(%1,%2)								((360.0/(%1))*((2*(%2))-1))
 
 #define	sqrtN(%0,%1)									floatpower((%0),(1.0/(%1)))
 
@@ -426,9 +431,33 @@ stock GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:t
 	}
 }
 
+stock Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=Float:0){
+	new Float:mx, Float:my;
+	GetPlayerPos(playerid,mx,my,rz);
+	GetRotationFor2Point2D(mx,my,x,y,rz);
+	return rz;
+}
+
+stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=Float:0){
+	new Float:mx, Float:my;
+	GetPlayerPos(playerid,mx,my,rz);
+	GetRotationFor2Point2D(mx,my,x,y,rz);
+	SetPlayerFacingAngle(playerid,rz);
+	return rz;
+}
+
 #define GetXYInFrontOfPlayer							GetPointInFrontOfPlayer
 #define GetPointInFront									GetPointInFront3D
 #define GetPointInFrontOfCamera							GetPointInFrontOfCamera3D
 #define GetDistanceBetweenPoints						GetDistanceBetweenPoints3D
+
+#if !defined USE_OLD_PROTOTYPE_FUNCTION
+	
+	#if defined GetAngle
+		#error GetAngle is old prototype. Use GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D
+	#endif
+	
+	
+#endif
 
 //EOF
