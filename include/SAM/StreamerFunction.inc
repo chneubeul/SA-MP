@@ -7,7 +7,7 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
  * File Version: 2.3C                                                                                                                      *
- * Streamer Version: 2.8.1                                                                                                                 *
+ * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
  * GetDynamicObjectModel(objectid);                                                                                                        *
@@ -249,7 +249,7 @@
 #define _streamer_spec
 
 #define Streamer_Spec_Version 					(20303) //a.b[c] 10000*a+100*b+c
-#define Valid_Streamer_Version 					(0x281001)
+#define Valid_Streamer_Version 					(0x282001)
 
 #if !defined INVALID_STREAMER_ID
 	#define INVALID_STREAMER_ID 0

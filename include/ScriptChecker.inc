@@ -30,7 +30,6 @@
  * Include: 'socket' Author: 'BlueG'                                                                                              *
  * Include: 'a_mysql' Author: 'BlueG'                                                                                             *
  * Include: 'pointers' Author: 'Slice'                                                                                            *
- * Include: 'sqlitei' Author: 'Slice'                                                                                             *
  * Include: 'weapon-config' Author: 'Slice'                                                                                       *
  * Include: 'ColAndreas' Author: 'Slice, Chris420, Pottus, uint32, Crayder, Codectile'                                            *
  * Include: 'md5' Author: 'Y_Less'                                                                                                *
@@ -306,11 +305,6 @@ public OnThisScriptCheck(playerid,errorlevel){
 	//Check CA3.inc
 	#if defined CreateArt3
 		WriteCheckLog("Include: 'CA3' Author: 'DialUp'",SCRIPT_CHECK_FILE);
-	#endif
-	
-	//Check sqlitei.inc
-	#if defined db_open
-		WriteCheckLog("Include: 'sqlitei' Author: 'Slice'",SCRIPT_CHECK_FILE);
 	#endif
 
 	//Check weapon-config.inc
