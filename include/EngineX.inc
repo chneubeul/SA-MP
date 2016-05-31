@@ -57,7 +57,7 @@ Do not ask XD
 	#error You need MapAndreasEx.inc
 #endif
 
-#define NOX_ENGINE_X_Version		(51024)
+#define NOX_ENGINE_X_Version		(50124)
 #define NOX_VERSION					"5.1 Delta X"
 #define NT_VERSION					"1.0"
 
