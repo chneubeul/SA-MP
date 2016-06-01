@@ -6,11 +6,15 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 1.5B                                                                               *
+ * File Version: 1.6                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileHandleID(File:handle);                                                                    *
  * GetFileID(File:handle);                                                                          *
+ * bool:IsIdentical({AllTag,_}:variable1,{AllTag,_}:variable2);                                     *
+ * bool:IsInteger({AllTag,_}:variable);                                                             *
+ * bool:IsBool({AllTag,_}:variable);                                                                *
+ * bool:IsFloat({AllTag,_}:variable);                                                               *
  * BoolToInt(bool:boolean);                                                                         *
  * bool:StringToBool(string[]);                                                                     *
  * StringToInt(string[]);                                                                           *
@@ -47,6 +51,14 @@
 #define GetFileHandleID(%0)			(_:%0)
 #define StringToInt(%0)				strval(%0)
 
+#define Integer						_
+#define Create::(%0) 				(%0:0)
+
+#define IsIdentical(%0,%1)			((tagof(%0) == tagof(%1)) && ((_:%0) != (_:%1) || (_:%0) == (_:%1)))
+#define IsInteger(%0)				(tagof(%0) == 0x80000000 && ((_:%0) == (_:%0)))
+#define IsBool(%0)					(tagof(%0) == 0x80000001 && ((_:%0) == (_:%0)))
+#define IsFloat(%0)					(tagof(%0) == 0xC0000004 && ((_:%0) == (_:%0)))
+
 //swapvars by Crayder
 #define swap_int(%0,%1)				(((%0) ^= (%1)), ((%1) ^= (%0)), ((%0) ^= (%1)))
 
@@ -75,7 +87,7 @@ stock BinToInt(string[]){
 }
 
 stock HexToBin(string[]){
-	new str[34];
+	new str[34], value = 0;
 	sscanf(string,"x",value);
 	format(str,sizeof(str),"%b",value);
 	return str;
