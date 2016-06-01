@@ -18,6 +18,9 @@
 #include <MD5>
 
 //3DTryg.inc Config
+//#define ProtVar:: <salt>
+//#define ENABLE_PROTECTION_VARIABLES
+
 //#define USE_OLD_PROTOTYPE_FUNCTION
 
 //Logs.inc
