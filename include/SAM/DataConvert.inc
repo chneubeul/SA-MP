@@ -6,7 +6,7 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 1.6                                                                                *
+ * File Version: 1.6B                                                                               *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileHandleID(File:handle);                                                                    *
@@ -54,10 +54,10 @@
 #define Integer						_
 #define Create::(%0) 				(%0:0)
 
-#define IsIdentical(%0,%1)			((tagof(%0) == tagof(%1)) && ((_:%0) != (_:%1) || (_:%0) == (_:%1)))
-#define IsInteger(%0)				(tagof(%0) == 0x80000000 && ((_:%0) == (_:%0)))
-#define IsBool(%0)					(tagof(%0) == 0x80000001 && ((_:%0) == (_:%0)))
-#define IsFloat(%0)					(tagof(%0) == 0xC0000004 && ((_:%0) == (_:%0)))
+#define IsIdentical(%0,%1)			((tagof(%0) == tagof(%1)) && (_:%0) == (_:%1))
+#define IsInteger(%0)				((tagof(%0) == 0x80000000) && ((_:%0) == (_:%0)))
+#define IsBool(%0)					((tagof(%0) == 0x80000001) && ((_:%0) == (_:%0)))
+#define IsFloat(%0)					((tagof(%0) == 0xC0000004) && ((_:%0) == (_:%0)))
 
 //swapvars by Crayder
 #define swap_int(%0,%1)				(((%0) ^= (%1)), ((%1) ^= (%0)), ((%0) ^= (%1)))
