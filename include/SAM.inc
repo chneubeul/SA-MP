@@ -5,7 +5,7 @@
  ************************************/
 
 #if !defined MD5_Hash
-	#tryinclude	<MD5>
+	#tryinclude	<md5>
 #endif
 
 #include "SAM/StreamerFunction.inc" //http://forum.sa-mp.com/showthread.php?t=590918

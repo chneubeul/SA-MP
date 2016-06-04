@@ -98,6 +98,12 @@
 
 #define Tryg3D_Version									(20403) //a.b[c] 10000*a+100*b+c
 
+#if defined _Map_Andreas_Ex
+	#define _3DTryg_MapAndreasFindZ		MapAndreasFindZ
+#else
+	#define _3DTryg_MapAndreasFindZ		MapAndreas_FindZ_For2DCoord
+#endif
+
 #if !defined FLOAT_PI
 	#define FLOAT_PI		 							(3.14159265358979323846)
 #endif
@@ -391,45 +397,49 @@ stock bool:IsProbable(chance){
 	return false;
 }
 
-stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry){
-	new Float:tpx1,Float:tpy1,Float:tpz1,
-		Float:tpx2,Float:tpy2,Float:tpz2,
-		Float:tmp;
-	GetPointInFront2D(x,y,0.0,size,tpx1,tpy1);
-	GetPointInFront2D(x,y,180.0,size,tpx2,tpy2);
-	MapAndreas_FindZ_For2DCoord(tpx1,tpy1,tpz1);
-	MapAndreas_FindZ_For2DCoord(tpx2,tpy2,tpz2);
-	GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,rx,tmp);
-	
-	GetPointInFront2D(x,y,90.0,size,tpx1,tpy1);
-	GetPointInFront2D(x,y,270.0,size,tpx2,tpy2);
-	MapAndreas_FindZ_For2DCoord(tpx1,tpy1,tpz1);
-	MapAndreas_FindZ_For2DCoord(tpx2,tpy2,tpz2);
-	GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,ry,tmp);
-	#pragma unused tmp
-}
+#if defined MapAndreas_FindZ_For2DCoord
+	stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry){
+		new Float:tpx1,Float:tpy1,Float:tpz1,
+			Float:tpx2,Float:tpy2,Float:tpz2,
+			Float:tmp;
+		GetPointInFront2D(x,y,0.0,size,tpx1,tpy1);
+		GetPointInFront2D(x,y,180.0,size,tpx2,tpy2);
+		_3DTryg_MapAndreasFindZ(tpx1,tpy1,tpz1);
+		_3DTryg_MapAndreasFindZ(tpx2,tpy2,tpz2);
+		GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,rx,tmp);
+		
+		GetPointInFront2D(x,y,90.0,size,tpx1,tpy1);
+		GetPointInFront2D(x,y,270.0,size,tpx2,tpy2);
+		_3DTryg_MapAndreasFindZ(tpx1,tpy1,tpz1);
+		_3DTryg_MapAndreasFindZ(tpx2,tpy2,tpz2);
+		GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,ry,tmp);
+		#pragma unused tmp
+	}
+#endif
 
-stock GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance){
-	new Float:tmpz;
-	MapAndreas_FindZ_For2DCoord(x,y,tmpz);
-	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,x,y,tmpz),
-		Float:cos = floatcos(rx+90.0,degrees),
-		Float:dist;
-	if(cos == 0.0){
-		dist = radius;
-	} else {
-		dist = floatabs(radius/cos);
-	}
-	if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
-		dist = max_distance;
-	}
-	GetPointInFront3D(x,y,z,rx,rz,dist,tx,ty,tz);
-	if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
+#if defined MapAndreas_FindZ_For2DCoord
+	stock GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance){
+		new Float:tmpz;
+		_3DTryg_MapAndreasFindZ(x,y,tmpz);
+		new Float:radius = GetDistanceBetweenPoints3D(x,y,z,x,y,tmpz),
+			Float:cos = floatcos(rx+90.0,degrees),
+			Float:dist;
+		if(cos == 0.0){
+			dist = radius;
+		} else {
+			dist = floatabs(radius/cos);
+		}
+		if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
+			dist = max_distance;
+		}
+		GetPointInFront3D(x,y,z,rx,rz,dist,tx,ty,tz);
+		if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
 
-	} else {
-		MapAndreas_FindZ_For2DCoord(tx,ty,tz);
+		} else {
+			_3DTryg_MapAndreasFindZ(tx,ty,tz);
+		}
 	}
-}
+#endif
 
 stock Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=Float:0){
 	new Float:mx, Float:my;

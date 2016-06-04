@@ -74,6 +74,17 @@
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
+/*
+//Check Version ScriptChecker.inc
+#if !defined _Script_Checker
+	#error You need ScriptChecker.inc v1.0
+#elseif !defined Script_Checker_Version
+	#error Update you ScriptChecker.inc to v1.0
+#elseif (Script_Checker_Version < 10001)
+	#error Update you ScriptChecker.inc to v1.0
+#endif
+*/
+
 #if defined _Script_Checker
 	#endinput
 #endif

@@ -47,11 +47,11 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v1.9
+	#error You need ADM.inc v2.2
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v1.9
-#elseif (ADM_Encryption_Version < 10901)
-	#error Update you ADM.inc to v1.9
+	#error Update you ADM.inc to v2.2
+#elseif (ADM_Encryption_Version < 20201)
+	#error Update you ADM.inc to v2.2
 #endif
 
 #if defined _DoT_Loader
