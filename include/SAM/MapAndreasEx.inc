@@ -9,7 +9,7 @@
  * Functions:                                                                                       *
  * bool:IsMapAndreasInit();                                                                         *
  * SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(name));                   *
- * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=Float:0);                                         *
+ * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0);                                             *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -22,7 +22,7 @@
 	#error Unknown MapAndreas Version
 #endif
 
-stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=Float:0){
+stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
 	if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
 		z = 0.0;
 	} else {

@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 2.5                                                                                                              *
+ * File Version: 2.5B                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
@@ -28,11 +28,11 @@
  * Float:NLTZF(Float:value);                                                                                                      *
  * Float:NMTZF(Float:value);                                                                                                      *
  * CompRotation(rotation,&cr=0);                                                                                                  *
- * Float:CompRotationFloat(Float:rotation,&Float:cr=Float:0);                                                                     *
+ * Float:CompRotationFloat(Float:rotation,&Float:cr=0.0);                                                                         *
  * GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty);                                                  *
  * Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius);                                                      *
  * Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius);                                                    *
- * GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=Float:0,&Float:rz=Float:0);            *
+ * GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                    *
  * GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                       *
  * GetRotationFor2Point2D(Float:x,Float:y,Float:tx,Float:ty,&Float:rz);                                                           *
  * GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                                *
@@ -52,9 +52,9 @@
  * Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                              *
  * GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz);                                                                   *
  * Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius);                                                  *
- * GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=Float:0,&Float:rz=Float:0);          *
+ * GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                  *
  * GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz);                                                                         *
- * Float:GetPlayerCameraZAngle(playerid,&Float:rz=Float:0);                                                                       *
+ * Float:GetPlayerCameraZAngle(playerid,&Float:rz=0.0);                                                                           *
  * GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty);                               *
  * GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz);   *
  * ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz);                                                         *
@@ -67,8 +67,8 @@
  * bool:IsProbable(chance);                                                                                                       *
  * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
  * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
- * Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=Float:0);                                                        *
- * Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=Float:0);                                                        *
+ * Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
+ * Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
  *                                                                                                                                *
  * Deprecated Functions:                                                                                                          *
  * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                          *
@@ -84,11 +84,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.5
+	#error You need 3DTryg.inc v2.5B
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.5
-#elseif (Tryg3D_Version < 20501)
-	#error Update you 3DTryg.inc to v2.5
+	#error Update you 3DTryg.inc to v2.5B
+#elseif (Tryg3D_Version < 20502)
+	#error Update you 3DTryg.inc to v2.5B
 #endif
 */
 
@@ -97,7 +97,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20501) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version									(20502) //a.b[c] 10000*a+100*b+c
 
 #if defined _Map_Andreas_Ex
 	#define _3DTryg_MapAndreasFindZ						MapAndreasFindZ
@@ -166,7 +166,7 @@ stock CompRotation(rotation,&cr=0){
 	return cr;
 }
 
-stock Float:CompRotationFloat(Float:rotation,&Float:cr=Float:0){
+stock Float:CompRotationFloat(Float:rotation,&Float:cr=0.0){
 	cr = rotation;
 	while(cr < 0.0) cr += 360.0;
 	while(cr >= 360.0) cr -= 360.0;
@@ -198,7 +198,7 @@ stock Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius){
 	return rz;
 }
 
-stock Float:GetPlayerCameraZAngle(playerid,&Float:rz=Float:0){
+stock Float:GetPlayerCameraZAngle(playerid,&Float:rz=0.0){
 	new Float:mx,Float:my,Float:mz;
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
 	CompRotationFloat((atan2(my,mx)-90.0),rz);
@@ -213,7 +213,7 @@ stock Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius)
 	return rz;
 }
 
-stock GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=Float:0,&Float:rz=Float:0){
+stock GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
 	new Float:x,Float:y,Float:z;
 	GetPlayerCameraPos(playerid,x,y,z);
 	GetPlayerCameraRotation(playerid,rx,rz);
@@ -296,7 +296,7 @@ stock Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radiu
 	return rz;
 }
 
-stock GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=Float:0,&Float:rz=Float:0){
+stock GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
 	new Float:ry,Float:x,Float:y,Float:z;
 	GetVehiclePos(vehicleid,x,y,z);
 	GetVehicleRotation(vehicleid,rx,ry,rz);
@@ -446,14 +446,14 @@ stock bool:IsProbable(chance){
 	}
 #endif
 
-stock Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=Float:0){
+stock Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	new Float:mx, Float:my;
 	GetPlayerPos(playerid,mx,my,rz);
 	GetRotationFor2Point2D(mx,my,x,y,rz);
 	return rz;
 }
 
-stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=Float:0){
+stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	new Float:mx, Float:my;
 	GetPlayerPos(playerid,mx,my,rz);
 	GetRotationFor2Point2D(mx,my,x,y,rz);
