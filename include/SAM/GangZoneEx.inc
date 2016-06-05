@@ -73,9 +73,6 @@ stock AC_GangZoneDestroy(zoneid){
 		if(IsValidDynamicArea(GangZoneArea[zoneid]) && GangZoneArea[zoneid] != 0) return true
 		return false;
 	}
-#else
-	//if YSF.inc occurred later than GangZoneEx.inc we force reactions user
-	#define _YSF_included
 #endif
 
 stock bool:IsPlayerInAnyGangZone(playerid){

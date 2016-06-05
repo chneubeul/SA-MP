@@ -45,11 +45,11 @@
  * ADMToInt(ADM:admvar);                                                                                                          *
  * bool:IsValidADMKey(key[], type);                                                                                               *
  * GetADMKeyType(key[], bool:distorted = false);                                                                                  *
+ * GetADMErrorName(ADM:code);                                                                                                     *
  * ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(outputkey));                                                  *
  * ADM:CreateADMKey(key[], type, maxdest = sizeof(key));                                                                          *
  * ADM:StringToHexString(input[], output[], maxdest = sizeof(output));                                                            *
  * ADM:HexStringToString(input[], output[], maxdest = sizeof(output));                                                            *
- * GetADMErrorName(ADM:code);                                                                                                     *
  *                                                                                                                                *
  * Return value:                                                                                                                  *
  * ERROR_CODE_ADM_UNEXEC       //function unexecutable                                                                            *
@@ -1167,7 +1167,7 @@ stock GetDumpFileType(const name[]){
 
 stock DMP:DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32){
 	if(!fexist(name)) return INVALID_DUMP_FILE;
-	if(!IsValidDumpFile(name))return INVALID_DUMP_FILE;
+	if(!IsValidDumpFile(name)) return INVALID_DUMP_FILE;
 	new DMP:idx = FindFreeDumpFileID();
 	if(idx == INVALID_DUMP_FILE) return INVALID_DUMP_FILE;
 	ADM_ProtVar::DumpFileStatus[idx] = true;

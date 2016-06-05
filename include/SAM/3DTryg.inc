@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 2.4C                                                                                                             *
+ * File Version: 2.5                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
@@ -30,7 +30,7 @@
  * CompRotation(rotation,&cr=0);                                                                                                  *
  * Float:CompRotationFloat(Float:rotation,&Float:cr=Float:0);                                                                     *
  * GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty);                                                  *
- * Float:GetPointInFrontOfPlayer(playerid,&Float:x,&Float:y,Float:radius);                                                        *
+ * Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius);                                                      *
  * Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius);                                                    *
  * GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=Float:0,&Float:rz=Float:0);            *
  * GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                       *
@@ -51,9 +51,10 @@
  * GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime);                                            *
  * Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                              *
  * GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz);                                                                   *
+ * Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius);                                                  *
+ * GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=Float:0,&Float:rz=Float:0);          *
  * GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz);                                                                         *
  * Float:GetPlayerCameraZAngle(playerid,&Float:rz=Float:0);                                                                       *
- * QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz);                                                *
  * GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty);                               *
  * GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz);   *
  * ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz);                                                         *
@@ -83,11 +84,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.4C
+	#error You need 3DTryg.inc v2.5
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.4C
-#elseif (Tryg3D_Version < 20403)
-	#error Update you 3DTryg.inc to v2.4C
+	#error Update you 3DTryg.inc to v2.5
+#elseif (Tryg3D_Version < 20501)
+	#error Update you 3DTryg.inc to v2.5
 #endif
 */
 
@@ -96,12 +97,12 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20403) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version									(20501) //a.b[c] 10000*a+100*b+c
 
 #if defined _Map_Andreas_Ex
-	#define _3DTryg_MapAndreasFindZ		MapAndreasFindZ
+	#define _3DTryg_MapAndreasFindZ						MapAndreasFindZ
 #else
-	#define _3DTryg_MapAndreasFindZ		MapAndreas_FindZ_For2DCoord
+	#define _3DTryg_MapAndreasFindZ						MapAndreas_FindZ_For2DCoord
 #endif
 
 #if !defined FLOAT_PI
@@ -186,14 +187,14 @@ stock GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&
 }
 
 //GetXYInFrontOfPlayer
-stock Float:GetPointInFrontOfPlayer(playerid,&Float:x,&Float:y,Float:radius){
+stock Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius){
 	new Float:rz;
-	GetPlayerPos(playerid,x,y,rz);
+	GetPlayerPos(playerid,tx,ty,rz);
 	GetPlayerFacingAngle(playerid,rz);
 	if(IsPlayerInAnyVehicle(playerid)){
 		GetVehicleZAngle(GetPlayerVehicleID(playerid),rz);
 	}
-	GetPointInFront2D(x,y,rz,radius,x,y);
+	GetPointInFront2D(tx,ty,rz,radius,tx,ty);
 	return rz;
 }
 
@@ -276,18 +277,30 @@ stock Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:
 	return speed;
 }
 
-//Prototype function v2.0
-stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
-	new Float:q0,Float:q1,Float:q2,Float:q3;
-	GetVehicleRotationQuat(vehicleid,q0,q1,q2,q3);
-	GetVehicleZAngle(vehicleid,rz);
-	if((rz >= 0.0 && rz <= 90.0) || (rz >= 270.0 && rz <= 360.0)){
-		CompRotationFloat(-atan2(2*(q0*q1+q2*q3),1-2*((q1*q1)+(q2*q2))),rx);
-		CompRotationFloat(-asin(2*(q0*q2-q3*q1)),ry);
-	} else {
-		CompRotationFloat(atan2(2*(q0*q1+q2*q3),1-2*((q1*q1)+(q2*q2))),rx);
-		CompRotationFloat(asin(2*(q0*q2-q3*q1)),ry);
+//GetVehicleRotation Created by IllidanS4
+#if !defined GetVehicleRotation	//Compatible with i_quat.inc
+	stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
+		new Float:qw,Float:qx,Float:qy,Float:qz;
+		GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
+		rx = asin(2*qy*qz-2*qx*qw);
+		ry = -atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy);
+		rz = -atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz);
 	}
+#endif
+
+stock Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius){
+	new Float:rx,Float:ry,Float:rz,Float:x,Float:y;
+	GetVehiclePos(vehicleid,x,y,rz);
+	GetVehicleRotation(vehicleid,rx,ry,rz);
+	GetPointInFront2D(x,y,rz,radius,tx,ty);
+	return rz;
+}
+
+stock GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=Float:0,&Float:rz=Float:0){
+	new Float:ry,Float:x,Float:y,Float:z;
+	GetVehiclePos(vehicleid,x,y,z);
+	GetVehicleRotation(vehicleid,rx,ry,rz);
+	GetPointInFront3D(x,y,z,rx,rz,radius,tx,ty,tz);
 }
 
 stock ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz){
@@ -383,13 +396,6 @@ stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,F
 	return false;
 }
 
-//Prototype function
-stock QuatToEuler(Float:qx,Float:qy,Float:qz,Float:qw,&Float:rx,&Float:ry,&Float:rz){
-	CompRotationFloat(atan2(2*(qx*qy+qz*qw),1-2*((qy*qy)+(qz*qz))),rx);
-	CompRotationFloat(asin(2*(qx*qz-qw*qy)),ry);
-	CompRotationFloat(atan2(2*(qx*qw+qy*qz),1-2*(qz*qz+qw*qw)),rz);
-}
-
 stock bool:IsProbable(chance){
 	if(chance <= 0) return false;
 	if(chance >= 100) return true;
@@ -413,7 +419,6 @@ stock bool:IsProbable(chance){
 		_3DTryg_MapAndreasFindZ(tpx1,tpy1,tpz1);
 		_3DTryg_MapAndreasFindZ(tpx2,tpy2,tpz2);
 		GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,ry,tmp);
-		#pragma unused tmp
 	}
 #endif
 

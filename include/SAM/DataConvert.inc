@@ -16,6 +16,7 @@
  * bool:IsBool({AllTag,_}:variable);                                                                *
  * bool:IsFloat({AllTag,_}:variable);                                                               *
  * BoolToInt(bool:boolean);                                                                         *
+ * bool:IntToBool(value);                                                                           *
  * bool:StringToBool(string[]);                                                                     *
  * StringToInt(string[]);                                                                           *
  * BinToInt(string[]);                                                                              *
@@ -112,6 +113,11 @@ stock BoolToInt(bool:boolean){
 	} else {
 		return 0;
 	}
+}
+
+stock bool:IntToBool(value){
+	if(value == 1) return true;
+	return false;
 }
 
 stock bool:StringToBool(string[]){
