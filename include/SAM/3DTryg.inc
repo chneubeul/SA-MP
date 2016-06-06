@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 2.5B                                                                                                             *
+ * File Version: 2.5C                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
@@ -84,11 +84,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.5B
+	#error You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.5B
-#elseif (Tryg3D_Version < 20502)
-	#error Update you 3DTryg.inc to v2.5B
+	#error Update you 3DTryg.inc to v2.5C
+#elseif (Tryg3D_Version < 20503)
+	#error Update you 3DTryg.inc to v2.5C
 #endif
 */
 
@@ -97,7 +97,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20502) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version									(20503) //a.b[c] 10000*a+100*b+c
 
 #if defined _Map_Andreas_Ex
 	#define _3DTryg_MapAndreasFindZ						MapAndreasFindZ
@@ -278,15 +278,13 @@ stock Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:
 }
 
 //GetVehicleRotation Created by IllidanS4
-#if !defined GetVehicleRotation	//Compatible with i_quat.inc
-	stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
-		new Float:qw,Float:qx,Float:qy,Float:qz;
-		GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
-		rx = asin(2*qy*qz-2*qx*qw);
-		ry = -atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy);
-		rz = -atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz);
-	}
-#endif
+stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
+	new Float:qw,Float:qx,Float:qy,Float:qz;
+	GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
+	rx = asin(2*qy*qz-2*qx*qw);
+	ry = -atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy);
+	rz = -atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz);
+}
 
 stock Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius){
 	new Float:rx,Float:ry,Float:rz,Float:x,Float:y;
