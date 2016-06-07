@@ -6,7 +6,7 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 2.1                                                                                *
+ * File Version: 2.2                                                                                *
  *                                                                                                  *
  * Object Functions:                                                                                *
  * IMG:LoadBinaryObjectIMG(const name[],&count=0);                                                  *
@@ -37,11 +37,11 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 /*
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error You need BINLDR.inc v2.1
+	#error You need BINLDR.inc v2.2
 #elseif !defined Bin_Loader_Version
-	#error Update you BINLDR.inc to v2.1
-#elseif (Bin_Loader_Version < 20101)
-	#error Update you BINLDR.inc to v2.1
+	#error Update you BINLDR.inc to v2.2
+#elseif (Bin_Loader_Version < 20201)
+	#error Update you BINLDR.inc to v2.2
 #endif
 */
 
@@ -50,7 +50,7 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 #endif
 #define _Bin_Loader
 
-#define Bin_Loader_Version 					(20101) //a.b[c] 10000*a+100*b+c
+#define Bin_Loader_Version 					(20201) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
 	#error Unknown sscanf version
@@ -159,33 +159,31 @@ stock IMG:LoadBinaryObjectIMG(const name[],&count=0){
 	if(!fexist(name)) return ERROR_CODE_BINLDR_INPUT;
 	new RAW[MAX_RAW_DATA], File:inpf = fopen(name,io_read);
 	if(!inpf) return ERROR_CODE_BINLDR_OPEN_INPUT;
-	new asize = flength(inpf), idx = 0, s = 0, cnt = 0;
+	new asize = flength(inpf), idx = 0, cnt = 0;
 	if(asize > MAX_BIN_FILE_SIZE || asize < 0 || (asize % MAX_RAW_DATA) != 0){
 		fclose(inpf);
 		return ERROR_CODE_BINLDR_SIZE;
 	}
 	while(idx < asize){
-		RAW[s] = fgetchar(inpf,0,false);
-		idx++;
-		s++;
-		if(s >= MAX_RAW_DATA){
-			s = 0;
-			CreateDynamicObject(
-				Bin_MergeValueEx(0,0,RAW[0],RAW[1]),
-				Bin_MergeFloatEx(RAW[2],RAW[3],RAW[4],RAW[5]),
-				Bin_MergeFloatEx(RAW[6],RAW[7],RAW[8],RAW[9]),
-				Bin_MergeFloatEx(RAW[10],RAW[11],RAW[12],RAW[13]),
-				Bin_MergeFloatEx(RAW[14],RAW[15],RAW[16],RAW[17]),
-				Bin_MergeFloatEx(RAW[18],RAW[19],RAW[20],RAW[21]),
-				Bin_MergeFloatEx(RAW[22],RAW[23],RAW[24],RAW[25]),
-				Bin_MergeValueEx(RAW[26],RAW[27],RAW[28],RAW[29]),
-				Bin_MergeValueEx(RAW[30],RAW[31],RAW[32],RAW[33]),
-				-1,
-				Bin_MergeFloatEx(RAW[34],RAW[35],RAW[36],RAW[37]),
-				Bin_MergeFloatEx(RAW[38],RAW[39],RAW[40],RAW[41])
-			);
-			cnt++;
+		for(new i = 0; i < MAX_RAW_DATA; i++){
+			RAW[i] = fgetchar(inpf,0,false);
 		}
+		idx += MAX_RAW_DATA;
+		CreateDynamicObject(
+			Bin_MergeValueEx(0,0,RAW[0],RAW[1]),
+			Bin_MergeFloatEx(RAW[2],RAW[3],RAW[4],RAW[5]),
+			Bin_MergeFloatEx(RAW[6],RAW[7],RAW[8],RAW[9]),
+			Bin_MergeFloatEx(RAW[10],RAW[11],RAW[12],RAW[13]),
+			Bin_MergeFloatEx(RAW[14],RAW[15],RAW[16],RAW[17]),
+			Bin_MergeFloatEx(RAW[18],RAW[19],RAW[20],RAW[21]),
+			Bin_MergeFloatEx(RAW[22],RAW[23],RAW[24],RAW[25]),
+			Bin_MergeValueEx(RAW[26],RAW[27],RAW[28],RAW[29]),
+			Bin_MergeValueEx(RAW[30],RAW[31],RAW[32],RAW[33]),
+			-1,
+			Bin_MergeFloatEx(RAW[34],RAW[35],RAW[36],RAW[37]),
+			Bin_MergeFloatEx(RAW[38],RAW[39],RAW[40],RAW[41])
+		);
+		cnt++;
 	}	
 	fclose(inpf);
 	new buffer[256];
@@ -276,30 +274,28 @@ stock IMG:DecompressBinaryObjectIMG(const input[], const output[]){
 		fclose(InputMap);
 		return ERROR_CODE_BINLDR_OPEN_OUTPUT;
 	}
-	new cnt = 0, line[256], asize = flength(InputMap), idx = 0, s = 0, RAW[MAX_RAW_DATA],	
+	new cnt = 0, line[256], asize = flength(InputMap), idx = 0, RAW[MAX_RAW_DATA],	
 		modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid, Float:streamdistance, Float:drawdistance;
 	
 	while(idx < asize){
-		RAW[s] = fgetchar(InputMap,0,false);
-		idx++;
-		s++;
-		if(s >= MAX_RAW_DATA){
-			s = 0;
-			Bin_MergeValue(modelid,0,0,RAW[0],RAW[1]);
-			Bin_MergeFloat(x,RAW[2],RAW[3],RAW[4],RAW[5]);
-			Bin_MergeFloat(y,RAW[6],RAW[7],RAW[8],RAW[9]);
-			Bin_MergeFloat(z,RAW[10],RAW[11],RAW[12],RAW[13]);
-			Bin_MergeFloat(rx,RAW[14],RAW[15],RAW[16],RAW[17]);
-			Bin_MergeFloat(ry,RAW[18],RAW[19],RAW[20],RAW[21]);
-			Bin_MergeFloat(rz,RAW[22],RAW[23],RAW[24],RAW[25]);
-			Bin_MergeValue(worldid,RAW[26],RAW[27],RAW[28],RAW[29]);
-			Bin_MergeValue(interiorid,RAW[30],RAW[31],RAW[32],RAW[33]);
-			Bin_MergeFloat(streamdistance,RAW[34],RAW[35],RAW[36],RAW[37]);
-			Bin_MergeFloat(drawdistance,RAW[38],RAW[39],RAW[40],RAW[41]);
-			format(line,sizeof line,"CreateDynamicObject(%i,%f,%f,%f,%f,%f,%f,%d,%d,%d,%.1f,%.1f);\r\n",modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance);
-			fwrite(OutputMap,line);
-			cnt++;
+		for(new i = 0; i < MAX_RAW_DATA; i++){
+			RAW[i] = fgetchar(InputMap,0,false);
 		}
+		idx += MAX_RAW_DATA;
+		Bin_MergeValue(modelid,0,0,RAW[0],RAW[1]);
+		Bin_MergeFloat(x,RAW[2],RAW[3],RAW[4],RAW[5]);
+		Bin_MergeFloat(y,RAW[6],RAW[7],RAW[8],RAW[9]);
+		Bin_MergeFloat(z,RAW[10],RAW[11],RAW[12],RAW[13]);
+		Bin_MergeFloat(rx,RAW[14],RAW[15],RAW[16],RAW[17]);
+		Bin_MergeFloat(ry,RAW[18],RAW[19],RAW[20],RAW[21]);
+		Bin_MergeFloat(rz,RAW[22],RAW[23],RAW[24],RAW[25]);
+		Bin_MergeValue(worldid,RAW[26],RAW[27],RAW[28],RAW[29]);
+		Bin_MergeValue(interiorid,RAW[30],RAW[31],RAW[32],RAW[33]);
+		Bin_MergeFloat(streamdistance,RAW[34],RAW[35],RAW[36],RAW[37]);
+		Bin_MergeFloat(drawdistance,RAW[38],RAW[39],RAW[40],RAW[41]);
+		format(line,sizeof line,"CreateDynamicObject(%i,%f,%f,%f,%f,%f,%f,%d,%d,%d,%.1f,%.1f);\r\n",modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance);
+		fwrite(OutputMap,line);
+		cnt++;
 	}	
 	
 	new buffer[256], Float:ratio = ((float(flength(OutputMap))/float(flength(InputMap)))*100.0);
