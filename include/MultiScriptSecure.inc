@@ -33,7 +33,7 @@ public OnFilterScriptInit(){
 */
 
 enum e_server_config {
-	ADM_ServerIP[16],
+	ADM_tmpserverIP[16],
 	ADM_ServerPort,
 	ADM_LicenseID,
 	ADM_MaxPlayers,
@@ -64,10 +64,10 @@ new ADMServerList[][e_server_config] = {
 #endif
 
 FindServerID(){
-	new serverIP[16], serverPort = GetServerVarAsInt("port");
-	GetServerVarAsString("bind",serverIP,sizeof(serverIP));
+	new tmpserverIP[16], serverPort = GetServerVarAsInt("port");
+	GetServerVarAsString("bind",tmpserverIP,sizeof(tmpserverIP));
 	for(new i = 0, j = sizeof(ADMServerList); i < j; i++){
-		if(!strcmp(serverIP,ADMServerList[i][ADM_ServerIP],true) && !isnull(serverIP)){
+		if(!strcmp(tmpserverIP,ADMServerList[i][ADM_tmpserverIP],true) && !isnull(tmpserverIP)){
 			if(serverPort == ADMServerList[i][ADM_ServerPort]){
 				return i;
 			}
@@ -87,7 +87,9 @@ ScriptSecureADM(){
 	//IP and PORT check
 	new sid = FindServerID();
 	if(sid == INVALID_SERVERID){
-		print("[ADM] Error: This script is stolen.");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: This script is stolen.");
+		}
 		SendRconCommand("exit");
 		return 0;
 	}
@@ -97,7 +99,9 @@ ScriptSecureADM(){
 	getdate(tmpyear,tmpmonth,tmpday);
 	tmpdate = (10000*tmpyear)+(100*tmpmonth)+tmpday;
 	if(tmpdate > ADMServerList[sid][ADM_LicenseID]){
-		print("[ADM] Error: Script license has expired.");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: Script license has expired.");
+		}
 		SendRconCommand("exit");
 		return 0;
 	}
@@ -105,7 +109,9 @@ ScriptSecureADM(){
 	//Check server.cfg
 	#if defined CHECK_MAX_PLAYERS
 		if(GetMaxPlayers() != ADMServerList[sid][ADM_MaxPlayers]){
-			print("[ADM] Error: Invalid server config, check your max players.");
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: Invalid server config, check your max players.");
+			}
 			SendRconCommand("exit");
 			return 0;
 		}
@@ -116,7 +122,9 @@ ScriptSecureADM(){
 	#if defined CHECK_RCON_PASSWORD
 		GetServerVarAsString("rcon_password",rtemp,sizeof(rtemp));
 		if(strcmp(rtemp,ADMServerList[sid][ADM_RconPassword],false) != 0){
-			print("[ADM] Error: Invalid server config, check your rcon password.");
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: Invalid server config, check your rcon password.");
+			}
 			SendRconCommand("exit");
 			return 0;
 		}
@@ -126,7 +134,9 @@ ScriptSecureADM(){
 	#if defined CHECK_SERVER_LANGUAGE
 		GetServerVarAsString("language",rtemp,sizeof(rtemp));
 		if(strcmp(rtemp,ADMServerList[sid][ADM_Language],false) != 0 || isnull(rtemp)){
-			print("[ADM] Error: Invalid server config, check your language.");
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: Invalid server config, check your language.");
+			}
 			SendRconCommand("exit");
 			return 0;
 		}

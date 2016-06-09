@@ -73,7 +73,9 @@ forward MissileDestroy(mobid);
 public MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz){
 	new mobid = FindFreeMissileID();
 	if(mobid == INVALID_MISSILE_ID){
-		printf("[ADM] Error: Failed to MissileLaunch limit %d exceeded, edit Missile.inc and change MAX_MISSILE",MAX_MISSILE);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Error: Failed to MissileLaunch limit %d exceeded, edit Missile.inc and change MAX_MISSILE",MAX_MISSILE);
+		}
 		return INVALID_MISSILE_ID;
 	}
 	

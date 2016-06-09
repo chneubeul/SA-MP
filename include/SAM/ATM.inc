@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.2C                                                                                                             *
+ * File Version: 1.2D                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -24,6 +24,7 @@
  * CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,type,Float:radius,Float:expradius);                    *
  * Float:CalculatePercent(Float:value,Float:maxvalue);                                                                            *
  * GetSAMIncludeVersion(value,name[],maxdest = sizeof(name));                                                                     *
+ * DisableADMLogging(bool:disable);                                                                                               *
  * SetPlayerWorldBoundsEx(playerid,Float:minx,Float:miny,Float:maxx,Float:maxy);                                                  *
  * GetPlayerNick(playerid);                                                                                                       *
  * GetPlayerID(name[]);                                                                                                           *
@@ -145,6 +146,14 @@ stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,ty
 
 stock GetSAMIncludeVersion(value,name[],maxdest = sizeof(name)){
 	format(name,maxdest,"%d.%d%c",(value / 10000),((value % 10000) / 100),(((value % 10000) % 100) + 0x40));
+}
+
+stock DisableADMLogging(bool:disable){
+	if(disable){
+		SetSVarInt("ADM:Logging:Disable",1);
+	} else {
+		SetSVarInt("ADM:Logging:Disable",0);
+	}
 }
 
 stock SetPlayerWorldBoundsEx(playerid,Float:minx,Float:miny,Float:maxx,Float:maxy){

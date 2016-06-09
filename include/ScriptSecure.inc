@@ -14,7 +14,7 @@
 //#define CHECK_RCON_PASSWORD	//additional option
 //#define CHECK_SERVER_LANGUAGE	//additional option
 
-#define FILE_SERVERIP			"127.0.0.1"
+#define FILE_tmpserverIP			"127.0.0.1"
 #define FILE_SERVERPORT			(7777)			
 #define FILE_LICENSEID			(20160201)		//<--- YYYYMMDD 01.02.2016 (DD.MM.YYYY)
 #define FILE_MAX_PLAYERS		(500)			//max players in server.cfg
@@ -42,8 +42,8 @@ public OnFilterScriptInit(){
 	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
 
-#if !defined FILE_SERVERIP
-	#error Please #define FILE_SERVERIP "127.0.0.1"
+#if !defined FILE_tmpserverIP
+	#error Please #define FILE_tmpserverIP "127.0.0.1"
 #endif
 
 #if !defined FILE_SERVERPORT
@@ -80,36 +80,46 @@ AntiDeAMX(){
 
 ScriptSecureADM(){
 	//IP and PORT check
-	new serverIP[16];
-	GetServerVarAsString("bind",serverIP,sizeof(serverIP));
+	new tmpserverIP[16];
+	GetServerVarAsString("bind",tmpserverIP,sizeof(tmpserverIP));
 	
-	if(!strcmp(serverIP,FILE_SERVERIP,true) && !isnull(serverIP)){
+	if(!strcmp(tmpserverIP,FILE_tmpserverIP,true) && !isnull(tmpserverIP)){
 		//Server IP OK
 	} else {
-		if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){
+		if(!strcmp(tmpserverIP,"127.0.0.1",true) || !strcmp(tmpserverIP,"localhost",true)){
 			//localhost
 			#if defined DONT_ALLOW_LOCALHOST
-				print("[ADM] Error: This script is stolen.");
+				if(GetSVarInt("ADM:Logging:Disable") == 0){
+					print("[ADM] Error: This script is stolen.");
+				}
 				SendRconCommand("exit");
 				return 0;
 			#else
-				print("[ADM] Info: Local server detect.");
+				if(GetSVarInt("ADM:Logging:Disable") == 0){
+					print("[ADM] Info: Local server detect.");
+				}
 			#endif
 		} else {
-			print("[ADM] Error: This script is stolen.");
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: This script is stolen.");
+			}
 			SendRconCommand("exit");
 			return 0;
 		}
 	}
-	if(!strcmp(serverIP,"127.0.0.1",true) || !strcmp(serverIP,"localhost",true)){
+	if(!strcmp(tmpserverIP,"127.0.0.1",true) || !strcmp(tmpserverIP,"localhost",true)){
 		//localhost
 		#if defined DONT_ALLOW_LOCALHOST
-			print("[ADM] Error: This script is stolen.");
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: This script is stolen.");
+			}
 			SendRconCommand("exit");
 			return 0;
 		#endif
 	} else if(GetServerVarAsInt("port") != FILE_SERVERPORT){
-		print("[ADM] Error: This script is stolen.");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: This script is stolen.");
+		}
 		SendRconCommand("exit");
 		return 0;
 	}
@@ -119,7 +129,9 @@ ScriptSecureADM(){
 	getdate(tmpyear,tmpmonth,tmpday);
 	tmpdate = (10000*tmpyear)+(100*tmpmonth)+tmpday;
 	if(tmpdate > FILE_LICENSEID){
-		print("[ADM] Error: Script license has expired.");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: Script license has expired.");
+		}
 		SendRconCommand("exit");
 		return 0;
 	}
@@ -127,7 +139,9 @@ ScriptSecureADM(){
 	//Check server.cfg
 	#if defined CHECK_MAX_PLAYERS
 		if(GetMaxPlayers() != FILE_MAX_PLAYERS){
-			print("[ADM] Error: Invalid server config, check your max players.");
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: Invalid server config, check your max players.");
+			}
 			SendRconCommand("exit");
 			return 0;
 		}
@@ -138,7 +152,9 @@ ScriptSecureADM(){
 	#if defined CHECK_RCON_PASSWORD
 		GetServerVarAsString("rcon_password",rtemp,sizeof(rtemp));
 		if(strcmp(rtemp,FILE_RCONPASS,false) != 0){
-			print("[ADM] Error: Invalid server config, check your rcon password.");
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: Invalid server config, check your rcon password.");
+			}
 			SendRconCommand("exit");
 			return 0;
 		}
@@ -148,7 +164,9 @@ ScriptSecureADM(){
 	#if defined CHECK_SERVER_LANGUAGE
 		GetServerVarAsString("language",rtemp,sizeof(rtemp));
 		if(strcmp(rtemp,FILE_LANGUAGE,false) != 0 || isnull(rtemp)){
-			print("[ADM] Error: Invalid server config, check your language.");
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: Invalid server config, check your language.");
+			}
 			SendRconCommand("exit");
 			return 0;
 		}
@@ -159,7 +177,7 @@ ScriptSecureADM(){
 	return 1;
 }
 
-#undef FILE_SERVERIP
+#undef FILE_tmpserverIP
 #undef FILE_SERVERPORT
 #undef FILE_LICENSEID
 

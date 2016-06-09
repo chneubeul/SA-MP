@@ -218,7 +218,9 @@ public OnDynamicMineUpdate(tec){
 public CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object){
 	new mineid = FindFreeMineID();
 	if(mineid == INVALID_MINE_ID){
-		printf("[ADM] Error: Failed to CreateDynamicMine limit %d exceeded, edit Mines.inc and change MAX_MINES",MAX_MINES);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Error: Failed to CreateDynamicMine limit %d exceeded, edit Mines.inc and change MAX_MINES",MAX_MINES);
+		}
 		return INVALID_MINE_ID;
 	}
 	switch(mine_object){

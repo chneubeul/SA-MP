@@ -791,10 +791,16 @@ stock DestroyDynamicObjectComponent(objectid,type){
 			switch(type){
 				case STREAMER_TYPE_OBJECT:	if(IsValidDynamicObject(i)) DestroyDynamicObject(i);
 				case STREAMER_TYPE_AREA:	if(IsValidDynamicArea(i)) DestroyDynamicArea(i);
-				default: print("[ADM] Warring: Invalid Object Component type.");
+				default: {
+					if(GetSVarInt("ADM:Logging:Disable") == 0){
+						print("[ADM] Warring: Invalid Object Component type.");
+					}
+					return 0;
+				}
 			}
 		}
 	}
+	return 1;
 }
 
 stock DeattachDynamicObjectComponent(objectid,type){
@@ -804,10 +810,16 @@ stock DeattachDynamicObjectComponent(objectid,type){
 			switch(type){
 				case STREAMER_TYPE_OBJECT:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID);
 				case STREAMER_TYPE_AREA:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_VEHICLE_ID);
-				default: print("[ADM] Warring: Invalid Object Component type.");
+				default: {
+					if(GetSVarInt("ADM:Logging:Disable") == 0){
+						print("[ADM] Warring: Invalid Object Component type.");
+					}
+					return 0;
+				}
 			}
 		}
 	}
+	return 1;
 }
 
 stock GetDynamicObjectMoveTime(objectid,&objstate,&rtime){
@@ -1090,7 +1102,9 @@ stock CheckStreamerVersion(){
 		new str1[32], str2[32];
 		GetStreamerVersionName(str1,GetStreamerVersion());
 		GetStreamerVersionName(str2,GetValidStreamerVersion());
-		printf("[ADM] Warring: Your Streamer %s It is not compatible with this version Streamer Functions, update your streamer to %s",str1,str2);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Warring: Your Streamer %s It is not compatible with this version Streamer Functions, update your streamer to %s",str1,str2);
+		}
 	}
 }
 

@@ -82,13 +82,17 @@ forward OnEngineXExit();
 public OnEngineXInit(){
 	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
-		printf("[ADM] Error: Invalid MapAndreas Memory.");
-		printf("[ADM] Error: NGCM Mob Move Engine System %s not loaded.",NOX_VERSION);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Error: Invalid MapAndreas Memory.");
+			printf("[ADM] Error: NGCM Mob Move Engine System %s not loaded.",NOX_VERSION);
+		}
 		return 0;
 	}
 	InvalidPolygon[0] = CreateDynamicRectangle(398.0,689.0,808.0,1031.0,-1,-1,-1);		//Kanion blokada
 	InvalidPolygon[1] = CreateDynamicRectangle(-1407.0,1979.0,-445.0,2843.0,-1,-1,-1);	//Tama Blokada
-	printf("[ADM] Info: NGCM Mob Move Engine System %s loaded",NOX_VERSION);
+	if(GetSVarInt("ADM:Logging:Disable") == 0){
+		printf("[ADM] Info: NGCM Mob Move Engine System %s loaded",NOX_VERSION);
+	}
 	EngineXLoaded = true;
 	return 1;
 }
@@ -97,7 +101,9 @@ public OnEngineXExit(){
 	if(!EngineXLoaded) return 0;
 	if(IsValidDynamicArea(InvalidPolygon[0])) DestroyDynamicArea(InvalidPolygon[0]);
 	if(IsValidDynamicArea(InvalidPolygon[1])) DestroyDynamicArea(InvalidPolygon[1]);
-	printf("[ADM] Info: NGCM Mob Move Engine System %s unloaded.",NOX_VERSION);
+	if(GetSVarInt("ADM:Logging:Disable") == 0){
+		printf("[ADM] Info: NGCM Mob Move Engine System %s unloaded.",NOX_VERSION);
+	}
 	EngineXLoaded = false;
 	return 1;
 }

@@ -80,7 +80,9 @@ forward SantaGiftReset(giftid);
 public OnGameModeInit(){
 	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
-		print("[ADM] Error: Invalid MapAndreas Memory.");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: Invalid MapAndreas Memory.");
+		}
 	} else {
 		for(new i = 0; i < MAX_SANTAGIFTS; i++){
 			SantaGiftCreate(i);
@@ -106,7 +108,9 @@ public OnGameModeInit(){
 public OnFilterScriptInit(){
 	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
-		print("[ADM] Error: Invalid MapAndreas Memory.");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: Invalid MapAndreas Memory.");
+		}
 	} else {
 		for(new i = 0; i < MAX_SANTAGIFTS; i++){
 			SantaGiftCreate(i);

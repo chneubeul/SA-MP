@@ -227,7 +227,9 @@ stock GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,
 		CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
 		CompRotationFloat((atan2(ty-y,tx-x)-90),rz);
 	} else {
-		print("[ADM] Warring: Get the rotation wrong, identical points.");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Warring: Get the rotation wrong, identical points.");
+		}
 	}
 }
 
@@ -270,7 +272,9 @@ stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed
 stock Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
 	if(rtime/1000.0 <= 0.0){
 		speed = Float:0x7F800000;
-		print("[ADM] Warring: Get speed error, the wrong time.");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Warring: Get speed error, the wrong time.");
+		}
 	} else {
 		speed = (GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz)/(rtime/1000.0));
 	}
@@ -362,7 +366,9 @@ stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:
 	lengthsq = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
 	lengthsq = lengthsq*lengthsq;
 	if(lengthsq <= 0.0 || maxdist <= 0.0){
-		print("[ADM] Warring: Invalid lengthsq OR maxdist");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Warring: Invalid lengthsq OR maxdist");
+		}
 		return false;
 	}
 	if(dot < 0.0 || dot > lengthsq){

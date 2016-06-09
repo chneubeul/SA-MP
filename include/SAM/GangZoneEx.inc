@@ -28,14 +28,24 @@ new GangZoneArea[MAX_GANG_ZONES];
 
 stock GangZoneCreateEx(Float:minx,Float:miny,Float:maxx,Float:maxy,worldid = -1,interiorid = -1){
 	new tid = GangZoneCreate(minx,miny,maxx,maxy);
-	if(tid == INVALID_GANG_ZONE) return print("[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE");
+	if(tid == INVALID_GANG_ZONE){
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE");
+		}
+		return INVALID_GANG_ZONE;
+	}
 	GangZoneArea[tid] = CreateDynamicRectangle(minx,miny,maxx,maxy,worldid,interiorid,-1);
 	return tid;
 }
 
 stock AC_GangZoneCreate(Float:minx,Float:miny,Float:maxx,Float:maxy){
 	new tid = GangZoneCreate(minx,miny,maxx,maxy);
-	if(tid == INVALID_GANG_ZONE) return print("[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE");
+	if(tid == INVALID_GANG_ZONE){
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE");
+		}
+		return INVALID_GANG_ZONE;
+	}
 	GangZoneArea[tid] = CreateDynamicRectangle(minx,miny,maxx,maxy,-1,-1,-1);
 	return tid;
 }
@@ -48,7 +58,12 @@ stock AC_GangZoneCreate(Float:minx,Float:miny,Float:maxx,Float:maxy){
 #define GangZoneCreate AC_GangZoneCreate
 
 stock AC_GangZoneDestroy(zoneid){
-	if(zoneid < 0 || zoneid > MAX_GANG_ZONES) return printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+	if(zoneid < 0 || zoneid > MAX_GANG_ZONES){
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+		}
+		return 0;
+	}
 	if(IsValidDynamicArea(GangZoneArea[zoneid])) DestroyDynamicArea(GangZoneArea[zoneid]);
 	return GangZoneDestroy(zoneid);
 }
@@ -63,13 +78,23 @@ stock AC_GangZoneDestroy(zoneid){
 //fix colision YSF.inc
 #if !defined _YSF_included
 	stock bool:IsPlayerInGangZone(playerid,zoneid){
-		if(zoneid < 0 || zoneid > MAX_GANG_ZONES) return printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+		if(zoneid < 0 || zoneid > MAX_GANG_ZONES){
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+			}
+			return false;
+		}
 		if(IsPlayerInDynamicArea(playerid,GangZoneArea[zoneid])) return true;
 		return false;
 	}
 	
 	stock bool:IsValidGangZone(zoneid){
-		if(zoneid < 0 || zoneid > MAX_GANG_ZONES) return printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+		if(zoneid < 0 || zoneid > MAX_GANG_ZONES){
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+				return false;
+			}
+		}
 		if(IsValidDynamicArea(GangZoneArea[zoneid]) && GangZoneArea[zoneid] != 0) return true
 		return false;
 	}

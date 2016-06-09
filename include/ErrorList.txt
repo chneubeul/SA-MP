@@ -1,4 +1,6 @@
-﻿//StreamerFunction.inc
+﻿Use DisableADMLogging(true); to disable notifications [ADM]
+
+//StreamerFunction.inc
 [ADM] Warring: Invalid Object Component type.
 [ADM] Warring: Your Streamer ... It is not compatible with this version Streamer Functions, update your streamer to ...
 

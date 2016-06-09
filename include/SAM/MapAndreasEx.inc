@@ -46,10 +46,14 @@ stock SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(nam
 		MapAndreasLastStat = true;
 	}
 	if(!IsMapAndreasInit()){
-		print("[ADM] Error: MapAndreas failed to initiated.");
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: MapAndreas failed to initiated.");
+		}
 	} else {
 		if(MapAndreasLastStat){
-			print("[ADM] Info: MapAndreas successfully init.");
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Info: MapAndreas successfully init.");
+			}
 		}
 	}
 }
