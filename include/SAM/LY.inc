@@ -1,12 +1,12 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- *                                       Unsigned Long 61 bit                                                                     *
+ *                                                Unsigned Long 61 bit (Long Yoyo)                                                *
  *                                                                                                                                *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.5                                                                                                              *
+ * File Version: 1.6                                                                                                              *
  *                                                                                                                                *
  * Pawn Unsigned Long for 32 Bit language (precision 61-bit)                                                                      *
  * Available limit:                                                                                                               *
@@ -16,10 +16,19 @@
  * Functions:                                                                                                                     *
  * bool:IsValueContainLY(prefix,suffix,value);                                                                                    *
  * GetLYString(prefix,suffix,string[],maxdest = sizeof(string));                                                                  *
+ * LYStringToLY(&prefix,&suffix,string[]); //Reverse to GetLYStrin                                                                *
  * UpdateLY(&prefix,&suffix,value,limitprefix = DEFAULT_MAX_LY_PREFIX);                                                           *
  * AddSeparatorLY(string[],separator[]);                                                                                          *
+ * DeleteSeparatorLY(string[],separator[]);                                                                                       *
  * CalculatePercentLY(&prefix,&suffix,Float:percent = 0.0,increase = true,limitprefix = DEFAULT_MAX_LY_PREFIX);                   *
  * GetPercentLY(prefix,suffix,&o_prefix,&o_suffix,Float:percent = 0.0,limitprefix = DEFAULT_MAX_LY_PREFIX);                       *
+ *                                                                                                                                *
+ * Operators:                                                                                                                     *
+ * bool:IsLYEqual(prefix,suffix,from_prefix,from_suffix);                                                                         *
+ * bool:IsLYSmallerThan(prefix,suffix,from_prefix,from_suffix);                                                                   *
+ * bool:IsLYSmallerThanOrEqual(prefix,suffix,from_prefix,from_suffix);                                                            *
+ * bool:IsLYBiggerThan(prefix,suffix,from_prefix,from_suffix);                                                                    *
+ * bool:IsLYBiggerThanOrEqual(prefix,suffix,from_prefix,from_suffix);                                                             *
  *                                                                                                                                *
  **********************************************************************************************************************************/
  
@@ -31,6 +40,7 @@
 #define LY_STRING_LEN					(20)
 #define SEP_LY_STRING_LEN				(LY_STRING_LEN+10)
 #define MAX_LY_STRING					(LY_STRING_LEN)
+#define MAX_SEP_LY_STRING				(SEP_LY_STRING_LEN)
 
 #define MAX_LY_PREFIX	 				(2147483647)
 #define DEFAULT_MAX_LY_PREFIX			(2000000000)
@@ -90,7 +100,7 @@ stock UpdateLY(&prefix,&suffix,value,limitprefix = DEFAULT_MAX_LY_PREFIX){
 				suffix = 0;
 			}
 		}
-	}	
+	}
 	if((prefix >= limitprefix) && (suffix >= 0)){
 		prefix = limitprefix;
 		suffix = 0;
@@ -99,7 +109,7 @@ stock UpdateLY(&prefix,&suffix,value,limitprefix = DEFAULT_MAX_LY_PREFIX){
 }
 
 stock AddSeparatorLY(string[],separator[]){ 
-	new tStr[SEP_LY_STRING_LEN];
+	new tStr[MAX_SEP_LY_STRING];
 	format(tStr,sizeof(tStr),"%s",string); 
 
 	if(strlen(tStr) < 4) return tStr; 
@@ -108,14 +118,25 @@ stock AddSeparatorLY(string[],separator[]){
 	while(iPos > 0){ 
 		if(iCount == 4){ 
 			iCount = 0; 
-			strins(tStr,separator,iPos,1); 
+			strins(tStr,separator[0],iPos,1); 
 			iPos++; 
 		}
 		iCount++; 
 		iPos--; 
 	} 
 	return tStr; 
-}  
+}
+
+stock DeleteSeparatorLY(string[],separator[]){ 
+	new tStr[MAX_LY_STRING], idx = 0;
+	for(new i = 0, j = strlen(string); i < j ; i++){
+		if(string[i] != separator[0]){
+			tStr[idx] = string[i];
+			idx++;
+		}
+	}
+	return tStr; 
+}
 
 stock CalculatePercentLY(&prefix,&suffix,Float:percent = 0.0,bool:increase = true,limitprefix = DEFAULT_MAX_LY_PREFIX){
 	new Float:lycut = (prefix*(percent/100.0)),
@@ -147,6 +168,53 @@ stock GetPercentLY(prefix,suffix,&o_prefix,&o_suffix,Float:percent = 0.0,limitpr
 	modify_s = floatround(suffix*(percent/100.0));
 	UpdateLY(o_prefix,o_suffix,modify_s,limitprefix);
 
+}
+
+//Operator  a == b
+stock bool:IsLYEqual(prefix,suffix,from_prefix,from_suffix){
+	if(prefix == from_prefix && sufix == from_suffix) return true;
+	return false;
+}
+
+//Operator  a < b
+stock bool:IsLYSmallerThan(prefix,suffix,from_prefix,from_suffix){
+	if(prefix < from_prefix) return true;
+	if(prefix == from_prefix && suffix < from_suffix) return true;
+	return false;
+}
+
+//Operator  a <= b
+stock bool:IsLYSmallerThanOrEqual(prefix,suffix,from_prefix,from_suffix){
+	if(prefix <= from_prefix) return true;
+	if(prefix == from_prefix && suffix <= from_suffix) return true;
+	return false;
+}
+
+//Operator  a > b
+stock bool:IsLYBiggerThan(prefix,suffix,from_prefix,from_suffix){
+	if(prefix > from_prefix) return true;
+	if(prefix == from_prefix && suffix > from_suffix) return true;
+	return false;
+}
+
+//Operator a >= b
+stock bool:IsLYBiggerThanOrEqual(prefix,suffix,from_prefix,from_suffix){
+	if(prefix >= from_prefix) return true;
+	if(prefix == from_prefix && suffix >= from_suffix) return true;
+	return false;
+}
+
+//Reverse to GetLYString
+stock LYStringToLY(&prefix,&suffix,string[]){
+	new len = strlen(string);
+	prefix = 0, suffix = 0;
+	for(new i = strlen(string)-1; i >= 0; i--){
+		if(len-i <= 9){
+			suffix += (string[i]-48)*floatround(floatpower(10,len-i-1));
+		} else {
+			prefix += (string[i]-48)*floatround(floatpower(10,len-i-10));
+		}
+	}
 }
 
 //EOF

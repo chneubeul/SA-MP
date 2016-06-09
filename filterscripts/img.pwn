@@ -1,13 +1,13 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Easy IMG Creator v1.0 made by Abyss Morgan                                                       *
+ * Easy IMG Creator v1.1 made by Abyss Morgan                                                       *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
  *                                                                                                  *
  ****************************************************************************************************/
 
-#define INPUT_TXT		"FullServer.txt"
-#define OUTPUT_BIN		"FullServer.bin"
+#define INPUT_TXT		"MyObject.txt"
+#define OUTPUT_BIN		"MyObject.bin"
 
 #include <a_samp>
 #include <sscanf2>
@@ -15,16 +15,20 @@
 
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error You need BINLDR.inc v2.0
+	#error You need BINLDR.inc v2.2
 #elseif !defined Bin_Loader_Version
-	#error Update you BINLDR.inc to v2.0
-#elseif (Bin_Loader_Version < 20001)
-	#error Update you BINLDR.inc to v2.0
+	#error Update you BINLDR.inc to v2.2
+#elseif (Bin_Loader_Version < 20201)
+	#error Update you BINLDR.inc to v2.2
 #endif
 
 public OnFilterScriptInit(){
+	if(fexist(OUTPUT_BIN)) fremove(OUTPUT_BIN);
 	if(fexist(INPUT_TXT)){
-		SaveBinaryObjectIMG(INPUT_TXT,OUTPUT_BIN);
+		new IMG::edi = SaveBinaryObjectIMG(INPUT_TXT,OUTPUT_BIN);
+		if(edi != ERROR_CODE_BINLDR_OK){
+			printf("Error Convert '%s' file, code '%d'",INPUT_TXT,IMGToInt(edi));
+		}
 	}
 	return 1;
 }

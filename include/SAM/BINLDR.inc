@@ -66,9 +66,16 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 #define ERROR_CODE_BINLDR_OK				(IMG:1)		//success
 #define ERROR_CODE_BINLDR_INPUT				(IMG:-1)	//input file not exist
 #define ERROR_CODE_BINLDR_OUTPUT			(IMG:-2)	//output file exist
+//Shadow:ADM.inc							(IMG:-3)	//invalid key
 #define ERROR_CODE_BINLDR_SIZE				(IMG:-4)	//invalid file size
+//Shadow:ADM.inc							(IMG:-5)	//error destination size
 #define ERROR_CODE_BINLDR_OPEN_INPUT		(IMG:-6)	//error open input file
 #define ERROR_CODE_BINLDR_OPEN_OUTPUT		(IMG:-7)	//error open output file
+//Shadow:ADM.inc							(IMG:-8)	//invalid key type
+//Shadow:ADM.inc							(IMG:-9)	//invalid password length
+//Shadow:ADM.inc							(IMG:-10)	//invalid MD5 Load
+//Shadow:ADM.inc							(IMG:-11)	//invalid dump file name
+//Shadow:ADM.inc							(IMG:-12)	//invalid dump file index
 
 //BitFunctions
 #define Bin_ExtractValue(%0,%1,%2,%3,%4)	((%1) = (((%0) & 0xFF000000) >>> 24),(%2) = (((%0) & 0x00FF0000) >>> 16),(%3) = (((%0) & 0x0000FF00) >>> 8),(%4) = ((%0) & 0x000000FF))
@@ -184,7 +191,7 @@ stock IMG:LoadBinaryObjectIMG(const name[],&count=0){
 			Bin_MergeFloatEx(RAW[38],RAW[39],RAW[40],RAW[41])
 		);
 		cnt++;
-	}	
+	}
 	fclose(inpf);
 	new buffer[256];
 	format(buffer,sizeof buffer,"%s, objects: %d load time %d ms",name,cnt,GetTickCount()-NTTime);
@@ -215,8 +222,8 @@ stock IMG:SaveBinaryObjectIMG(const input[], const output[]){
 				worldid = -1, interiorid = -1, playerid = -1,
 				Float:streamdistance = 200.0, Float:drawdistance = 0.0,
 				Float:nul, RAW[MAX_RAW_DATA], tmp;
-				
-			if(sscanf(line,"p<,>'('ifffffP<,)>fP<,)>D(-1)D(-1)D(-1)F(-1)F(0)p<)>F(0)", modelid, x, y, z, rx, ry, rz, worldid, interiorid, playerid, streamdistance, drawdistance, nul)){
+			
+			if(sscanf(line,"p<,>'('ifffffP<,)>fP<,)>D(-1)D(-1)D(-1)F(-1)F(0)p<)>F(0)",modelid,x,y,z,rx,ry,rz,worldid,interiorid,playerid,streamdistance,drawdistance,nul)){
 				if(streamdistance == -1) streamdistance = BIN_CalculateObjectDistance(modelid);
 				
 				//extract object info
@@ -274,8 +281,9 @@ stock IMG:DecompressBinaryObjectIMG(const input[], const output[]){
 		fclose(InputMap);
 		return ERROR_CODE_BINLDR_OPEN_OUTPUT;
 	}
-	new cnt = 0, line[256], asize = flength(InputMap), idx = 0, RAW[MAX_RAW_DATA],	
-		modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid, Float:streamdistance, Float:drawdistance;
+	new cnt = 0, line[256], asize = flength(InputMap), idx = 0, RAW[MAX_RAW_DATA],
+		modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid,
+		Float:streamdistance, Float:drawdistance;
 	
 	while(idx < asize){
 		for(new i = 0; i < MAX_RAW_DATA; i++){
@@ -296,7 +304,7 @@ stock IMG:DecompressBinaryObjectIMG(const input[], const output[]){
 		format(line,sizeof line,"CreateDynamicObject(%i,%f,%f,%f,%f,%f,%f,%d,%d,%d,%.1f,%.1f);\r\n",modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance);
 		fwrite(OutputMap,line);
 		cnt++;
-	}	
+	}
 	
 	new buffer[256], Float:ratio = ((float(flength(OutputMap))/float(flength(InputMap)))*100.0);
 	format(buffer,sizeof buffer,"%s, objects: %d convert time %d ms ratio %.2f",input,cnt,GetTickCount()-NTTime,ratio);

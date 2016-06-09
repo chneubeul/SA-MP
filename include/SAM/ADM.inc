@@ -52,20 +52,20 @@
  * ADM:HexStringToString(input[], output[], maxdest = sizeof(output));                                                            *
  *                                                                                                                                *
  * Return value:                                                                                                                  *
- * ERROR_CODE_ADM_UNEXEC       //function unexecutable                                                                            *
- * ERROR_CODE_ADM_OK           //success                                                                                          *
- * ERROR_CODE_ADM_INPUT        //input file not exist                                                                             *
- * ERROR_CODE_ADM_OUTPUT       //output file exist                                                                                *
- * ERROR_CODE_ADM_KEY          //invalid key                                                                                      *
- * ERROR_CODE_ADM_SIZE         //invalid file size                                                                                *
- * ERROR_CODE_ADM_DEST         //error destination size                                                                           *
- * ERROR_CODE_ADM_OPEN_INPUT   //error open input file                                                                            *
- * ERROR_CODE_ADM_OPEN_OUTPUT  //error open output file                                                                           * 
- * ERROR_CODE_ADM_INVALID_TYPE //invalid key type                                                                                 *
- * ERROR_CODE_ADM_PASSWORD     //invalid password len                                                                             *
- * ERROR_CODE_ADM_MD5          //invalid MD5 Load                                                                                 *
- * ERROR_CODE_ADM_DMP_NAME     //invalid dump file name                                                                           *
- * ERROR_CODE_ADM_DMP_IDX      //invalid dump file index                                                                          *
+ * ERROR_CODE_ADM_UNEXEC       //Function unexecutable                                                                            *
+ * ERROR_CODE_ADM_OK           //Success                                                                                          *
+ * ERROR_CODE_ADM_INPUT        //Input file not exist                                                                             *
+ * ERROR_CODE_ADM_OUTPUT       //Output file exist                                                                                *
+ * ERROR_CODE_ADM_KEY          //Invalid key                                                                                      *
+ * ERROR_CODE_ADM_SIZE         //Invalid file size                                                                                *
+ * ERROR_CODE_ADM_DEST         //Destination size                                                                                 *
+ * ERROR_CODE_ADM_OPEN_INPUT   //Open input file                                                                                  *
+ * ERROR_CODE_ADM_OPEN_OUTPUT  //Open output file                                                                                 * 
+ * ERROR_CODE_ADM_INVALID_TYPE //Invalid key type                                                                                 *
+ * ERROR_CODE_ADM_PASSWORD     //Invalid password len                                                                             *
+ * ERROR_CODE_ADM_MD5          //Invalid MD5 Load                                                                                 *
+ * ERROR_CODE_ADM_DMP_NAME     //Invalid dump file name                                                                           *
+ * ERROR_CODE_ADM_DMP_IDX      //Invalid dump file index                                                                          *
  *                                                                                                                                *
  * Key Generator:                                                                                                                 *
  * http://ngc.ugu.pl/admkg                                                                                                        *
@@ -147,7 +147,9 @@
 #define ERROR_CODE_ADM_DMP_NAME		(ADM:-11)	//invalid dump file name
 #define ERROR_CODE_ADM_DMP_IDX		(ADM:-12)	//invalid dump file index
 
-#define MAX_DUMP_FILE				(DMP:100)
+#if !defined MAX_DUMP_FILE
+	#define MAX_DUMP_FILE				(DMP:100)
+#endif
 #define MAX_DUMP_FILE_NAME			(80)
 #define MAX_DUMP_HEADER_SIZE		(14)
 
@@ -239,7 +241,7 @@ stock bool:IsValidADMKey(key[], type){
 				if(mode[i] < 1 || mode[i] > 255){
 					return false;
 				}
-			}	
+			}
 		}
 		
 		case KEY_TYPE_ADMx128: {
@@ -374,7 +376,7 @@ stock ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(outputkey
 						format(outputkey,maxdest,"%s %d",outputkey,(0xFF & (256-mode[i])));
 					}
 				}
-			}	
+			}
 		}
 		
 		case KEY_TYPE_ADMx128: {
@@ -458,7 +460,7 @@ stock ADM:CreateADMKey(key[], type, maxdest = sizeof(key)){
 				} else {
 					format(key,maxdest,"%s %d",key,random(255)+1);
 				}
-			}	
+			}
 		}
 		
 		case KEY_TYPE_ADMx128: {
@@ -1085,7 +1087,7 @@ stock DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
 			case KEY_TYPE_ADMx64: 	format(buffer,sizeof buffer,"%s",DUMP_HEADER_x64);
 			case KEY_TYPE_ADMx128:	format(buffer,sizeof buffer,"%s",DUMP_HEADER_x128);
 			case KEY_TYPE_ADMx256:	format(buffer,sizeof buffer,"%s",DUMP_HEADER_x256);
-		}		
+		}
 		for(new i = 0, j = strlen(buffer); i < j; i++){
 			fputchar(dmpfile,buffer[i],false);
 		}
@@ -1222,7 +1224,7 @@ stock ADM:DumpFileWrite(DMP:index, string[]){
 					mode[16],mode[17],mode[18],mode[19],mode[20],mode[21],mode[22],mode[23],
 					mode[24],mode[25],mode[26],mode[27],mode[28],mode[29],mode[30],mode[31]
 				);
-			}		
+			}
 		}
 		
 		for(new i = 0, j = strlen(string); i < j; i++){
