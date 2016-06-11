@@ -6,7 +6,7 @@
  *                                                                                                                                         *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
- * File Version: 2.3C                                                                                                                      *
+ * File Version: 2.3D                                                                                                                      *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
@@ -231,11 +231,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.3C
+	#error You need StreamerFunction.inc v2.3D
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.3C
-#elseif (Streamer_Spec_Version < 20303)
-	#error Update you StreamerFunction.inc to v2.3C
+	#error Update you StreamerFunction.inc to v2.3D
+#elseif (Streamer_Spec_Version < 20304)
+	#error Update you StreamerFunction.inc to v2.3D
 #endif
 */
 
@@ -248,7 +248,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 					(20303) //a.b[c] 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20304) //a.b[c] 10000*a+100*b+c
 #define Valid_Streamer_Version 					(0x282001)
 
 #if !defined INVALID_STREAMER_ID
@@ -787,15 +787,17 @@ stock SetDynamicRectanglePos(areaid,Float:minx,Float:miny,Float:maxx,Float:maxy)
 stock DestroyDynamicObjectComponent(objectid,type){
 	new max_dobj = Streamer_GetUpperBound(type);
 	for(new i = 1; i < max_dobj; i++){
-		if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == objectid){
-			switch(type){
-				case STREAMER_TYPE_OBJECT:	if(IsValidDynamicObject(i)) DestroyDynamicObject(i);
-				case STREAMER_TYPE_AREA:	if(IsValidDynamicArea(i)) DestroyDynamicArea(i);
-				default: {
-					if(GetSVarInt("ADM:Logging:Disable") == 0){
-						print("[ADM] Warring: Invalid Object Component type.");
+		if((IsValidDynamicObject(i) && type == STREAMER_TYPE_OBJECT) || (IsValidDynamicArea(i) && type == STREAMER_TYPE_AREA)){
+			if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == objectid){
+				switch(type){
+					case STREAMER_TYPE_OBJECT:	DestroyDynamicObject(i);
+					case STREAMER_TYPE_AREA:	DestroyDynamicArea(i);
+					default: {
+						if(GetSVarInt("ADM:Logging:Disable") == 0){
+							print("[ADM] Warring: Invalid Object Component type.");
+						}
+						return 0;
 					}
-					return 0;
 				}
 			}
 		}
@@ -806,15 +808,17 @@ stock DestroyDynamicObjectComponent(objectid,type){
 stock DeattachDynamicObjectComponent(objectid,type){
 	new max_dobj = Streamer_GetUpperBound(type);
 	for(new i = 1; i < max_dobj; i++){
-		if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == objectid){
-			switch(type){
-				case STREAMER_TYPE_OBJECT:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID);
-				case STREAMER_TYPE_AREA:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_VEHICLE_ID);
-				default: {
-					if(GetSVarInt("ADM:Logging:Disable") == 0){
-						print("[ADM] Warring: Invalid Object Component type.");
+		if((IsValidDynamicObject(i) && type == STREAMER_TYPE_OBJECT) || (IsValidDynamicArea(i) && type == STREAMER_TYPE_AREA)){
+			if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == objectid){
+				switch(type){
+					case STREAMER_TYPE_OBJECT:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID);
+					case STREAMER_TYPE_AREA:	Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_VEHICLE_ID);
+					default: {
+						if(GetSVarInt("ADM:Logging:Disable") == 0){
+							print("[ADM] Warring: Invalid Object Component type.");
+						}
+						return 0;
 					}
-					return 0;
 				}
 			}
 		}
