@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.2D                                                                                                             *
+ * File Version: 1.2E                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -37,69 +37,71 @@
 #define _ATM_Core
 
 #if !defined isnull
-	#define isnull(%1) 				((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+	#define isnull(%1) 										((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
 
 #if !defined function
-	#define function%0(%1)			forward %0(%1); public %0(%1)
+	#define function%0(%1)									forward %0(%1); public %0(%1)
 #endif
 
 #if !defined exec
-	#define exec%0(%1)%2(%3)		forward %0(%1); public %0(%1){ return %2(%3); }
+	#define exec%0(%1)%2(%3)								forward %0(%1); public %0(%1){ return %2(%3); }
 #endif
 
-#define PubFunction:{%0,%1}			exec %0 %1
-#define ServerPubVar:{%1,%2}		forward v_%1(); public v_%1(){ return (%2); }
-#define GetServerPubVar(%1)			CallRemoteFunction("v_"#%1"","")
-#define PlayerPubVar:{%1,%2}		forward v_%1(playerid); public v_%1(playerid){ return (%2); }
-#define GetPlayerPubVar(%0,%1)		CallRemoteFunction("v_"#%1"","d",%0)
+#define PubFunction:{%0,%1}									exec %0 %1
+#define ServerPubVar:{%1,%2}								forward v_%1(); public v_%1(){ return (%2); }
+#define GetServerPubVar(%1)									CallRemoteFunction("v_"#%1"","")
+#define PlayerPubVar:{%1,%2}								forward v_%1(playerid); public v_%1(playerid){ return (%2); }
+#define GetPlayerPubVar(%0,%1)								CallRemoteFunction("v_"#%1"","d",%0)
 
-#define randomex(%0,%1) 			(random((%1)-(%0)+1)+(%0))
+#define randomex(%0,%1) 									(random((%1)-(%0)+1)+(%0))
 
 #if !defined SecToTimeDay
 	//%d:%02d:%02d:%02d
-	#define SecToTimeDay(%0)		((%0) / 86400),(((%0) % 86400) / 3600),((((%0) % 86400) % 3600) / 60),((((%0) % 86400) % 3600) % 60)
-	#define MSToTimeDay(%0)			SecToTimeDay((%0)/1000)
+	#define SecToTimeDay(%0)								((%0) / 86400),(((%0) % 86400) / 3600),((((%0) % 86400) % 3600) / 60),((((%0) % 86400) % 3600) % 60)
+	#define MSToTimeDay(%0)									SecToTimeDay((%0)/1000)
 	//%02d:%02d:%02d
-	#define SecToTime(%0)			((%0) / 3600),(((%0) % 3600) / 60),(((%0) % 3600) % 60)
-	#define MSToTime(%0)			SecToTime((%0)/1000)
+	#define SecToTime(%0)									((%0) / 3600),(((%0) % 3600) / 60),(((%0) % 3600) % 60)
+	#define MSToTime(%0)									SecToTime((%0)/1000)
 	//%02d:%02d
-	#define SecToTimeMini(%0)		((%0) / 60),((%0) % 60)
-	#define MSToTimeMini(%0)		SecToTimeMini((%0)/1000)
+	#define SecToTimeMini(%0)								((%0) / 60),((%0) % 60)
+	#define MSToTimeMini(%0)								SecToTimeMini((%0)/1000)
 #endif
 
 //value bigger than possible
 #if !defined VBTP
-	#define VBTP 					(0x7FFFFFFF)
+	#define VBTP 											(0x7FFFFFFF)
 #endif
 
 #if !defined FLOAT_NAN
-	#define FLOAT_NAN 				(Float:0xFFFFFFFF)
+	#define FLOAT_NAN 										(Float:0xFFFFFFFF)
 #endif
 
-#define SD_TINY						(5.0)
-#define SD_VERYLOW					(20.0)
-#define SD_LOW						(200.0)
-#define SD_MEDIUM					(500.0)
-#define SD_HIGH						(800.0)
-#define SD_VERYHIGH					(999.0)
+#define SD_TINY												(5.0)
+#define SD_VERYLOW											(20.0)
+#define SD_LOW												(200.0)
+#define SD_MEDIUM											(500.0)
+#define SD_HIGH												(800.0)
+#define SD_VERYHIGH											(999.0)
 
-#define ALL_PLAYERS					(-1)
-#define ALL_VW						(-1)
-#define ALL_INT						(-1)
-#define ATM_INT						(1)
-#define ATM_VW						(1)
-#define REAL_INT					(0)
-#define REAL_VW						(0)
+#define ALL_PLAYERS											(-1)
+#define ALL_VW												(-1)
+#define ALL_INT												(-1)
+#define ATM_INT												(1)
+#define ATM_VW												(1)
+#define REAL_INT											(0)
+#define REAL_VW												(0)
 
-#define foX(%1,%2,%3)				for(new %1 = %2; %1 <= %3; %1++)
-#define foreach(%1)					for(new %1 = 0, p_%1 = GetPlayerPoolSize(); %1 <= p_%1; %1++)
+#define foX(%1,%2,%3)										for(new %1 = %2; %1 <= %3; %1++)
+#define foreach(%1)											for(new %1 = 0, p_%1 = GetPlayerPoolSize(); %1 <= p_%1; %1++)
 
-#define KEY_PRESSED(%0) 			(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
-#define KEY_RELEASED(%0)			(((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
-#define KEY_HOLDING(%0) 			((newkeys & (%0)) == (%0))
+#define KEY_PRESSED(%0) 									(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
+#define KEY_RELEASED(%0)									(((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
+#define KEY_HOLDING(%0) 									((newkeys & (%0)) == (%0))
 
-#define CalculatePercent(%0,%1)		(((%0)/(%1))*100.0)
+#define CalculatePercent(%0,%1)								(((%0)/(%1))*100.0)
+
+#define ATM_GetDistanceBetweenPoints3D(%1,%2,%3,%4,%5,%6)	VectorSize((%1)-(%4),(%2)-(%5),(%3)-(%6))
 
 enum e_Vectors {
 	Float:X, Float:Y, Float:Z, Float:A
@@ -135,7 +137,7 @@ stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,ty
 			} else {
 				GetPlayerPos(i,F4[X],F4[Y],F4[Z]);
 			}
-			new Float:distance = GetDistanceBetweenPoints3D(F4[X],F4[Y],F4[Z],x,y,z);
+			new Float:distance = ATM_GetDistanceBetweenPoints3D(F4[X],F4[Y],F4[Z],x,y,z);
 			if((GetPlayerInterior(i) == interiorid) && (GetPlayerVirtualWorld(i) == worldid) && (distance <= radius)){
 				CreateExplosionForPlayer(i,x,y,z,type,expradius);
 			}

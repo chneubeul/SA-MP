@@ -43,6 +43,7 @@
 #include <SAM/VehicleEx>
 #include <SAM/Logs>
 #include <SAM/ATM>
+#include <SAM/scmd>
 
 //Other includes created by Abyss Morgan
 // Knife.inc, Santa.inc etc.

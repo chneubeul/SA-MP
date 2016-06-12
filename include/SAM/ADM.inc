@@ -1063,7 +1063,7 @@ stock ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output)){
 /********************
  * Dump Functions   *
  ********************/
- 
+
 stock DMP:FindFreeDumpFileID(){
 	for(new DMP:i = DMP:0; i < MAX_DUMP_FILE; i = DMP:(DMPToInt(i)+1)){
 		if(ADM_ProtVar::DumpFileStatus[i] == false) return i;
