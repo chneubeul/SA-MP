@@ -9,7 +9,11 @@ ECHO Drop input file, and click enter.
 ECHO.
 SET /P FILE=Input file: 
 ECHO.
-CALL :CONVERT %FILE%
+IF EXIST "%FILE%" (
+	CALL :CONVERT "%FILE%"
+) ELSE (
+	CALL :CONVERT %FILE%
+)
 ECHO.
 PAUSE
 GOTO :eof

@@ -2,7 +2,7 @@
  *                                                                                                  *
  *                                   Binary Object File Converter                                   *
  *                                                                                                  *
- * Copyright Â© 2016 Abyss Morgan. All rights reserved.                                              *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
@@ -81,6 +81,7 @@ int main(int argc, char* argv[]){
 	int cnt = 0, lcnt = 0, ecnt = 0;
 	
 	while(!inpf.eof()){
+		lcnt++;
 		string line;
 		char buffer[256];
 		getline(inpf,line);
@@ -109,6 +110,7 @@ int main(int argc, char* argv[]){
 				erno = false;
 				if(streamdistance == -1) streamdistance = CalculateObjectDistance(modelid);
 			} else {
+				printf("Parse error in line %d\n",lcnt);
 				ecnt++;
 			}
 			
@@ -131,7 +133,6 @@ int main(int argc, char* argv[]){
 				cnt++;
 			}
 		}
-		lcnt++;
 	}
 	
 	inpf.close();
