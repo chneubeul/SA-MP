@@ -1,8 +1,12 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Knife Script v1.8 made by Abyss Morgan                                                           *
+ * Knife Shoot Script v1.9 made by Abyss Morgan                                                     *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
+ *                                                                                                  *
+ * Functions:                                                                                       *
+ * ToggleUseTeamKnifeShoot(bool:toggle); //default: false                                           *
+ * bool:IsToggleUseTeamKnifeShoot();                                                                *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -10,23 +14,27 @@
 	#error Unknown streamer version
 #endif
 
-//3DTryg.inc
+//Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.2
+	#error You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.2
-#elseif (Tryg3D_Version < 20201)
-	#error Update you 3DTryg.inc to v2.2
+	#error Update you 3DTryg.inc to v2.5C
+#elseif (Tryg3D_Version < 20503)
+	#error Update you 3DTryg.inc to v2.5C
 #endif
 
-#define KNIFE_SPEED 			(12.0)
-#define KNIFE_MAX_RADIUS		(15.0)
-#define KNIFE_REFRESH_ACTION	(1000)	//1 sec
-#define KNIFE_REFRESH_MISS		(5000)	//5 sec
+#define KNIFE_SPEED 					(12.0)
+#define KNIFE_MAX_RADIUS				(15.0)
+#define KNIFE_REFRESH_ACTION			(1000)	//1 sec
+#define KNIFE_REFRESH_MISS				(5000)	//5 sec
 
 new KnifeLockTarget[MAX_PLAYERS],
 	KnifeStep[MAX_PLAYERS],
-	KnifeTime[MAX_PLAYERS];
+	KnifeTime[MAX_PLAYERS],
+	bool:KnifeUsePlayerTeam = false;
+
+#define ToggleUseTeamKnifeShoot(%0)		KnifeUsePlayerTeam = (%0)
+#define IsToggleUseTeamKnifeShoot()		(KnifeUsePlayerTeam)
 
 stock GivePlayerDamage(targetid,Float:damage,playerid,weaponid){
 	new Float:thp, Float:tarm;
@@ -86,7 +94,7 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 
 public KnifeShot(playerid){
 	new Float:mx, Float:my, Float:mz, Float:mrz, Float:mtx, Float:mty, Float:mtz, mvw, mint, Float:trz,
-		Float:px, Float:py, Float:pz, pvw, pint, mtime;
+		Float:px, Float:py, Float:pz, pvw, pint, mtime, pteam;
 	GetPlayerPos(playerid,mx,my,mz);
 	GetPlayerFacingAngle(playerid,mrz);
 	mvw = GetPlayerVirtualWorld(playerid);
@@ -94,19 +102,22 @@ public KnifeShot(playerid){
 	GetPointInFront2D(mx,my,mrz,KNIFE_MAX_RADIUS,mtx,mty);
 	KnifeLockTarget[playerid] = INVALID_PLAYER_ID;
 	new Float:ldist = 9000;
-
+	pteam = GetPlayerTeam(playerid);
+	
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		if(i != playerid){
 			if(IsPlayerConnected(i)){
-				GetPlayerPos(i,px,py,pz);
-				pvw = GetPlayerVirtualWorld(i);
-				pint = GetPlayerInterior(i);
-				if(pvw == mvw && pint == mint){
-					if(IsPointNearly2Points3D(px,py,pz, mx,my,mz, mtx,mty,mz, 1.0)){
-						new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
-						if(dist < ldist){
-							ldist = dist;
-							KnifeLockTarget[playerid] = i;
+				if(!IsToggleUseTeamKnifeShoot() || (IsToggleUseTeamKnifeShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
+					GetPlayerPos(i,px,py,pz);
+					pvw = GetPlayerVirtualWorld(i);
+					pint = GetPlayerInterior(i);
+					if(pvw == mvw && pint == mint){
+						if(IsPointNearly2Points3D(px,py,pz, mx,my,mz, mtx,mty,mz, 1.0)){
+							new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
+							if(dist < ldist){
+								ldist = dist;
+								KnifeLockTarget[playerid] = i;
+							}
 						}
 					}
 				}
