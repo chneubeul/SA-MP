@@ -6,13 +6,13 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
-//3DTryg.inc
+//Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.1b
+	#error You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.1b
-#elseif (Tryg3D_Version < 20102)
-	#error Update you 3DTryg.inc to v2.1b
+	#error Update you 3DTryg.inc to v2.5C
+#elseif (Tryg3D_Version < 20503)
+	#error Update you 3DTryg.inc to v2.5C
 #endif
 
 #if !defined _ATM_Core

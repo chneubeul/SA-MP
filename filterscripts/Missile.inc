@@ -23,11 +23,11 @@ MissileDestroy(mobid);
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.4B
+	#error You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.4B
-#elseif (Tryg3D_Version < 20402)
-	#error Update you 3DTryg.inc to v2.4B
+	#error Update you 3DTryg.inc to v2.5C
+#elseif (Tryg3D_Version < 20503)
+	#error Update you 3DTryg.inc to v2.5C
 #endif
 
 #if defined _missile_launcher

@@ -15,22 +15,22 @@ SantaPickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
 */
 
 
-//StreamerFunction.inc
+//Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.0d
+	#error You need StreamerFunction.inc v2.3D
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.0d
-#elseif (Streamer_Spec_Version < 20004)
-	#error Update you StreamerFunction.inc to v2.0d
+	#error Update you StreamerFunction.inc to v2.3D
+#elseif (Streamer_Spec_Version < 20304)
+	#error Update you StreamerFunction.inc to v2.3D
 #endif
 
-//3DTryg.inc
+//Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.1b
+	#error You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.1b
-#elseif (Tryg3D_Version < 20102)
-	#error Update you 3DTryg.inc to v2.1b
+	#error Update you 3DTryg.inc to v2.5C
+#elseif (Tryg3D_Version < 20503)
+	#error Update you 3DTryg.inc to v2.5C
 #endif
 
 //MapAndreasEx.inc

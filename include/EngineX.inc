@@ -45,11 +45,11 @@ Do not ask XD
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.3
+	#error You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.3
-#elseif (Tryg3D_Version < 20301)
-	#error Update you 3DTryg.inc to v2.3
+	#error Update you 3DTryg.inc to v2.5C
+#elseif (Tryg3D_Version < 20503)
+	#error Update you 3DTryg.inc to v2.5C
 #endif
 
 //MapAndreasEx.inc

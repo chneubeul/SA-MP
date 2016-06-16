@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                                                             *
  *                                                                                                                                *
- * File Version: 1.0                                                                                                              *
+ * File Version: 1.0B                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CheckAllScript(playerid = INVALID_PLAYER_ID, errorlevel = 0);                                                                  *
@@ -65,6 +65,7 @@
  * Include: 'VehicleEx' Author: 'Abyss Morgan'                                                                                    *
  * Include: 'Logs' Author: 'Abyss Morgan'                                                                                         *
  * Include: 'ATM' Author: 'Abyss Morgan'                                                                                          *
+ * Include: 'scmd' Author: 'Abyss Morgan'                                                                                         *
  * Include: 'EngineX' Author: 'Abyss Morgan'                                                                                      *
  * Include: 'MultiScriptSecure' Author: 'Abyss Morgan'                                                                            *
  * Include: 'ScriptSecure' Author: 'Abyss Morgan'                                                                                 *
@@ -77,11 +78,11 @@
 /*
 //Check Version ScriptChecker.inc
 #if !defined _Script_Checker
-	#error You need ScriptChecker.inc v1.0
+	#error You need ScriptChecker.inc v1.0B
 #elseif !defined Script_Checker_Version
-	#error Update you ScriptChecker.inc to v1.0
-#elseif (Script_Checker_Version < 10001)
-	#error Update you ScriptChecker.inc to v1.0
+	#error Update you ScriptChecker.inc to v1.0B
+#elseif (Script_Checker_Version < 10002)
+	#error Update you ScriptChecker.inc to v1.0B
 #endif
 */
 
@@ -90,7 +91,7 @@
 #endif
 #define _Script_Checker
 
-#define Script_Checker_Version 					(10001) //a.b[c] 10000*a+100*b+c
+#define Script_Checker_Version 					(10002) //a.b[c] 10000*a+100*b+c
 
 #if !defined SCRIPT_NAME
 	#error Please define SCRIPT_NAME <script name> before including ScriptChecker.inc
@@ -440,12 +441,18 @@ public OnThisScriptCheck(playerid,errorlevel){
 		WriteCheckLog("Include: 'ATM' Author: 'Abyss Morgan'",SCRIPT_CHECK_FILE);
 	#endif
 	
+	//Check scmd.inc
+	#if defined _scmd_included
+		WriteCheckLog("Include: 'scmd' Author: 'Abyss Morgan'",SCRIPT_CHECK_FILE);
+	#endif
+	
 	//Check EngineX.inc
 	#if defined _NOX_ENGINE_X
 		SC_GetSAMIncludeVersion(NOX_ENGINE_X_Version,script_version);
 		format(buffer,sizeof(buffer),"Include: 'EngineX' Author: 'Abyss Morgan' Version: '%s' Version Name: '%s' NT Version: '%s'",script_version,NOX_VERSION,NT_VERSION);
 		WriteCheckLog(buffer,SCRIPT_CHECK_FILE);
 	#endif
+
 	
 	//Check ScriptSecure.inc 
 	//Check MultiScriptSecure.inc
