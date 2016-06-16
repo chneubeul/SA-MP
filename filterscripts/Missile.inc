@@ -140,7 +140,9 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MISSILE_EXTRA_ID_OFFSET);
 	if(mobid >= 0 && mobid < MAX_MISSILE){
 		if(MissileComponent[mobid][missile_active]){
-			MissileDestroy(mobid);
+			if((MissileComponent[mobid][missile_teamid] != GetPlayerTeam(playerid)) || (MissileComponent[mobid][missile_teamid] == ANY_TEAM)){
+				MissileDestroy(mobid);
+			}
 		}
 	}
 	#if defined MISOnPlayerShootDynamicObject
