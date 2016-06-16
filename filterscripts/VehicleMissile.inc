@@ -31,6 +31,7 @@
  * SetVehicleRhinoMissileReload(vehicleid,time);                                                    *
  *                                                                                                  *
  * OnVehicleShot(playerid,type);                                                                    *
+ * OnVehicleMissileInit();                                                                          *
  *                                                                                                  *
  ****************************************************************************************************/
 
