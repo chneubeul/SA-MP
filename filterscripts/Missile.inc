@@ -49,7 +49,9 @@ MissileDestroy(mobid);
 
 #define INVALID_MISSILE_ID				(-1)
 
-#define ANY_TEAM						(0xFFFF)
+#if !defined ANY_TEAM
+	#define ANY_TEAM						(0xFFFF)
+#endif
 
 enum e_missile {
 	bool:missile_active,
