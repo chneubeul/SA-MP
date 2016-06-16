@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Military Dynamic Mines System v1.5 made by Abyss Morgan                                          *
+ * Military Dynamic Mines System v1.6 made by Abyss Morgan                                          *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
  *                                                                                                  *
@@ -8,7 +8,7 @@
 
 /*
 //To add/remove mines use:
-CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object);
+CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object = MINE_OBJECT_STANDARD, teamid = ANY_TEAM);
 DestroyDynamicMine(mineid);
 */
 
@@ -42,6 +42,10 @@ DestroyDynamicMine(mineid);
 #define MINE_TYPE_EXPLODE_HUGE		(7)
 #define INVALID_MINE_ID				(-1)
 
+#if !defined ANY_TEAM
+	#define ANY_TEAM				(0xFFFF)
+#endif
+
 enum e_mine {
 	mine_status,
 	mine_objectid,
@@ -51,7 +55,8 @@ enum e_mine {
 	mine_respawntime,
 	Float:mine_health,
 	Float:mine_maxhealth,
-	Float:mine_explode
+	Float:mine_explode,
+	mine_teamid
 }
 
 new MineComponent[MAX_MINES][e_mine],
@@ -124,7 +129,6 @@ stock FindFreeMineID(){
 }
 
 forward OnDynamicMineUpdate(tec);
-forward CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object);
 forward DestroyDynamicMine(mineid);
 forward ExplodeDynamicMine(mineid);
 forward RespawnDynamicMine(mineid);
@@ -215,7 +219,7 @@ public OnDynamicMineUpdate(tec){
 	return 1;
 }
 
-public CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object){
+stock CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object = MINE_OBJECT_STANDARD, teamid = ANY_TEAM){
 	new mineid = FindFreeMineID();
 	if(mineid == INVALID_MINE_ID){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -238,6 +242,7 @@ public CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Floa
 	MineComponent[mineid][mine_tickcount] = 0;
 	MineComponent[mineid][mine_type] = type;
 	MineComponent[mineid][mine_respawntime] = respawntime;
+	MineComponent[mineid][mine_teamid] = teamid;
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mineid][mine_objectid],E_STREAMER_EXTRA_ID,(mineid+MINE_EXTRA_ID_OFFSET));
 	Streamer_SetIntData(STREAMER_TYPE_AREA,MineComponent[mineid][mine_areaid],E_STREAMER_EXTRA_ID,(mineid+MINE_EXTRA_ID_OFFSET));
 	MineComponent[mineid][mine_status] = MINE_STATUS_ACTIVE;
@@ -259,6 +264,7 @@ public DestroyDynamicMine(mineid){
 	MineComponent[mineid][mine_type] = 0;
 	MineComponent[mineid][mine_status] = MINE_STATUS_UNACTIVE;
 	MineComponent[mineid][mine_respawntime] = 0;
+	MineComponent[mineid][mine_teamid] = ANY_TEAM;
 	if(mineid == MineUpperBound) MineUpperBound = (mineid-1);
 	return 1;
 }
@@ -295,17 +301,19 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 	new mineid = (Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mineid >= 0 && mineid < MAX_MINES){
 		if(MineComponent[mineid][mine_status] == MINE_STATUS_ACTIVE){
-			if(MineComponent[mineid][mine_health] != MINE_INFINITY_HEALTH){
-				MineComponent[mineid][mine_health] -= MDM_WeaponDamage[weaponid];
-				new buffer[128];
-				if(MineComponent[mineid][mine_health] > 0){
-					format(buffer,sizeof buffer,"Mine~n~~w~%.0f HP~n~~r~~h~~h~-%.0f HP",MineComponent[mineid][mine_health],MDM_WeaponDamage[weaponid]);
-				} else {
-					format(buffer,sizeof buffer,"Mine~n~~w~0 HP~n~~r~~h~~h~-%.0f HP",MDM_WeaponDamage[weaponid]);
-				}
-				GameTextForPlayer(playerid,buffer,500,4);
-				if(MineComponent[mineid][mine_health] <= 0.0){
-					ExplodeDynamicMine(mineid);
+			if((MineComponent[mineid][mine_teamid] != GetPlayerTeam(playerid)) || (MineComponent[mineid][mine_teamid] == ANY_TEAM)){
+				if(MineComponent[mineid][mine_health] != MINE_INFINITY_HEALTH){
+					MineComponent[mineid][mine_health] -= MDM_WeaponDamage[weaponid];
+					new buffer[128];
+					if(MineComponent[mineid][mine_health] > 0){
+						format(buffer,sizeof buffer,"Mine~n~~w~%.0f HP~n~~r~~h~~h~-%.0f HP",MineComponent[mineid][mine_health],MDM_WeaponDamage[weaponid]);
+					} else {
+						format(buffer,sizeof buffer,"Mine~n~~w~0 HP~n~~r~~h~~h~-%.0f HP",MDM_WeaponDamage[weaponid]);
+					}
+					GameTextForPlayer(playerid,buffer,500,4);
+					if(MineComponent[mineid][mine_health] <= 0.0){
+						ExplodeDynamicMine(mineid);
+					}
 				}
 			}
 		}
@@ -331,8 +339,10 @@ public OnPlayerEnterDynamicArea(playerid, areaid){
 	new mineid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mineid >= 0 && mineid < MAX_MINES){
 		if(MineComponent[mineid][mine_status] == MINE_STATUS_ACTIVE){
-			MineComponent[mineid][mine_health] = 0.0;
-			ExplodeDynamicMine(mineid);
+			if((MineComponent[mineid][mine_teamid] != GetPlayerTeam(playerid)) || (MineComponent[mineid][mine_teamid] == ANY_TEAM)){
+				MineComponent[mineid][mine_health] = 0.0;
+				ExplodeDynamicMine(mineid);
+			}
 		}
 	}	
 	#if defined MDM_OnPlayerEnterDynamicArea
