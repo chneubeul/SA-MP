@@ -16,7 +16,7 @@
  * Functions:                                                                                                                     *
  * bool:IsValueContainLY(prefix,suffix,value);                                                                                    *
  * GetLYString(prefix,suffix,string[],maxdest = sizeof(string));                                                                  *
- * LYStringToLY(&prefix,&suffix,string[]); //Reverse to GetLYStrin                                                                *
+ * LYStringToLY(&prefix,&suffix,string[]); //Reverse to GetLYString                                                               *
  * UpdateLY(&prefix,&suffix,value,limitprefix = DEFAULT_MAX_LY_PREFIX);                                                           *
  * AddSeparatorLY(string[],separator[]);                                                                                          *
  * DeleteSeparatorLY(string[],separator[]);                                                                                       *

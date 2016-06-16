@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Missile Launcher v1.1 made by Abyss Morgan                                                       *
+ * Missile Launcher v1.2 made by Abyss Morgan                                                       *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
  *                                                                                                  *
@@ -8,7 +8,7 @@
 
 /*
 
-MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID);
+MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM);
 MissileDestroy(mobid);
 
 */
@@ -49,6 +49,8 @@ MissileDestroy(mobid);
 
 #define INVALID_MISSILE_ID				(-1)
 
+#define ANY_TEAM						(0xFFFF)
+
 enum e_missile {
 	bool:missile_active,
 	missile_objectid,
@@ -56,7 +58,8 @@ enum e_missile {
 	missile_type,
 	Float:missile_explode,
 	missile_timer,
-	missile_playerid
+	missile_playerid,
+	missile_teamid
 }
 
 new MissileComponent[MAX_MISSILE][e_missile];
@@ -70,7 +73,7 @@ stock FindFreeMissileID(){
 
 forward MissileDestroy(mobid);
 
-stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID){
+stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM){
 	new mobid = FindFreeMissileID();
 	if(mobid == INVALID_MISSILE_ID){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -100,6 +103,7 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 	MissileComponent[mobid][missile_explode] = explode_radius;
 	MissileComponent[mobid][missile_active] = true;
 	MissileComponent[mobid][missile_playerid] = byplayerid;
+	MissileComponent[mobid][missile_teamid] = teamid;
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MissileComponent[mobid][missile_objectid],E_STREAMER_EXTRA_ID,(mobid+MISSILE_EXTRA_ID_OFFSET));
 	Streamer_SetIntData(STREAMER_TYPE_AREA,MissileComponent[mobid][missile_areaid],E_STREAMER_EXTRA_ID,(mobid+MISSILE_EXTRA_ID_OFFSET));
 	MissileComponent[mobid][missile_type] = type;
@@ -125,6 +129,7 @@ public MissileDestroy(mobid){
 	MissileComponent[mobid][missile_type] = 0;
 	MissileComponent[mobid][missile_explode] = 0.0;
 	MissileComponent[mobid][missile_playerid] = INVALID_PLAYER_ID;
+	MissileComponent[mobid][missile_teamid] = ANY_TEAM;
 	return 1;
 }
 
@@ -160,7 +165,9 @@ public OnPlayerEnterDynamicArea(playerid, areaid){
 	
 	if(mobid >= 0 && mobid < MAX_MISSILE){
 		if(MissileComponent[mobid][missile_active] && MissileComponent[mobid][missile_playerid] != playerid){
-			MissileDestroy(mobid);
+			if((MissileComponent[mobid][missile_teamid] != GetPlayerTeam(playerid)) || (MissileComponent[mobid][missile_teamid] == ANY_TEAM)){
+				MissileDestroy(mobid);
+			}
 		}
 	}	
 	#if defined MIS_OnPlayerEnterDynamicArea

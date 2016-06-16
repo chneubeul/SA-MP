@@ -6,6 +6,13 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+/*
+
+This file is deprecated, use IMG Generator for Windows:
+https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM/IMG%20Generator
+
+*/
+
 #define INPUT_TXT		"MyObject.txt"
 #define OUTPUT_BIN		"MyObject.bin"
 

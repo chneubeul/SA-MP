@@ -148,7 +148,7 @@
 #define ERROR_CODE_ADM_DMP_IDX		(ADM:-12)	//invalid dump file index
 
 #if !defined MAX_DUMP_FILE
-	#define MAX_DUMP_FILE				(DMP:100)
+	#define MAX_DUMP_FILE			(DMP:100)
 #endif
 #define MAX_DUMP_FILE_NAME			(80)
 #define MAX_DUMP_HEADER_SIZE		(14)
