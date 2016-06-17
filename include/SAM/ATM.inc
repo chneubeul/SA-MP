@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.2E                                                                                                             *
+ * File Version: 1.3                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -93,11 +93,22 @@
 #define REAL_VW												(0)
 
 #define foX(%1,%2,%3)										for(new %1 = %2; %1 <= %3; %1++)
-#define foreach(%1)											for(new %1 = 0, p_%1 = GetPlayerPoolSize(); %1 <= p_%1; %1++)
 
-#define KEY_PRESSED(%0) 									(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
-#define KEY_RELEASED(%0)									(((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
-#define KEY_HOLDING(%0) 									((newkeys & (%0)) == (%0))
+#if !defined foreach
+	#define foreach(%1)										for(new %1 = 0, p_%1 = GetPlayerPoolSize(); %1 <= p_%1; %1++)
+#endif
+
+#if !defined KEY_PRESSED
+	#define KEY_PRESSED(%0) 								(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
+#endif
+
+#if !defined KEY_RELEASED
+	#define KEY_RELEASED(%0)								(((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
+#endif
+
+#if !defined KEY_HOLDING
+	#define KEY_HOLDING(%0) 								((newkeys & (%0)) == (%0))
+#endif
 
 #define CalculatePercent(%0,%1)								(((%0)/(%1))*100.0)
 
@@ -129,7 +140,7 @@ enum e_long_float {
 }
 
 stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,type,Float:radius,Float:expradius){
-	foreach(i){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		if(IsPlayerConnected(i)){
 			new F4[e_float];
 			if(IsPlayerInAnyVehicle(i)){
