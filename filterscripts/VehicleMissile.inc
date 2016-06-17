@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Vehicle Missile Launcher v1.0 made by Abyss Morgan                                               *
+ * Vehicle Missile Launcher v1.1 made by Abyss Morgan                                               *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
  *                                                                                                  *
@@ -251,7 +251,7 @@ public OnVehicleMissileInit(){
 }
 
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
-	if(IsPlayerInAnyVehicle(playerid)){
+	if(IsPlayerInAnyVehicle(playerid) && GetPlayerVehicleSeat(playerid) == 0){
 		new vid = GetPlayerVehicleID(playerid);
 		if(KEY_PRESSED(KEY_FIRE)){
 			if(IsToggleVehicleMiniMissile(vid)){
