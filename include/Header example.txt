@@ -16,6 +16,7 @@
 #include <zcmd>
 #include <progress>
 #include <MD5>
+#include <foreach>
 
 //3DTryg.inc Config
 //#define ProtVar:: <salt>
@@ -46,6 +47,16 @@
 #include <SAM/scmd>
 
 //Other includes created by Abyss Morgan
-// Knife.inc, Santa.inc etc.
+#include <EngineX>
+#include <AntiSupremeTroll>
+#include <ScriptSecure> //or MultiScriptSecure
+#include <Interiors>
+#include <Knife>
+#include <Mines>
+#include <Missile>
+#include <VehicleMissile>
+#include <event/Fireworks>
+#include <event/Lottery>
+#include <event/Santa>
 
 //EOF
