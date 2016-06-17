@@ -32,10 +32,23 @@
  *                                                                                                                                *
  **********************************************************************************************************************************/
  
+/*
+//Check Version LY.inc
+#if !defined _Long_Yoyo
+	#error You need LY.inc v1.6
+#elseif !defined Long_Yoyo_Version
+	#error Update you LY.inc to v1.6
+#elseif (Long_Yoyo_Version < 10601)
+	#error Update you LY.inc to v1.6
+#endif
+*/
+
 #if defined _Long_Yoyo
 	#endinput
 #endif
 #define _Long_Yoyo
+
+#define Long_Yoyo_Version				(10601) //a.b[c] 10000*a+100*b+c
 
 #define LY_STRING_LEN					(20)
 #define SEP_LY_STRING_LEN				(LY_STRING_LEN+10)

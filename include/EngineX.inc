@@ -52,8 +52,8 @@ Do not ask XD
 	#error Update you 3DTryg.inc to v2.5C
 #endif
 
-//MapAndreasEx.inc
-#if !defined MapAndreasFindZ
+//Check MapAndreasEx.inc
+#if !defined _Map_Andreas_Ex
 	#error You need MapAndreasEx.inc
 #endif
 

@@ -31,10 +31,23 @@
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
+/*
+//Check Version ATM.inc
+#if !defined _ATM_Core
+	#error You need ATM.inc v1.3
+#elseif !defined ATM_Version
+	#error Update you ATM.inc to v1.3
+#elseif (ATM_Version < 10301)
+	#error Update you ATM.inc to v1.3
+#endif
+*/
+
 #if defined _ATM_Core
 	#endinput
 #endif
 #define _ATM_Core
+
+#define ATM_Version											(10301) //a.b[c] 10000*a+100*b+c
 
 #if !defined isnull
 	#define isnull(%1) 										((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))

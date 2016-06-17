@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                                                             *
  *                                                                                                                                *
- * File Version: 1.0B                                                                                                             *
+ * File Version: 1.0C                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CheckAllScript(playerid = INVALID_PLAYER_ID, errorlevel = 0);                                                                  *
@@ -78,11 +78,11 @@
 /*
 //Check Version ScriptChecker.inc
 #if !defined _Script_Checker
-	#error You need ScriptChecker.inc v1.0B
+	#error You need ScriptChecker.inc v1.0C
 #elseif !defined Script_Checker_Version
-	#error Update you ScriptChecker.inc to v1.0B
-#elseif (Script_Checker_Version < 10002)
-	#error Update you ScriptChecker.inc to v1.0B
+	#error Update you ScriptChecker.inc to v1.0C
+#elseif (Script_Checker_Version < 10003)
+	#error Update you ScriptChecker.inc to v1.0C
 #endif
 */
 
@@ -91,7 +91,7 @@
 #endif
 #define _Script_Checker
 
-#define Script_Checker_Version 					(10002) //a.b[c] 10000*a+100*b+c
+#define Script_Checker_Version 					(10003) //a.b[c] 10000*a+100*b+c
 
 #if !defined SCRIPT_NAME
 	#error Please define SCRIPT_NAME <script name> before including ScriptChecker.inc
@@ -388,7 +388,7 @@ public OnThisScriptCheck(playerid,errorlevel){
 	#endif
 	
 	//Check MapAndreasEx.inc
-	#if defined  _Map_Andreas_Ex
+	#if defined _Map_Andreas_Ex
 		WriteCheckLog("Include: 'MapAndreasEx' Author: 'Abyss Morgan'",SCRIPT_CHECK_FILE);
 	#endif
 	
@@ -399,7 +399,9 @@ public OnThisScriptCheck(playerid,errorlevel){
 	
 	//Check DataConvert.inc
 	#if defined _Data_Convert
-		WriteCheckLog("Include: 'DataConvert' Author: 'Abyss Morgan'",SCRIPT_CHECK_FILE);
+		SC_GetSAMIncludeVersion(Data_Convert_Version,script_version);
+		format(buffer,sizeof(buffer),"Include: 'DataConvert' Author: 'Abyss Morgan' Version: '%s'",script_version);
+		WriteCheckLog(buffer,SCRIPT_CHECK_FILE);
 	#endif
 	
 	//Check TextDrawEx.inc
@@ -409,7 +411,9 @@ public OnThisScriptCheck(playerid,errorlevel){
 	
 	//Check LY.inc
 	#if defined _Long_Yoyo
-		WriteCheckLog("Include: 'LY' Author: 'Abyss Morgan'",SCRIPT_CHECK_FILE);
+		SC_GetSAMIncludeVersion(Long_Yoyo_Version,script_version);
+		format(buffer,sizeof(buffer),"Include: 'LY' Author: 'Abyss Morgan' Version: '%s'",script_version);
+		WriteCheckLog(buffer,SCRIPT_CHECK_FILE);
 	#endif
 	
 	//Check DoT.inc
@@ -438,7 +442,9 @@ public OnThisScriptCheck(playerid,errorlevel){
 	
 	//Check ATM.inc
 	#if defined _ATM_Core
-		WriteCheckLog("Include: 'ATM' Author: 'Abyss Morgan'",SCRIPT_CHECK_FILE);
+		SC_GetSAMIncludeVersion(ATM_Version,script_version);
+		format(buffer,sizeof(buffer),"Include: 'ATM' Author: 'Abyss Morgan' Version: '%s'",script_version);
+		WriteCheckLog(buffer,SCRIPT_CHECK_FILE);
 	#endif
 	
 	//Check scmd.inc

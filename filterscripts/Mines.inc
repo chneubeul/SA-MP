@@ -16,8 +16,13 @@ DestroyDynamicMine(mineid);
 	#error Unknown streamer version
 #endif
 
+//Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc
+	#error You need ATM.inc v1.3
+#elseif !defined ATM_Version
+	#error Update you ATM.inc to v1.3
+#elseif (ATM_Version < 10301)
+	#error Update you ATM.inc to v1.3
 #endif
 
 #if defined _dynamic_mine_system

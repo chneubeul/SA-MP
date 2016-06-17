@@ -11,12 +11,12 @@
 #endif
 #define _zcmd_included
 
-#define CMD_SUCCESS 		(1)
-#define CMD_FAILURE 		(0)
+#define CMD_SUCCESS 		1
+#define CMD_FAILURE 		0
 
-#define MAX_FUNC_NAME 		(32)
-#define MAX_CMD_NAME		(27)
-#define MAX_BUFFER_LEN		(128)
+#define MAX_FUNC_NAME 		32
+#define MAX_CMD_NAME		27
+#define MAX_BUFFER_LEN		128
 
 #define COMMAND:%1(%2)		forward cmd_%1(%2); public cmd_%1(%2)
 #define CMD:%1(%2)			COMMAND:%1(%2)

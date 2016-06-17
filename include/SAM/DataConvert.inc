@@ -36,7 +36,18 @@
  * swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2));             *
  *                                                                                                  *
  ****************************************************************************************************/
- 
+
+/*
+//Check Version DataConvert.inc
+#if !defined _Data_Convert
+	#error You need DataConvert.inc v1.6B
+#elseif !defined Data_Convert_Version
+	#error Update you DataConvert.inc to v1.6B
+#elseif (Data_Convert_Version < 10602)
+	#error Update you DataConvert.inc to v1.6B
+#endif
+*/
+
 #if defined _Data_Convert
 	#endinput
 #endif
@@ -45,6 +56,8 @@
 #if !defined sscanf
 	#error Unknown sscanf version
 #endif
+
+#define Data_Convert_Version		(10602) //a.b[c] 10000*a+100*b+c
 
 #define FIRST_FILE_ADDRESS			(0x004E5A18)
 #define INVALID_FILE_ID				(0xFFB1A5E7)
