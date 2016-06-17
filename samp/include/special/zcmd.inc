@@ -1,8 +1,8 @@
 /**********************************
  *                                *
- *   @Author:   ZeeX              *
- *   @Version:  0.3.2             *
- *   @Released: 31/10/2009        *
+ *   @Author:      ZeeX           *
+ *   @Version:     0.3.1          *
+ *   @Released:    31/10/2009     *
  *                                *
  **********************************/
 
@@ -13,7 +13,7 @@
 
 #define MAX_FUNC_NAME (32)
 
-#define COMMAND:%1(%2)		  \
+#define COMMAND:%1(%2)          \
 			forward cmd_%1(%2); \
 			public cmd_%1(%2)		
 			
@@ -21,8 +21,8 @@
 			COMMAND:%1(%2)
 
 #define command(%1,%2,%3) \
-			COMMAND:%1(%2, %3)	  
-	  
+			COMMAND:%1(%2, %3)      
+      
 #define cmd(%1,%2,%3) \
 			COMMAND:%1(%2, %3)
 
@@ -46,13 +46,13 @@ public OnFilterScriptInit()
 {
 	zcmd_g_HasOPCS = funcidx("OnPlayerCommandReceived") != -1;
 	zcmd_g_HasOPCE = funcidx("OnPlayerCommandPerformed") != -1;
-	return CallLocalFunction("zcmd_OnFilterScriptInit", "");
+    return CallLocalFunction("zcmd_OnFilterScriptInit", "");
 }
 
 #if defined _ALS_OnFilterScriptInit
-	#undef OnFilterScriptInit
+    #undef OnFilterScriptInit
 #else
-	#define _ALS_OnFilterScriptInit
+    #define _ALS_OnFilterScriptInit
 #endif
 #define OnFilterScriptInit zcmd_OnFilterScriptInit
 forward zcmd_OnFilterScriptInit();
@@ -71,9 +71,9 @@ public OnGameModeInit()
 }
 
 #if defined _ALS_OnGameModeInit
-	#undef OnGameModeInit
+    #undef OnGameModeInit
 #else
-	#define _ALS_OnGameModeInit
+    #define _ALS_OnGameModeInit
 #endif
 #define OnGameModeInit zcmd_OnGameModeInit
 forward zcmd_OnGameModeInit();
@@ -82,19 +82,19 @@ forward zcmd_OnGameModeInit();
 
 public OnPlayerCommandText(playerid, cmdtext[])
 {
-	if (zcmd_g_HasOPCS && !CallLocalFunction("OnPlayerCommandReceived", "is", playerid, cmdtext))
+    if (zcmd_g_HasOPCS && !CallLocalFunction("OnPlayerCommandReceived", "is", playerid, cmdtext))
+    {
+        return 1;
+    }
+    new
+        pos,
+        funcname[MAX_FUNC_NAME];
+    while (cmdtext[++pos] > ' ') 
 	{
-		return 1;
-	}
-	new 
-		pos,
-		funcname[MAX_FUNC_NAME];
-	while (cmdtext[++pos] > ' ' && pos < MAX_FUNC_NAME-4)
-	{
-		funcname[pos-1] = tolower(cmdtext[pos]);
+		funcname[pos-1] = tolower(cmdtext[pos]); 
 	}
 	format(funcname, sizeof(funcname), "cmd_%s", funcname);
-	while (cmdtext[pos] == ' ') pos++;
+    while (cmdtext[pos] == ' ') pos++;
 	if (!cmdtext[pos])
 	{
 		if (zcmd_g_HasOPCE)
@@ -111,9 +111,9 @@ public OnPlayerCommandText(playerid, cmdtext[])
 }
 
 #if defined _ALS_OnPlayerCommandText
-	#undef OnPlayerCommandText
+    #undef OnPlayerCommandText
 #else
-	#define _ALS_OnPlayerCommandText
+    #define _ALS_OnPlayerCommandText
 #endif
 #define OnPlayerCommandText zcmd_OnPlayerCommandText
 forward zcmd_OnPlayerCommandText(playerid, cmdtext[]);
