@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Knife Shoot Script v2.0 made by Abyss Morgan                                                     *
+ * Knife Shoot Script v2.1 made by Abyss Morgan                                                     *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
@@ -155,6 +155,8 @@ public KnifeDestroy(objectid,targetid,playerid){
 		#if !defined DISABLE_KNIFE_SOUND
 			PlayerPlaySound(targetid,17802,0.0,0.0,0.0);
 		#endif
+		CallLocalFunction("OnPlayerGiveDamage","ddfdd",playerid,targetid,KNIFE_DAMAGE,4,BODY_PART_TORSO);
+		CallLocalFunction("OnPlayerTakeDamage","ddfdd",targetid,playerid,KNIFE_DAMAGE,4,BODY_PART_TORSO);
 	}
 	return 1;
 }
