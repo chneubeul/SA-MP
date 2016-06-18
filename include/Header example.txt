@@ -54,16 +54,21 @@
 #include <SAM/scmd>	//Do not use with ZCMD.inc !
 
 //Other includes created by Abyss Morgan
-#include <EngineX>
-#include <AntiSupremeTroll>
-#include <ScriptSecure> //or MultiScriptSecure
-#include <Interiors>
-#include <Knife>
-#include <Mines>
-#include <Missile>
-#include <VehicleMissile>
+
+#include <other/AntiSupremeTroll>
+#include <other/Interiors>
+
+#include <engine/EngineX>
+#include <engine/Knife>
+#include <engine/Mines>
+#include <engine/Missile>
+#include <engine/VehicleMissile>
+
 #include <event/Fireworks>
 #include <event/Lottery>
 #include <event/Santa>
+
+#include <security/ScriptSecure> //or MultiScriptSecure
+#include <security/ScriptChecker>
 
 //EOF
