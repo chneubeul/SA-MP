@@ -4,7 +4,7 @@
  *                                                                                                                                *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                                                             *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                                                    *
  *                                                                                                                                *
  * File Version: 1.0C                                                                                                             *
  *                                                                                                                                *

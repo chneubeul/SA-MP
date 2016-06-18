@@ -17,6 +17,7 @@
 #include <progress>
 #include <MD5>
 #include <foreach>
+#include <Dini>
 
 //ProtVar Config
 //#define ProtVar:: <salt>
@@ -28,6 +29,7 @@
 //ADM.inc Config
 //#define DISABLE_ATM_FUNCTION
 //#define DISABLE_ATM_EXEC
+//#define DISABLE_ATM_PUB_VAR
 
 //Logs.inc Config
 #define EMPTY_LOG_BUFFER	"My Log File\n"
@@ -49,7 +51,7 @@
 #include <SAM/VehicleEx>
 #include <SAM/Logs>
 #include <SAM/ATM>
-#include <SAM/scmd>
+#include <SAM/scmd>	//Do not use with ZCMD.inc !
 
 //Other includes created by Abyss Morgan
 #include <EngineX>

@@ -2,7 +2,7 @@
  *                                                                                                  *
  * Script Secure v2.2 made by Abyss Morgan                                                          *
  *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include                               *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                      *
  *                                                                                                  *
  ****************************************************************************************************/
 

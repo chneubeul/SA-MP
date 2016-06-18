@@ -23,12 +23,12 @@
  * Float:GetDistanceBetweenPoints1D(Float:x1,Float:x2);                                                                           *
  * Float:GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2);                                                         *
  * Float:GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2);                                       *
- * NLTZ(value);                                                                                                                   *
- * NMTZ(value);                                                                                                                   *
- * Float:NLTZF(Float:value);                                                                                                      *
- * Float:NMTZF(Float:value);                                                                                                      *
- * CompRotation(rotation,&cr=0);                                                                                                  *
- * Float:CompRotationFloat(Float:rotation,&Float:cr=0.0);                                                                         *
+ * NLTZ(value);              //NotLessThanZero                                                                                    *
+ * NMTZ(value);              //NotMoreThanZero                                                                                    *
+ * Float:NLTZF(Float:value); //NotLessThanZeroFloat                                                                               *
+ * Float:NMTZF(Float:value); //NotMoreThanZeroFloat                                                                               *
+ * CompRotation(rotation,&crotation=0); //CompressRotation                                                                        *
+ * Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0); //CompressRotationFloat                                          *
  * GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty);                                                  *
  * Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius);                                                      *
  * Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius);                                                    *
@@ -75,6 +75,8 @@
  * GetPointInFront            -> GetPointInFront3D                                                                                *
  * GetPointInFrontOfCamera    -> GetPointInFrontOfCamera3D                                                                        *
  * GetDistanceBetweenPoints   -> GetDistanceBetweenPoints3D                                                                       *
+ * CompressRotation           -> CompRotation                                                                                     *
+ * CompressRotationFloat      -> CompRotationFloat                                                                                *
  *                                                                                                                                *
  * Old prototype:                                                                                                                 *
  * GetAngle                   -> GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D                             *
@@ -124,16 +126,9 @@
 #define GetDistanceBetweenPoints2D(%1,%2,%3,%4)			VectorSize((%1)-(%3),(%2)-(%4),0.0)
 #define GetDistanceBetweenPoints3D(%1,%2,%3,%4,%5,%6)	VectorSize((%1)-(%4),(%2)-(%5),(%3)-(%6))
 
-//NotLessThanZero
 #define NLTZ(%0)										(((%0) < 0)?(0):(%0))
-
-//NotMoreThanZero
 #define NMTZ(%0)										(((%0) > 0)?(0):(%0))
-
-//NotLessThanZeroFloat
 #define NLTZF(%0)										(((%0) < 0.0)?(0.0):(%0))
-
-//NotMoreThanZeroFloat
 #define NMTZF(%0)										(((%0) > 0.0)?(0.0):(%0))
 
 #define IsEven(%0)										((((%0) % 2) == 0)?(true):(false))
@@ -159,18 +154,18 @@ stock GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz){
 	tz = z + (random(range * 2 + 1)-range);
 }
 
-stock CompRotation(rotation,&cr=0){
-	cr = rotation;
-	while(cr < 0) cr += 360;
-	while(cr >= 360) cr -= 360;
-	return cr;
+stock CompRotation(rotation,&crotation=0){
+	crotation = rotation;
+	while(crotation < 0) crotation += 360;
+	while(crotation >= 360) crotation -= 360;
+	return crotation;
 }
 
-stock Float:CompRotationFloat(Float:rotation,&Float:cr=0.0){
-	cr = rotation;
-	while(cr < 0.0) cr += 360.0;
-	while(cr >= 360.0) cr -= 360.0;
-	return cr;
+stock Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0){
+	crotation = rotation;
+	while(crotation < 0.0) crotation += 360.0;
+	while(crotation >= 360.0) crotation -= 360.0;
+	return crotation;
 }
 
 //old code version
@@ -469,7 +464,9 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 #define GetPointInFront									GetPointInFront3D
 #define GetPointInFrontOfCamera							GetPointInFrontOfCamera3D
 #define GetDistanceBetweenPoints						GetDistanceBetweenPoints3D
-
+#define CompressRotation								CompRotation
+#define CompressRotationFloat							CompRotationFloat
+	
 #if !defined USE_OLD_PROTOTYPE_FUNCTION
 	
 	#if defined GetAngle

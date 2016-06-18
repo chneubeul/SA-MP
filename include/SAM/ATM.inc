@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.3B                                                                                                             *
+ * File Version: 1.3C                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -34,11 +34,11 @@
 /*
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc v1.3B
+	#error You need ATM.inc v1.3C
 #elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.3B
-#elseif (ATM_Version < 10302)
-	#error Update you ATM.inc to v1.3B
+	#error Update you ATM.inc to v1.3C
+#elseif (ATM_Version < 10303)
+	#error Update you ATM.inc to v1.3C
 #endif
 */
 
@@ -47,7 +47,7 @@
 #endif
 #define _ATM_Core
 
-#define ATM_Version											(10302) //a.b[c] 10000*a+100*b+c
+#define ATM_Version											(10303) //a.b[c] 10000*a+100*b+c
 
 #if !defined isnull
 	#define isnull(%1) 										((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
@@ -59,15 +59,19 @@
 
 #if !defined exec && !defined DISABLE_ATM_EXEC
 	#define exec%0(%1)%2(%3)								forward %0(%1); public %0(%1){ return %2(%3); }
+	#define PubFunction:{%0,%1}								exec %0 %1
 #endif
 
-#define PubFunction:{%0,%1}									exec %0 %1
-#define ServerPubVar:{%1,%2}								forward v_%1(); public v_%1(){ return (%2); }
-#define GetServerPubVar(%1)									CallRemoteFunction("v_"#%1"","")
-#define PlayerPubVar:{%1,%2}								forward v_%1(playerid); public v_%1(playerid){ return (%2); }
-#define GetPlayerPubVar(%0,%1)								CallRemoteFunction("v_"#%1"","d",%0)
+#if !defined DISABLE_ATM_PUB_VAR
+	#define ServerPubVar:{%1,%2}							forward v_%1(); public v_%1(){ return (%2); }
+	#define GetServerPubVar(%1)								CallRemoteFunction("v_"#%1"","")
+	#define PlayerPubVar:{%1,%2}							forward v_%1(playerid); public v_%1(playerid){ return (%2); }
+	#define GetPlayerPubVar(%0,%1)							CallRemoteFunction("v_"#%1"","d",%0)
+#endif
 
-#define randomex(%0,%1) 									(random((%1)-(%0)+1)+(%0))
+#if !defined randomex
+	#define randomex(%0,%1) 								(random((%1)-(%0)+1)+(%0))
+#endif
 
 #if !defined SecToTimeDay
 	//%d:%02d:%02d:%02d
