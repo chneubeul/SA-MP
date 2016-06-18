@@ -18,13 +18,18 @@
 #include <MD5>
 #include <foreach>
 
-//3DTryg.inc Config
+//ProtVar Config
 //#define ProtVar:: <salt>
 //#define ENABLE_PROTECTION_VARIABLES
 
+//3DTryg.inc Config
 //#define USE_OLD_PROTOTYPE_FUNCTION
 
-//Logs.inc
+//ADM.inc Config
+//#define DISABLE_ATM_FUNCTION
+//#define DISABLE_ATM_EXEC
+
+//Logs.inc Config
 #define EMPTY_LOG_BUFFER	"My Log File\n"
 
 //SAM Includes

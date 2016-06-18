@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.3                                                                                                              *
+ * File Version: 1.3B                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -34,11 +34,11 @@
 /*
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc v1.3
+	#error You need ATM.inc v1.3B
 #elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.3
-#elseif (ATM_Version < 10301)
-	#error Update you ATM.inc to v1.3
+	#error Update you ATM.inc to v1.3B
+#elseif (ATM_Version < 10302)
+	#error Update you ATM.inc to v1.3B
 #endif
 */
 
@@ -47,17 +47,17 @@
 #endif
 #define _ATM_Core
 
-#define ATM_Version											(10301) //a.b[c] 10000*a+100*b+c
+#define ATM_Version											(10302) //a.b[c] 10000*a+100*b+c
 
 #if !defined isnull
 	#define isnull(%1) 										((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
 
-#if !defined function
+#if !defined function && !defined DISABLE_ATM_FUNCTION
 	#define function%0(%1)									forward %0(%1); public %0(%1)
 #endif
 
-#if !defined exec
+#if !defined exec && !defined DISABLE_ATM_EXEC
 	#define exec%0(%1)%2(%3)								forward %0(%1); public %0(%1){ return %2(%3); }
 #endif
 
