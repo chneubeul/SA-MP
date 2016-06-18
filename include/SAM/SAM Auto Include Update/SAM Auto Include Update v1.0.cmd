@@ -23,7 +23,7 @@ IF NOT DEFINED OUTPUT ECHO Destination folder is not set & PAUSE > nul & EXIT
 
 ECHO Update Include List
 IF EXIST "%CD%\include.tmp" DEL /Q /A "%CD%\include.tmp"
-powershell -command "& { (New-Object Net.WebClient).DownloadFile('%INPUT%/include.lst', '%CD%\include.tmp') }"
+powershell -command "& { (New-Object Net.WebClient).DownloadFile('%INPUT%/z_include.lst', '%CD%\include.tmp') }"
 IF EXIST "%CD%\include.tmp" (
 	IF EXIST "%CD%\include.lst" (
 		DEL /Q /A "%CD%\include.lst"
