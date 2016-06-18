@@ -79,8 +79,8 @@
 
 stock bool:swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2)){
 	if(dest1 < strlen(string2) || dest2 < strlen(string1)) return false;
-	new swap_size = dest1, tmp = dest2;
-	if(tmp > swap_size) swap_size = tmp;
+	new swap_size = dest1;
+	if(dest2 > swap_size) swap_size = dest2;
 	for(new i = 0; i < swap_size; i++){
 		swap_int(string1[i],string2[i]);
 	}
