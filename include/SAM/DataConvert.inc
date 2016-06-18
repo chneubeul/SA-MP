@@ -18,10 +18,10 @@
  * StringToInt(string[]);                                                                           *
  * BinToInt(string[]);                                                                              *
  * IntToBin(value);                                                                                 *
- * HexToInt(string[]);                                                                              * 
+ * HexToInt(string[]);                                                                              *
  * IntToHex(int);                                                                                   *
  * IntToHexEx(int);                                                                                 *
- * HexToBin(string[]);                                                                              * 
+ * HexToBin(string[]);                                                                              *
  * BinToHex(string[]);                                                                              *
  * BinToHexEx(string[]);                                                                            *
  * strcopy(input[],output[]);  //string copy for warning 224: indeterminate array size              *
@@ -185,7 +185,7 @@ stock AnyToInt(str[], type, &bool:flag){
 		flag = false;
 		return 0;
 	}
-	
+
 	while(i < n){
 		if(str[i] >= 0x30 && str[i] <= 0x39){
 	    	k = str[i] - 48;
