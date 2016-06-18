@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.3C                                                                                                             *
+ * File Version: 1.3D                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -34,11 +34,11 @@
 /*
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc v1.3C
+	#error You need ATM.inc v1.3D
 #elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.3C
-#elseif (ATM_Version < 10303)
-	#error Update you ATM.inc to v1.3C
+	#error Update you ATM.inc to v1.3D
+#elseif (ATM_Version < 10304)
+	#error Update you ATM.inc to v1.3D
 #endif
 */
 
@@ -47,7 +47,7 @@
 #endif
 #define _ATM_Core
 
-#define ATM_Version											(10303) //a.b[c] 10000*a+100*b+c
+#define ATM_Version											(10304) //a.b[c] 10000*a+100*b+c
 
 #if !defined isnull
 	#define isnull(%1) 										((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
@@ -129,8 +129,6 @@
 
 #define CalculatePercent(%0,%1)								(((%0)/(%1))*100.0)
 
-#define ATM_GetDistanceBetweenPoints3D(%1,%2,%3,%4,%5,%6)	VectorSize((%1)-(%4),(%2)-(%5),(%3)-(%6))
-
 enum e_Vectors {
 	Float:X, Float:Y, Float:Z, Float:A
 }
@@ -165,8 +163,8 @@ stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,ty
 			} else {
 				GetPlayerPos(i,F4[X],F4[Y],F4[Z]);
 			}
-			new Float:distance = ATM_GetDistanceBetweenPoints3D(F4[X],F4[Y],F4[Z],x,y,z);
-			if((GetPlayerInterior(i) == interiorid) && (GetPlayerVirtualWorld(i) == worldid) && (distance <= radius)){
+			new Float:distance = VectorSize(F4[X]-x,F4[Y]-y,F4[Z]-z);
+			if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (distance <= radius)){
 				CreateExplosionForPlayer(i,x,y,z,type,expradius);
 			}
 		}

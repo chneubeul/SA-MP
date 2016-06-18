@@ -1,17 +1,18 @@
-/****************************************************************************************************
- *                                                                                                  *
- * Missile Launcher v1.2 made by Abyss Morgan                                                       *
- *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
- *                                                                                                  *
- ****************************************************************************************************/
-
-/*
-
-MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM);
-MissileDestroy(mobid);
-
-*/
+/**********************************************************************************************************************************
+ *                                                                                                                                *
+ * Missile Launcher v1.3 made by Abyss Morgan                                                                                     *
+ *                                                                                                                                *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
+ *                                                                                                                                *
+ * Functions:                                                                                                                     *
+ * MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, *
+ *               Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM);    *
+ * MissileDestroy(mobid,type,playerid);                                                                                           *
+ *                                                                                                                                *
+ * Callbacks:                                                                                                                     *
+ * OnMissileDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);                                                                 *
+ *                                                                                                                                *
+ **********************************************************************************************************************************/
 
 #if !defined Streamer_AppendArrayData
 	#error Unknown streamer version
@@ -19,11 +20,11 @@ MissileDestroy(mobid);
 
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc v1.3
+	#error You need ATM.inc v1.3D
 #elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.3
-#elseif (ATM_Version < 10301)
-	#error Update you ATM.inc to v1.3
+	#error Update you ATM.inc to v1.3D
+#elseif (ATM_Version < 10304)
+	#error Update you ATM.inc to v1.3D
 #endif
 
 //Check Version 3DTryg.inc
@@ -52,6 +53,10 @@ MissileDestroy(mobid);
 #define MISSILE_TYPE_EXPLODE_LARGE		(6)
 #define MISSILE_TYPE_EXPLODE_HUGE		(7)
 
+#define MISSILE_DESTROY_TYPE_TARGET		(0)	//When rocket reaches its destination (always killerid=INVALID_PLAYER_ID)
+#define MISSILE_DESTROY_TYPE_DETECT		(1)	//When rocket has been destroyed by detection range
+#define MISSILE_DESTROY_TYPE_KILL		(2)	//When rocket has been destroyed by player
+
 #define INVALID_MISSILE_ID				(-1)
 
 #if !defined ANY_TEAM
@@ -78,7 +83,8 @@ stock FindFreeMissileID(){
 	return INVALID_MISSILE_ID;
 }
 
-forward MissileDestroy(mobid);
+forward MissileDestroy(mobid,type,playerid);
+forward OnMissileDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);
 
 stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM){
 	new mobid = FindFreeMissileID();
@@ -101,7 +107,7 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(3786,x,y,z,0.0,rx,rz,worldid,interiorid,playerid,streamdistance);
 		}
 		case MISSILE_OBJECT_HYDRA: {
-			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(345,x,y,z,0.0,rx,rz,worldid,interiorid,playerid,streamdistance);
+			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(345,x,y,z,rx,0.0,rz,worldid,interiorid,playerid,streamdistance);
 		}
 	}
 	
@@ -115,11 +121,11 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 	Streamer_SetIntData(STREAMER_TYPE_AREA,MissileComponent[mobid][missile_areaid],E_STREAMER_EXTRA_ID,(mobid+MISSILE_EXTRA_ID_OFFSET));
 	MissileComponent[mobid][missile_type] = type;
 	MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,0.0,rx,rz);
-	MissileComponent[mobid][missile_timer] = SetTimerEx("MissileDestroy",GetMoveTime(x,y,z,tx,ty,tz,speed)-10,false,"d",mobid);
+	MissileComponent[mobid][missile_timer] = SetTimerEx("MissileDestroy",GetMoveTime(x,y,z,tx,ty,tz,speed)-10,false,"ddd",mobid,MISSILE_DESTROY_TYPE_TARGET,INVALID_PLAYER_ID);
 	return mobid;
 }
 
-public MissileDestroy(mobid){
+public MissileDestroy(mobid,type,playerid){
 	if(mobid < 0 || mobid >= MAX_MISSILE) return 0;
 	KillTimer(MissileComponent[mobid][missile_timer]);
 	new Float:x, Float:y, Float:z,
@@ -137,6 +143,7 @@ public MissileDestroy(mobid){
 	MissileComponent[mobid][missile_explode] = 0.0;
 	MissileComponent[mobid][missile_playerid] = INVALID_PLAYER_ID;
 	MissileComponent[mobid][missile_teamid] = ANY_TEAM;
+	CallLocalFunction("OnMissileDestroy","dfffdd",mobid,x,y,z,type,playerid);
 	return 1;
 }
 
@@ -146,7 +153,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 	if(mobid >= 0 && mobid < MAX_MISSILE){
 		if(MissileComponent[mobid][missile_active]){
 			if((MissileComponent[mobid][missile_teamid] != GetPlayerTeam(playerid)) || (MissileComponent[mobid][missile_teamid] == ANY_TEAM)){
-				MissileDestroy(mobid);
+				MissileDestroy(mobid,MISSILE_DESTROY_TYPE_KILL,playerid);
 			}
 		}
 	}
@@ -175,7 +182,7 @@ public OnPlayerEnterDynamicArea(playerid, areaid){
 	if(mobid >= 0 && mobid < MAX_MISSILE){
 		if(MissileComponent[mobid][missile_active] && MissileComponent[mobid][missile_playerid] != playerid){
 			if((MissileComponent[mobid][missile_teamid] != GetPlayerTeam(playerid)) || (MissileComponent[mobid][missile_teamid] == ANY_TEAM)){
-				MissileDestroy(mobid);
+				MissileDestroy(mobid,MISSILE_DESTROY_TYPE_DETECT,playerid);
 			}
 		}
 	}	

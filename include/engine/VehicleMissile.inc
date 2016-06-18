@@ -43,17 +43,17 @@
 	#error Unknown MapAndreas Version
 #endif
 
-//Check Version ATM.inc
-#if !defined _ATM_Core
-	#error You need ATM.inc v1.3
-#elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.3
-#elseif (ATM_Version < 10301)
-	#error Update you ATM.inc to v1.3
-#endif
-
 #if !defined _missile_launcher
 	#error You need Missile.inc
+#endif
+
+//Check Version ATM.inc
+#if !defined _ATM_Core
+	#error You need ATM.inc v1.3D
+#elseif !defined ATM_Version
+	#error Update you ATM.inc to v1.3D
+#elseif (ATM_Version < 10304)
+	#error Update you ATM.inc to v1.3D
 #endif
 
 //Check Version 3DTryg.inc
