@@ -2,7 +2,7 @@
  *                                                                                                  *
  * Knife Shoot Script v1.9 made by Abyss Morgan                                                     *
  *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamKnifeShoot(bool:toggle); //default: false                                           *

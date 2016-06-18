@@ -2,7 +2,7 @@
  *                                                                                                  *
  * Military Dynamic Mines System v1.6 made by Abyss Morgan                                          *
  *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
  ****************************************************************************************************/
 
