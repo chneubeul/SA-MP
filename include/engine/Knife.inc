@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Knife Shoot Script v1.9 made by Abyss Morgan                                                     *
+ * Knife Shoot Script v2.0 made by Abyss Morgan                                                     *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
@@ -27,6 +27,7 @@
 #define KNIFE_MAX_RADIUS				(15.0)
 #define KNIFE_REFRESH_ACTION			(1000)	//1 sec
 #define KNIFE_REFRESH_MISS				(5000)	//5 sec
+#define KNIFE_DAMAGE					(10.0)
 
 new KnifeLockTarget[MAX_PLAYERS],
 	KnifeStep[MAX_PLAYERS],
@@ -149,8 +150,11 @@ public KnifeShot(playerid){
 public KnifeDestroy(objectid,targetid,playerid){
 	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
-		GivePlayerDamage(targetid,10.0,playerid,4);
+		GivePlayerDamage(targetid,KNIFE_DAMAGE,playerid,4);
 		ApplyAnimation(targetid,"ped","SHOT_partial",4.1,0,1,1,1,1,1);
+		#if !defined DISABLE_KNIFE_SOUND
+			PlayerPlaySound(targetid,17802,0.0,0.0,0.0);
+		#endif
 	}
 	return 1;
 }

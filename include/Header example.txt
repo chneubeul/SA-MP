@@ -34,6 +34,9 @@
 //Logs.inc Config
 #define EMPTY_LOG_BUFFER	"My Log File\n"
 
+//Knife.inc Config
+//#define DISABLE_KNIFE_SOUND
+
 //SAM Includes
 #include <SAM/StreamerFunction>
 #include <SAM/BitFunctions>
