@@ -20,8 +20,10 @@
  * IntToBin(value);                                                                                 *
  * HexToInt(string[]);                                                                              * 
  * IntToHex(int);                                                                                   *
+ * IntToHexEx(int);                                                                                 *
  * HexToBin(string[]);                                                                              * 
  * BinToHex(string[]);                                                                              *
+ * BinToHexEx(string[]);                                                                            *
  * strcopy(input[],output[]);  //string copy for warning 224: indeterminate array size              *
  * fstrcopy(input[],output[],maxdest = sizeof(output));   //fast string copy                        *
  * ABCToCBA(input[],output[]);                                                                      *
@@ -113,6 +115,13 @@ stock BinToHex(string[]){
 	return str;
 }
 
+stock BinToHexEx(string[]){
+	new str[10], value = 0;
+	sscanf(string,"b",value);
+	format(str,sizeof(str),"%x",value);
+	return str;
+}
+
 stock IntToBin(value){
 	new string[34];
 	format(string,sizeof(string),"%b",value);
@@ -149,6 +158,12 @@ stock HexToInt(string[]){
 stock IntToHex(int){
 	new result[10];
 	format(result,sizeof(result),"%06x",int);
+	return result;
+}
+
+stock IntToHexEx(int){
+	new result[10];
+	format(result,sizeof(result),"%x",int);
 	return result;
 }
 
