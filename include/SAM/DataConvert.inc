@@ -6,15 +6,12 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 1.6B                                                                               *
+ * File Version: 1.7                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileHandleID(File:handle);                                                                    *
  * GetFileID(File:handle);                                                                          *
  * bool:IsIdentical({AllTag,_}:variable1,{AllTag,_}:variable2);                                     *
- * bool:IsInteger({AllTag,_}:variable);                                                             *
- * bool:IsBool({AllTag,_}:variable);                                                                *
- * bool:IsFloat({AllTag,_}:variable);                                                               *
  * BoolToInt(bool:boolean);                                                                         *
  * bool:IntToBool(value);                                                                           *
  * bool:StringToBool(string[]);                                                                     *
@@ -34,30 +31,32 @@
  * code128(input[],output[]);                                                                       *
  * swap_int({Float,_}:int1,{Float,_}:int2);                                                         *
  * swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2));             *
+ * FloatToInt(Float:value); //Convert Float binary data to Integer binary data                      *
+ * Float:IntToFloat(value); //Convert Integer binary data to Float binary data                      *
  *                                                                                                  *
  ****************************************************************************************************/
 
 /*
 //Check Version DataConvert.inc
 #if !defined _Data_Convert
-	#error You need DataConvert.inc v1.6B
+	#error You need DataConvert.inc v1.7
 #elseif !defined Data_Convert_Version
-	#error Update you DataConvert.inc to v1.6B
-#elseif (Data_Convert_Version < 10602)
-	#error Update you DataConvert.inc to v1.6B
+	#error Update you DataConvert.inc to v1.7
+#elseif (Data_Convert_Version < 10701)
+	#error Update you DataConvert.inc to v1.7
 #endif
 */
+
+#if !defined sscanf
+	#error Unknown sscanf version
+#endif
 
 #if defined _Data_Convert
 	#endinput
 #endif
 #define _Data_Convert
 
-#if !defined sscanf
-	#error Unknown sscanf version
-#endif
-
-#define Data_Convert_Version		(10602) //a.b[c] 10000*a+100*b+c
+#define Data_Convert_Version		(10701) //a.b[c] 10000*a+100*b+c
 
 #define FIRST_FILE_ADDRESS			(0x004E5A18)
 #define INVALID_FILE_ID				(0xFFB1A5E7)
@@ -65,16 +64,16 @@
 #define GetFileHandleID(%0)			(_:%0)
 #define StringToInt(%0)				strval(%0)
 
-#define Integer						_
-#define Create::(%0) 				(%0:0)
-
 #define IsIdentical(%0,%1)			((tagof(%0) == tagof(%1)) && (_:%0) == (_:%1))
-#define IsInteger(%0)				((tagof(%0) == 0x80000000) && ((_:%0) == (_:%0)))
-#define IsBool(%0)					((tagof(%0) == 0x80000001) && ((_:%0) == (_:%0)))
-#define IsFloat(%0)					((tagof(%0) == 0xC0000004) && ((_:%0) == (_:%0)))
 
 //swapvars by Crayder
 #define swap_int(%0,%1)				(((%0) ^= (%1)), ((%1) ^= (%0)), ((%0) ^= (%1)))
+
+#define BoolToInt(%0)				((%0)?1:0)
+#define IntToBool(%0)				((%0 == 1)?true:false)
+
+#define FloatToInt(%0)				(_:%0)
+#define IntToFloat(%0)				(Float:%0)
 
 stock bool:swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2)){
 	if(dest1 < strlen(string2) || dest2 < strlen(string1)) return false;
@@ -118,19 +117,6 @@ stock IntToBin(value){
 	new string[34];
 	format(string,sizeof(string),"%b",value);
 	return string;
-}
-
-stock BoolToInt(bool:boolean){
-	if(boolean){
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-stock bool:IntToBool(value){
-	if(value == 1) return true;
-	return false;
 }
 
 stock bool:StringToBool(string[]){
