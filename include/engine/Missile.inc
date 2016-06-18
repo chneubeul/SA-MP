@@ -2,7 +2,7 @@
  *                                                                                                  *
  * Missile Launcher v1.2 made by Abyss Morgan                                                       *
  *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
  ****************************************************************************************************/
 

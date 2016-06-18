@@ -2,7 +2,7 @@
  *                                                                                                  *
  * Vehicle Missile Launcher v1.1 made by Abyss Morgan                                               *
  *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleVehicleMiniMissile(vehicleid,toggle);                                                      *
