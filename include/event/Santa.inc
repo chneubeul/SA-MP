@@ -4,7 +4,8 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
  *                                                                                                  *
- * Edit your reward in 'SantaPickUp'                                                                *
+ * Callbacks:                                                                                       *
+ * OnSantaPickupReward(playerid);                                                                   *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -37,33 +38,32 @@
 new SantaGift[MAX_SANTAGIFTS],
 	SantaTimer[1];
 
-//Christmas
-new SantaPickupModel[][1] = {
-	{19054},
-	{19055},
-	{19056},
-	{19057},
-	{19058}
-};
-
-/*
-//Easter
-new SantaPickupModel[][1] = {
-	{19341},
-	{19342},
-	{19343},
-	{19344},
-	{19345}
-};
-
-
-//Halloween
-new SantaPickupModel[][1] = {
-	{19320},	//pumpkin
-	{19527},	//cauldron
-	{19339}		//coffin
-};
-*/
+#if defined SANTA_IS_EASTER_EVENT
+	//Easter
+	new SantaPickupModel[][1] = {
+		{19341},
+		{19342},
+		{19343},
+		{19344},
+		{19345}
+	};
+#elseif defined SANTA_IS_EASTER_HALLOWEEN
+	//Halloween
+	new SantaPickupModel[][1] = {
+		{19320},	//pumpkin
+		{19527},	//cauldron
+		{19339}		//coffin
+	};
+#else
+	//Christmas
+	new SantaPickupModel[][1] = {
+		{19054},
+		{19055},
+		{19056},
+		{19057},
+		{19058}
+	};
+#endif
 
 forward SantaPickUp(playerid,pickupid);
 forward SantaReset(tec);
@@ -145,13 +145,14 @@ public OnFilterScriptExit(){
 	forward SantaOnFilterScriptExit();
 #endif
 
+forward OnSantaPickupReward(playerid);
+
 public SantaPickUp(playerid,pickupid){
 	for(new i = 0; i < MAX_SANTAGIFTS; i++){
 		if(pickupid == SantaGift[i]){
 			SantaGiftReset(i);
-			
-			
-			//your reward
+			CallLocalFunction("OnSantaPickupReward","d",playerid);
+			return 1;
 		}
 	}
 	return 1;
