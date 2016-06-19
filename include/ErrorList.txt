@@ -26,10 +26,10 @@
 [ADM] Error: Invalid server config, check your language.
 
 //Mines.inc
-[ADM] Error: Failed to CreateDynamicMine limit 300 exceeded, edit Mines.inc and change MAX_MINES
+[ADM] Error: Failed to CreateDynamicMine limit ... exceeded, edit Mines.inc and change MAX_MINES
 
 //Missile.inc
-[ADM] Error: Failed to MissileLaunch limit 2048 exceeded, edit Missile.inc and change MAX_MISSILE
+[ADM] Error: Failed to MissileLaunch limit ... exceeded, edit Missile.inc and change MAX_MISSILE
 
 //EngineX.inc
 [ADM] Info: NGCM Mob Move Engine System ... loaded

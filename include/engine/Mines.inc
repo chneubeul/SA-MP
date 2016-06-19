@@ -1,13 +1,17 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- * Military Dynamic Mines System v1.7 made by Abyss Morgan                                                                        *
+ * Military Dynamic Mines System v1.8 made by Abyss Morgan                                                                        *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,            *
  *                   worldid,interiorid,playerid,Float:streamdistance,mine_object = MINE_OBJECT_STANDARD,teamid = ANY_TEAM);      *
+ * CreateDynamicMineEx(objectid,type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z, *
+ *                     Float:rx,Float:ry,Float:rz,worldid,interiorid,playerid,Float:streamdistance,teamid = ANY_TEAM);            *
  * DestroyDynamicMine(mobid);                                                                                                     *
+ * Float:GetMineExplodeVisibility();                                                                                              *
+ * SetMineExplodeVisibility(Float:explode_stream);                                                                                *
  *                                                                                                                                *
  * Callbacks:                                                                                                                     *
  * OnMineDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);                                                                    *
@@ -37,7 +41,7 @@
 #define MINE_OBJECT_LASER			(3)
 #define MINE_OBJECT_PIZZA			(4)
 
-#define MAX_MINES					(300)
+#define MAX_MINES					(2048)
 #define MINE_EXTRA_ID_OFFSET		(200001)
 #define MINE_INFINITY_HEALTH		(1000000.0)
 
@@ -74,7 +78,8 @@ enum e_mine {
 
 new MineComponent[MAX_MINES][e_mine],
 	MineUpperBound = 0,
-	MineTimer;
+	MineTimer,
+	Float:MineExplosionVisibility = 200.0;
 
 static const Float:MDM_WeaponDamage[] = {
 	1.0,	// 0 - Fist
@@ -133,6 +138,9 @@ static const Float:MDM_WeaponDamage[] = {
 	1.0,	// 53 - Drowning
 	165.0	// 54 - Splat
 };
+
+#define GetMineExplodeVisibility()		MineExplosionVisibility
+#define SetMineExplodeVisibility(%0)	MineExplosionVisibility = (%0)
 
 stock FindFreeMineID(){
 	for(new i = 0; i < MAX_MINES; i++){
@@ -233,7 +241,7 @@ public OnDynamicMineUpdate(tec){
 	return 1;
 }
 
-stock CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float:health, respawntime, Float:x, Float:y, Float:z, worldid, interiorid, playerid, Float:streamdistance, mine_object = MINE_OBJECT_STANDARD, teamid = ANY_TEAM){
+stock CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,mine_object = MINE_OBJECT_STANDARD,teamid = ANY_TEAM){
 	new mobid = FindFreeMineID();
 	if(mobid == INVALID_MINE_ID){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -249,6 +257,31 @@ stock CreateDynamicMine(type, Float:detection_range, Float:explode_radius, Float
 		
 		default:						MineComponent[mobid][mine_objectid] = CreateDynamicObject(19602,x,y,z-0.93,0.0,0.0,0.0,worldid,interiorid,playerid,streamdistance);
 	}
+	MineComponent[mobid][mine_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
+	MineComponent[mobid][mine_health] = health;
+	MineComponent[mobid][mine_maxhealth] = health;
+	MineComponent[mobid][mine_explode] = explode_radius;
+	MineComponent[mobid][mine_tickcount] = 0;
+	MineComponent[mobid][mine_type] = type;
+	MineComponent[mobid][mine_respawntime] = respawntime;
+	MineComponent[mobid][mine_teamid] = teamid;
+	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
+	Streamer_SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
+	MineComponent[mobid][mine_status] = MINE_STATUS_ACTIVE;
+	if(mobid > MineUpperBound) MineUpperBound = mobid;
+	return mobid;
+}
+
+stock CreateDynamicMineEx(objectid,type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid,interiorid,playerid,Float:streamdistance,teamid = ANY_TEAM){
+	new mobid = FindFreeMineID();
+	if(mobid == INVALID_MINE_ID){
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Error: Failed to CreateDynamicMine limit %d exceeded, edit Mines.inc and change MAX_MINES",MAX_MINES);
+		}
+		return INVALID_MINE_ID;
+	}
+	
+	MineComponent[mobid][mine_objectid] = CreateDynamicObject(objectid,x,y,z,rx,ry,rz,worldid,interiorid,playerid,streamdistance);
 	MineComponent[mobid][mine_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
 	MineComponent[mobid][mine_health] = health;
 	MineComponent[mobid][mine_maxhealth] = health;
@@ -290,7 +323,7 @@ public ExplodeDynamicMine(mobid,type,playerid){
 		interiorid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_INTERIOR_ID);
 		
 	GetDynamicObjectPos(MineComponent[mobid][mine_objectid],minex,miney,minez);
-	CreateExplosionForRangePoint(minex,miney,minez,worldid,interiorid,MineComponent[mobid][mine_type],200.0,MineComponent[mobid][mine_explode]);
+	CreateExplosionForRangePoint(minex,miney,minez,worldid,interiorid,MineComponent[mobid][mine_type],GetMineExplodeVisibility(),MineComponent[mobid][mine_explode]);
 	MineComponent[mobid][mine_tickcount] = GetTickCount()+(MineComponent[mobid][mine_respawntime]*1000);
 	MineComponent[mobid][mine_status] = MINE_STATUS_DAMAGED;
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID,worldid+10000); //hide mine

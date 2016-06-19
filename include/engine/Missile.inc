@@ -1,6 +1,6 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- * Missile Launcher v1.3 made by Abyss Morgan                                                                                     *
+ * Missile Launcher v1.4 made by Abyss Morgan                                                                                     *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
@@ -8,6 +8,8 @@
  * MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, *
  *               Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM);    *
  * MissileDestroy(mobid,type,playerid);                                                                                           *
+ * Float:GetMissileExplodeVisibility();                                                                                           *
+ * SetMissileExplodeVisibility(Float:explode_stream);                                                                             *
  *                                                                                                                                *
  * Callbacks:                                                                                                                     *
  * OnMissileDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);                                                                 *
@@ -41,6 +43,8 @@
 #endif
 #define _missile_launcher
 
+#define Missile_Version					(10401)
+
 #define MISSILE_OBJECT_NORMAL			(0)
 #define MISSILE_OBJECT_BIG				(1)
 #define MISSILE_OBJECT_HYDRA			(2)
@@ -60,7 +64,7 @@
 #define INVALID_MISSILE_ID				(-1)
 
 #if !defined ANY_TEAM
-	#define ANY_TEAM						(0xFFFF)
+	#define ANY_TEAM					(0xFFFF)
 #endif
 
 enum e_missile {
@@ -74,7 +78,11 @@ enum e_missile {
 	missile_teamid
 }
 
-new MissileComponent[MAX_MISSILE][e_missile];
+new MissileComponent[MAX_MISSILE][e_missile],
+	Float:MissileExplosionVisibility = 200.0;
+
+#define GetMissileExplodeVisibility()		MissileExplosionVisibility
+#define SetMissileExplodeVisibility(%0)		MissileExplosionVisibility = (%0)
 
 stock FindFreeMissileID(){
 	for(new i = 0; i < MAX_MISSILE; i++){
@@ -133,7 +141,7 @@ public MissileDestroy(mobid,type,playerid){
 		interiorid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MissileComponent[mobid][missile_objectid],E_STREAMER_INTERIOR_ID);
 	
 	GetDynamicObjectPos(MissileComponent[mobid][missile_objectid],x,y,z);
-	CreateExplosionForRangePoint(x,y,z,worldid,interiorid,MissileComponent[mobid][missile_type],200.0,MissileComponent[mobid][missile_explode]);
+	CreateExplosionForRangePoint(x,y,z,worldid,interiorid,MissileComponent[mobid][missile_type],GetMissileExplodeVisibility(),MissileComponent[mobid][missile_explode]);
 	DestroyDynamicObject(MissileComponent[mobid][missile_objectid]);
 	DestroyDynamicArea(MissileComponent[mobid][missile_areaid]);
 	MissileComponent[mobid][missile_objectid] = INVALID_STREAMER_ID;
