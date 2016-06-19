@@ -6,7 +6,7 @@
  *                                                                                                                                         *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
- * File Version: 2.3D                                                                                                                      *
+ * File Version: 2.3E                                                                                                                      *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
@@ -231,11 +231,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.3D
+	#error You need StreamerFunction.inc v2.3E
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.3D
-#elseif (Streamer_Spec_Version < 20304)
-	#error Update you StreamerFunction.inc to v2.3D
+	#error Update you StreamerFunction.inc to v2.3E
+#elseif (Streamer_Spec_Version < 20305)
+	#error Update you StreamerFunction.inc to v2.3E
 #endif
 */
 
@@ -248,7 +248,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 					(20304) //a.b[c] 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20305) //a.b[c] 10000*a+100*b+c
 #define Valid_Streamer_Version 					(0x282001)
 
 #if !defined INVALID_STREAMER_ID
@@ -916,7 +916,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 //Fix Destroy Objects
 #if defined FIX_OBJECTS
 	//DestroyDynamicObject
-	stock AC_DestroyDynamicObject(&objectid){
+	stock SF_DestroyDynamicObject(&objectid){
 		new dobj = DestroyDynamicObject(objectid);
 		objectid = INVALID_STREAMER_ID;
 		return dobj;
@@ -927,10 +927,10 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _ALS_DestroyDynamicObject
 	#endif
-	#define DestroyDynamicObject AC_DestroyDynamicObject
+	#define DestroyDynamicObject SF_DestroyDynamicObject
 
 	//DestroyObject
-	stock AC_DestroyObject(&objectid){
+	stock SF_DestroyObject(&objectid){
 		new dobj = DestroyObject(objectid);
 		objectid = INVALID_OBJECT_ID;
 		return dobj;
@@ -941,10 +941,10 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _ALS_DestroyObject
 	#endif
-	#define DestroyObject AC_DestroyObject
+	#define DestroyObject SF_DestroyObject
 
 	//DestroyPlayerObject
-	stock AC_DestroyPlayerObject(playerid,&objectid){
+	stock SF_DestroyPlayerObject(playerid,&objectid){
 		new dobj = DestroyPlayerObject(playerid,objectid);
 		objectid = INVALID_OBJECT_ID;
 		return dobj;
@@ -955,10 +955,10 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _ALS_DestroyPlayerObject
 	#endif
-	#define DestroyPlayerObject AC_DestroyPlayerObject
+	#define DestroyPlayerObject SF_DestroyPlayerObject
 
 	//DestroyDynamicPickup
-	stock AC_DestroyDynamicPickup(&pickupid){
+	stock SF_DestroyDynamicPickup(&pickupid){
 		new dobj = DestroyDynamicPickup(pickupid);
 		pickupid = INVALID_STREAMER_ID;
 		return dobj;
@@ -969,10 +969,10 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _ALS_DestroyDynamicPickup
 	#endif
-	#define DestroyDynamicPickup AC_DestroyDynamicPickup
+	#define DestroyDynamicPickup SF_DestroyDynamicPickup
 
 	//DestroyDynamicCP
-	stock AC_DestroyDynamicCP(&checkpointid){
+	stock SF_DestroyDynamicCP(&checkpointid){
 		new dobj = DestroyDynamicCP(checkpointid);
 		checkpointid = INVALID_STREAMER_ID;
 		return dobj;
@@ -983,10 +983,10 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _ALS_DestroyDynamicCP
 	#endif
-	#define DestroyDynamicCP AC_DestroyDynamicCP
+	#define DestroyDynamicCP SF_DestroyDynamicCP
 
 	//DestroyDynamicRaceCP
-	stock AC_DestroyDynamicRaceCP(&checkpointid){
+	stock SF_DestroyDynamicRaceCP(&checkpointid){
 		new dobj = DestroyDynamicRaceCP(checkpointid);
 		checkpointid = INVALID_STREAMER_ID;
 		return dobj;
@@ -997,10 +997,10 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _ALS_DestroyDynamicRaceCP
 	#endif
-	#define DestroyDynamicRaceCP AC_DestroyDynamicRaceCP
+	#define DestroyDynamicRaceCP SF_DestroyDynamicRaceCP
 
 	//DestroyDynamicMapIcon
-	stock AC_DestroyDynamicMapIcon(&iconid){
+	stock SF_DestroyDynamicMapIcon(&iconid){
 		new dobj = DestroyDynamicMapIcon(iconid);
 		iconid = INVALID_STREAMER_ID;
 		return dobj;
@@ -1011,10 +1011,10 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _ALS_DestroyDynamicMapIcon
 	#endif
-	#define DestroyDynamicMapIcon AC_DestroyDynamicMapIcon
+	#define DestroyDynamicMapIcon SF_DestroyDynamicMapIcon
 
 	//DestroyDynamic3DTextLabel
-	stock AC_DestroyDynamic3DTextLabel(&Text3D:id){
+	stock SF_DestroyDynamic3DTextLabel(&Text3D:id){
 		new dobj = DestroyDynamic3DTextLabel(id);
 		id = Text3D:INVALID_STREAMER_ID;
 		return dobj;
@@ -1025,10 +1025,10 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _ALS_DestroyDynamic3DTextLabel
 	#endif
-	#define DestroyDynamic3DTextLabel AC_DestroyDynamic3DTextLabel
+	#define DestroyDynamic3DTextLabel SF_DestroyDynamic3DTextLabel
 
 	//DestroyDynamicArea
-	stock AC_DestroyDynamicArea(&areaid){
+	stock SF_DestroyDynamicArea(&areaid){
 		new dobj = DestroyDynamicArea(areaid);
 		areaid = INVALID_STREAMER_ID;
 		return dobj;
@@ -1039,10 +1039,10 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _ALS_DestroyDynamicArea
 	#endif
-	#define DestroyDynamicArea AC_DestroyDynamicArea
+	#define DestroyDynamicArea SF_DestroyDynamicArea
 	
 	//AttachDynamicObjectToObject
-	stock AC_AttachDynamicObjectToObject(objectid,attachtoid,Float:offsetx,Float:offsety,Float:offsetz,Float:rx,Float:ry,Float:rz,syncrotation = 1){
+	stock SF_AttachDynamicObjectToObject(objectid,attachtoid,Float:offsetx,Float:offsety,Float:offsetz,Float:rx,Float:ry,Float:rz,syncrotation = 1){
 		new dobj = AttachDynamicObjectToObject(objectid,attachtoid,offsetx,offsety,offsetz,rx,ry,rz,syncrotation);
 		if(GetDynamicObjectPriority(attachtoid) <= GetDynamicObjectPriority(objectid)){
 			SetDynamicObjectPriority(attachtoid,GetDynamicObjectPriority(objectid)+1);
@@ -1055,7 +1055,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#else
 		#define _LS_AttachDynamicObjectToObject
 	#endif
-	#define AttachDynamicObjectToObject AC_AttachDynamicObjectToObject
+	#define AttachDynamicObjectToObject SF_AttachDynamicObjectToObject
 
 #endif
 

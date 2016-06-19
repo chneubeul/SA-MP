@@ -1,19 +1,12 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Santa Gifts v1.3 made by Abyss Morgan                                                            *
+ * Santa Gifts v1.4 made by Abyss Morgan                                                            *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
  *                                                                                                  *
+ * Edit your reward in 'SantaPickUp'                                                                *
+ *                                                                                                  *
  ****************************************************************************************************/
-
-/*
-//to hook function
-SantaPickUpDynamicPickup(playerid,pickupid);	//OnPlayerPickUpDynamicPickup
-
-//edit your reward in 'SantaPickUpDynamicPickup'
-
-*/
-
 
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
@@ -72,7 +65,7 @@ new SantaPickupModel[][1] = {
 };
 */
 
-forward SantaPickUpDynamicPickup(playerid,pickupid);
+forward SantaPickUp(playerid,pickupid);
 forward SantaReset(tec);
 forward SantaGiftCreate(giftid);
 forward SantaGiftReset(giftid);
@@ -152,7 +145,7 @@ public OnFilterScriptExit(){
 	forward SantaOnFilterScriptExit();
 #endif
 
-public SantaPickUpDynamicPickup(playerid,pickupid){
+public SantaPickUp(playerid,pickupid){
 	for(new i = 0; i < MAX_SANTAGIFTS; i++){
 		if(pickupid == SantaGift[i]){
 			SantaGiftReset(i);
@@ -164,6 +157,24 @@ public SantaPickUpDynamicPickup(playerid,pickupid){
 	return 1;
 }
 
+//OnPlayerPickUpDynamicPickup
+public OnPlayerPickUpDynamicPickup(playerid,pickupid){
+	SantaPickUp(playerid,pickupid);
+	#if defined Santa_OnPlayerPickUpPickup
+		Santa_OnPlayerPickUpPickup(playerid,pickupid);
+	#endif
+	return 1;
+}
+
+#if defined _LS_OnPlayerPickUpDynamicPickup
+	#undef OnPlayerPickUpDynamicPickup
+#else
+	#define _LS_OnPlayerPickUpDynamicPickup
+#endif
+#define OnPlayerPickUpDynamicPickup Santa_OnPlayerPickUpPickup
+#if defined Santa_OnPlayerPickUpPickup
+	forward Santa_OnPlayerPickUpPickup(playerid,pickupid);
+#endif
 
 public SantaReset(tec){
 	for(new i = 0; i < MAX_SANTAGIFTS; i++){
