@@ -3,6 +3,7 @@
  *                                          SScanf Command                                          *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
+ * Another Author: ZeeX used scheme zcmd.inc v0.3.1                                                 *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
