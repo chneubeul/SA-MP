@@ -52,6 +52,7 @@ forward NGCBomberGoTo(mobid,Float:x,Float:y,Float:z,Float:speed);
 forward OnBomberActive(mobid,Float:x,Float:y,Float:z);
 forward OnPackageLanded(mobid,objectid);
 
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	Bomber_OnFilterScriptInit();
 	#if defined BMB_OnFilterScriptInit
@@ -70,6 +71,7 @@ public OnFilterScriptInit(){
 	forward BMB_OnFilterScriptInit();
 #endif
 
+//Hook: OnFilterScriptExit
 public OnFilterScriptExit(){
 	Bomber_OnFilterScriptExit();
 	#if defined BMB_OnFilterScriptExit
@@ -88,6 +90,7 @@ public OnFilterScriptExit(){
 	forward BMB_OnFilterScriptExit();
 #endif
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
 	Bomber_OnFilterScriptInit();
 	#if defined BMB_OnGameModeInit
@@ -106,6 +109,7 @@ public OnGameModeInit(){
 	forward BMB_OnGameModeInit();
 #endif
 
+//Hook: OnGameModeExit
 public OnGameModeExit(){
 	Bomber_OnFilterScriptExit();
 	#if defined BMB_OnGameModeExit

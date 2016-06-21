@@ -305,6 +305,7 @@ public OnVehicleMissileInit(){
 	return 1;
 }
 
+//Hook: OnPlayerKeyStateChange
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
 	if(IsPlayerInAnyVehicle(playerid) && GetPlayerVehicleSeat(playerid) == 0){
 		new vid = GetPlayerVehicleID(playerid);
@@ -343,6 +344,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
 	forward VM_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
 #endif
 
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	OnVehicleMissileInit();
 	#if defined VM_OnFilterScriptInit
@@ -361,6 +363,7 @@ public OnFilterScriptInit(){
 	forward VM_OnFilterScriptInit();
 #endif
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
 	OnVehicleMissileInit();
 	#if defined VM_OnGameModeInit

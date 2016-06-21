@@ -915,7 +915,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 
 //Fix Destroy Objects
 #if defined FIX_OBJECTS
-	//DestroyDynamicObject
+	//Hook: DestroyDynamicObject
 	stock SF_DestroyDynamicObject(&objectid){
 		new dobj = DestroyDynamicObject(objectid);
 		objectid = INVALID_STREAMER_ID;
@@ -929,7 +929,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyDynamicObject SF_DestroyDynamicObject
 
-	//DestroyObject
+	//Hook: DestroyObject
 	stock SF_DestroyObject(&objectid){
 		new dobj = DestroyObject(objectid);
 		objectid = INVALID_OBJECT_ID;
@@ -943,7 +943,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyObject SF_DestroyObject
 
-	//DestroyPlayerObject
+	//Hook: DestroyPlayerObject
 	stock SF_DestroyPlayerObject(playerid,&objectid){
 		new dobj = DestroyPlayerObject(playerid,objectid);
 		objectid = INVALID_OBJECT_ID;
@@ -957,7 +957,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyPlayerObject SF_DestroyPlayerObject
 
-	//DestroyDynamicPickup
+	//Hook: DestroyDynamicPickup
 	stock SF_DestroyDynamicPickup(&pickupid){
 		new dobj = DestroyDynamicPickup(pickupid);
 		pickupid = INVALID_STREAMER_ID;
@@ -971,7 +971,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyDynamicPickup SF_DestroyDynamicPickup
 
-	//DestroyDynamicCP
+	//Hook: DestroyDynamicCP
 	stock SF_DestroyDynamicCP(&checkpointid){
 		new dobj = DestroyDynamicCP(checkpointid);
 		checkpointid = INVALID_STREAMER_ID;
@@ -985,7 +985,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyDynamicCP SF_DestroyDynamicCP
 
-	//DestroyDynamicRaceCP
+	//Hook: DestroyDynamicRaceCP
 	stock SF_DestroyDynamicRaceCP(&checkpointid){
 		new dobj = DestroyDynamicRaceCP(checkpointid);
 		checkpointid = INVALID_STREAMER_ID;
@@ -999,7 +999,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyDynamicRaceCP SF_DestroyDynamicRaceCP
 
-	//DestroyDynamicMapIcon
+	//Hook: DestroyDynamicMapIcon
 	stock SF_DestroyDynamicMapIcon(&iconid){
 		new dobj = DestroyDynamicMapIcon(iconid);
 		iconid = INVALID_STREAMER_ID;
@@ -1013,7 +1013,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyDynamicMapIcon SF_DestroyDynamicMapIcon
 
-	//DestroyDynamic3DTextLabel
+	//Hook: DestroyDynamic3DTextLabel
 	stock SF_DestroyDynamic3DTextLabel(&Text3D:id){
 		new dobj = DestroyDynamic3DTextLabel(id);
 		id = Text3D:INVALID_STREAMER_ID;
@@ -1027,7 +1027,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyDynamic3DTextLabel SF_DestroyDynamic3DTextLabel
 
-	//DestroyDynamicArea
+	//Hook: DestroyDynamicArea
 	stock SF_DestroyDynamicArea(&areaid){
 		new dobj = DestroyDynamicArea(areaid);
 		areaid = INVALID_STREAMER_ID;
@@ -1041,7 +1041,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyDynamicArea SF_DestroyDynamicArea
 	
-	//AttachDynamicObjectToObject
+	//Hook: AttachDynamicObjectToObject
 	stock SF_AttachDynamicObjectToObject(objectid,attachtoid,Float:offsetx,Float:offsety,Float:offsetz,Float:rx,Float:ry,Float:rz,syncrotation = 1){
 		new dobj = AttachDynamicObjectToObject(objectid,attachtoid,offsetx,offsety,offsetz,rx,ry,rz,syncrotation);
 		if(GetDynamicObjectPriority(attachtoid) <= GetDynamicObjectPriority(objectid)){
@@ -1065,6 +1065,7 @@ stock ResetDynamicObjectMaterialAll(objectid){
 forward OnPlayerEnterAntiArea(playerid,areaid);
 forward OnPlayerLeaveAntiArea(playerid,areaid);
 
+//Hook: OnPlayerEnterDynamicArea
 public OnPlayerEnterDynamicArea(playerid,areaid){
 	CallLocalFunction("OnPlayerLeaveAntiArea","dd",playerid,areaid);
 	#if defined SSpec_OnPlayerEnterDynamicArea
@@ -1083,6 +1084,7 @@ public OnPlayerEnterDynamicArea(playerid,areaid){
 	forward SSpec_OnPlayerEnterDynamicArea(playerid,areaid);
 #endif
 
+//Hook: OnPlayerLeaveDynamicArea
 public OnPlayerLeaveDynamicArea(playerid,areaid){
 	CallLocalFunction("OnPlayerEnterAntiArea","dd",playerid,areaid);
 	#if defined SSpec_OnPlayerLeaveDynamicArea
@@ -1112,7 +1114,7 @@ stock CheckStreamerVersion(){
 	}
 }
 
-//Hook Init
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	CheckStreamerVersion();
 	#if defined SSpec_OnFilterScriptInit
@@ -1131,6 +1133,7 @@ public OnFilterScriptInit(){
 	forward SSpec_OnFilterScriptInit();
 #endif
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
 	CheckStreamerVersion();
 	#if defined SSpec_OnGameModeInit

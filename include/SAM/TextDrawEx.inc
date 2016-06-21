@@ -21,8 +21,8 @@ new TextDrawCount = 0,
 #define CountTextDraw()				(TextDrawCount)
 #define CountPlayerTextDraw(%0)		(PlayerTextDrawCount[(%0)])
 
-//TextDrawCreate
-stock Text:AC_TextDrawCreate(Float:x,Float:y,text[]){
+//Hook: TextDrawCreate
+stock Text:TD_TextDrawCreate(Float:x,Float:y,text[]){
 	TextDrawCount++;
 	return TextDrawCreate(x,y,text);
 }
@@ -32,10 +32,10 @@ stock Text:AC_TextDrawCreate(Float:x,Float:y,text[]){
 #else
     #define _ALS_TextDrawCreate
 #endif
-#define TextDrawCreate AC_TextDrawCreate
+#define TextDrawCreate TD_TextDrawCreate
 
-//CreatePlayerTextDraw
-stock PlayerText:AC_CreatePlayerTextDraw(playerid,Float:x,Float:y,text[]){
+//Hook: CreatePlayerTextDraw
+stock PlayerText:TD_CreatePlayerTextDraw(playerid,Float:x,Float:y,text[]){
 	PlayerTextDrawCount[playerid]++;
 	return CreatePlayerTextDraw(playerid,x,y,text);
 }
@@ -45,10 +45,10 @@ stock PlayerText:AC_CreatePlayerTextDraw(playerid,Float:x,Float:y,text[]){
 #else
     #define _ALS_CreatePlayerTextDraw
 #endif
-#define CreatePlayerTextDraw AC_CreatePlayerTextDraw
+#define CreatePlayerTextDraw TD_CreatePlayerTextDraw
 
-//TextDrawDestroy
-stock AC_TextDrawDestroy(Text:text){
+//Hook: TextDrawDestroy
+stock TD_TextDrawDestroy(Text:text){
 	TextDrawCount--;
 	return TextDrawDestroy(text);
 }
@@ -58,10 +58,10 @@ stock AC_TextDrawDestroy(Text:text){
 #else
     #define _ALS_TextDrawDestroy
 #endif
-#define TextDrawDestroy AC_TextDrawDestroy
+#define TextDrawDestroy TD_TextDrawDestroy
 
-//DestroyPlayerTextDraw
-stock AC_DestroyPlayerTextDraw(playerid,PlayerText:text){
+//Hook: DestroyPlayerTextDraw
+stock TD_DestroyPlayerTextDraw(playerid,PlayerText:text){
 	PlayerTextDrawCount[playerid]--;
 	return DestroyPlayerTextDraw(playerid,text);
 }
@@ -71,6 +71,6 @@ stock AC_DestroyPlayerTextDraw(playerid,PlayerText:text){
 #else
     #define _ALS_DestroyPlayerTextDraw
 #endif
-#define DestroyPlayerTextDraw AC_DestroyPlayerTextDraw
+#define DestroyPlayerTextDraw TD_DestroyPlayerTextDraw
 
 //EOF

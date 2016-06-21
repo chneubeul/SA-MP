@@ -55,6 +55,7 @@
 #include <SAM/Logs>
 #include <SAM/ATM>
 #include <SAM/scmd>				//Do not use with ZCMD.inc !
+#include <SAM/FoxForeach>
 
 //Other includes created by Abyss Morgan
 

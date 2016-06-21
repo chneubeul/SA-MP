@@ -50,6 +50,7 @@ forward OnPlayerCommandPerformed(playerid, cmdtext[], success);
 
 static bool:scmd_g_HasOPCS = false, bool:scmd_g_HasOPCE = false;
 
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	scmd_g_HasOPCS = funcidx("OnPlayerCommandReceived") != -1;
 	scmd_g_HasOPCE = funcidx("OnPlayerCommandPerformed") != -1;
@@ -64,6 +65,7 @@ public OnFilterScriptInit(){
 #define OnFilterScriptInit scmd_OnFilterScriptInit
 forward scmd_OnFilterScriptInit();
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
 	scmd_g_HasOPCS = funcidx("OnPlayerCommandReceived") != -1;
 	scmd_g_HasOPCE = funcidx("OnPlayerCommandPerformed") != -1;
@@ -81,8 +83,7 @@ public OnGameModeInit(){
 #define OnGameModeInit scmd_OnGameModeInit
 forward scmd_OnGameModeInit();
 
-
-
+//Hook: OnPlayerCommandText
 public OnPlayerCommandText(playerid, cmdtext[]){
 	if(scmd_g_HasOPCS && !CallLocalFunction("OnPlayerCommandReceived", "is", playerid, cmdtext)) return 1;
 

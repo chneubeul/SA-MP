@@ -76,7 +76,7 @@ stock bool:Lottery_RemovePlayer(playerid){
 	return true;
 }
 
-
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	Lottery_OnGameModeInit();
 	#if defined LOT_OnFilterScriptInit
@@ -95,6 +95,7 @@ public OnFilterScriptInit(){
 	forward LOT_OnFilterScriptInit();
 #endif
 
+//Hook: OnFilterScriptExit
 public OnFilterScriptExit(){
 	Lottery_OnGameModeExit();
 	#if defined LOT_OnFilterScriptExit
@@ -113,6 +114,7 @@ public OnFilterScriptExit(){
 	forward LOT_OnFilterScriptExit();
 #endif
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
 	Lottery_OnGameModeInit();
 	#if defined LOT_OnGameModeInit
@@ -131,6 +133,7 @@ public OnGameModeInit(){
 	forward LOT_OnGameModeInit();
 #endif
 
+//Hook: OnGameModeExit
 public OnGameModeExit(){
 	Lottery_OnGameModeExit();
 	#if defined LOT_OnGameModeExit
@@ -149,6 +152,7 @@ public OnGameModeExit(){
 	forward LOT_OnGameModeExit();
 #endif
 
+//Hook: OnPlayerDisconnect
 public OnPlayerDisconnect(playerid,reason){
 	Lottery_RemovePlayer(playerid);
 	#if defined LOT_OnPlayerDisconnect

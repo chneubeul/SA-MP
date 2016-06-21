@@ -108,6 +108,7 @@ public OnEngineXExit(){
 	return 1;
 }
 
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	OnEngineXInit();
 	#if defined NOX_OnFilterScriptInit
@@ -126,6 +127,7 @@ public OnFilterScriptInit(){
 	forward NOX_OnFilterScriptInit();
 #endif
 
+//Hook: OnFilterScriptExit
 public OnFilterScriptExit(){
 	OnEngineXExit();
 	#if defined NOX_OnFilterScriptExit
@@ -144,6 +146,7 @@ public OnFilterScriptExit(){
 	forward NOX_OnFilterScriptExit();
 #endif
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
 	OnEngineXInit();
 	#if defined NOX_OnGameModeInit
@@ -162,6 +165,7 @@ public OnGameModeInit(){
 	forward NOX_OnGameModeInit();
 #endif
 
+//Hook: OnGameModeExit
 public OnGameModeExit(){
 	OnEngineXExit();
 	#if defined NOX_OnGameModeExit

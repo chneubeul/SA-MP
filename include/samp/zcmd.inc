@@ -33,6 +33,7 @@ forward OnPlayerCommandPerformed(playerid, cmdtext[], success);
 
 static bool:zcmd_g_HasOPCS = false, bool:zcmd_g_HasOPCE = false;
 
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	zcmd_g_HasOPCS = funcidx("OnPlayerCommandReceived") != -1;
 	zcmd_g_HasOPCE = funcidx("OnPlayerCommandPerformed") != -1;
@@ -47,6 +48,7 @@ public OnFilterScriptInit(){
 #define OnFilterScriptInit zcmd_OnFilterScriptInit
 forward zcmd_OnFilterScriptInit();
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
 	zcmd_g_HasOPCS = funcidx("OnPlayerCommandReceived") != -1;
 	zcmd_g_HasOPCE = funcidx("OnPlayerCommandPerformed") != -1;
@@ -64,8 +66,7 @@ public OnGameModeInit(){
 #define OnGameModeInit zcmd_OnGameModeInit
 forward zcmd_OnGameModeInit();
 
-
-
+//Hook: OnPlayerCommandText
 public OnPlayerCommandText(playerid, cmdtext[]){
 	if(zcmd_g_HasOPCS && !CallLocalFunction("OnPlayerCommandReceived", "is", playerid, cmdtext)) return 1;
 	new pos, funcname[MAX_FUNC_NAME];

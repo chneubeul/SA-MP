@@ -65,6 +65,7 @@ stock GivePlayerDamage(targetid,Float:damage,playerid,weaponid){
 forward KnifeShot(playerid);
 forward KnifeDestroy(objectid,targetid,playerid);
 
+//Hook: OnPlayerKeyStateChange
 public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 	if(GetTickCount()-KnifeTime[playerid] >= KNIFE_REFRESH_ACTION){
 		if(GetPlayerWeapon(playerid) == 4){

@@ -38,7 +38,8 @@ stock GangZoneCreateEx(Float:minx,Float:miny,Float:maxx,Float:maxy,worldid = -1,
 	return tid;
 }
 
-stock AC_GangZoneCreate(Float:minx,Float:miny,Float:maxx,Float:maxy){
+//Hook: GangZoneCreate
+stock GZ_GangZoneCreate(Float:minx,Float:miny,Float:maxx,Float:maxy){
 	new tid = GangZoneCreate(minx,miny,maxx,maxy);
 	if(tid == INVALID_GANG_ZONE){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -55,9 +56,10 @@ stock AC_GangZoneCreate(Float:minx,Float:miny,Float:maxx,Float:maxy){
 #else
 	#define _ALS_GangZoneCreate
 #endif
-#define GangZoneCreate AC_GangZoneCreate
+#define GangZoneCreate GZ_GangZoneCreate
 
-stock AC_GangZoneDestroy(zoneid){
+//Hook: GangZoneDestroy
+stock GZ_GangZoneDestroy(zoneid){
 	if(zoneid < 0 || zoneid > MAX_GANG_ZONES){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
 			printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
@@ -73,7 +75,7 @@ stock AC_GangZoneDestroy(zoneid){
 #else
 	#define _ALS_GangZoneDestroy
 #endif
-#define GangZoneDestroy AC_GangZoneDestroy
+#define GangZoneDestroy GZ_GangZoneDestroy
 
 //fix colision YSF.inc
 #if !defined _YSF_included

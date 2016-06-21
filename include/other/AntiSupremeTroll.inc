@@ -181,7 +181,7 @@ CMD:oreset(playerid,params[])		return OnSupremeTrollCMD(playerid,"oreset",params
 CMD:otog(playerid,params[])			return OnSupremeTrollCMD(playerid,"otog",params);
 
 
-//DestroyPlayerObject
+//Hook: DestroyPlayerObject
 stock AST_DestroyPlayerObject(playerid,&objectid){
 	AST_SetValueBit(PlayerObj[playerid][GetPlayerObjAddress(objectid)],GetPlayerObjBit(objectid),0);
 	new dobj = DestroyPlayerObject(playerid,objectid);
@@ -196,7 +196,7 @@ stock AST_DestroyPlayerObject(playerid,&objectid){
 #endif
 #define DestroyPlayerObject AST_DestroyPlayerObject
 
-//CreatePlayerObject
+//Hook: CreatePlayerObject
 stock AST_CreatePlayerObject(playerid,modelid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:DrawDistance = 0.0){
 	new dobj = CreatePlayerObject(playerid,modelid,x,y,z,rx,ry,rz,DrawDistance);
 	AST_SetValueBit(PlayerObj[playerid][GetPlayerObjAddress(dobj)],GetPlayerObjBit(dobj),1);

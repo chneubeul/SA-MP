@@ -155,6 +155,7 @@ forward ExplodeDynamicMine(mobid,type,playerid);
 forward RespawnDynamicMine(mobid);
 forward OnMineDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);
 
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
 	#if defined MDM_OnFilterScriptInit
@@ -173,6 +174,7 @@ public OnFilterScriptInit(){
 	forward MDM_OnFilterScriptInit();
 #endif
 
+//Hook: OnFilterScriptExit
 public OnFilterScriptExit(){
 	KillTimer(MineTimer);
 	#if defined MDM_OnFilterScriptExit
@@ -191,6 +193,7 @@ public OnFilterScriptExit(){
 	forward MDM_OnFilterScriptExit();
 #endif
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
 	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
 	#if defined MDM_OnGameModeInit
@@ -209,6 +212,7 @@ public OnGameModeInit(){
 	forward MDM_OnGameModeInit();
 #endif
 
+//Hook: OnGameModeExit
 public OnGameModeExit(){
 	KillTimer(MineTimer);
 	#if defined MDM_OnGameModeExit
@@ -341,6 +345,7 @@ public RespawnDynamicMine(mobid){
 	return 1;
 }
 
+//Hook: OnPlayerShootDynamicObject
 public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z){
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mobid >= 0 && mobid < MAX_MINES){
@@ -378,7 +383,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 	forward MDM_OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z);
 #endif
 
-
+//Hook: OnPlayerEnterDynamicArea
 public OnPlayerEnterDynamicArea(playerid, areaid){
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mobid >= 0 && mobid < MAX_MINES){

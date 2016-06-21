@@ -155,7 +155,7 @@ public MissileDestroy(mobid,type,playerid){
 	return 1;
 }
 
-
+//Hook: OnPlayerShootDynamicObject
 public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z){
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MISSILE_EXTRA_ID_OFFSET);
 	if(mobid >= 0 && mobid < MAX_MISSILE){
@@ -181,6 +181,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 	forward MISOnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z);
 #endif
 
+//Hook: OnPlayerEnterDynamicArea
 public OnPlayerEnterDynamicArea(playerid, areaid){
 	new pstate = GetPlayerState(playerid);
 	if(pstate != 1 && pstate != 2 && pstate != 3) return 1;

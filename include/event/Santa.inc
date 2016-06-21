@@ -70,6 +70,7 @@ forward SantaReset(tec);
 forward SantaGiftCreate(giftid);
 forward SantaGiftReset(giftid);
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
 	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
@@ -98,6 +99,7 @@ public OnGameModeInit(){
 	forward SantaOnGameModeInit();
 #endif
 
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
@@ -126,7 +128,7 @@ public OnFilterScriptInit(){
 	forward SantaOnFilterScriptInit();
 #endif
 
-
+//Hook: OnFilterScriptExit
 public OnFilterScriptExit(){
 	KillTimer(SantaTimer[0]);
 	#if defined SantaOnFilterScriptExit
