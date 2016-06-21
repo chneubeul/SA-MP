@@ -6,7 +6,7 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * File Version: 1.3D                                                                                                             *
+ * File Version: 1.4                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -15,8 +15,6 @@
  * MSToTime(millisecond);     //Use: %02d:%02d:%02d                                                                               *
  * SecToTimeMini(second);     //Use: %02d:%02d                                                                                    *
  * MSToTimeMini(millisecond); //Use: %02d:%02d                                                                                    *
- * foX(variable,beginning,end);                                                                                                   *
- * foreach(variable);                                                                                                             *
  * randomex(min,max);                                                                                                             *
  * KEY_PRESSED(key);                                                                                                              *
  * KEY_RELEASED(key);                                                                                                             *
@@ -34,11 +32,11 @@
 /*
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc v1.3D
+	#error You need ATM.inc v1.4
 #elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.3D
-#elseif (ATM_Version < 10304)
-	#error Update you ATM.inc to v1.3D
+	#error Update you ATM.inc to v1.4
+#elseif (ATM_Version < 10401)
+	#error Update you ATM.inc to v1.4
 #endif
 */
 
@@ -47,7 +45,7 @@
 #endif
 #define _ATM_Core
 
-#define ATM_Version											(10304) //a.b[c] 10000*a+100*b+c
+#define ATM_Version											(10401) //a.b[c] 10000*a+100*b+c
 
 #if !defined isnull
 	#define isnull(%1) 										((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
@@ -108,12 +106,6 @@
 #define ATM_VW												(1)
 #define REAL_INT											(0)
 #define REAL_VW												(0)
-
-#define foX(%1,%2,%3)										for(new %1 = %2; %1 <= %3; %1++)
-
-#if !defined foreach
-	#define foreach(%1)										for(new %1 = 0, p_%1 = GetPlayerPoolSize(); %1 <= p_%1; %1++)
-#endif
 
 #if !defined KEY_PRESSED
 	#define KEY_PRESSED(%0) 								(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
