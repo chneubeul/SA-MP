@@ -1,0 +1,4 @@
+Streamer Extra ID Offset:
+
+MINE_EXTRA_ID_OFFSET		200001	//Include: /engine/Mines.inc
+MISSILE_EXTRA_ID_OFFSET		300001	//Include: /engine/Missile.inc
