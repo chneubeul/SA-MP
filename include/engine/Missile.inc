@@ -161,7 +161,7 @@ public MissileDestroy(mobid,type,playerid){
 		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 			if(IsPlayerConnected(i)){
 				if(IsPlayerInDynamicArea(i,MissileComponent[mobid][missile_areaid])){
-					CallLocalFunction("OnMissileDetectPlayer","dd",i,MissileComponent[mobid][missile_playerid]);
+					SetTimerEx("OnMissileDetectPlayer",50,false,"dd",i,MissileComponent[mobid][missile_playerid]);
 				}
 			}
 		}
