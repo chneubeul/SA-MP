@@ -58,11 +58,11 @@
 
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error You need Missile.inc v1.4
+	#error You need Missile.inc v1.5
 #elseif !defined Missile_Version
-	#error Update you Missile.inc to v1.4
-#elseif (Missile_Version < 10401)
-	#error Update you Missile.inc to v1.4
+	#error Update you Missile.inc to v1.5
+#elseif (Missile_Version < 10501)
+	#error Update you Missile.inc to v1.5
 #endif
 
 //Check Version ATM.inc

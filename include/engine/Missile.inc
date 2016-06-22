@@ -1,6 +1,6 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- * Missile Launcher v1.4 made by Abyss Morgan                                                                                     *
+ * Missile Launcher v1.5 made by Abyss Morgan                                                                                     *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
@@ -13,8 +13,20 @@
  *                                                                                                                                *
  * Callbacks:                                                                                                                     *
  * OnMissileDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);                                                                 *
+ * OnMissileDetectPlayer(playerid,missile_owner);                                                                                 *
  *                                                                                                                                *
  **********************************************************************************************************************************/
+
+/*
+//Check Version Missile.inc
+#if !defined _missile_launcher
+	#error You need Missile.inc v1.5
+#elseif !defined Missile_Version
+	#error Update you Missile.inc to v1.5
+#elseif (Missile_Version < 10501)
+	#error Update you Missile.inc to v1.5
+#endif
+*/
 
 #if !defined Streamer_AppendArrayData
 	#error Unknown streamer version
@@ -43,7 +55,7 @@
 #endif
 #define _missile_launcher
 
-#define Missile_Version					(10401)
+#define Missile_Version					(10501)
 
 #define MISSILE_OBJECT_NORMAL			(0)
 #define MISSILE_OBJECT_BIG				(1)
@@ -189,10 +201,14 @@ public OnPlayerEnterDynamicArea(playerid, areaid){
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-MISSILE_EXTRA_ID_OFFSET);
 	
 	if(mobid >= 0 && mobid < MAX_MISSILE){
+		new missile_own = MissileComponent[mobid][missile_playerid];
 		if(MissileComponent[mobid][missile_active] && MissileComponent[mobid][missile_playerid] != playerid){
 			if((MissileComponent[mobid][missile_teamid] != GetPlayerTeam(playerid)) || (MissileComponent[mobid][missile_teamid] == ANY_TEAM)){
 				MissileDestroy(mobid,MISSILE_DESTROY_TYPE_DETECT,playerid);
 			}
+		}
+		if(MissileComponent[mobid][missile_playerid] != playerid){
+			CallLocalFunction("OnMissileDetectPlayer","dd",playerid,missile_own);
 		}
 	}	
 	#if defined MIS_OnPlayerEnterDynamicArea
