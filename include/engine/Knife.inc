@@ -1,12 +1,16 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Knife Shoot Script v2.1 made by Abyss Morgan                                                     *
+ * Knife Shoot Script v2.2 made by Abyss Morgan                                                     *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamKnifeShoot(bool:toggle); //default: false                                           *
  * bool:IsToggleUseTeamKnifeShoot();                                                                *
+ * ToggleKnifeShootForAll(toggle); //default: true                                                  *
+ * IsToggleKnifeShootForAll(); //default: false                                                     *
+ * ToggleKnifeShootForPlayer(playerid,toggle);                                                      *
+ * IsToggleKnifeShootForPlayer(playerid);                                                           *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -23,19 +27,25 @@
 	#error Update you 3DTryg.inc to v2.5C
 #endif
 
-#define KNIFE_SPEED 					(12.0)
-#define KNIFE_MAX_RADIUS				(15.0)
-#define KNIFE_REFRESH_ACTION			(1000)	//1 sec
-#define KNIFE_REFRESH_MISS				(5000)	//5 sec
-#define KNIFE_DAMAGE					(10.0)
+#define KNIFE_SPEED 						(12.0)
+#define KNIFE_MAX_RADIUS					(15.0)
+#define KNIFE_REFRESH_ACTION				(1000)	//1 sec
+#define KNIFE_REFRESH_MISS					(5000)	//5 sec
+#define KNIFE_DAMAGE						(10.0)
 
 new KnifeLockTarget[MAX_PLAYERS],
 	KnifeStep[MAX_PLAYERS],
 	KnifeTime[MAX_PLAYERS],
+	bool:KnifeEnabledForPlayer[MAX_PLAYERS],
+	bool:KnifeEnabledForAll = true,
 	bool:KnifeUsePlayerTeam = false;
 
-#define ToggleUseTeamKnifeShoot(%0)		KnifeUsePlayerTeam = (%0)
-#define IsToggleUseTeamKnifeShoot()		(KnifeUsePlayerTeam)
+#define ToggleUseTeamKnifeShoot(%0)			KnifeUsePlayerTeam = (%0)
+#define IsToggleUseTeamKnifeShoot()			(KnifeUsePlayerTeam)
+#define ToggleKnifeShootForAll(%0)			KnifeEnabledForAll = (%0)
+#define IsToggleKnifeShootForAll()			(KnifeEnabledForAll)
+#define ToggleKnifeShootForPlayer(%0,%1)	KnifeEnabledForPlayer[(%0)] = (%1)
+#define IsToggleKnifeShootForPlayer(%0)		(KnifeEnabledForPlayer[(%0)])
 
 stock GivePlayerDamage(targetid,Float:damage,playerid,weaponid){
 	new Float:thp, Float:tarm;
@@ -67,14 +77,16 @@ forward KnifeDestroy(objectid,targetid,playerid);
 
 //Hook: OnPlayerKeyStateChange
 public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
-	if(GetTickCount()-KnifeTime[playerid] >= KNIFE_REFRESH_ACTION){
-		if(GetPlayerWeapon(playerid) == 4){
-			if(newkeys == KEY_FIRE && KnifeStep[playerid] == 1){
-				KnifeStep[playerid] = 0;
-				KnifeShot(playerid);
-			}
-			if(newkeys == KEY_HANDBRAKE && KnifeStep[playerid] == 0){
-				KnifeStep[playerid] = 1;
+	if(IsToggleKnifeShootForAll() || IsToggleKnifeShootForPlayer(playerid)){
+		if(GetTickCount()-KnifeTime[playerid] >= KNIFE_REFRESH_ACTION){
+			if(GetPlayerWeapon(playerid) == 4){
+				if(newkeys == KEY_FIRE && KnifeStep[playerid] == 1){
+					KnifeStep[playerid] = 0;
+					KnifeShot(playerid);
+				}
+				if(newkeys == KEY_HANDBRAKE && KnifeStep[playerid] == 0){
+					KnifeStep[playerid] = 1;
+				}
 			}
 		}
 	}
