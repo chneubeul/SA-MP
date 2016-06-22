@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Vehicle Missile Launcher v1.2 made by Abyss Morgan                                               *
+ * Vehicle Missile Launcher v1.3 made by Abyss Morgan                                               *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
@@ -14,12 +14,12 @@
  * IsToggleVehicleRhinoMissile(vehicleid);                                                          *
  * IsToggleVehicleBomberMissile(vehicleid);                                                         *
  *                                                                                                  *
+ * Float:GetVehicleMiniMissileSpeed(vehicleid);                                                     *
+ * Float:GetVehicleHeavyMissileSpeed(vehicleid);                                                    *
+ * Float:GetVehicleBomberMissileSpeed(vehicleid);                                                   *
  * SetVehicleMiniMissileSpeed(vehicleid,Float:speed);                                               *
  * SetVehicleHeavyMissileSpeed(vehicleid,Float:speed);                                              *
  * SetVehicleBomberMissileSpeed(vehicleid,Float:speed);                                             *
- * GetVehicleMiniMissileSpeed(vehicleid);                                                           *
- * GetVehicleHeavyMissileSpeed(vehicleid);                                                          *
- * GetVehicleBomberMissileSpeed(vehicleid);                                                         *
  *                                                                                                  *
  * GetVehicleMiniMissileReload(vehicleid);                                                          *
  * GetVehicleHeavyMissileReload(vehicleid);                                                         *
@@ -30,14 +30,23 @@
  * SetVehicleBomberMissileReload(vehicleid,time);                                                   *
  * SetVehicleRhinoMissileReload(vehicleid,time);                                                    *
  *                                                                                                  *
- * GetVehicleMiniMissileDistance(vehicleid);                                                        *
- * GetVehicleHeavyMissileDistance(vehicleid);                                                       *
- * GetVehicleBomberMissileDistance(vehicleid);                                                      *
- * GetVehicleRhinoMissileDistance(vehicleid);                                                       *
+ * Float:GetVehicleMiniMissileDistance(vehicleid);                                                  *
+ * Float:GetVehicleHeavyMissileDistance(vehicleid);                                                 *
+ * Float:GetVehicleBomberMissileDistance(vehicleid);                                                *
+ * Float:GetVehicleRhinoMissileDistance(vehicleid);                                                 *
  * SetVehicleMiniMissileDistance(vehicleid,Float:distance);                                         *
  * SetVehicleHeavyMissileDistance(vehicleid,Float:distance);                                        *
  * SetVehicleBomberMissileDistance(vehicleid,Float:distance);                                       *
  * SetVehicleRhinoMissileDistance(vehicleid,Float:distance);                                        *
+ *                                                                                                  *
+ * GetVehicleMiniMissileKey(vehicleid);                                                             *
+ * GetVehicleHeavyMissileKey(vehicleid);                                                            *
+ * GetVehicleBomberMissileKey(vehicleid);                                                           *
+ * GetVehicleRhinoMissileKey(vehicleid);                                                            *
+ * SetVehicleMiniMissileKey(vehicleid,key);                                                         *
+ * SetVehicleHeavyMissileKey(vehicleid,key);                                                        *
+ * SetVehicleBomberMissileKey(vehicleid,key);                                                       *
+ * SetVehicleRhinoMissileKey(vehicleid,key);                                                        *
  *                                                                                                  *
  * Float:GetMissileStreamDistance();                                                                *
  * SetMissileStreamDistance(Float:streamdistance);                                                  *
@@ -108,6 +117,11 @@
 #define VEHICLE_MISSILE_DISTANCE_BOMBER			(1200.0)
 #define VEHICLE_MISSILE_DISTANCE_RHINO			(12.0)
 
+#define VEHICLE_MISSILE_KEY_MINI				(KEY_FIRE)
+#define VEHICLE_MISSILE_KEY_HEAVY				(KEY_ACTION)
+#define VEHICLE_MISSILE_KEY_BOMBER				(KEY_YES)
+#define VEHICLE_MISSILE_KEY_RHINO				(KEY_FIRE)
+
 //Get Compress Adress
 #define GetVehicleConfigAddress(%0)				(floatround((%0)/32))
 #define GetVehicleConfigBit(%0)					((%0) % 32)
@@ -122,6 +136,7 @@ new VehicleConfigMiniMissile[64],
 	VehicleConfigBomberMissile[64],
 	VehicleWeaponTick[MAX_PLAYERS][MAX_VEHICLE_MISSILE_TYPE],
 	VehicleWeaponReload[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
+	VehicleWeaponKey[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
 	Float:VehicleWeaponSpeed[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
 	Float:VehicleWeaponDistance[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
 	Float:MissileStreamDistance = 200.0;
@@ -163,6 +178,16 @@ new VehicleConfigMiniMissile[64],
 #define SetVehicleHeavyMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
 #define SetVehicleBomberMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
 #define SetVehicleRhinoMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
+
+#define GetVehicleMiniMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MINI]
+#define GetVehicleHeavyMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
+#define GetVehicleBomberMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
+#define GetVehicleRhinoMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
+
+#define SetVehicleMiniMissileKey(%0,%1)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MINI] = (%1)
+#define SetVehicleHeavyMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
+#define SetVehicleBomberMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
+#define SetVehicleRhinoMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
 
 #define GetMissileStreamDistance()				MissileStreamDistance
 #define SetMissileStreamDistance(%0)			MissileStreamDistance = (%0)
@@ -301,6 +326,11 @@ public OnVehicleMissileInit(){
 		SetVehicleHeavyMissileDistance(i,VEHICLE_MISSILE_DISTANCE_HEAVY);
 		SetVehicleBomberMissileDistance(i,VEHICLE_MISSILE_DISTANCE_BOMBER);
 		SetVehicleRhinoMissileDistance(i,VEHICLE_MISSILE_DISTANCE_RHINO);
+		
+		SetVehicleMiniMissileKey(i,VEHICLE_MISSILE_KEY_MINI);
+		SetVehicleHeavyMissileKey(i,VEHICLE_MISSILE_KEY_HEAVY);
+		SetVehicleBomberMissileKey(i,VEHICLE_MISSILE_KEY_BOMBER);
+		SetVehicleRhinoMissileKey(i,VEHICLE_MISSILE_KEY_RHINO);
 	}
 	return 1;
 }
@@ -309,22 +339,24 @@ public OnVehicleMissileInit(){
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
 	if(IsPlayerInAnyVehicle(playerid) && GetPlayerVehicleSeat(playerid) == 0){
 		new vid = GetPlayerVehicleID(playerid);
-		if(KEY_PRESSED(KEY_FIRE)){
+		if(KEY_PRESSED(GetVehicleMiniMissileKey(vid))){
 			if(IsToggleVehicleMiniMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_MINI);
 			}
-			if(IsToggleVehicleRhinoMissile(vid)){
-				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_RHINO);
-			}
 		}
-		if(KEY_PRESSED(KEY_ACTION)){
+		if(KEY_PRESSED(GetVehicleHeavyMissileKey(vid))){
 			if(IsToggleVehicleHeavyMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_HEAVY);
 			}
 		}
-		if(KEY_PRESSED(KEY_YES)){
+		if(KEY_PRESSED(GetVehicleBomberMissileKey(vid))){
 			if(IsToggleVehicleBomberMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_BOMBER);
+			}
+		}
+		if(KEY_PRESSED(GetVehicleRhinoMissileKey(vid))){
+			if(IsToggleVehicleRhinoMissile(vid)){
+				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_RHINO);
 			}
 		}
 	}
