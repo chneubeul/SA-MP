@@ -1,6 +1,6 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- * Missile Launcher v1.5 made by Abyss Morgan                                                                                     *
+ * Missile Launcher v1.5B made by Abyss Morgan                                                                                    *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
@@ -13,18 +13,18 @@
  *                                                                                                                                *
  * Callbacks:                                                                                                                     *
  * OnMissileDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);                                                                 *
- * OnMissileDetectPlayer(playerid,missile_owner);                                                                                 *
+ * OnMissileDetectPlayer(playerid,killerid);                                                                                      *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error You need Missile.inc v1.5
+	#error You need Missile.inc v1.5B
 #elseif !defined Missile_Version
-	#error Update you Missile.inc to v1.5
-#elseif (Missile_Version < 10501)
-	#error Update you Missile.inc to v1.5
+	#error Update you Missile.inc to v1.5B
+#elseif (Missile_Version < 10502)
+	#error Update you Missile.inc to v1.5B
 #endif
 */
 
@@ -55,7 +55,7 @@
 #endif
 #define _missile_launcher
 
-#define Missile_Version					(10501)
+#define Missile_Version					(10502)
 
 #define MISSILE_OBJECT_NORMAL			(0)
 #define MISSILE_OBJECT_BIG				(1)
@@ -87,7 +87,8 @@ enum e_missile {
 	Float:missile_explode,
 	missile_timer,
 	missile_playerid,
-	missile_teamid
+	missile_teamid,
+	missile_vehicleid
 }
 
 new MissileComponent[MAX_MISSILE][e_missile],
@@ -105,7 +106,7 @@ stock FindFreeMissileID(){
 
 forward MissileDestroy(mobid,type,playerid);
 forward OnMissileDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);
-forward OnMissileDetectPlayer(playerid,missile_owner);
+forward OnMissileDetectPlayer(playerid,killerid);
 
 stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM){
 	new mobid = FindFreeMissileID();
@@ -138,6 +139,7 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 	MissileComponent[mobid][missile_active] = true;
 	MissileComponent[mobid][missile_playerid] = byplayerid;
 	MissileComponent[mobid][missile_teamid] = teamid;
+	MissileComponent[mobid][missile_vehicleid] = GetPlayerVehicleID(playerid);
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MissileComponent[mobid][missile_objectid],E_STREAMER_EXTRA_ID,(mobid+MISSILE_EXTRA_ID_OFFSET));
 	Streamer_SetIntData(STREAMER_TYPE_AREA,MissileComponent[mobid][missile_areaid],E_STREAMER_EXTRA_ID,(mobid+MISSILE_EXTRA_ID_OFFSET));
 	MissileComponent[mobid][missile_type] = type;
@@ -155,6 +157,15 @@ public MissileDestroy(mobid,type,playerid){
 	
 	GetDynamicObjectPos(MissileComponent[mobid][missile_objectid],x,y,z);
 	CreateExplosionForRangePoint(x,y,z,worldid,interiorid,MissileComponent[mobid][missile_type],GetMissileExplodeVisibility(),MissileComponent[mobid][missile_explode]);
+	if(IsAnyPlayerInDynamicArea(MissileComponent[mobid][missile_areaid])){
+		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+			if(IsPlayerConnected(i)){
+				if(IsPlayerInDynamicArea(i,MissileComponent[mobid][missile_areaid])){
+					CallLocalFunction("OnMissileDetectPlayer","dd",i,MissileComponent[mobid][missile_playerid]);
+				}
+			}
+		}
+	}
 	DestroyDynamicObject(MissileComponent[mobid][missile_objectid]);
 	DestroyDynamicArea(MissileComponent[mobid][missile_areaid]);
 	MissileComponent[mobid][missile_objectid] = INVALID_STREAMER_ID;
@@ -164,6 +175,7 @@ public MissileDestroy(mobid,type,playerid){
 	MissileComponent[mobid][missile_explode] = 0.0;
 	MissileComponent[mobid][missile_playerid] = INVALID_PLAYER_ID;
 	MissileComponent[mobid][missile_teamid] = ANY_TEAM;
+	MissileComponent[mobid][missile_vehicleid] = 0;
 	CallLocalFunction("OnMissileDestroy","dfffdd",mobid,x,y,z,type,playerid);
 	return 1;
 }
@@ -202,14 +214,12 @@ public OnPlayerEnterDynamicArea(playerid, areaid){
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-MISSILE_EXTRA_ID_OFFSET);
 	
 	if(mobid >= 0 && mobid < MAX_MISSILE){
-		new missile_own = MissileComponent[mobid][missile_playerid];
 		if(MissileComponent[mobid][missile_active] && MissileComponent[mobid][missile_playerid] != playerid){
 			if((MissileComponent[mobid][missile_teamid] != GetPlayerTeam(playerid)) || (MissileComponent[mobid][missile_teamid] == ANY_TEAM)){
-				MissileDestroy(mobid,MISSILE_DESTROY_TYPE_DETECT,playerid);
+				if((MissileComponent[mobid][missile_vehicleid] != GetPlayerVehicleID(playerid)) || (MissileComponent[mobid][missile_vehicleid] == 0)){
+					MissileDestroy(mobid,MISSILE_DESTROY_TYPE_DETECT,playerid);
+				}
 			}
-		}
-		if(MissileComponent[mobid][missile_playerid] != playerid){
-			CallLocalFunction("OnMissileDetectPlayer","dd",playerid,missile_own);
 		}
 	}	
 	#if defined MIS_OnPlayerEnterDynamicArea
