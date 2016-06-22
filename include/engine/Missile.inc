@@ -105,6 +105,7 @@ stock FindFreeMissileID(){
 
 forward MissileDestroy(mobid,type,playerid);
 forward OnMissileDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);
+forward OnMissileDetectPlayer(playerid,missile_owner);
 
 stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM){
 	new mobid = FindFreeMissileID();
