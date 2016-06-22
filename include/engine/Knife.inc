@@ -5,11 +5,11 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
  * Functions:                                                                                       *
- * ToggleUseTeamKnifeShoot(bool:toggle); //default: false                                           *
+ * ToggleUseTeamKnifeShoot(bool:toggle);       //default: false                                     *
  * bool:IsToggleUseTeamKnifeShoot();                                                                *
- * ToggleKnifeShootForAll(toggle); //default: true                                                  *
- * IsToggleKnifeShootForAll(); //default: false                                                     *
- * ToggleKnifeShootForPlayer(playerid,toggle);                                                      *
+ * ToggleKnifeShootForAll(toggle);             //default: true                                      *
+ * IsToggleKnifeShootForAll();                                                                      *
+ * ToggleKnifeShootForPlayer(playerid,toggle); //default: false                                     *
  * IsToggleKnifeShootForPlayer(playerid);                                                           *
  *                                                                                                  *
  ****************************************************************************************************/
