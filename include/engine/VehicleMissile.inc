@@ -1,61 +1,61 @@
-/****************************************************************************************************
- *                                                                                                  *
- * Vehicle Missile Launcher v1.3 made by Abyss Morgan                                               *
- *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
- *                                                                                                  *
- * Functions:                                                                                       *
- * ToggleVehicleMiniMissile(vehicleid,toggle);                                                      *
- * ToggleVehicleHeavyMissile(vehicleid,toggle);                                                     *
- * ToggleVehicleRhinoMissile(vehicleid,toggle);                                                     *
- * ToggleVehicleBomberMissile(vehicleid,toggle);                                                    *
- * IsToggleVehicleMiniMissile(vehicleid);                                                           *
- * IsToggleVehicleHeavyMissile(vehicleid);                                                          *
- * IsToggleVehicleRhinoMissile(vehicleid);                                                          *
- * IsToggleVehicleBomberMissile(vehicleid);                                                         *
- *                                                                                                  *
- * Float:GetVehicleMiniMissileSpeed(vehicleid);                                                     *
- * Float:GetVehicleHeavyMissileSpeed(vehicleid);                                                    *
- * Float:GetVehicleBomberMissileSpeed(vehicleid);                                                   *
- * SetVehicleMiniMissileSpeed(vehicleid,Float:speed);                                               *
- * SetVehicleHeavyMissileSpeed(vehicleid,Float:speed);                                              *
- * SetVehicleBomberMissileSpeed(vehicleid,Float:speed);                                             *
- *                                                                                                  *
- * GetVehicleMiniMissileReload(vehicleid);                                                          *
- * GetVehicleHeavyMissileReload(vehicleid);                                                         *
- * GetVehicleBomberMissileReload(vehicleid);                                                        *
- * GetVehicleRhinoMissileReload(vehicleid);                                                         *
- * SetVehicleMiniMissileReload(vehicleid,time);                                                     *
- * SetVehicleHeavyMissileReload(vehicleid,time);                                                    *
- * SetVehicleBomberMissileReload(vehicleid,time);                                                   *
- * SetVehicleRhinoMissileReload(vehicleid,time);                                                    *
- *                                                                                                  *
- * Float:GetVehicleMiniMissileDistance(vehicleid);                                                  *
- * Float:GetVehicleHeavyMissileDistance(vehicleid);                                                 *
- * Float:GetVehicleBomberMissileDistance(vehicleid);                                                *
- * Float:GetVehicleRhinoMissileDistance(vehicleid);                                                 *
- * SetVehicleMiniMissileDistance(vehicleid,Float:distance);                                         *
- * SetVehicleHeavyMissileDistance(vehicleid,Float:distance);                                        *
- * SetVehicleBomberMissileDistance(vehicleid,Float:distance);                                       *
- * SetVehicleRhinoMissileDistance(vehicleid,Float:distance);                                        *
- *                                                                                                  *
- * GetVehicleMiniMissileKey(vehicleid);                                                             *
- * GetVehicleHeavyMissileKey(vehicleid);                                                            *
- * GetVehicleBomberMissileKey(vehicleid);                                                           *
- * GetVehicleRhinoMissileKey(vehicleid);                                                            *
- * SetVehicleMiniMissileKey(vehicleid,key);                                                         *
- * SetVehicleHeavyMissileKey(vehicleid,key);                                                        *
- * SetVehicleBomberMissileKey(vehicleid,key);                                                       *
- * SetVehicleRhinoMissileKey(vehicleid,key);                                                        *
- *                                                                                                  *
- * Float:GetMissileStreamDistance();                                                                *
- * SetMissileStreamDistance(Float:streamdistance);                                                  *
- * DisarmVehicleMissile(vehicleid);                                                                 *
- *                                                                                                  *
- * OnVehicleShot(playerid,type);                                                                    *
- * OnVehicleMissileInit();                                                                          *
- *                                                                                                  *
- ****************************************************************************************************/
+/**********************************************************************************************************************************
+ *                                                                                                                                *
+ * Vehicle Missile Launcher v1.3 made by Abyss Morgan                                                                             *
+ *                                                                                                                                *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
+ *                                                                                                                                *
+ * Functions:                                                                                                                     *
+ * ToggleVehicleMiniMissile(vehicleid,toggle);                                                                                    *
+ * ToggleVehicleHeavyMissile(vehicleid,toggle);                                                                                   *
+ * ToggleVehicleRhinoMissile(vehicleid,toggle);                                                                                   *
+ * ToggleVehicleBomberMissile(vehicleid,toggle);                                                                                  *
+ * IsToggleVehicleMiniMissile(vehicleid);                                                                                         *
+ * IsToggleVehicleHeavyMissile(vehicleid);                                                                                        *
+ * IsToggleVehicleRhinoMissile(vehicleid);                                                                                        *
+ * IsToggleVehicleBomberMissile(vehicleid);                                                                                       *
+ *                                                                                                                                *
+ * Float:GetVehicleMiniMissileSpeed(vehicleid);                                                                                   *
+ * Float:GetVehicleHeavyMissileSpeed(vehicleid);                                                                                  *
+ * Float:GetVehicleBomberMissileSpeed(vehicleid);                                                                                 *
+ * SetVehicleMiniMissileSpeed(vehicleid,Float:speed);                                                                             *
+ * SetVehicleHeavyMissileSpeed(vehicleid,Float:speed);                                                                            *
+ * SetVehicleBomberMissileSpeed(vehicleid,Float:speed);                                                                           *
+ *                                                                                                                                *
+ * GetVehicleMiniMissileReload(vehicleid);                                                                                        *
+ * GetVehicleHeavyMissileReload(vehicleid);                                                                                       *
+ * GetVehicleBomberMissileReload(vehicleid);                                                                                      *
+ * GetVehicleRhinoMissileReload(vehicleid);                                                                                       *
+ * SetVehicleMiniMissileReload(vehicleid,time);                                                                                   *
+ * SetVehicleHeavyMissileReload(vehicleid,time);                                                                                  *
+ * SetVehicleBomberMissileReload(vehicleid,time);                                                                                 *
+ * SetVehicleRhinoMissileReload(vehicleid,time);                                                                                  *
+ *                                                                                                                                *
+ * Float:GetVehicleMiniMissileDistance(vehicleid);                                                                                *
+ * Float:GetVehicleHeavyMissileDistance(vehicleid);                                                                               *
+ * Float:GetVehicleBomberMissileDistance(vehicleid);                                                                              *
+ * Float:GetVehicleRhinoMissileDistance(vehicleid);                                                                               *
+ * SetVehicleMiniMissileDistance(vehicleid,Float:distance);                                                                       *
+ * SetVehicleHeavyMissileDistance(vehicleid,Float:distance);                                                                      *
+ * SetVehicleBomberMissileDistance(vehicleid,Float:distance);                                                                     *
+ * SetVehicleRhinoMissileDistance(vehicleid,Float:distance);                                                                      *
+ *                                                                                                                                *
+ * GetVehicleMiniMissileKey(vehicleid);                                                                                           *
+ * GetVehicleHeavyMissileKey(vehicleid);                                                                                          *
+ * GetVehicleBomberMissileKey(vehicleid);                                                                                         *
+ * GetVehicleRhinoMissileKey(vehicleid);                                                                                          *
+ * SetVehicleMiniMissileKey(vehicleid,key);                                                                                       *
+ * SetVehicleHeavyMissileKey(vehicleid,key);                                                                                      *
+ * SetVehicleBomberMissileKey(vehicleid,key);                                                                                     *
+ * SetVehicleRhinoMissileKey(vehicleid,key);                                                                                      *
+ *                                                                                                                                *
+ * Float:GetMissileStreamDistance();                                                                                              *
+ * SetMissileStreamDistance(Float:streamdistance);                                                                                *
+ * DisarmVehicleMissile(vehicleid);                                                                                               *
+ *                                                                                                                                *
+ * OnVehicleShot(playerid,type);                                                                                                  *
+ * OnVehicleMissileInit();                                                                                                        *
+ *                                                                                                                                *
+ **********************************************************************************************************************************/
 
 #if !defined Streamer_AppendArrayData
 	#error Unknown streamer version
@@ -67,11 +67,11 @@
 
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error You need Missile.inc v1.5B
+	#error You need Missile.inc v1.6
 #elseif !defined Missile_Version
-	#error Update you Missile.inc to v1.5B
-#elseif (Missile_Version < 10502)
-	#error Update you Missile.inc to v1.5B
+	#error Update you Missile.inc to v1.6
+#elseif (Missile_Version < 10601)
+	#error Update you Missile.inc to v1.6
 #endif
 
 //Check Version ATM.inc
