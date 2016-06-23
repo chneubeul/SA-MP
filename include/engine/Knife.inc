@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Knife Shoot Script v2.2 made by Abyss Morgan                                                     *
+ * Knife Shoot Script v2.3 made by Abyss Morgan                                                     *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  *                                                                                                  *
@@ -122,6 +122,8 @@ public KnifeShot(playerid){
 		if(i != playerid){
 			if(IsPlayerConnected(i)){
 				if(!IsToggleUseTeamKnifeShoot() || (IsToggleUseTeamKnifeShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
+					new pstate = GetPlayerState(i);
+					if(pstate != 1 && pstate != 2 && pstate != 3) continue;
 					GetPlayerPos(i,px,py,pz);
 					pvw = GetPlayerVirtualWorld(i);
 					pint = GetPlayerInterior(i);
@@ -168,8 +170,10 @@ public KnifeDestroy(objectid,targetid,playerid){
 		#if !defined DISABLE_KNIFE_SOUND
 			PlayerPlaySound(targetid,17802,0.0,0.0,0.0);
 		#endif
-		CallLocalFunction("OnPlayerGiveDamage","ddfdd",playerid,targetid,KNIFE_DAMAGE,4,3);
-		CallLocalFunction("OnPlayerTakeDamage","ddfdd",targetid,playerid,KNIFE_DAMAGE,4,3);
+		#if !defined DISABLE_KNIFE_CALL_DAMAGE
+			CallLocalFunction("OnPlayerGiveDamage","ddfdd",playerid,targetid,KNIFE_DAMAGE,4,3);
+			CallLocalFunction("OnPlayerTakeDamage","ddfdd",targetid,playerid,KNIFE_DAMAGE,4,3);
+		#endif
 	}
 	return 1;
 }

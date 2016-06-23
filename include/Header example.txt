@@ -36,6 +36,7 @@
 
 //Knife.inc Config
 //#define DISABLE_KNIFE_SOUND
+//#define DISABLE_KNIFE_CALL_DAMAGE
 
 //SAM Includes
 #include <SAM/StreamerFunction>
