@@ -6,7 +6,7 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
- * File Version: 1.0                                                                                *
+ * File Version: 1.1                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * FoxForeach(variable);                                                                            *
@@ -59,10 +59,10 @@ stock bool:FoxAddPlayer(playerid){
 }
 
 stock FoxForeachRandomPlayer(){
-	if(FoxUpperbound == -1) return INVALID_PLAYER_ID;
+	if(FoxUpperbound == -1) return 0;
 	new playerid = FoxPlayers[random(FoxUpperbound+1)];
 	if(IsPlayerConnected(playerid)) return playerid;
-	return INVALID_PLAYER_ID;
+	return 0;
 }
 
 stock FoxForeachInit(){
@@ -78,11 +78,13 @@ stock bool:FoxRemovePlayer(playerid){
 	if(!IsPlayerInFoxPool(playerid)) return false;
 	for(new i = 0; i <= FoxUpperbound; i++){
 		if(FoxPlayers[i] == playerid){
-			if(i == FoxUpperbound || i == 0){
-				FoxPlayers[i] = INVALID_PLAYER_ID;
+			if(FoxUpperbound == 0){
+				FoxPlayers[i] = 0;
+			} else if(i == FoxUpperbound){
+				FoxPlayers[i] = 0;
 			} else {
 				FoxPlayers[i] = FoxPlayers[FoxUpperbound];
-				FoxPlayers[FoxUpperbound] = INVALID_PLAYER_ID;
+				FoxPlayers[FoxUpperbound] = 0;
 			}
 			FoxUpperbound--;
 			break;
