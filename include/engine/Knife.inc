@@ -146,7 +146,7 @@ public KnifeShot(playerid){
 		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
 		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);		
 		GetMoveTime(mx,my,mz,mtx,mty,mtz,KNIFE_SPEED,mtime);
-		MoveDynamicObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,90.0+20.0,trz);
+		MoveDynamicObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,110.0,trz);
 		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"ddd",tmpobj,INVALID_PLAYER_ID,playerid);
 	} else {
 		GetPlayerPos(KnifeLockTarget[playerid],px,py,pz);
