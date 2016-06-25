@@ -27,7 +27,7 @@
 #define FILE_LICENSEID			(20160201)		//<--- YYYYMMDD 01.02.2016 (DD.MM.YYYY)
 #define FILE_MAX_PLAYERS		(500)			//max players in server.cfg
 #define FILE_RCONPASS			"123"			//rcon password
-#define FILE_LANGUAGE			"Polish"		//server language
+#define FILE_LANGUAGE			"English"		//server language
 
 public OnGameModeInit(){
 
