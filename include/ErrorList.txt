@@ -1,4 +1,6 @@
 ﻿Use DisableADMLogging(true); to disable notifications [ADM]
+This option is available in ATM.inc
+
 
 //StreamerFunction.inc
 [ADM] Warring: Invalid Object Component type.
