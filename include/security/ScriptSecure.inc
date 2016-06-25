@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Script Secure v2.2 made by Abyss Morgan                                                          *
+ * Script Secure v4.0 made by Abyss Morgan                                                          *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                      *
  *                                                                                                  *
@@ -14,7 +14,15 @@
 //#define CHECK_RCON_PASSWORD	//additional option
 //#define CHECK_SERVER_LANGUAGE	//additional option
 
-#define FILE_tmpserverIP			"127.0.0.1"
+//Web ACK System
+//#define ENABLE_WEB_ACK		//additional option (definitions below apply to this option)
+//#define SCRIPT_ACK_KEY		"{BOBO_HAHA,ACCESSCONTROL,TRUE}"
+//#define SCRIPT_ACK_URL		"example.com/secure_adm/index.php"
+//#define SCRIPT_ANTI_FLOOD		(123) //change this number
+//#define SCRIPT_ACK_TIME		(10000) //10 second
+
+
+#define FILE_SERVERIP			"127.0.0.1"
 #define FILE_SERVERPORT			(7777)			
 #define FILE_LICENSEID			(20160201)		//<--- YYYYMMDD 01.02.2016 (DD.MM.YYYY)
 #define FILE_MAX_PLAYERS		(500)			//max players in server.cfg
@@ -42,33 +50,89 @@ public OnFilterScriptInit(){
 	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
 
-#if !defined FILE_tmpserverIP
-	#error Please #define FILE_tmpserverIP "127.0.0.1"
+//Web ACK System
+#if defined ENABLE_WEB_ACK
+	#if !defined SCRIPT_ACK_KEY
+		#error Please #define SCRIPT_ACK_KEY "key"
+	#endif
+	
+	#if !defined SCRIPT_ACK_URL
+		#error Please #define SCRIPT_ACK_URL "ack_url"
+	#endif
+	
+	#if !defined SCRIPT_ANTI_FLOOD
+		#error Please #define SCRIPT_ANTI_FLOOD <random number>
+	#endif
+#else
+	#if !defined SCRIPT_ACK_KEY
+		#define SCRIPT_ACK_KEY		"none"
+	#endif
+	
+	#if !defined SCRIPT_ACK_URL
+		#define SCRIPT_ACK_URL		"none"
+	#endif
+	
+	#if !defined SCRIPT_ANTI_FLOOD
+		#define SCRIPT_ANTI_FLOOD	(0)
+	#endif
+#endif
+new bool:ADMWebCheck = false;
+
+forward ScriptSecureADMWeb(index, response_code, data[]);
+forward ADMWebACKCheck(important);
+
+public ScriptSecureADMWeb(index, response_code, data[]){
+	if(strfind(data,SCRIPT_ACK_KEY,false) != -1){
+		ADMWebCheck = true;
+		//ok
+	} else {
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Error: The script did not get permission to activation");
+		}
+		SendRconCommand("exit");
+		return 0;
+	}
+	return 1;
+}
+
+public ADMWebACKCheck(important){
+	if(!ADMWebCheck){
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: The script did not get permission to activation");
+		}
+		SendRconCommand("exit");
+		return 0;
+	}
+	return 1;
+}
+
+#if !defined FILE_SERVERIP
+	#error Please #define FILE_SERVERIP "server ip"
 #endif
 
 #if !defined FILE_SERVERPORT
-	#error Please #define FILE_SERVERPORT (7777)
+	#error Please #define FILE_SERVERPORT <port>
 #endif
 
 #if !defined FILE_LICENSEID
-	#error Please #define FILE_LICENSEID (20160201)
+	#error Please #define FILE_LICENSEID <license id>
 #endif
 
 #if defined CHECK_MAX_PLAYERS
 	#if !defined FILE_MAX_PLAYERS
-		#error Please #define FILE_MAX_PLAYERS (500)
+		#error Please #define FILE_MAX_PLAYERS <players>
 	#endif
 #endif
 
 #if defined CHECK_RCON_PASSWORD
 	#if !defined FILE_RCONPASS
-		#error Please #define FILE_RCONPASS "123"
+		#error Please #define FILE_RCONPASS "rcon pass"
 	#endif
 #endif
 
 #if defined CHECK_SERVER_LANGUAGE
 	#if !defined FILE_LANGUAGE
-		#error Please #define FILE_LANGUAGE "Polish"
+		#error Please #define FILE_LANGUAGE "language"
 	#endif
 #endif
 
@@ -77,16 +141,15 @@ AntiDeAMX(){
 	#pragma unused UAX
 }
 
-
 ScriptSecureADM(){
 	//IP and PORT check
-	new tmpserverIP[16];
-	GetServerVarAsString("bind",tmpserverIP,sizeof(tmpserverIP));
+	new ADMserverIP[16];
+	GetServerVarAsString("bind",ADMserverIP,sizeof(ADMserverIP));
 	
-	if(!strcmp(tmpserverIP,FILE_tmpserverIP,true) && !isnull(tmpserverIP)){
+	if(!strcmp(ADMserverIP,FILE_SERVERIP,true) && !isnull(ADMserverIP)){
 		//Server IP OK
 	} else {
-		if(!strcmp(tmpserverIP,"127.0.0.1",true) || !strcmp(tmpserverIP,"localhost",true)){
+		if(!strcmp(ADMserverIP,"127.0.0.1",true) || !strcmp(ADMserverIP,"localhost",true)){
 			//localhost
 			#if defined DONT_ALLOW_LOCALHOST
 				if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -107,7 +170,7 @@ ScriptSecureADM(){
 			return 0;
 		}
 	}
-	if(!strcmp(tmpserverIP,"127.0.0.1",true) || !strcmp(tmpserverIP,"localhost",true)){
+	if(!strcmp(ADMserverIP,"127.0.0.1",true) || !strcmp(ADMserverIP,"localhost",true)){
 		//localhost
 		#if defined DONT_ALLOW_LOCALHOST
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -174,10 +237,19 @@ ScriptSecureADM(){
 	#endif
 	
 	#pragma unused rtemp
+	
+	//Web ACK System
+	#if defined ENABLE_WEB_ACK
+		new buffer[256];
+		format(buffer,sizeof(buffer),"%s?code=%d&bind=%s&port=%d",SCRIPT_ACK_URL,SCRIPT_ANTI_FLOOD,ADMserverIP,GetServerVarAsInt("port"));
+		HTTP(790,HTTP_POST,buffer," ","ScriptSecureADMWeb");
+		SetTimerEx("ADMWebACKCheck",SCRIPT_ACK_TIME, false, "d", 1);
+	#endif
+	
 	return 1;
 }
 
-#undef FILE_tmpserverIP
+#undef FILE_SERVERIP
 #undef FILE_SERVERPORT
 #undef FILE_LICENSEID
 

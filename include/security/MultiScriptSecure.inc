@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Script Secure v3.0 made by Abyss Morgan                                                          *
+ * Script Secure v4.0 made by Abyss Morgan                                                          *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                      *
  *                                                                                                  *
@@ -12,6 +12,13 @@
 //#define CHECK_MAX_PLAYERS		//additional option
 //#define CHECK_RCON_PASSWORD	//additional option
 //#define CHECK_SERVER_LANGUAGE	//additional option
+
+//Web ACK System
+//#define ENABLE_WEB_ACK		//additional option (definitions below apply to this option)
+//#define SCRIPT_ACK_KEY		"{BOBO_HAHA,ACCESSCONTROL,TRUE}"
+//#define SCRIPT_ACK_URL		"example.com/secure_adm/index.php"
+//#define SCRIPT_ANTI_FLOOD		(123) //change this number
+//#define SCRIPT_ACK_TIME		(10000) //10 second
 
 Add server information to ADMServerList
 
@@ -33,7 +40,7 @@ public OnFilterScriptInit(){
 */
 
 enum e_server_config {
-	ADM_tmpserverIP[16],
+	ADM_ADMserverIP[16],
 	ADM_ServerPort,
 	ADM_LicenseID,
 	ADM_MaxPlayers,
@@ -63,11 +70,68 @@ new ADMServerList[][e_server_config] = {
 	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
 
+//Web ACK System
+#if defined ENABLE_WEB_ACK
+	#if !defined SCRIPT_ACK_KEY
+		#error Please #define SCRIPT_ACK_KEY "key"
+	#endif
+	
+	#if !defined SCRIPT_ACK_URL
+		#error Please #define SCRIPT_ACK_URL "ack_url"
+	#endif
+	
+	#if !defined SCRIPT_ANTI_FLOOD
+		#error Please #define SCRIPT_ANTI_FLOOD <random number>
+	#endif
+#else
+	#if !defined SCRIPT_ACK_KEY
+		#define SCRIPT_ACK_KEY		"none"
+	#endif
+	
+	#if !defined SCRIPT_ACK_URL
+		#define SCRIPT_ACK_URL		"none"
+	#endif
+	
+	#if !defined SCRIPT_ANTI_FLOOD
+		#define SCRIPT_ANTI_FLOOD	(0)
+	#endif
+#endif
+
+new bool:ADMWebCheck = false;
+
+forward ScriptSecureADMWeb(index, response_code, data[]);
+forward ADMWebACKCheck(important);
+
+public ScriptSecureADMWeb(index, response_code, data[]){
+	if(strfind(data,SCRIPT_ACK_KEY,false) != -1){
+		ADMWebCheck = true;
+		//ok
+	} else {
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: The script did not get permission to activation");
+		}
+		SendRconCommand("exit");
+		return 0;
+	}
+	return 1;
+}
+
+public ADMWebACKCheck(important){
+	if(!ADMWebCheck){
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Error: The script did not get permission to activation");
+		}
+		SendRconCommand("exit");
+		return 0;
+	}
+	return 1;
+}
+
 FindServerID(){
-	new tmpserverIP[16], serverPort = GetServerVarAsInt("port");
-	GetServerVarAsString("bind",tmpserverIP,sizeof(tmpserverIP));
+	new ADMserverIP[16], serverPort = GetServerVarAsInt("port");
+	GetServerVarAsString("bind",ADMserverIP,sizeof(ADMserverIP));
 	for(new i = 0, j = sizeof(ADMServerList); i < j; i++){
-		if(!strcmp(tmpserverIP,ADMServerList[i][ADM_tmpserverIP],true) && !isnull(tmpserverIP)){
+		if(!strcmp(ADMserverIP,ADMServerList[i][ADM_ADMserverIP],true) && !isnull(ADMserverIP)){
 			if(serverPort == ADMServerList[i][ADM_ServerPort]){
 				return i;
 			}
@@ -144,6 +208,15 @@ ScriptSecureADM(){
 	#endif
 	
 	#pragma unused rtemp
+	
+	//Web ACK System
+	#if defined ENABLE_WEB_ACK
+		new buffer[256];
+		format(buffer,sizeof(buffer),"%s?code=%d&bind=%s&port=%d",SCRIPT_ACK_URL,SCRIPT_ANTI_FLOOD,ADMServerList[sid][ADM_ADMserverIP],ADMServerList[sid][ADM_ServerPort]);
+		HTTP(790,HTTP_POST,buffer," ","ScriptSecureADMWeb");
+		SetTimerEx("ADMWebACKCheck",SCRIPT_ACK_TIME, false, "d", 1);
+	#endif
+	
 	return 1;
 }
 
