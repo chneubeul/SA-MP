@@ -73,6 +73,16 @@
 #define SAOI_ERROR_DESCRIPTION_SIZE			(SAOI:-12)		//invalid description size
 #define SAOI_ERROR_INVALID_HEADER			(SAOI:-13)		//invalid header
 
+#define PARSE_STEP_ARG_COUNT				(0)
+#define PARSE_STEP_ARG_START				(1)
+#define PARSE_STEP_ARG_END					(13)
+#define PARSE_STEP_MATERIAL_HEAD			(14)
+#define PARSE_STEP_MATERIAL_START			(15)
+#define PARSE_STEP_MATERIAL_END				(30)
+#define PARSE_STEP_MATERIAL_TEXT_HEAD		(31)
+#define PARSE_STEP_MATERIAL_TEXT_START		(32)
+#define PARSE_STEP_MATERIAL_TEXT_END		(47)
+
 //BitFunctions.inc
 #define SAOI_GetValueBit(%0,%1)				((%0) >>> (%1) & 0x01)
 #define SAOI_SetValueBit(%0,%1,%2)			((%0) = (((%0) & ~(0x01 << (%1))) | ((0x01 << (%1))*(%2))))
@@ -183,7 +193,7 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 	if(!outf) return SAOI_ERROR_OUTPUT_NOT_OPEN;
 	
 	new modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid, Float:streamdistance, Float:drawdistance, areaid, priority,
-		arg_count = 13, material_used = 0, material_text_used = 0;
+		arg_count = PARSE_STEP_ARG_END, material_used = 0, material_text_used = 0;
 	
 	//Get Object Info
 	modelid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MODEL_ID);
@@ -199,7 +209,7 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 	priority = Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_PRIORITY);
 	
 	//Count Arg
-	for(new i = 13; i > 7; i--){
+	for(new i = PARSE_STEP_ARG_END; i > 7; i--){
 		switch(i){
 			case 13: {
 				if(priority == 0){
@@ -467,14 +477,14 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 				return SAOI_ERROR_INVALID_HEADER;
 			}
 		} else {
-			if(parse_step == 0){
+			if(parse_step == PARSE_STEP_ARG_COUNT){
 				//Get Arg Count
 				arg_count = fgetchar(inpf,0,false), idx++;
 				
 				//Reset Data
 				objectid = 0, material_used = 0, material_text_used = 0, worldid = -1, interiorid = -1, streamdistance = 300.0,
 				drawdistance = 0.0, areaid = -1, priority = 0;
-			} else if(parse_step >= 1 && parse_step <= arg_count){
+			} else if(parse_step >= PARSE_STEP_ARG_START && parse_step <= arg_count){
 				switch(parse_step){
 					case 1: {
 						SAOI_MergeValue(modelid,0,0,fgetchar(inpf,0,false),fgetchar(inpf,0,false));
@@ -529,14 +539,14 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 						idx += 1;
 					}
 				}
-			} else if(parse_step == 14){
+			} else if(parse_step == PARSE_STEP_MATERIAL_HEAD){
 				SAOI_MergeValue(material_used,0,0,fgetchar(inpf,0,false),fgetchar(inpf,0,false));
 				idx += 2;
 				#if defined DEBUG_SAOI
 					printf("material_used: %b",material_used);
 				#endif
-			} else if(parse_step >= 15 && parse_step <= 30){
-				if(SAOI_GetValueBit(material_used,(parse_step-15)) == 1){
+			} else if(parse_step >= PARSE_STEP_MATERIAL_START && parse_step <= PARSE_STEP_MATERIAL_END){
+				if(SAOI_GetValueBit(material_used,(parse_step-PARSE_STEP_MATERIAL_START)) == 1){
 					new txdname[MAX_TXD_NAME], texturename[MAX_TEXTURE_NAME], materialcolor, txdsize, texturenamesize;
 					
 					SAOI_MergeValue(modelid,0,0,fgetchar(inpf,0,false),fgetchar(inpf,0,false));
@@ -563,20 +573,20 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 					SAOI_MergeValue(materialcolor,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
 					idx += 4;
 					
-					SetDynamicObjectMaterial(objectid,(parse_step-15),modelid,txdname,texturename,materialcolor);
+					SetDynamicObjectMaterial(objectid,(parse_step-PARSE_STEP_MATERIAL_START),modelid,txdname,texturename,materialcolor);
 					
 					#if defined DEBUG_SAOI
-						printf("%d %d %d %s %s %08x",objectid,(parse_step-15),modelid,txdname,texturename,materialcolor);
+						printf("%d %d %d %s %s %08x",objectid,(parse_step-PARSE_STEP_MATERIAL_START),modelid,txdname,texturename,materialcolor);
 					#endif
 				}
-			} else if(parse_step == 31){
+			} else if(parse_step == PARSE_STEP_MATERIAL_TEXT_HEAD){
 				SAOI_MergeValue(material_text_used,0,0,fgetchar(inpf,0,false),fgetchar(inpf,0,false));
 				idx += 2;
 				#if defined DEBUG_SAOI
 					printf("material_text_used: %b",material_text_used);
 				#endif
-			} else if(parse_step >= 32 && parse_step <= 47){
-				if(SAOI_GetValueBit(material_text_used,(parse_step-32)) == 1){
+			} else if(parse_step >= PARSE_STEP_MATERIAL_TEXT_START && parse_step <= PARSE_STEP_MATERIAL_TEXT_END){
+				if(SAOI_GetValueBit(material_text_used,(parse_step-PARSE_STEP_MATERIAL_TEXT_START)) == 1){
 					new text[MAX_TEXT_NAME], fontface[MAX_FONT_NAME], textsize, materialsize, fontfacesize, bold, fontcolor, backcolor,
 						textalignment, fontsize;
 					
@@ -611,9 +621,9 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 					
 					textalignment = fgetchar(inpf,0,false), idx++;
 					
-					SetDynamicObjectMaterialText(objectid,(parse_step-32),text,materialsize,fontface,fontsize,bold,fontcolor,backcolor,textalignment);
+					SetDynamicObjectMaterialText(objectid,(parse_step-PARSE_STEP_MATERIAL_TEXT_START),text,materialsize,fontface,fontsize,bold,fontcolor,backcolor,textalignment);
 					#if defined DEBUG_SAOI
-						printf("%d %d %s %d %s %d %d %08x %08x %d",objectid,(parse_step-32),text,materialsize,fontface,fontsize,bold,fontcolor,backcolor,textalignment);
+						printf("%d %d %s %d %s %d %d %08x %08x %d",objectid,(parse_step-PARSE_STEP_MATERIAL_TEXT_START),text,materialsize,fontface,fontsize,bold,fontcolor,backcolor,textalignment);
 					#endif
 				}
 			}
@@ -622,13 +632,13 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 			if(parse_step == arg_count){
 				objectid = CreateDynamicObject(modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance,areaid,priority);
 				Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,SAOI_EXTRA_ID_OFFSET+_:SAOI_ID); //identify objects
-				parse_step = 13;
+				parse_step = PARSE_STEP_ARG_END;
 				
 				#if defined DEBUG_SAOI
 					printf("%d %f %f %f %f %f %f %d %d -1 %f %f %d %d ex: %d",modelid,x,y,z,rx,ry,rz,worldid,interiorid,streamdistance,drawdistance,areaid,priority,SAOI_EXTRA_ID_OFFSET+_:SAOI_ID);
 				#endif
 				cnt++;
-			} else if(parse_step == 47){
+			} else if(parse_step == PARSE_STEP_MATERIAL_TEXT_END){
 				parse_step = -1;
 			}
 			parse_step++;
