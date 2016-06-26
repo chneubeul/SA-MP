@@ -16,7 +16,7 @@
  * SAOI:SaveDynamicObject(objectid,const name[]);                                                                                 *
  * SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0);                            *
  * bool:UnloadObjectImage(SAOI:index);                                                                                            *
- * bool:GetSAOILoadData(SAOI:index,name[],&object_cnt,&material_cnt,&material_text_cnt,&load_time);                               *
+ * bool:GetSAOILoadData(SAOI:index,name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0);                       *
  * CountObjectsForIndex(SAOI:index);                                                                                              *
  *                                                                                                                                *
  * Extended Functions:                                                                                                            *
@@ -77,6 +77,7 @@
 #define SAOI_ERROR_INVALID_HEADER			(SAOI:-13)		//invalid header
 #define SAOI_ERROR_INPUT_EXTENSION			(SAOI:-14)		//invalid input extension
 #define SAOI_ERROR_OUTPUT_EXTENSION			(SAOI:-15)		//invalid output extension
+#define SAOI_ERROR_NOT_ENOUGH_CAPACITY		(SAOI:-16)		//not enough capacity, to load new file
 
 #define PARSE_STEP_ARG_COUNT				(0)
 #define PARSE_STEP_ARG_START				(1)
@@ -130,7 +131,7 @@ stock SAOI:FindFreeSAOIID(){
 	return INVALID_SAOI_FILE;
 }
 
-stock bool:GetSAOILoadData(SAOI:index,name[],&object_cnt,&material_cnt,&material_text_cnt,&load_time){
+stock bool:GetSAOILoadData(SAOI:index,name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0){
 	if(!SAOIFile[index][saoi_status]) return false;
 	object_cnt =		SAOIFile[index][saoi_object_cnt];
 	material_cnt =		SAOIFile[index][saoi_material_cnt];
@@ -495,6 +496,9 @@ stock SAOI:GetSAOIFileHeader(const name[],author[],version[],description[]){
 
 stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0){
 	object_cnt = 0, material_cnt = 0, material_text_cnt = 0, load_time = 0;
+	new SAOI:index = FindFreeSAOIID();
+	if(index == INVALID_SAOI_FILE) return SAOI_ERROR_NOT_ENOUGH_CAPACITY;
+	
 	new NTTime = GetTickCount();
 	if(!fexist(name)) return SAOI_ERROR_INPUT_NOT_EXIST;
 	if(strfind(name,".saoi",true) == -1) return SAOI_ERROR_INPUT_EXTENSION;
@@ -505,9 +509,8 @@ stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_
 		fclose(inpf);
 		return SAOI_ERROR_FILE_SIZE;
 	}
-	new SAOI:index = FindFreeSAOIID(), parse_step, bool:parse_header,
-		author[MAX_SAOI_AUTHOR_SIZE], version[MAX_SAOI_VERSION_SIZE ], description[MAX_SAOI_DESCRIPTION_SIZE];
-		
+	new parse_step, bool:parse_header, author[MAX_SAOI_AUTHOR_SIZE], version[MAX_SAOI_VERSION_SIZE], description[MAX_SAOI_DESCRIPTION_SIZE];
+	
 	SAOIFile[index][saoi_status] = true;
 	format(SAOIFile[index][saoi_name],MAX_SAOI_NAME_SIZE,"%s",name);
 	for(new i = strlen(SAOIFile[index][saoi_name])-1; i >= 0; i--){
