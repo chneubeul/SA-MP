@@ -1,6 +1,6 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- * Missile Launcher v1.6 made by Abyss Morgan                                                                                     *
+ * Missile Launcher v1.6B made by Abyss Morgan                                                                                    *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
@@ -20,11 +20,11 @@
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error You need Missile.inc v1.6
+	#error You need Missile.inc v1.6B
 #elseif !defined Missile_Version
-	#error Update you Missile.inc to v1.6
-#elseif (Missile_Version < 10601)
-	#error Update you Missile.inc to v1.6
+	#error Update you Missile.inc to v1.6B
+#elseif (Missile_Version < 10602)
+	#error Update you Missile.inc to v1.6B
 #endif
 */
 
@@ -55,7 +55,7 @@
 #endif
 #define _missile_launcher
 
-#define Missile_Version						(10601)
+#define Missile_Version						(10602)
 
 #define MISSILE_OBJECT_NORMAL				(0)
 #define MISSILE_OBJECT_BIG					(1)
@@ -139,7 +139,7 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 	MissileComponent[mobid][missile_active] = true;
 	MissileComponent[mobid][missile_playerid] = byplayerid;
 	MissileComponent[mobid][missile_teamid] = teamid;
-	MissileComponent[mobid][missile_vehicleid] = GetPlayerVehicleID(playerid);
+	MissileComponent[mobid][missile_vehicleid] = GetPlayerVehicleID(byplayerid);
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MissileComponent[mobid][missile_objectid],E_STREAMER_EXTRA_ID,(mobid+MISSILE_EXTRA_ID_OFFSET));
 	Streamer_SetIntData(STREAMER_TYPE_AREA,MissileComponent[mobid][missile_areaid],E_STREAMER_EXTRA_ID,(mobid+MISSILE_EXTRA_ID_OFFSET));
 	MissileComponent[mobid][missile_type] = type;
