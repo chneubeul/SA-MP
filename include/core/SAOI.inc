@@ -349,8 +349,10 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 			new text[MAX_TEXT_NAME], materialsize, fontface[MAX_FONT_NAME], fontsize, bold, fontcolor, backcolor, textalignment;
 			GetDynamicObjectMaterialText(objectid,i,text,materialsize,fontface,fontsize,bold,fontcolor,backcolor,textalignment);
 			
+			new len = strlen(text);
+			SAOI_ExtractValue(len,int1,int2,int3,int4);
+			fputchar(outf,int3,false), fputchar(outf,int4,false);
 			
-			fputchar(outf,strlen(text),false);
 			string_mod(text,text);
 			for(new k = 0, l = strlen(text); k < l; k++){
 				fputchar(outf,text[k],false);
@@ -578,7 +580,8 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 					new text[MAX_TEXT_NAME], fontface[MAX_FONT_NAME], textsize, materialsize, fontfacesize, bold, fontcolor, backcolor,
 						textalignment, fontsize;
 					
-					textsize = fgetchar(inpf,0,false), idx++;
+					SAOI_MergeValue(textsize,0,0,fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+					idx += 2;
 					
 					for(new i = 0; i < textsize; i++){
 						text[i] = fgetchar(inpf,0,false), idx++;
