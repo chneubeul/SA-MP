@@ -39,24 +39,24 @@
 #endif
 #define _SAOI_VERSION
 
-#define SAOI_LOADER_VERSION 				(10101) //a.b[c] 10000*a+100*b+c
+#define SAOI_LOADER_VERSION 				(10101)			//a.b[c] 10000*a+100*b+c
 
-#define SAOI_HEADER_KEY						"SAOI 1.0 ADM"
+#define SAOI_HEADER_KEY						"SAOI 1.0 ADM"	//You can never change !!!
 
-#define INVALID_SAOI_FILE					(SAOI:0)
-#define SAOI_EXTRA_ID_OFFSET				(1000000)
+#define INVALID_SAOI_FILE					(SAOI:0)		//You can never change !!!
+#define SAOI_EXTRA_ID_OFFSET				(1000000)		//You can never change !!!
 
 #define MAX_SAOI_FILE_SIZE					(2147483647)	//~2 GB
 #define MAX_SAOI_FILE						(SAOI:1024)		//more ? why not
 
-#define MAX_AUTHOR_SIZE 					(32)
-#define MAX_VERSION_SIZE 					(32)
-#define MAX_DESCRIPTION_SIZE 				(128)
+#define MAX_AUTHOR_SIZE 					(32)			//Max 255 (auto resize header, compatible with all version) 
+#define MAX_VERSION_SIZE 					(32)			//Max 255 (auto resize header, compatible with all version)
+#define MAX_DESCRIPTION_SIZE 				(128)			//Max 255 (auto resize header, compatible with all version)
 
-#define MAX_FONT_NAME 						(32)
-#define MAX_TXD_NAME						(32)
-#define MAX_TEXTURE_NAME					(32)
-#define MAX_TEXT_NAME						(1024)
+#define MAX_FONT_NAME 						(32)			//These limits can be changed according to the San Andreas 
+#define MAX_TXD_NAME						(32)			//These limits can be changed according to the San Andreas 
+#define MAX_TEXTURE_NAME					(32)			//These limits can be changed according to the San Andreas 
+#define MAX_TEXT_NAME						(1024)			//(Max 65535 for c++) These limits can be changed according to the San Andreas
 
 #define SAOI_ERROR_UNEXEC					(SAOI:0)		//function unexecutable
 #define SAOI_ERROR_SUCCESS					(SAOI:-1)		//success
