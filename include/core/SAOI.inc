@@ -56,7 +56,7 @@
 #define MAX_FONT_NAME 						(32)			//These limits can be changed according to the San Andreas 
 #define MAX_TXD_NAME						(32)			//These limits can be changed according to the San Andreas 
 #define MAX_TEXTURE_NAME					(32)			//These limits can be changed according to the San Andreas 
-#define MAX_TEXT_NAME						(1024)			//(Max 65535 for c++) These limits can be changed according to the San Andreas
+#define MAX_TEXT_NAME						(2048)			//These limits can be changed according to the San Andreas
 
 #define SAOI_ERROR_UNEXEC					(SAOI:0)		//function unexecutable
 #define SAOI_ERROR_SUCCESS					(SAOI:-1)		//success
