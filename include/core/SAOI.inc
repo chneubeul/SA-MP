@@ -49,14 +49,14 @@
 #define MAX_SAOI_FILE_SIZE					(2147483647)	//~2 GB
 #define MAX_SAOI_FILE						(SAOI:1024)		//more ? why not
 
-#define MAX_AUTHOR_SIZE 					(32)			//Max 255 (auto resize header, compatible with all version) 
-#define MAX_VERSION_SIZE 					(32)			//Max 255 (auto resize header, compatible with all version)
-#define MAX_DESCRIPTION_SIZE 				(128)			//Max 255 (auto resize header, compatible with all version)
+#define MAX_AUTHOR_SIZE 					(32)			//Max Value: 255 (auto resize header, compatible with all version) 
+#define MAX_VERSION_SIZE 					(32)			//Max Value: 255 (auto resize header, compatible with all version)
+#define MAX_DESCRIPTION_SIZE 				(128)			//Max Value: 255 (auto resize header, compatible with all version)
 
-#define MAX_FONT_NAME 						(32)			//These limits can be changed according to the San Andreas 
-#define MAX_TXD_NAME						(32)			//These limits can be changed according to the San Andreas 
-#define MAX_TEXTURE_NAME					(32)			//These limits can be changed according to the San Andreas 
-#define MAX_TEXT_NAME						(2048)			//These limits can be changed according to the San Andreas
+#define MAX_FONT_NAME 						(32)			//Max Value: 255 (These limits can be changed according to the San Andreas)
+#define MAX_TXD_NAME						(32)			//Max Value: 255 (These limits can be changed according to the San Andreas)
+#define MAX_TEXTURE_NAME					(32)			//Max Value: 255 (These limits can be changed according to the San Andreas)
+#define MAX_TEXT_NAME						(2048)			//Max Value: 65535 (These limits can be changed according to the San Andreas)
 
 #define SAOI_ERROR_UNEXEC					(SAOI:0)		//function unexecutable
 #define SAOI_ERROR_SUCCESS					(SAOI:-1)		//success
