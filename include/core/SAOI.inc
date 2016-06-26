@@ -674,5 +674,4 @@ stock CountObjectsForIndex(SAOI:index){
 	return cnt;
 }
 
-//#pragma dynamic (64*1024)
 //EOF
