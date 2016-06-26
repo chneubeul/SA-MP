@@ -653,7 +653,7 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 
 stock bool:UnloadObjectImage(SAOI:index){
 	if(!SAOIFileStatus[i]) return false;
-	for(new i = 1, j = GetDynamicObjectPoolSize(); i <= j; i++){
+	for(new i = 1, j = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT); i <= j; i++){
 		if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_EXTRA_ID) == _:index-SAOI_EXTRA_ID_OFFSET){
 			if(IsValidDynamicObject(i)){
 				DestroyDynamicObject(i);
@@ -667,7 +667,7 @@ stock bool:UnloadObjectImage(SAOI:index){
 stock CountObjectsForIndex(SAOI:index){
 	if(!SAOIFileStatus[i]) return 0;
 	new cnt = 0;
-	for(new i = 1, j = GetDynamicObjectPoolSize(); i <= j; i++){
+	for(new i = 1, j = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT); i <= j; i++){
 		if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_EXTRA_ID) == _:index-SAOI_EXTRA_ID_OFFSET){
 			if(IsValidDynamicObject(i)){
 				cnt++;
