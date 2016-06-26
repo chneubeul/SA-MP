@@ -1,36 +1,38 @@
-/****************************************************************************************************
- *                                                                                                  *
- *                                     San Andreas Object Image                                     *
- *                                                                                                  *
- * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
- *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/core                          *
- *                                                                                                  *
- * This is beta include!                                                                            *
- *                                                                                                  *
- * File Version: 1.1                                                                                *
- *                                                                                                  *
- * Functions:                                                                                       *
- * SAOI:CreateSAOIFile(const name[],author[],version[],description[] = "");                         *
- * SAOI:SaveDynamicObject(objectid,const name[]);                                                   *
- * SAOI:LoadObjectImage(const name[],&count=0,&load_time=0);                                        *
- * bool:UnloadObjectImage(SAOI:index);                                                              *
- * CountObjectsForIndex(SAOI:index);                                                                *
- *                                                                                                  *
- * Extended Functions:                                                                              *
- * SAOI:FindFreeSAOIID();                                                                           *
- * string_mod(input[],output[]);                                                                    *
- *                                                                                                  *
- ****************************************************************************************************/
+/**********************************************************************************************************************************
+ *                                                                                                                                *
+ *                                                    San Andreas Object Image                                                    *
+ *                                                                                                                                *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
+ *                                                                                                                                *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/core                                                        *
+ *                                                                                                                                *
+ * This is beta include!                                                                                                          *
+ *                                                                                                                                *
+ * File Version: 1.2                                                                                                              *
+ *                                                                                                                                *
+ * Functions:                                                                                                                     *
+ * SAOI:CreateSAOIFile(const name[],author[],version[],description[] = "");                                                       *
+ * SAOI:GetSAOIFileHeader(const name[],author[],version[],description[]);                                                         *
+ * SAOI:SaveDynamicObject(objectid,const name[]);                                                                                 *
+ * SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0);                            *
+ * bool:UnloadObjectImage(SAOI:index);                                                                                            *
+ * bool:GetSAOILoadData(SAOI:index,name[],&object_cnt,&material_cnt,&material_text_cnt,&load_time);                               *
+ * CountObjectsForIndex(SAOI:index);                                                                                              *
+ *                                                                                                                                *
+ * Extended Functions:                                                                                                            *
+ * SAOI:FindFreeSAOIID();                                                                                                         *
+ * SAOIStringMod(input[],output[]);                                                                                               *
+ *                                                                                                                                *
+ **********************************************************************************************************************************/
 
 /*
 //Check Version SAOI.inc
 #if !defined _SAOI_VERSION
-	#error You need SAOI.inc v1.1
+	#error You need SAOI.inc v1.2
 #elseif !defined SAOI_LOADER_VERSION
-	#error Update you SAOI.inc to v1.1
-#elseif (SAOI_LOADER_VERSION < 10101)
-	#error Update you SAOI.inc to v1.1
+	#error Update you SAOI.inc to v1.2
+#elseif (SAOI_LOADER_VERSION < 10201)
+	#error Update you SAOI.inc to v1.2
 #endif
 */
 
@@ -39,19 +41,20 @@
 #endif
 #define _SAOI_VERSION
 
-#define SAOI_LOADER_VERSION 				(10101)			//a.b[c] 10000*a+100*b+c
+#define SAOI_LOADER_VERSION 				(10201)			//a.b[c] 10000*a+100*b+c
 
 #define SAOI_HEADER_KEY						"SAOI 1.0 ADM"	//You can never change !!!
 
 #define INVALID_SAOI_FILE					(SAOI:0)		//You can never change !!!
 #define SAOI_EXTRA_ID_OFFSET				(1000000)		//You can never change !!!
 
-#define MAX_SAOI_FILE_SIZE					(2147483647)	//~2 GB
-#define MAX_SAOI_FILE						(SAOI:1024)		//more ? why not
+#define MAX_SAOI_FILE_SIZE					(68157440)		//64 MB
+#define MAX_SAOI_FILE						(SAOI:512)		//more ? why not
+#define MAX_SAOI_NAME_SIZE					(64)
 
-#define MAX_AUTHOR_SIZE 					(32)			//Max Value: 255 (auto resize header, compatible with all version) 
-#define MAX_VERSION_SIZE 					(32)			//Max Value: 255 (auto resize header, compatible with all version)
-#define MAX_DESCRIPTION_SIZE 				(128)			//Max Value: 255 (auto resize header, compatible with all version)
+#define MAX_SAOI_AUTHOR_SIZE 				(32)			//Max Value: 255 (auto resize header, compatible with all version) 
+#define MAX_SAOI_VERSION_SIZE 				(32)			//Max Value: 255 (auto resize header, compatible with all version)
+#define MAX_SAOI_DESCRIPTION_SIZE 			(128)			//Max Value: 255 (auto resize header, compatible with all version)
 
 #define MAX_FONT_NAME 						(32)			//Max Value: 255 (These limits can be changed according to the San Andreas)
 #define MAX_TXD_NAME						(32)			//Max Value: 255 (These limits can be changed according to the San Andreas)
@@ -72,6 +75,8 @@
 #define SAOI_ERROR_VERSION_SIZE				(SAOI:-11)		//invalid version size
 #define SAOI_ERROR_DESCRIPTION_SIZE			(SAOI:-12)		//invalid description size
 #define SAOI_ERROR_INVALID_HEADER			(SAOI:-13)		//invalid header
+#define SAOI_ERROR_INPUT_EXTENSION			(SAOI:-14)		//invalid input extension
+#define SAOI_ERROR_OUTPUT_EXTENSION			(SAOI:-15)		//invalid output extension
 
 #define PARSE_STEP_ARG_COUNT				(0)
 #define PARSE_STEP_ARG_START				(1)
@@ -100,9 +105,18 @@
 	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
 
-new bool:SAOIFileStatus[SAOI:MAX_SAOI_FILE];
+enum e_saoi {
+	bool:saoi_status,
+	saoi_name[MAX_SAOI_NAME_SIZE],
+	saoi_object_cnt,
+	saoi_material_cnt,
+	saoi_material_text_cnt,
+	saoi_load_time
+}
 
-stock string_mod(input[],output[]){
+new bool:SAOIFile[SAOI:MAX_SAOI_FILE][e_saoi];
+
+stock SAOIStringMod(input[],output[]){
 	for(new i = 0, j = strlen(input); i < j; i++){
 		output[i] = (0xFF & input[i]+128);
 	}
@@ -111,13 +125,24 @@ stock string_mod(input[],output[]){
 
 stock SAOI:FindFreeSAOIID(){
 	for(new SAOI:i = SAOI:1; i < MAX_SAOI_FILE; i = SAOI:(_:i+1)){
-		if(!SAOIFileStatus[i]) return i;
+		if(!SAOIFile[i][saoi_status]) return i;
 	}
 	return INVALID_SAOI_FILE;
 }
 
+stock bool:GetSAOILoadData(SAOI:index,name[],&object_cnt,&material_cnt,&material_text_cnt,&load_time){
+	if(!SAOIFile[index][saoi_status]) return false;
+	object_cnt =		SAOIFile[index][saoi_object_cnt];
+	material_cnt =		SAOIFile[index][saoi_material_cnt];
+	material_text_cnt =	SAOIFile[index][saoi_material_text_cnt];
+	load_time =			SAOIFile[index][saoi_load_time];
+	format(name,MAX_SAOI_NAME_SIZE,"%s",SAOIFile[index][saoi_name]);
+	return true;
+}
+
 stock SAOI:CreateSAOIFile(const name[],author[],version[],description[] = ""){
 	if(fexist(name)) return SAOI_ERROR_OUTPUT_EXIST;
+	if(strfind(name,".saoi",true) == -1) return SAOI_ERROR_OUTPUT_EXTENSION;
 	new File:outf = fopen(name,io_readwrite);
 	if(!outf) return SAOI_ERROR_OUTPUT_NOT_OPEN;
 	fwrite(outf,SAOI_HEADER_KEY);
@@ -126,15 +151,15 @@ stock SAOI:CreateSAOIFile(const name[],author[],version[],description[] = ""){
 		version_size = strlen(version),
 		description_size = strlen(description);
 	
-	if(author_size > MAX_AUTHOR_SIZE){
+	if(author_size > MAX_SAOI_AUTHOR_SIZE){
 		fclose(outf);
 		return SAOI_ERROR_AUTHOR_SIZE;
 	}
-	if(version_size > MAX_VERSION_SIZE){
+	if(version_size > MAX_SAOI_VERSION_SIZE ){
 		fclose(outf);
 		return SAOI_ERROR_VERSION_SIZE;
 	}
-	if(description_size > MAX_DESCRIPTION_SIZE){
+	if(description_size > MAX_SAOI_DESCRIPTION_SIZE){
 		fclose(outf);
 		return SAOI_ERROR_DESCRIPTION_SIZE;
 	}
@@ -189,6 +214,7 @@ stock SAOI:CreateSAOIFile(const name[],author[],version[],description[] = ""){
 stock SAOI:SaveDynamicObject(objectid,const name[]){
 	if(!IsValidDynamicObject(objectid)) return SAOI_ERROR_INVALID_OBJECTID;
 	if(!fexist(name)) return SAOI_ERROR_OUTPUT_NOT_EXIST;
+	if(strfind(name,".saoi",true) == -1) return SAOI_ERROR_OUTPUT_EXTENSION;
 	new File:outf = fopen(name,io_append);
 	if(!outf) return SAOI_ERROR_OUTPUT_NOT_OPEN;
 	
@@ -328,12 +354,12 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 			fputchar(outf,int3,false), fputchar(outf,int4,false);
 			
 			fputchar(outf,strlen(txdname),false);
-			string_mod(txdname,txdname);
+			SAOIStringMod(txdname,txdname);
 			for(new k = 0, l = strlen(txdname); k < l; k++){
 				fputchar(outf,txdname[k],false);
 			}
 			
-			string_mod(texturename,texturename);
+			SAOIStringMod(texturename,texturename);
 			fputchar(outf,strlen(texturename),false);
 			for(new k = 0, l = strlen(texturename); k < l; k++){
 				fputchar(outf,texturename[k],false);
@@ -363,7 +389,7 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 			SAOI_ExtractValue(len,int1,int2,int3,int4);
 			fputchar(outf,int3,false), fputchar(outf,int4,false);
 			
-			string_mod(text,text);
+			SAOIStringMod(text,text);
 			for(new k = 0, l = strlen(text); k < l; k++){
 				fputchar(outf,text[k],false);
 			}
@@ -371,7 +397,7 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 			fputchar(outf,materialsize,false);
 			
 			fputchar(outf,strlen(fontface),false);
-			string_mod(fontface,fontface);
+			SAOIStringMod(fontface,fontface);
 			for(new k = 0, l = strlen(fontface); k < l; k++){
 				fputchar(outf,fontface[k],false);
 			}
@@ -396,21 +422,100 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 	return SAOI_ERROR_SUCCESS;
 }
 
-stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
-	count = 0;
-	new NTTime = GetTickCount();
+stock SAOI:GetSAOIFileHeader(const name[],author[],version[],description[]){
 	if(!fexist(name)) return SAOI_ERROR_INPUT_NOT_EXIST;
+	if(strfind(name,".saoi",true) == -1) return SAOI_ERROR_INPUT_EXTENSION;
 	new File:inpf = fopen(name,io_read);
 	if(!inpf) return SAOI_ERROR_INPUT_NOT_OPEN;
-	new asize = flength(inpf), idx = 0, cnt = 0;
+	new asize = flength(inpf);
 	if(asize > MAX_SAOI_FILE_SIZE || asize < 0){
 		fclose(inpf);
 		return SAOI_ERROR_FILE_SIZE;
 	}
-	new SAOI:SAOI_ID = FindFreeSAOIID(), parse_step, bool:parse_header,
-		author[MAX_AUTHOR_SIZE], version[MAX_VERSION_SIZE], description[MAX_DESCRIPTION_SIZE];
+	new h_len = strlen(SAOI_HEADER_KEY), h_key[32];
+	for(new i = 0; i < h_len; i++){
+		h_key[i] = fgetchar(inpf,0,false);
+	}
+	h_key[h_len] = EOS;
+
+	if(!strcmp(h_key,SAOI_HEADER_KEY,true)){
+		new author_size, version_size, description_size, key[32];
 		
-	SAOIFileStatus[SAOI_ID] = true;
+		author_size = fgetchar(inpf,0,false);
+		for(new i = 0; i < author_size; i++){
+			author[i] = fgetchar(inpf,0,false);
+		}
+		
+		version_size = fgetchar(inpf,0,false);
+		for(new i = 0; i < version_size; i++){
+			version[i] = fgetchar(inpf,0,false);
+		}
+		
+		description_size = fgetchar(inpf,0,false);
+		for(new i = 0; i < description_size; i++){
+			description[i] = fgetchar(inpf,0,false);
+		}
+		
+		for(new i = 0; i < 32; i++){
+			key[i] = fgetchar(inpf,0,false);
+		}
+		
+		
+		new s;
+		
+		s = 0;
+		for(new i = 0; i < author_size; i++){
+			author[i] = ((author[i]+key[s]) & 0xFF);
+			s++;
+			if(s >= 32) s = 0;
+		}
+		
+		s = 0;
+		for(new i = 0; i < version_size; i++){
+			version[i] = ((version[i]+key[s]) & 0xFF);
+			s++;
+			if(s >= 32) s = 0;
+		}
+		
+		s = 0;
+		for(new i = 0; i < description_size; i++){
+			description[i] = ((description[i]+key[s]) & 0xFF);
+			s++;
+			if(s >= 32) s = 0;
+		}
+		
+	} else {
+		fclose(inpf);
+		return SAOI_ERROR_INVALID_HEADER;
+	}
+	
+	fclose(inpf);
+	return SAOI_ERROR_SUCCESS;
+}
+
+stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0){
+	object_cnt = 0, material_cnt = 0, material_text_cnt = 0, load_time = 0;
+	new NTTime = GetTickCount();
+	if(!fexist(name)) return SAOI_ERROR_INPUT_NOT_EXIST;
+	if(strfind(name,".saoi",true) == -1) return SAOI_ERROR_INPUT_EXTENSION;
+	new File:inpf = fopen(name,io_read);
+	if(!inpf) return SAOI_ERROR_INPUT_NOT_OPEN;
+	new asize = flength(inpf), idx = 0;
+	if(asize > MAX_SAOI_FILE_SIZE || asize < 0){
+		fclose(inpf);
+		return SAOI_ERROR_FILE_SIZE;
+	}
+	new SAOI:index = FindFreeSAOIID(), parse_step, bool:parse_header,
+		author[MAX_SAOI_AUTHOR_SIZE], version[MAX_SAOI_VERSION_SIZE ], description[MAX_SAOI_DESCRIPTION_SIZE];
+		
+	SAOIFile[index][saoi_status] = true;
+	format(SAOIFile[index][saoi_name],MAX_SAOI_NAME_SIZE,"%s",name);
+	for(new i = strlen(SAOIFile[index][saoi_name])-1; i >= 0; i--){
+		if(SAOIFile[index][saoi_name][i] == '.'){
+			SAOIFile[index][saoi_name][i] = EOS;
+			break;
+		}
+	}
 	
 	new modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid = -1, interiorid = -1, Float:streamdistance = 300.0, Float:drawdistance = 0.0, areaid = -1, priority = 0,
 		arg_count = 0, material_used = 0, material_text_used = 0, objectid;
@@ -560,7 +665,7 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 						txdname[i] = fgetchar(inpf,0,false), idx++;
 					}
 					txdname[txdsize] = EOS;
-					string_mod(txdname,txdname);
+					SAOIStringMod(txdname,txdname);
 					
 					texturenamesize = fgetchar(inpf,0,false), idx++;
 					
@@ -568,12 +673,13 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 						texturename[i] = fgetchar(inpf,0,false), idx++;
 					}
 					texturename[texturenamesize] = EOS;
-					string_mod(texturename,texturename);
+					SAOIStringMod(texturename,texturename);
 					
 					SAOI_MergeValue(materialcolor,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
 					idx += 4;
 					
 					SetDynamicObjectMaterial(objectid,(parse_step-PARSE_STEP_MATERIAL_START),modelid,txdname,texturename,materialcolor);
+					material_cnt++;
 					
 					#if defined DEBUG_SAOI
 						printf("%d %d %d %s %s %08x",objectid,(parse_step-PARSE_STEP_MATERIAL_START),modelid,txdname,texturename,materialcolor);
@@ -597,7 +703,7 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 						text[i] = fgetchar(inpf,0,false), idx++;
 					}
 					text[textsize] = EOS;
-					string_mod(text,text);
+					SAOIStringMod(text,text);
 					
 					materialsize = fgetchar(inpf,0,false), idx++;
 					
@@ -607,7 +713,7 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 						fontface[i] = fgetchar(inpf,0,false), idx++;
 					}
 					fontface[fontfacesize] = EOS;
-					string_mod(fontface,fontface);
+					SAOIStringMod(fontface,fontface);
 					
 					fontsize = fgetchar(inpf,0,false), idx++;
 					
@@ -622,6 +728,8 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 					textalignment = fgetchar(inpf,0,false), idx++;
 					
 					SetDynamicObjectMaterialText(objectid,(parse_step-PARSE_STEP_MATERIAL_TEXT_START),text,materialsize,fontface,fontsize,bold,fontcolor,backcolor,textalignment);
+					material_text_cnt++;
+					
 					#if defined DEBUG_SAOI
 						printf("%d %d %s %d %s %d %d %08x %08x %d",objectid,(parse_step-PARSE_STEP_MATERIAL_TEXT_START),text,materialsize,fontface,fontsize,bold,fontcolor,backcolor,textalignment);
 					#endif
@@ -631,13 +739,13 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 			
 			if(parse_step == arg_count){
 				objectid = CreateDynamicObject(modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance,areaid,priority);
-				Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,SAOI_EXTRA_ID_OFFSET+_:SAOI_ID); //identify objects
+				Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,SAOI_EXTRA_ID_OFFSET+_:index); //identify objects
+				object_cnt++;
 				parse_step = PARSE_STEP_ARG_END;
 				
 				#if defined DEBUG_SAOI
-					printf("%d %f %f %f %f %f %f %d %d -1 %f %f %d %d ex: %d",modelid,x,y,z,rx,ry,rz,worldid,interiorid,streamdistance,drawdistance,areaid,priority,SAOI_EXTRA_ID_OFFSET+_:SAOI_ID);
+					printf("%d %f %f %f %f %f %f %d %d -1 %f %f %d %d ex: %d",modelid,x,y,z,rx,ry,rz,worldid,interiorid,streamdistance,drawdistance,areaid,priority,SAOI_EXTRA_ID_OFFSET+_:index);
 				#endif
-				cnt++;
 			} else if(parse_step == PARSE_STEP_MATERIAL_TEXT_END){
 				parse_step = -1;
 			}
@@ -647,22 +755,26 @@ stock SAOI:LoadObjectImage(const name[],&count=0,&load_time=0){
 	fclose(inpf);
 	
 	load_time = GetTickCount()-NTTime;
-	count += cnt;
+	
+	SAOIFile[index][saoi_object_cnt] = object_cnt;
+	SAOIFile[index][saoi_material_cnt] = material_cnt;
+	SAOIFile[index][saoi_material_text_cnt] = material_text_cnt;
+	SAOIFile[index][saoi_load_time] = load_time;
 	
 	new buffer[256];
-	format(buffer,sizeof buffer,"File %s has been loaded in %d ms",name,load_time);
+	format(buffer,sizeof buffer,"File %s has been loaded in %d ms",SAOIFile[index][saoi_name],load_time);
 	printf(buffer);
-	format(buffer,sizeof buffer,"Author: %s Version: %s Objects: %d",author,version,cnt);
+	format(buffer,sizeof buffer,"Author: %s Version: %s Objects: %d Material: %d Material Text: %d",author,version,object_cnt,material_cnt,material_text_cnt);
 	printf(buffer);
 	if(!isnull(description)){
 		format(buffer,sizeof buffer,"Description: %s",description);
 		printf(buffer);
 	}
-	return SAOI_ID;
+	return index;
 }
 
 stock bool:UnloadObjectImage(SAOI:index){
-	if(!SAOIFileStatus[index]) return false;
+	if(!SAOIFile[index][saoi_status]) return false;
 	for(new i = 1, j = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT); i <= j; i++){
 		if(IsValidDynamicObject(i)){
 			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_EXTRA_ID) == _:index-SAOI_EXTRA_ID_OFFSET){
@@ -670,21 +782,18 @@ stock bool:UnloadObjectImage(SAOI:index){
 			}
 		}
 	}
-	SAOIFileStatus[index] = false;
+	SAOIFile[index][saoi_status] = false;
+	SAOIFile[index][saoi_name] = EOS;
+	SAOIFile[index][saoi_object_cnt] = 0;
+	SAOIFile[index][saoi_material_cnt] = 0;
+	SAOIFile[index][saoi_material_text_cnt] = 0;
+	SAOIFile[index][saoi_load_time] = 0;
 	return true;
 }
 
 stock CountObjectsForIndex(SAOI:index){
-	if(!SAOIFileStatus[index]) return 0;
-	new cnt = 0;
-	for(new i = 1, j = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT); i <= j; i++){
-		if(IsValidDynamicObject(i)){
-			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_EXTRA_ID) == _:index-SAOI_EXTRA_ID_OFFSET){
-				cnt++;
-			}
-		}
-	}
-	return cnt;
+	if(!SAOIFile[index][saoi_status]) return 0;
+	return SAOIFile[index][saoi_object_cnt];
 }
 
 //EOF
