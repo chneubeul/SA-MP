@@ -95,7 +95,7 @@
 #define SAOI_ERROR_NOT_ENOUGH_CAPACITY		(SAOI:-16)		//not enough capacity, to load new file
 #define SAOI_ERROR_INVALID_ARG_COUNT		(SAOI:-17)		//number of arguments exceeds the specified arguments (error structure version)
 
-#define MAX_ARG_COUNT						(15)
+#define MAX_ARG_COUNT						(15)			//argument number 1 - 15 !!
 #define PARSE_STEP_ARG_COUNT				(0)
 #define PARSE_STEP_ARG_START				(1)
 #define PARSE_STEP_ARG_END					(MAX_ARG_COUNT)
