@@ -828,10 +828,10 @@ stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_
 				objectid = CreateDynamicObject(modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance,areaid,priority);
 				Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,SAOI_EXTRA_ID_OFFSET+_:index); //identify objects
 				if(anti_area == 1){
-					Streamer_ToggleItemAntiAreas(STREAMER_TYPE_OBJECT,objectid, 1);
+					Streamer_ToggleItemAntiAreas(STREAMER_TYPE_OBJECT,objectid,1);
 				}
 				if(no_camera_col == 1){
-					SetDynamicObjectNoCameraCol(STREAMER_TYPE_OBJECT);
+					SetDynamicObjectNoCameraCol(objectid);
 				}
 				object_cnt++;
 				parse_step = PARSE_STEP_ARG_END;
