@@ -8,31 +8,46 @@
  *                                                                                                                                *
  * This is beta include!                                                                                                          *
  *                                                                                                                                *
- * File Version: 1.2                                                                                                              *
+ * File Version: 1.3                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SAOI:CreateSAOIFile(const name[],author[],version[],description[] = "");                                                       *
  * SAOI:GetSAOIFileHeader(const name[],author[],version[],description[]);                                                         *
  * SAOI:SaveDynamicObject(objectid,const name[]);                                                                                 *
  * SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0);                            *
- * bool:UnloadObjectImage(SAOI:index);                                                                                            *
- * bool:GetSAOILoadData(SAOI:index,name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0);                       *
+ * bool:UnloadObjectImage(&SAOI:index);                                                                                           *
+ * bool:GetSAOILoadData(SAOI:index,name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0,&active_tick=0);        *
  * CountObjectsForIndex(SAOI:index);                                                                                              *
+ * bool:IsSAOIFileLoaded(const name[],&SAOI:index=INVALID_SAOI_FILE);                                                             *
+ * CountSAOIFileLoaded();                                                                                                         *
+ * GetSAOIActiveTime(SAOI:index);                                                                                                 *
  *                                                                                                                                *
  * Extended Functions:                                                                                                            *
  * SAOI:FindFreeSAOIID();                                                                                                         *
  * SAOIStringMod(input[],output[]);                                                                                               *
+ *                                                                                                                                *
+ **********************************************************************************************************************************
+ *                                                                                                                                *
+ * Support:                                                                                                                       *
+ * - CreateDynamicObject for all params                                                                                           *
+ * - Extra parameter: Streamer_ToggleItemAntiAreas, SetDynamicObjectNoCameraCol                                                   *
+ * - SetDynamicObjectMaterial for all materialindex                                                                               *
+ * - SetDynamicObjectMaterialText for all materialindex                                                                           *
+ * - Unique compressed file structure (Dynamic moving datagram)                                                                   *
+ * - Encrypted information: Author, Version, Description                                                                          *
+ * - Ability to load, unload the selected files                                                                                   *
+ * - Compression performance. Ratio ~33%                                                                                          *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
 //Check Version SAOI.inc
 #if !defined _SAOI_VERSION
-	#error You need SAOI.inc v1.2
+	#error You need SAOI.inc v1.3
 #elseif !defined SAOI_LOADER_VERSION
-	#error Update you SAOI.inc to v1.2
-#elseif (SAOI_LOADER_VERSION < 10201)
-	#error Update you SAOI.inc to v1.2
+	#error Update you SAOI.inc to v1.3
+#elseif (SAOI_LOADER_VERSION < 10301)
+	#error Update you SAOI.inc to v1.3
 #endif
 */
 
@@ -41,7 +56,7 @@
 #endif
 #define _SAOI_VERSION
 
-#define SAOI_LOADER_VERSION 				(10201)			//a.b[c] 10000*a+100*b+c
+#define SAOI_LOADER_VERSION 				(10301)			//a.b[c] 10000*a+100*b+c
 
 #define SAOI_HEADER_KEY						"SAOI 1.0 ADM"	//You can never change !!!
 
@@ -78,16 +93,18 @@
 #define SAOI_ERROR_INPUT_EXTENSION			(SAOI:-14)		//invalid input extension
 #define SAOI_ERROR_OUTPUT_EXTENSION			(SAOI:-15)		//invalid output extension
 #define SAOI_ERROR_NOT_ENOUGH_CAPACITY		(SAOI:-16)		//not enough capacity, to load new file
+#define SAOI_ERROR_INVALID_ARG_COUNT		(SAOI:-17)		//number of arguments exceeds the specified arguments (error structure version)
 
+#define MAX_ARG_COUNT						(15)
 #define PARSE_STEP_ARG_COUNT				(0)
 #define PARSE_STEP_ARG_START				(1)
-#define PARSE_STEP_ARG_END					(13)
-#define PARSE_STEP_MATERIAL_HEAD			(14)
-#define PARSE_STEP_MATERIAL_START			(15)
-#define PARSE_STEP_MATERIAL_END				(30)
-#define PARSE_STEP_MATERIAL_TEXT_HEAD		(31)
-#define PARSE_STEP_MATERIAL_TEXT_START		(32)
-#define PARSE_STEP_MATERIAL_TEXT_END		(47)
+#define PARSE_STEP_ARG_END					(15)
+#define PARSE_STEP_MATERIAL_HEAD			(16)
+#define PARSE_STEP_MATERIAL_START			(17)
+#define PARSE_STEP_MATERIAL_END				(32)
+#define PARSE_STEP_MATERIAL_TEXT_HEAD		(33)
+#define PARSE_STEP_MATERIAL_TEXT_START		(34)
+#define PARSE_STEP_MATERIAL_TEXT_END		(49)
 
 //BitFunctions.inc
 #define SAOI_GetValueBit(%0,%1)				((%0) >>> (%1) & 0x01)
@@ -112,10 +129,39 @@ enum e_saoi {
 	saoi_object_cnt,
 	saoi_material_cnt,
 	saoi_material_text_cnt,
-	saoi_load_time
+	saoi_load_time,
+	saoi_active_tick
 }
 
 new bool:SAOIFile[SAOI:MAX_SAOI_FILE][e_saoi];
+
+stock bool:IsSAOIFileLoaded(const name[],&SAOI:index=INVALID_SAOI_FILE){
+	new tmp_saoi_name[MAX_SAOI_NAME_SIZE];
+	format(tmp_saoi_name,MAX_SAOI_NAME_SIZE,"%s",name);
+	for(new i = strlen(tmp_saoi_name)-1; i >= 0; i--){
+		if(tmp_saoi_name[i] == '.'){
+			tmp_saoi_name[i] = EOS;
+			break;
+		}
+	}
+	for(new SAOI:i = SAOI:1; i < MAX_SAOI_FILE; i = SAOI:(_:i+1)){
+		if(SAOIFile[i][saoi_status]){
+			if(!strcmp(tmp_saoi_name,SAOIFile[i][saoi_name],true)){
+				index = i;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+stock CountSAOIFileLoaded(){
+	new cnt = 0;
+	for(new SAOI:i = SAOI:1; i < MAX_SAOI_FILE; i = SAOI:(_:i+1)){
+		if(SAOIFile[i][saoi_status]) cnt++;
+	}
+	return cnt;
+}
 
 stock SAOIStringMod(input[],output[]){
 	for(new i = 0, j = strlen(input); i < j; i++){
@@ -131,12 +177,13 @@ stock SAOI:FindFreeSAOIID(){
 	return INVALID_SAOI_FILE;
 }
 
-stock bool:GetSAOILoadData(SAOI:index,name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0){
+stock bool:GetSAOILoadData(SAOI:index,name[],&object_cnt=0,&material_cnt=0,&material_text_cnt=0,&load_time=0,&active_tick=0){
 	if(!SAOIFile[index][saoi_status]) return false;
 	object_cnt =		SAOIFile[index][saoi_object_cnt];
 	material_cnt =		SAOIFile[index][saoi_material_cnt];
 	material_text_cnt =	SAOIFile[index][saoi_material_text_cnt];
 	load_time =			SAOIFile[index][saoi_load_time];
+	active_tick =		SAOIFile[index][saoi_active_tick];
 	format(name,MAX_SAOI_NAME_SIZE,"%s",SAOIFile[index][saoi_name]);
 	return true;
 }
@@ -220,7 +267,7 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 	if(!outf) return SAOI_ERROR_OUTPUT_NOT_OPEN;
 	
 	new modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid, interiorid, Float:streamdistance, Float:drawdistance, areaid, priority,
-		arg_count = PARSE_STEP_ARG_END, material_used = 0, material_text_used = 0;
+		arg_count = PARSE_STEP_ARG_END, material_used = 0, material_text_used = 0, anti_area = 0, no_camera_col = 0;
 	
 	//Get Object Info
 	modelid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MODEL_ID);
@@ -235,9 +282,26 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 	areaid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_AREA_ID);
 	priority = Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_PRIORITY);
 	
+	if(Streamer_IsToggleItemAntiAreas(STREAMER_TYPE_OBJECT,objectid)) anti_area = 1;
+	if(GetDynamicObjectNoCameraCol(objectid)) no_camera_col = 1;
+	
 	//Count Arg
 	for(new i = PARSE_STEP_ARG_END; i > 7; i--){
 		switch(i){
+			case 15: {
+				if(no_camera_col == 0){
+					arg_count--;
+				} else {
+					break;
+				}
+			}
+			case 14: {
+				if(anti_area == 0){
+					arg_count--;
+				} else {
+					break;
+				}
+			}
 			case 13: {
 				if(priority == 0){
 					arg_count--;
@@ -335,6 +399,15 @@ stock SAOI:SaveDynamicObject(objectid,const name[]){
 		SAOI_ExtractValue(priority,int1,int2,int3,int4);
 		fputchar(outf,int4,false);
 	}
+	if(arg_count >= 14){
+		SAOI_ExtractValue(anti_area,int1,int2,int3,int4);
+		fputchar(outf,int4,false);
+	}
+	if(arg_count >= 15){
+		SAOI_ExtractValue(no_camera_col,int1,int2,int3,int4);
+		fputchar(outf,int4,false);
+	}
+	
 	
 	//Get and Save Object Material
 	for(new i = 0; i < 16; i++){
@@ -521,7 +594,7 @@ stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_
 	}
 	
 	new modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid = -1, interiorid = -1, Float:streamdistance = 300.0, Float:drawdistance = 0.0, areaid = -1, priority = 0,
-		arg_count = 0, material_used = 0, material_text_used = 0, objectid;
+		arg_count = 0, material_used = 0, material_text_used = 0, objectid, anti_area = 0, no_camera_col = 0;
 	
 	while(idx < asize){
 		if(!parse_header){
@@ -588,10 +661,13 @@ stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_
 			if(parse_step == PARSE_STEP_ARG_COUNT){
 				//Get Arg Count
 				arg_count = fgetchar(inpf,0,false), idx++;
-				
+				if(arg_count > MAX_ARG_COUNT){
+					fclose(inpf);
+					return SAOI_ERROR_INVALID_ARG_COUNT;
+				}
 				//Reset Data
 				objectid = 0, material_used = 0, material_text_used = 0, worldid = -1, interiorid = -1, streamdistance = 300.0,
-				drawdistance = 0.0, areaid = -1, priority = 0;
+				drawdistance = 0.0, areaid = -1, priority = 0, anti_area = 0, no_camera_col = 0;
 			} else if(parse_step >= PARSE_STEP_ARG_START && parse_step <= arg_count){
 				switch(parse_step){
 					case 1: {
@@ -644,6 +720,14 @@ stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_
 					}
 					case 13: {
 						SAOI_MergeValue(areaid,0,0,0,fgetchar(inpf,0,false));
+						idx += 1;
+					}
+					case 14: {
+						SAOI_MergeValue(anti_area,0,0,0,fgetchar(inpf,0,false));
+						idx += 1;
+					}
+					case 15: {
+						SAOI_MergeValue(no_camera_col,0,0,0,fgetchar(inpf,0,false));
 						idx += 1;
 					}
 				}
@@ -743,6 +827,12 @@ stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_
 			if(parse_step == arg_count){
 				objectid = CreateDynamicObject(modelid,x,y,z,rx,ry,rz,worldid,interiorid,-1,streamdistance,drawdistance,areaid,priority);
 				Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,SAOI_EXTRA_ID_OFFSET+_:index); //identify objects
+				if(anti_area == 1){
+					Streamer_ToggleItemAntiAreas(STREAMER_TYPE_OBJECT,objectid, 1);
+				}
+				if(no_camera_col == 1){
+					SetDynamicObjectNoCameraCol(STREAMER_TYPE_OBJECT);
+				}
 				object_cnt++;
 				parse_step = PARSE_STEP_ARG_END;
 				
@@ -759,10 +849,12 @@ stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_
 	
 	load_time = GetTickCount()-NTTime;
 	
+	
 	SAOIFile[index][saoi_object_cnt] = object_cnt;
 	SAOIFile[index][saoi_material_cnt] = material_cnt;
 	SAOIFile[index][saoi_material_text_cnt] = material_text_cnt;
 	SAOIFile[index][saoi_load_time] = load_time;
+	SAOIFile[index][saoi_active_tick] = GetTickCount();
 	
 	new buffer[256];
 	format(buffer,sizeof buffer,"File %s has been loaded in %d ms",SAOIFile[index][saoi_name],load_time);
@@ -776,7 +868,7 @@ stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_
 	return index;
 }
 
-stock bool:UnloadObjectImage(SAOI:index){
+stock bool:UnloadObjectImage(&SAOI:index){
 	if(!SAOIFile[index][saoi_status]) return false;
 	for(new i = 1, j = Streamer_GetUpperBound(STREAMER_TYPE_OBJECT); i <= j; i++){
 		if(IsValidDynamicObject(i)){
@@ -791,12 +883,18 @@ stock bool:UnloadObjectImage(SAOI:index){
 	SAOIFile[index][saoi_material_cnt] = 0;
 	SAOIFile[index][saoi_material_text_cnt] = 0;
 	SAOIFile[index][saoi_load_time] = 0;
+	SAOIFile[index][saoi_active_tick] = 0;
+	index = INVALID_SAOI_FILE;
 	return true;
 }
 
 stock CountObjectsForIndex(SAOI:index){
 	if(!SAOIFile[index][saoi_status]) return 0;
 	return SAOIFile[index][saoi_object_cnt];
+}
+
+stock GetSAOIActiveTime(SAOI:index){
+	return (GetTickCount()-SAOIFile[index][saoi_active_tick]);
 }
 
 //EOF
