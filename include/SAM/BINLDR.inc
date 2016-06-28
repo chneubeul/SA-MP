@@ -58,7 +58,7 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 
 
 #define MAX_RAW_DATA						(42)
-#define MAX_BIN_FILE_SIZE					(2147483647)	//~2 GB
+#define MAX_BIN_FILE_SIZE					(68157440)	//64 MB
 
 #define IMG::								IMG:
 

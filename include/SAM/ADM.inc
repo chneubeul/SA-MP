@@ -106,7 +106,7 @@
 #define DMP::						DMP:
 #define DUMP						DMP
 
-#define MAX_FILE_SIZE				(2147483647)	//~2 GB
+#define MAX_FILE_SIZE				(68157440)	//64 MB
 
 #define KEY_TYPE_UNKNOWN			(0)
 #define KEY_TYPE_HEXNEGATIVE		(4)
