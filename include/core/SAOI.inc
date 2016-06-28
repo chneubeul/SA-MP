@@ -8,7 +8,7 @@
  *                                                                                                                                *
  * This is beta include!                                                                                                          *
  *                                                                                                                                *
- * File Version: 1.3                                                                                                              *
+ * File Version: 1.3B                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SAOI:CreateSAOIFile(const name[],author[],version[],description[] = "");                                                       *
@@ -43,20 +43,27 @@
 /*
 //Check Version SAOI.inc
 #if !defined _SAOI_VERSION
-	#error You need SAOI.inc v1.3
+	#error You need SAOI.inc v1.3B
 #elseif !defined SAOI_LOADER_VERSION
-	#error Update you SAOI.inc to v1.3
-#elseif (SAOI_LOADER_VERSION < 10301)
-	#error Update you SAOI.inc to v1.3
+	#error Update you SAOI.inc to v1.3B
+#elseif (SAOI_LOADER_VERSION < 10302)
+	#error Update you SAOI.inc to v1.3B
 #endif
 */
+
+
+#if !defined Streamer_AppendArrayData
+	#error Unknown streamer version
+#endif
 
 #if defined _SAOI_VERSION
 	#endinput
 #endif
 #define _SAOI_VERSION
 
-#define SAOI_LOADER_VERSION 				(10301)			//a.b[c] 10000*a+100*b+c
+#define SAOI_LOADER_VERSION 				(10302)			//a.b[c] 10000*a+100*b+c
+
+#define SAOI::								SAOI:
 
 #define SAOI_HEADER_KEY						"SAOI 1.0 ADM"	//You can never change !!!
 
@@ -857,7 +864,7 @@ stock SAOI:LoadObjectImage(const name[],&object_cnt=0,&material_cnt=0,&material_
 	SAOIFile[index][saoi_active_tick] = GetTickCount();
 	
 	new buffer[256];
-	format(buffer,sizeof buffer,"File %s has been loaded in %d ms",SAOIFile[index][saoi_name],load_time);
+	format(buffer,sizeof buffer,"File %s has been loaded in %d ms",name,load_time);
 	printf(buffer);
 	format(buffer,sizeof buffer,"Author: %s Version: %s Objects: %d Material: %d Material Text: %d",author,version,object_cnt,material_cnt,material_text_cnt);
 	printf(buffer);
