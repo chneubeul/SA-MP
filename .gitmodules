@@ -16,9 +16,6 @@
 [submodule "resources/Audio Plugin/Server"]
 	path = resources/Audio Plugin/Server
 	url = https://github.com/samp-incognito/samp-audio-server-plugin
-[submodule "Crash Detect"]
-	path = Crash Detect
-	url = https://github.com/Zeex/samp-plugin-crashdetect
 [submodule "resources/CrashDetect"]
 	path = resources/CrashDetect
 	url = https://github.com/Zeex/samp-plugin-crashdetect
