@@ -1,6 +1,6 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- * Missile Launcher v1.6B made by Abyss Morgan                                                                                    *
+ * Missile Launcher v1.6C made by Abyss Morgan                                                                                    *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
@@ -20,11 +20,11 @@
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error You need Missile.inc v1.6B
+	#error You need Missile.inc v1.6C
 #elseif !defined Missile_Version
-	#error Update you Missile.inc to v1.6B
-#elseif (Missile_Version < 10602)
-	#error Update you Missile.inc to v1.6B
+	#error Update you Missile.inc to v1.6C
+#elseif (Missile_Version < 10603)
+	#error Update you Missile.inc to v1.6C
 #endif
 */
 
@@ -55,7 +55,7 @@
 #endif
 #define _missile_launcher
 
-#define Missile_Version						(10602)
+#define Missile_Version						(10603)
 
 #define MISSILE_OBJECT_NORMAL				(0)
 #define MISSILE_OBJECT_BIG					(1)
@@ -167,10 +167,10 @@ public MissileDestroy(mobid,type,playerid){
 	
 	GetDynamicObjectPos(MissileComponent[mobid][missile_objectid],x,y,z);
 	CreateExplosionForRangePoint(x,y,z,worldid,interiorid,MissileComponent[mobid][missile_type],GetMissileExplodeVisibility(),MissileComponent[mobid][missile_explode]);
-	if(IsAnyPlayerInDynamicArea(MissileComponent[mobid][missile_areaid])){
+	if(IsAnyPlayerInDynamicArea(MissileComponent[mobid][missile_areaid],1)){
 		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 			if(IsPlayerConnected(i)){
-				if(IsPlayerInDynamicArea(i,MissileComponent[mobid][missile_areaid])){
+				if(IsPlayerInDynamicArea(i,MissileComponent[mobid][missile_areaid],1)){
 					SetTimerEx("OnMissileDetectPlayer",50,false,"dd",i,MissileComponent[mobid][missile_playerid]);
 				}
 			}
