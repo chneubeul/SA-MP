@@ -19,3 +19,6 @@
 [submodule "resources/CrashDetect"]
 	path = resources/CrashDetect
 	url = https://github.com/Zeex/samp-plugin-crashdetect
+[submodule "resources/YSF - kurta999"]
+	path = resources/YSF - kurta999
+	url = https://github.com/kurta999/YSF
