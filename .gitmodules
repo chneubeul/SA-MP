@@ -22,3 +22,21 @@
 [submodule "resources/YSF - kurta999"]
 	path = resources/YSF - kurta999
 	url = https://github.com/kurta999/YSF
+[submodule "resources/YSF - IS4"]
+	path = resources/YSF - IS4
+	url = https://github.com/IllidanS4/YSF
+[submodule "resources/Pawn.CMD"]
+	path = resources/Pawn.CMD
+	url = https://github.com/urShadow/Pawn.CMD
+[submodule "resources/Pawn.Regex"]
+	path = resources/Pawn.Regex
+	url = https://github.com/urShadow/Pawn.Regex
+[submodule "resources/Socket"]
+	path = resources/Socket
+	url = https://github.com/pBlueG/Socket
+[submodule "resources/StrickenKid-MySQL"]
+	path = resources/StrickenKid-MySQL
+	url = https://github.com/eider-i128/StrickenKid-MySQL
+[submodule "resources/IRC Plugin"]
+	path = resources/IRC Plugin
+	url = https://github.com/samp-incognito/samp-irc-plugin
