@@ -35,6 +35,7 @@ native mysql_fetch_field(number,dest[],connectionHandle = 1);
 native mysql_fetch_field_row(string[],const fieldname[],connectionHandle = 1);
 native mysql_fetch_float(&Float:result,connectionHandle = 1);
 native mysql_fetch_row_format(string[],const delimiter[] = "|",connectionHandle = 1);
+native mysql_format(connectionHandle, output[], format[], {Float,_}:...);
 native mysql_field_count(connectionHandle = 1);
 native mysql_free_result(connectionHandle = 1);
 native mysql_get_charset(destination[],connectionHandle = 1);
