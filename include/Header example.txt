@@ -4,20 +4,27 @@
 
 //Plugin includes
 #include <sscanf2>
-#include <streamer>
-#include <audio>
+#include <streamer>				//https://github.com/samp-incognito/samp-streamer-plugin/tree/165bc27a97c7e5443c42e221189e14af2ee63cf0
+#include <audio>				//https://github.com/samp-incognito/samp-audio-server-plugin/tree/76ec5d8b17acbfdb888c626283cd3b01d1d29629
 #include <a_mysql>
 #include <mapandreas>
 #include <regex>
-#include <crashdetect>
-#include <YSF>
+#include <crashdetect>			//https://github.com/Zeex/samp-plugin-crashdetect/tree/ac1f71a8260e74c3db5d5fae65bc45a944a92c2f
+#include <YSF>					//https://github.com/kurta999/YSF/tree/2fa7f612c7b12b971a27b7bb731cc8756c6061af
+#include <SAOI>					//Beta Version: https://github.com/AbyssMorgan/SAOI
+#include <profiler>				//https://github.com/Zeex/samp-plugin-profiler
 
 //Other includes
-#include <zcmd>
-#include <progress>
-#include <MD5>
 #include <foreach>
-#include <Dini>
+
+#include <samp/zcmd>
+#include <samp/progress>
+#include <samp/md5>
+#include <samp/Dini>
+#include <samp/SHA256>
+#include <samp/pointers>
+#include <samp/y_timers>
+
 
 //ProtVar Config
 //#define ProtVar:: <salt>
@@ -55,15 +62,15 @@
 #include <SAM/VehicleEx>
 #include <SAM/Logs>
 #include <SAM/ATM>
-#include <SAM/scmd>				//Do not use with ZCMD.inc !
-#include <SAM/FoxForeach>
+#include <SAM/scmd>				//Incompatible with ZCMD.inc !
+#include <SAM/FoxForeach>		//Incompatible with foreach.inc !
 
 //Other includes created by Abyss Morgan
 
 #include <other/AntiSupremeTroll>
 #include <other/Interiors>
 
-#include <engine/EngineX>
+#include <engine/EngineX>		//Incompatible with NGCM Core
 #include <engine/Knife>
 #include <engine/Mines>
 #include <engine/Missile>
@@ -73,7 +80,7 @@
 #include <event/Lottery>
 #include <event/Santa>
 
-#include <security/ScriptSecure> //or MultiScriptSecure
+#include <security/ScriptSecure>	//or MultiScriptSecure
 #include <security/ScriptChecker>
 
 //EOF

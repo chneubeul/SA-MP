@@ -18,17 +18,17 @@
 // Ignores warning 217 for properly indented PAWNO code
 // It's tab size is 4 and often uses 4 spaces instead, PAWNCC's is 8
 
-#include <core.inc>
-#include <float.inc>
-#include <string.inc>
-#include <file.inc>
-#include <time.inc>
-#include <datagram.inc>
-#include <a_players.inc>
-#include <a_vehicles.inc>
-#include <a_objects.inc>
-//#include <a_actor.inc>
-#include <a_sampdb.inc>
+#include <core>
+#include <float>
+#include <string>
+#include <file>
+#include <time>
+#include <datagram>
+#include <a_players>
+#include <a_vehicles>
+#include <a_objects>
+#include <a_actor>
+#include <a_sampdb>
 
 // Limits and internal constants
 #define MAX_PLAYER_NAME							(24)

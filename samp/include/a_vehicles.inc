@@ -4,6 +4,10 @@
  *
  */
 
+/*******************
+ * SAMP 0.3.7 R2-1 *
+ *******************/
+ 
 #if defined _vehicles_included
 	#endinput
 #endif
