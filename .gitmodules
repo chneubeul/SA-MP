@@ -40,3 +40,6 @@
 [submodule "resources/IRC Plugin"]
 	path = resources/IRC Plugin
 	url = https://github.com/samp-incognito/samp-irc-plugin
+[submodule "resources/Profiler"]
+	path = resources/Profiler
+	url = https://github.com/Zeex/samp-plugin-profiler
