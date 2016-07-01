@@ -1,4 +1,3 @@
-
 Plugin Include:
 [ADM] Unknown Streamer Version
 [ADM] Unknown MapAndreas Version
@@ -6,10 +5,13 @@ Plugin Include:
 
 
 
-SAM Include:
+All Include:
 [ADM] You need <include name> <include version>
 [ADM] Update you <include name> to <include version>
 
+
+
+SAM Include:
 [ADM] GetAngle is old prototype. Use GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D 
 Use #define USE_OLD_PROTOTYPE_FUNCTION to ignore this error. ^^
 
