@@ -1,36 +1,56 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Santa Gifts v1.4 made by Abyss Morgan                                                            *
+ *                                           Santa Gifts                                            *
+ *                                                                                                  *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
+ *                                                                                                  *
+ * Plugins: Streamer, MapAndreas                                                                    *
+ * Modules: StreamerFunction, 3DTryg, MapAndreasEx                                                  *
+ *                                                                                                  *
+ * File Version: 1.4                                                                                *
  *                                                                                                  *
  * Callbacks:                                                                                       *
  * OnSantaPickupReward(playerid);                                                                   *
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if !defined Streamer_AppendArrayData
+	#error [ADM] Unknown Streamer Version
+#endif
+
+#if !defined MapAndreas_FindZ_For2DCoord
+	#error [ADM] Unknown MapAndreas Version
+#endif
+
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.3D
+	#error [ADM] You need StreamerFunction.inc v2.3D
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.3D
+	#error [ADM] Update you StreamerFunction.inc to v2.3D
 #elseif (Streamer_Spec_Version < 20304)
-	#error Update you StreamerFunction.inc to v2.3D
+	#error [ADM] Update you StreamerFunction.inc to v2.3D
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #elseif (Tryg3D_Version < 20503)
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #endif
 
 //Check MapAndreasEx.inc
 #if !defined _Map_Andreas_Ex
-	#error You need MapAndreasEx.inc
+	#error [ADM] You need MapAndreasEx.inc
 #endif
+
+#if defined _santa_gifts
+	#endinput
+#endif
+#define _santa_gifts
 
 #define	MAX_SANTAGIFTS			(100)
 #define REFRESH_SANTAGIFTS		(2*60*60*1000)	//2 hour

@@ -6,6 +6,9 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
+ * Plugins: SScanf                                                                                                                *
+ * Modules: ProtVar                                                                                                               *
+ *                                                                                                                                *
  * File Version: 2.2                                                                                                              *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
@@ -76,11 +79,11 @@
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v2.2
+	#error [ADM] You need ADM.inc v2.2
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2
 #elseif (ADM_Encryption_Version < 20201)
-	#error Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2
 #endif
 */
 
@@ -92,10 +95,10 @@
 #define ADM_Encryption_Version 		(20201) //a.b[c] 10000*a+100*b+c
 
 #if !defined sscanf
-	#error Unknown sscanf version
+	#error [ADM] Unknown SScanf Version
 #endif
 
-//ProtVar::
+//ProtVar:: Detect
 #if defined ENABLE_PROTECTION_VARIABLES && defined ProtVar::
 	#define ADM_ProtVar::	ProtVar::
 #else

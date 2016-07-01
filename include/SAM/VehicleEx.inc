@@ -1,8 +1,15 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Vehicle Update v1.0 made by Abyss Morgan                                                         *
+ *                                          Vehicle Update                                          *
+ *                                                                                                  *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ *                                                                                                  *
+ * Plugins: None                                                                                    *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
+ * File Version: 1.0                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetVehiclePanels(vehicleid,&front_bumper,&rear_bumper);                                          *

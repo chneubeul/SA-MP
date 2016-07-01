@@ -1,8 +1,15 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Knife Shoot Script v2.3 made by Abyss Morgan                                                     *
+ *                                        Knife Shoot Script                                        *
+ *                                                                                                  *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
+ *                                                                                                  *
+ * Plugins: Streamer                                                                                *
+ * Modules: 3DTryg                                                                                  *
+ *                                                                                                  *
+ * File Version: 2.3                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamKnifeShoot(bool:toggle);            //default: false                                *
@@ -15,16 +22,16 @@
  ****************************************************************************************************/
 
 #if !defined Streamer_AppendArrayData
-	#error Unknown streamer version
+	#error [ADM] Unknown Streamer Version
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #elseif (Tryg3D_Version < 20503)
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #endif
 
 #define KNIFE_SPEED 						(12.0)

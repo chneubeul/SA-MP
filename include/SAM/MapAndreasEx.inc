@@ -1,9 +1,15 @@
 /****************************************************************************************************
  *                                                                                                  *
- * MapAndreas Update v1.2 made by Abyss Morgan                                                      *
+ *                                        MapAndreas Update                                         *
+ *                                                                                                  *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
+ * Plugins: MapAndreas                                                                              *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
+ * File Version: 1.2                                                                                *
  * MapAndreas Version: 1.2.1                                                                        *
  *                                                                                                  *
  * Functions:                                                                                       *
@@ -13,14 +19,14 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if !defined MapAndreas_FindZ_For2DCoord
+	#error [ADM] Unknown MapAndreas Version
+#endif
+
 #if defined _Map_Andreas_Ex
 	#endinput
 #endif
 #define _Map_Andreas_Ex
-
-#if !defined MapAndreas_FindZ_For2DCoord
-	#error Unknown MapAndreas Version
-#endif
 
 stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
 	if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){

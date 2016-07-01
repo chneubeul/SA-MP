@@ -6,6 +6,9 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
+ * Plugins: None                                                                                    *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
  * File Version: 2.3                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *

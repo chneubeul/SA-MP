@@ -1,8 +1,19 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Script Secure v4.0 made by Abyss Morgan                                                          *
+ *                                          Script Secure                                           *
+ *                                                                                                  *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                      *
+ *                                                                                                  *
+ * Plugins: None                                                                                    *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
+ * File Version: 4.0                                                                                *
+ *                                                                                                  *
+ * Functions:                                                                                       *
+ * AntiDeAMX();                                                                                     *
+ * ScriptSecureADM();                                                                               *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -53,15 +64,15 @@ public OnFilterScriptInit(){
 //Web ACK System
 #if defined ENABLE_WEB_ACK
 	#if !defined SCRIPT_ACK_KEY
-		#error Please #define SCRIPT_ACK_KEY "key"
+		#error [ADM] Please #define SCRIPT_ACK_KEY "key"
 	#endif
 	
 	#if !defined SCRIPT_ACK_URL
-		#error Please #define SCRIPT_ACK_URL "ack_url"
+		#error [ADM] Please #define SCRIPT_ACK_URL "ack_url"
 	#endif
 	
 	#if !defined SCRIPT_ANTI_FLOOD
-		#error Please #define SCRIPT_ANTI_FLOOD <random number>
+		#error [ADM] Please #define SCRIPT_ANTI_FLOOD <random number>
 	#endif
 #else
 	#if !defined SCRIPT_ACK_KEY
@@ -107,32 +118,32 @@ public ADMWebACKCheck(important){
 }
 
 #if !defined FILE_SERVERIP
-	#error Please #define FILE_SERVERIP "server ip"
+	#error [ADM] Please #define FILE_SERVERIP "server ip"
 #endif
 
 #if !defined FILE_SERVERPORT
-	#error Please #define FILE_SERVERPORT <port>
+	#error [ADM] Please #define FILE_SERVERPORT <port>
 #endif
 
 #if !defined FILE_LICENSEID
-	#error Please #define FILE_LICENSEID <license id>
+	#error [ADM] Please #define FILE_LICENSEID <license id>
 #endif
 
 #if defined CHECK_MAX_PLAYERS
 	#if !defined FILE_MAX_PLAYERS
-		#error Please #define FILE_MAX_PLAYERS <players>
+		#error [ADM] Please #define FILE_MAX_PLAYERS <players>
 	#endif
 #endif
 
 #if defined CHECK_RCON_PASSWORD
 	#if !defined FILE_RCONPASS
-		#error Please #define FILE_RCONPASS "rcon pass"
+		#error [ADM] Please #define FILE_RCONPASS "rcon pass"
 	#endif
 #endif
 
 #if defined CHECK_SERVER_LANGUAGE
 	#if !defined FILE_LANGUAGE
-		#error Please #define FILE_LANGUAGE "language"
+		#error [ADM] Please #define FILE_LANGUAGE "language"
 	#endif
 #endif
 

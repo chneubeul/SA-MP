@@ -6,6 +6,9 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
+ * Plugins: MapAndreas                                                                                                            *
+ * Modules: MapAndreasEx                                                                                                          *
+ *                                                                                                                                *
  * File Version: 2.5C                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
@@ -86,11 +89,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #elseif (Tryg3D_Version < 20503)
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #endif
 */
 
@@ -470,7 +473,7 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 #if !defined USE_OLD_PROTOTYPE_FUNCTION
 	
 	#if defined GetAngle
-		#error GetAngle is old prototype. Use GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D
+		#error [ADM] GetAngle is old prototype. Use GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D
 	#endif
 	
 	

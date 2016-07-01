@@ -6,6 +6,9 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
+ * Plugins: Streamer, MapAndreas                                                                                                  *
+ * Modules: 3DTryg, MapAndreasEx                                                                                                  *
+ *                                                                                                                                *
  * File Version: 5.1 X                                                                                                            *
  *                                                                                                                                *
  * Include created for the project Next Generation City Mod http://ngc.porobieni.com                                              *
@@ -34,28 +37,35 @@ Do not ask XD
 */
 
 #if defined NGCM_KERNEL
-	#error Fatal error incompatible NOX
+	#error [ADM] Fatal error incompatible NOX
+#endif
+
+#if !defined Streamer_AppendArrayData
+	#error [ADM] Unknown Streamer Version
+#endif
+
+#if !defined MapAndreas_FindZ_For2DCoord
+	#error [ADM] Unknown MapAndreas Version
+#endif
+
+//Check Version 3DTryg.inc
+#if !defined _3D_Tryg
+	#error [ADM] You need 3DTryg.inc v2.5C
+#elseif !defined Tryg3D_Version
+	#error [ADM] Update you 3DTryg.inc to v2.5C
+#elseif (Tryg3D_Version < 20503)
+	#error [ADM] Update you 3DTryg.inc to v2.5C
+#endif
+
+//Check MapAndreasEx.inc
+#if !defined _Map_Andreas_Ex
+	#error [ADM] You need MapAndreasEx.inc
 #endif
 
 #if defined _NOX_ENGINE_X
 	#endinput
 #endif
 #define _NOX_ENGINE_X
-
-
-//Check Version 3DTryg.inc
-#if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.5C
-#elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.5C
-#elseif (Tryg3D_Version < 20503)
-	#error Update you 3DTryg.inc to v2.5C
-#endif
-
-//Check MapAndreasEx.inc
-#if !defined _Map_Andreas_Ex
-	#error You need MapAndreasEx.inc
-#endif
 
 #define NOX_ENGINE_X_Version		(50124)
 #define NOX_VERSION					"5.1 Delta X"

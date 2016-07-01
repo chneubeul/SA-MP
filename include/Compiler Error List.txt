@@ -1,0 +1,37 @@
+
+Plugin Include:
+[ADM] Unknown Streamer Version
+[ADM] Unknown MapAndreas Version
+[ADM] Unknown SScanf Version
+
+
+
+SAM Include:
+[ADM] You need <include name> <include version>
+[ADM] Update you <include name> to <include version>
+
+[ADM] GetAngle is old prototype. Use GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D 
+Use #define USE_OLD_PROTOTYPE_FUNCTION to ignore this error. ^^
+
+[ADM] Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
+
+
+
+Engine Include:
+[ADM] Fatal error incompatible NOX
+
+
+
+Security Include:
+[ADM] Please #define SCRIPT_NAME <script name> before including ScriptChecker.inc
+
+[ADM] Please #define SCRIPT_ACK_KEY "key"
+[ADM] Please #define SCRIPT_ACK_URL "ack_url"
+[ADM] Please #define SCRIPT_ANTI_FLOOD <random number>
+
+[ADM] Please #define FILE_SERVERIP "server ip"
+[ADM] Please #define FILE_SERVERPORT <port>
+[ADM] Please #define FILE_LICENSEID <license id>
+[ADM] Please #define FILE_MAX_PLAYERS <players>
+[ADM] Please #define FILE_RCONPASS "rcon pass"
+[ADM] Please #define FILE_LANGUAGE "language"

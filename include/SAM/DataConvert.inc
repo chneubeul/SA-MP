@@ -6,6 +6,9 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
+ * Plugins: SScanf                                                                                  *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
  * File Version: 1.7                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
@@ -41,16 +44,16 @@
 /*
 //Check Version DataConvert.inc
 #if !defined _Data_Convert
-	#error You need DataConvert.inc v1.7
+	#error [ADM] You need DataConvert.inc v1.7
 #elseif !defined Data_Convert_Version
-	#error Update you DataConvert.inc to v1.7
+	#error [ADM] Update you DataConvert.inc to v1.7
 #elseif (Data_Convert_Version < 10701)
-	#error Update you DataConvert.inc to v1.7
+	#error [ADM] Update you DataConvert.inc to v1.7
 #endif
 */
 
 #if !defined sscanf
-	#error Unknown sscanf version
+	#error [ADM] Unknown SScanf Version
 #endif
 
 #if defined _Data_Convert

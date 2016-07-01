@@ -6,6 +6,9 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
+ * Plugins: None                                                                                                                  *
+ * Modules: None                                                                                                                  *
+ *                                                                                                                                *
  * File Version: 1.4                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
@@ -32,11 +35,11 @@
 /*
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc v1.4
+	#error [ADM] You need ATM.inc v1.4
 #elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.4
+	#error [ADM] Update you ATM.inc to v1.4
 #elseif (ATM_Version < 10401)
-	#error Update you ATM.inc to v1.4
+	#error [ADM] Update you ATM.inc to v1.4
 #endif
 */
 

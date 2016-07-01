@@ -1,27 +1,38 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Rcon Fireworks v2.0 made by Abyss Morgan                                                         *
+ *                                          Rcon Fireworks                                          *
+ *                                                                                                  *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
  *                                                                                                  *
+ * Plugins: Streamer                                                                                *
+ * Modules: 3DTryg, ATM                                                                             *
+ *                                                                                                  *
+ * File Version: 2.0                                                                                *
+ *                                                                                                  *
  ****************************************************************************************************/
+
+#if !defined Streamer_AppendArrayData
+	#error [ADM] Unknown Streamer Version
+#endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #elseif (Tryg3D_Version < 20503)
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #endif
 
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc v1.3
+	#error [ADM] You need ATM.inc v1.3
 #elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.3
+	#error [ADM] Update you ATM.inc to v1.3
 #elseif (ATM_Version < 10301)
-	#error Update you ATM.inc to v1.3
+	#error [ADM] Update you ATM.inc to v1.3
 #endif
 
 #define FIREWORK_ELEMENT			(256)

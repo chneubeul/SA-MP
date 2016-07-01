@@ -1,8 +1,15 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- * Military Dynamic Mines System v1.9 made by Abyss Morgan                                                                        *
+ *                                                 Military Dynamic Mines System                                                  *
+ *                                                                                                                                *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
+ *                                                                                                                                *
+ * Plugins: Streamer                                                                                                              *
+ * Modules: ATM                                                                                                                   *
+ *                                                                                                                                *
+ * File Version: 1.9                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,            *
@@ -52,16 +59,16 @@
  **********************************************************************************************************************************/
 
 #if !defined Streamer_AppendArrayData
-	#error Unknown streamer version
+	#error [ADM] Unknown Streamer Version
 #endif
 
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc v1.3D
+	#error [ADM] You need ATM.inc v1.3D
 #elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.3D
+	#error [ADM] Update you ATM.inc to v1.3D
 #elseif (ATM_Version < 10304)
-	#error Update you ATM.inc to v1.3D
+	#error [ADM] Update you ATM.inc to v1.3D
 #endif
 
 #if defined _dynamic_mine_system

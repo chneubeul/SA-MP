@@ -1,8 +1,15 @@
 /****************************************************************************************************
  *                                                                                                  *
- * GangZone Update v1.2 made by Abyss Morgan                                                        *
+ *                                         GangZone Update                                          *
+ *                                                                                                  *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ *                                                                                                  *
+ * Plugins: Streamer                                                                                *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
+ * File Version: 1.2                                                                                *
  *                                                                                                  *
  * Notice:                                                                                          *
  * Fit with YSF.inc when it is before GangZoneEx.inc                                                *
@@ -21,7 +28,7 @@
 #define _Gang_Zone_Ex
 
 #if !defined Streamer_AppendArrayData
-	#error Unknown streamer version
+	#error [ADM] Unknown Streamer Version
 #endif
 
 new GangZoneArea[MAX_GANG_ZONES];

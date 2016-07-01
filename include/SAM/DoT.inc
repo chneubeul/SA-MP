@@ -6,6 +6,9 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
+ * Plugins: None                                                                                    *
+ * Modules: ADM                                                                                     *
+ *                                                                                                  *
  * File Version: 1.3B                                                                               *
  *                                                                                                  *
  * Object Functions:                                                                                *
@@ -36,22 +39,29 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 /*
 //Check Version DoT.inc
 #if !defined _DoT_Loader
-	#error You need DoT.inc v1.3B
+	#error [ADM] You need DoT.inc v1.3B
 #elseif !defined DoT_Loader_Version
-	#error Update you DoT.inc to v1.3B
+	#error [ADM] Update you DoT.inc to v1.3B
 #elseif (DoT_Loader_Version < 10301)
-	#error Update you DoT.inc to v1.3B
+	#error [ADM] Update you DoT.inc to v1.3B
 #endif
 */
 
+#if !defined Streamer_AppendArrayData
+	#error [ADM] Unknown Streamer Version
+#endif
+
+#if !defined sscanf
+	#error [ADM] Unknown SScanf Version
+#endif
 
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v2.2
+	#error [ADM] You need ADM.inc v2.2
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2
 #elseif (ADM_Encryption_Version < 20201)
-	#error Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2
 #endif
 
 #if defined _DoT_Loader

@@ -9,6 +9,9 @@
  * File Version: 2.3E                                                                                                                      *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
+ * Plugins: Streamer                                                                                                                       *
+ * Modules: None                                                                                                                           *
+ *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
  * GetDynamicObjectModel(objectid);                                                                                                        *
  * SetDynamicObjectModel(objectid,modelid);                                                                                                *
@@ -231,16 +234,16 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.3E
+	#error [ADM] You need StreamerFunction.inc v2.3E
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.3E
+	#error [ADM] Update you StreamerFunction.inc to v2.3E
 #elseif (Streamer_Spec_Version < 20305)
-	#error Update you StreamerFunction.inc to v2.3E
+	#error [ADM] Update you StreamerFunction.inc to v2.3E
 #endif
 */
 
 #if !defined Streamer_AppendArrayData
-	#error Unknown streamer version
+	#error [ADM] Unknown Streamer Version
 #endif
 
 #if defined _streamer_spec
@@ -257,7 +260,7 @@
 
 #if defined INVALID_DYNAMIC_OBJECT_ID
 	#if (INVALID_DYNAMIC_OBJECT_ID != INVALID_STREAMER_ID)
-		#error Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
+		#error [ADM] Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
 	#endif
 	#undef INVALID_DYNAMIC_OBJECT_ID
 #endif

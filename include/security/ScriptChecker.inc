@@ -6,13 +6,16 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                                                    *
  *                                                                                                                                *
- * File Version: 1.0C                                                                                                             *
+ * Plugins: None                                                                                                                  *
+ * Modules: None                                                                                                                  *
+ *                                                                                                                                *
+ * File Version: 1.0D                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CheckAllScript(playerid = INVALID_PLAYER_ID, errorlevel = 0);                                                                  *
  * OnThisScriptCheck(playerid, errorlevel);                                                                                       *
  * CallToAllScript(playerid, chanel, errorlevel, data[]);                                                                         *
- * GetFilterScriptActivetime();                                                                                                   *
+ * GetFilterScriptActiveTime();                                                                                                   *
  *                                                                                                                                *
  * Callbacks:                                                                                                                     *
  * OnScriptCheck(playerid, errorlevel);                                                                                           *
@@ -66,6 +69,7 @@
  * Include: 'Logs' Author: 'Abyss Morgan'                                                                                         *
  * Include: 'ATM' Author: 'Abyss Morgan'                                                                                          *
  * Include: 'scmd' Author: 'Abyss Morgan'                                                                                         *
+ * Include: 'FoxForeach' Author: 'Abyss Morgan'                                                                                   *
  * Include: 'EngineX' Author: 'Abyss Morgan'                                                                                      *
  * Include: 'MultiScriptSecure' Author: 'Abyss Morgan'                                                                            *
  * Include: 'ScriptSecure' Author: 'Abyss Morgan'                                                                                 *
@@ -78,11 +82,11 @@
 /*
 //Check Version ScriptChecker.inc
 #if !defined _Script_Checker
-	#error You need ScriptChecker.inc v1.0C
+	#error [ADM] You need ScriptChecker.inc v1.0D
 #elseif !defined Script_Checker_Version
-	#error Update you ScriptChecker.inc to v1.0C
-#elseif (Script_Checker_Version < 10003)
-	#error Update you ScriptChecker.inc to v1.0C
+	#error [ADM] Update you ScriptChecker.inc to v1.0D
+#elseif (Script_Checker_Version < 10004)
+	#error [ADM] Update you ScriptChecker.inc to v1.0D
 #endif
 */
 
@@ -91,10 +95,10 @@
 #endif
 #define _Script_Checker
 
-#define Script_Checker_Version 					(10003) //a.b[c] 10000*a+100*b+c
+#define Script_Checker_Version 					(10004) //a.b[c] 10000*a+100*b+c
 
 #if !defined SCRIPT_NAME
-	#error Please define SCRIPT_NAME <script name> before including ScriptChecker.inc
+	#error [ADM] Please #define SCRIPT_NAME <script name> before including ScriptChecker.inc
 #endif
 
 #if defined FILTERSCRIPT
@@ -110,7 +114,7 @@
 new FilterScriptActiveTime = 0;
 
 #define CallToAllScript(%0,%1,%2,%3)	CallRemoteFunction("OnScriptCall","ddds",(%0),(%1),(%2),(%3))
-#define GetFilterScriptActivetime()		(GetTickCount()-FilterScriptActiveTime)
+#define GetFilterScriptActiveTime()		(GetTickCount()-FilterScriptActiveTime)
 #define SC_SecToTimeDay(%0)				((%0) / 86400),(((%0) % 86400) / 3600),((((%0) % 86400) % 3600) / 60),((((%0) % 86400) % 3600) % 60)
 #define SC_MSToTimeDay(%0)				SC_SecToTimeDay((%0)/1000)
 
@@ -159,7 +163,7 @@ public OnThisScriptCheck(playerid,errorlevel){
 	#pragma unused script_version2
 	#pragma unused script_version3
 	
-	format(buffer,sizeof(buffer),"Script Name: '%s' Script Type: '%s' Active Time: '%02d:%02d:%02d:%02d'",SCRIPT_NAME,SCRIPT_TYPE,SC_MSToTimeDay(GetFilterScriptActivetime()));
+	format(buffer,sizeof(buffer),"Script Name: '%s' Script Type: '%s' Active Time: '%02d:%02d:%02d:%02d'",SCRIPT_NAME,SCRIPT_TYPE,SC_MSToTimeDay(GetFilterScriptActiveTime()));
 	WriteCheckLog(buffer,SCRIPT_CHECK_FILE);
 	
 	//Check ScriptChecker.inc
@@ -451,6 +455,12 @@ public OnThisScriptCheck(playerid,errorlevel){
 	#if defined _scmd_included
 		WriteCheckLog("Include: 'scmd' Author: 'Abyss Morgan'",SCRIPT_CHECK_FILE);
 	#endif
+	
+	//Check FoxForeach.inc
+	#if defined _FoX_Foreach
+		WriteCheckLog("Include: 'FoxForeach' Author: 'Abyss Morgan'",SCRIPT_CHECK_FILE);
+	#endif
+	
 	
 	//Check EngineX.inc
 	#if defined _NOX_ENGINE_X

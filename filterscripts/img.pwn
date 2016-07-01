@@ -22,11 +22,11 @@ https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM/IMG%20Generator
 
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error You need BINLDR.inc v2.2
+	#error [ADM] You need BINLDR.inc v2.2
 #elseif !defined Bin_Loader_Version
-	#error Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2
 #elseif (Bin_Loader_Version < 20201)
-	#error Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2
 #endif
 
 public OnFilterScriptInit(){

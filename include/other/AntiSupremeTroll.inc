@@ -1,10 +1,13 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Anti Supreme Troll + Object Finder Detect                                                        *
+ *                            Anti Supreme Troll + Object Finder Detect                             *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/other                         *
+ *                                                                                                  *
+ * Plugins: None                                                                                    *
+ * Modules: None                                                                                    *
  *                                                                                                  *
  * File Version: 1.2B                                                                               *
  *                                                                                                  *

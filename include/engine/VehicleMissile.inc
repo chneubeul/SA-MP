@@ -1,8 +1,15 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- * Vehicle Missile Launcher v1.4 made by Abyss Morgan                                                                             *
+ *                                                    Vehicle Missile Launcher                                                    *
+ *                                                                                                                                *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
+ *                                                                                                                                *
+ * Plugins: Streamer, MapAndreas                                                                                                  *
+ * Modules: 3DTryg, ATM, Missile                                                                                                  *
+ *                                                                                                                                *
+ * File Version: 1.4                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * ToggleVehicleMiniMissile(vehicleid,toggle);                                                                                    *
@@ -58,38 +65,38 @@
  **********************************************************************************************************************************/
 
 #if !defined Streamer_AppendArrayData
-	#error Unknown streamer version
+	#error [ADM] Unknown Streamer Version
 #endif
 
 #if !defined MapAndreas_FindZ_For2DCoord
-	#error Unknown MapAndreas Version
+	#error [ADM] Unknown MapAndreas Version
 #endif
 
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error You need Missile.inc v1.6C
+	#error [ADM] You need Missile.inc v1.6C
 #elseif !defined Missile_Version
-	#error Update you Missile.inc to v1.6C
+	#error [ADM] Update you Missile.inc to v1.6C
 #elseif (Missile_Version < 10603)
-	#error Update you Missile.inc to v1.6C
+	#error [ADM] Update you Missile.inc to v1.6C
 #endif
 
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error You need ATM.inc v1.3D
+	#error [ADM] You need ATM.inc v1.3D
 #elseif !defined ATM_Version
-	#error Update you ATM.inc to v1.3D
+	#error [ADM] Update you ATM.inc to v1.3D
 #elseif (ATM_Version < 10304)
-	#error Update you ATM.inc to v1.3D
+	#error [ADM] Update you ATM.inc to v1.3D
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #elseif (Tryg3D_Version < 20503)
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #endif
 
 #if defined _veh_missile_launcher

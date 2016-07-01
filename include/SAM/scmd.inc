@@ -7,6 +7,9 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
+ * Plugins: SScanf                                                                                  *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
  * File Version: 1.0                                                                                *
  *                                                                                                  *
  * Callbacks:                                                                                       *
@@ -20,7 +23,7 @@
 #endif
 
 #if !defined sscanf
-	#error Unknown sscanf version
+	#error [ADM] Unknown SScanf Version
 #endif
 
 #if defined _scmd_included

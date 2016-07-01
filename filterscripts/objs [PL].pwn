@@ -38,47 +38,47 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error You need StreamerFunction.inc v2.3D
+	#error [ADM] You need StreamerFunction.inc v2.3D
 #elseif !defined Streamer_Spec_Version
-	#error Update you StreamerFunction.inc to v2.3D
+	#error [ADM] Update you StreamerFunction.inc to v2.3D
 #elseif (Streamer_Spec_Version < 20304)
-	#error Update you StreamerFunction.inc to v2.3D
+	#error [ADM] Update you StreamerFunction.inc to v2.3D
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.5C
 #elseif !defined Tryg3D_Version
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #elseif (Tryg3D_Version < 20503)
-	#error Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5C
 #endif
 
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error You need ADM.inc v2.2
+	#error [ADM] You need ADM.inc v2.2
 #elseif !defined ADM_Encryption_Version
-	#error Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2
 #elseif (ADM_Encryption_Version < 20201)
-	#error Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2
 #endif
 
 //Check Version DoT.inc
 #if !defined _DoT_Loader
-	#error You need DoT.inc v1.3B
+	#error [ADM] You need DoT.inc v1.3B
 #elseif !defined DoT_Loader_Version
-	#error Update you DoT.inc to v1.3B
+	#error [ADM] Update you DoT.inc to v1.3B
 #elseif (DoT_Loader_Version < 10301)
-	#error Update you DoT.inc to v1.3B
+	#error [ADM] Update you DoT.inc to v1.3B
 #endif
 
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error You need BINLDR.inc v2.2
+	#error [ADM] You need BINLDR.inc v2.2
 #elseif !defined Bin_Loader_Version
-	#error Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2
 #elseif (Bin_Loader_Version < 20201)
-	#error Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2
 #endif
 
 new pliki[][32] = {

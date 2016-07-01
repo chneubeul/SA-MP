@@ -1,8 +1,19 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Script Secure v4.0 made by Abyss Morgan                                                          *
+ *                                       Multi Script Secure                                        *
+ *                                                                                                  *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                      *
+ *                                                                                                  *
+ * Plugins: None                                                                                    *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
+ * File Version: 4.0                                                                                *
+ *                                                                                                  *
+ * Functions:                                                                                       *
+ * AntiDeAMX();                                                                                     *
+ * ScriptSecureADM();                                                                               *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -73,15 +84,15 @@ new ADMServerList[][e_server_config] = {
 //Web ACK System
 #if defined ENABLE_WEB_ACK
 	#if !defined SCRIPT_ACK_KEY
-		#error Please #define SCRIPT_ACK_KEY "key"
+		#error [ADM] Please #define SCRIPT_ACK_KEY "key"
 	#endif
 	
 	#if !defined SCRIPT_ACK_URL
-		#error Please #define SCRIPT_ACK_URL "ack_url"
+		#error [ADM] Please #define SCRIPT_ACK_URL "ack_url"
 	#endif
 	
 	#if !defined SCRIPT_ANTI_FLOOD
-		#error Please #define SCRIPT_ANTI_FLOOD <random number>
+		#error [ADM] Please #define SCRIPT_ANTI_FLOOD <random number>
 	#endif
 #else
 	#if !defined SCRIPT_ACK_KEY

@@ -6,6 +6,9 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  *                                                                                                  *
+ * Plugins: SScanf                                                                                  *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
  * File Version: 2.2                                                                                *
  *                                                                                                  *
  * Object Functions:                                                                                *
@@ -37,13 +40,22 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 /*
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error You need BINLDR.inc v2.2
+	#error [ADM] You need BINLDR.inc v2.2
 #elseif !defined Bin_Loader_Version
-	#error Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2
 #elseif (Bin_Loader_Version < 20201)
-	#error Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2
 #endif
 */
+
+#if !defined Streamer_AppendArrayData
+	#error [ADM] Unknown Streamer Version
+#endif
+
+
+#if !defined sscanf
+	#error [ADM] Unknown SScanf Version
+#endif
 
 #if defined _Bin_Loader
 	#endinput
@@ -51,11 +63,6 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 #define _Bin_Loader
 
 #define Bin_Loader_Version 					(20201) //a.b[c] 10000*a+100*b+c
-
-#if !defined sscanf
-	#error Unknown sscanf version
-#endif
-
 
 #define MAX_RAW_DATA						(42)
 #define MAX_BIN_FILE_SIZE					(68157440)	//64 MB

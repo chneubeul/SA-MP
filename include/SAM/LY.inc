@@ -6,6 +6,9 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
+ * Plugins: None                                                                                                                  *
+ * Modules: None                                                                                                                  *
+ *                                                                                                                                *
  * File Version: 1.6                                                                                                              *
  *                                                                                                                                *
  * Pawn Unsigned Long for 32 Bit language (precision 61-bit)                                                                      *
@@ -35,11 +38,11 @@
 /*
 //Check Version LY.inc
 #if !defined _Long_Yoyo
-	#error You need LY.inc v1.6
+	#error [ADM] You need LY.inc v1.6
 #elseif !defined Long_Yoyo_Version
-	#error Update you LY.inc to v1.6
+	#error [ADM] Update you LY.inc to v1.6
 #elseif (Long_Yoyo_Version < 10601)
-	#error Update you LY.inc to v1.6
+	#error [ADM] Update you LY.inc to v1.6
 #endif
 */
 
