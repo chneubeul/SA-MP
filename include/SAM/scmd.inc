@@ -31,6 +31,10 @@
 #endif
 #define _scmd_included
 
+#if defined CMD
+	#error [ADM] Detected another command system
+#endif
+
 #define CMD_SUCCESS 		1
 #define CMD_FAILURE 		0
 

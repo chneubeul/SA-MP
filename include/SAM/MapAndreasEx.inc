@@ -28,6 +28,10 @@
 #endif
 #define _Map_Andreas_Ex
 
+#if defined _3D_Tryg
+	#error [ADM] Please include 3DTryg.inc before MapAndreasEx.inc
+#endif
+
 stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
 	if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
 		z = 0.0;

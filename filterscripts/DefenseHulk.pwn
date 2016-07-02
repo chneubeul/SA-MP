@@ -12,8 +12,8 @@
 #include <mapandreas>
 #include <YSF>
 
-#include <SAM/3DTryg>
 #include <SAM/MapAndreasEx>
+#include <SAM/3DTryg>
 #include <EngineX>
 
 #define SD_VERYHIGH					(999.0)

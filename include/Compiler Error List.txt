@@ -2,7 +2,7 @@ Plugin Include:
 [ADM] Unknown Streamer Version
 [ADM] Unknown MapAndreas Version
 [ADM] Unknown SScanf Version
-
+[ADM] Unknown ColAndreas Version
 
 
 All Include:
@@ -13,11 +13,11 @@ All Include:
 
 SAM Include:
 [ADM] GetAngle is old prototype. Use GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D 
-Use #define USE_OLD_PROTOTYPE_FUNCTION to ignore this error. ^^
+Use #define USE_OLD_PROTOTYPE_FUNCTION before include 3Dtryg to ignore this error. ^^
 
 [ADM] Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
-
-
+[ADM] Detected another command system
+[ADM] Please include 3DTryg.inc before MapAndreasEx.inc
 
 Engine Include:
 [ADM] Fatal error incompatible NOX
