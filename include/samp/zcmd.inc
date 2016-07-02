@@ -1,7 +1,7 @@
 /**********************************************
  *                                            *
  *   @Author:    ZeeX                         *
- *   @Version:   0.3.3                        *
+ *   @Version:   0.3.2                        *
  *   @Released:  31.10.2009                   *
  *   @Updated:   02.07.2016 by Abyss Morgan   *
  *                                            *
