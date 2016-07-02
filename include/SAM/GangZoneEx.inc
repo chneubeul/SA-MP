@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                                         GangZone Update                                          *
+ *                                   GangZone Extended Functions                                    *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *

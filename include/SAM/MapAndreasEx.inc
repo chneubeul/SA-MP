@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                                        MapAndreas Update                                         *
+ *                                  MapAndreas Extended Functions                                   *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
