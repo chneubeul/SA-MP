@@ -13,7 +13,7 @@
 #define _zcmd_included
 
 #if defined CMD
-	#error [ADM] Detected another command system
+	#error Detected another command system
 #endif
 
 #define CMD_SUCCESS 		1
@@ -75,7 +75,11 @@ public OnPlayerCommandText(playerid, cmdtext[]){
 	if(zcmd_g_HasOPCS && !CallLocalFunction("OnPlayerCommandReceived", "is", playerid, cmdtext)) return 1;
 	new pos, funcname[MAX_FUNC_NAME];
 	while(cmdtext[++pos] > ' ' && pos < MAX_FUNC_NAME-4){
-		funcname[pos-1] = tolower(cmdtext[pos]);
+		#if defined DISABLE_IGNORE_CASE
+			funcname[pos-1] = cmdtext[pos];
+		#else
+			funcname[pos-1] = tolower(cmdtext[pos]);
+		#endif
 	}
 	format(funcname, sizeof(funcname), "cmd_%s", funcname);
 	while(cmdtext[pos] == ' ') pos++;
