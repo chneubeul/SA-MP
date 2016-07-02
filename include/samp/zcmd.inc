@@ -1,9 +1,9 @@
 /**********************************************
  *                                            *
  *   @Author:    ZeeX                         *
- *   @Version:   0.3.2                        *
- *   @Released:  31/10/2009                   *
- *   @Updated:   17/06/2016 by Abyss Morgan   *
+ *   @Version:   0.3.3                        *
+ *   @Released:  31.10.2009                   *
+ *   @Updated:   02.07.2016 by Abyss Morgan   *
  *                                            *
  **********************************************/
 
@@ -11,6 +11,10 @@
 	#endinput
 #endif
 #define _zcmd_included
+
+#if defined CMD
+	#error [ADM] Detected another command system
+#endif
 
 #define CMD_SUCCESS 		1
 #define CMD_FAILURE 		0
