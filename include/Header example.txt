@@ -4,15 +4,16 @@
 
 //Plugin includes
 #include <sscanf2>
-#include <streamer>				//https://github.com/samp-incognito/samp-streamer-plugin/tree/165bc27a97c7e5443c42e221189e14af2ee63cf0
-#include <audio>				//https://github.com/samp-incognito/samp-audio-server-plugin/tree/76ec5d8b17acbfdb888c626283cd3b01d1d29629
+#include <streamer>               //https://github.com/samp-incognito/samp-streamer-plugin
+#include <audio>                  //https://github.com/samp-incognito/samp-audio-server-plugin
 #include <a_mysql>
 #include <mapandreas>
+#include <ColAndreas>             //https://github.com/Pottus/ColAndreas
 #include <regex>
-#include <crashdetect>			//https://github.com/Zeex/samp-plugin-crashdetect/tree/ac1f71a8260e74c3db5d5fae65bc45a944a92c2f
-#include <YSF>					//https://github.com/kurta999/YSF/tree/2fa7f612c7b12b971a27b7bb731cc8756c6061af
-#include <SAOI>					//Beta Version: https://github.com/AbyssMorgan/SAOI
-#include <profiler>				//https://github.com/Zeex/samp-plugin-profiler
+#include <crashdetect>            //https://github.com/Zeex/samp-plugin-crashdetect
+#include <YSF>                    //https://github.com/kurta999/YSF
+#include <SAOI>                   //Beta Version: https://github.com/AbyssMorgan/SAOI
+#include <profiler>               //https://github.com/Zeex/samp-plugin-profiler
 
 //Other includes
 #include <foreach>
@@ -39,7 +40,7 @@
 //#define DISABLE_ATM_PUB_VAR
 
 //Logs.inc Config
-#define EMPTY_LOG_BUFFER	"My Log File\n"
+#define EMPTY_LOG_BUFFER    "My Log File\n"
 
 //Knife.inc Config
 //#define DISABLE_KNIFE_SOUND
@@ -62,15 +63,15 @@
 #include <SAM/VehicleEx>
 #include <SAM/Logs>
 #include <SAM/ATM>
-#include <SAM/scmd>				//Incompatible with ZCMD.inc !
-#include <SAM/FoxForeach>		//Incompatible with foreach.inc !
+#include <SAM/scmd>               //Incompatible with ZCMD.inc !
+#include <SAM/FoxForeach>         //Incompatible with foreach.inc !
 
 //Other includes created by Abyss Morgan
 
 #include <other/AntiSupremeTroll>
 #include <other/Interiors>
 
-#include <engine/EngineX>		//Incompatible with NGCM Core
+#include <engine/EngineX>         //Incompatible with NGCM Core
 #include <engine/Knife>
 #include <engine/Mines>
 #include <engine/Missile>
@@ -80,7 +81,7 @@
 #include <event/Lottery>
 #include <event/Santa>
 
-#include <security/ScriptSecure>	//or MultiScriptSecure
+#include <security/ScriptSecure>  //or MultiScriptSecure
 #include <security/ScriptChecker>
 
 //EOF
