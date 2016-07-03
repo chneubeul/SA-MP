@@ -25,6 +25,6 @@
 #include "SAM/Logs.inc"             //not published
 #include "SAM/ATM.inc"              //not published
 #include "SAM/scmd.inc"             //not published
-#include "SAM/FoxForeach.inc"       //not published
+#include "SAM/FoxForeach.inc"       //http://forum.sa-mp.com/showthread.php?t=611175
 
 //EOF
