@@ -31,7 +31,7 @@ public OnFilterScriptInit(){
 	printf("#1 Foreach for %d iteration in %d ms",c,b-a);
 	
 	for(new i = 0; i < 100; i++){
-		CallLocalFunction("OnPlayerDisconnect","d",i); //disconnect 100 fake players
+		CallLocalFunction("OnPlayerDisconnect","dd",i,0); //disconnect 100 fake players
 	}
 	
 	c = 0;
