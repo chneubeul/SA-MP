@@ -29,7 +29,7 @@
 #define _Map_Andreas_Ex
 
 #if defined _3D_Tryg
-	#error [ADM] Please include 3DTryg.inc before MapAndreasEx.inc
+	#error [ADM] Please include MapAndreasEx.inc before 3DTryg.inc
 #endif
 
 stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){

@@ -22,7 +22,7 @@ SAM Include:
 Use #define USE_OLD_PROTOTYPE_FUNCTION before include 3Dtryg to ignore this error. ^^
 
 [ADM] Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
-[ADM] Please include 3DTryg.inc before MapAndreasEx.inc
+[ADM] Please include MapAndreasEx.inc before 3DTryg.inc
 
 Engine Include:
 [ADM] Fatal error incompatible NOX
