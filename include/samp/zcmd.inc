@@ -48,7 +48,7 @@ public OnPlayerCommandText(playerid,cmdtext[]){
 	
 	static pos;
 	if((pos = strfind(cmdtext," ",false,1)) == -1){
-		pos = strlen(cmdtext);
+		if((pos = strlen(cmdtext)) > MAX_CMD_NAME) pos = MAX_CMD_NAME;
 		strmid(funcname[4],cmdtext,1,pos,MAX_CMD_NAME);
 		#if defined OnPlayerCommandPerformed
 			return OnPlayerCommandPerformed(playerid,cmdtext,CallLocalFunction(funcname,"is",playerid,"\1"));
@@ -56,6 +56,7 @@ public OnPlayerCommandText(playerid,cmdtext[]){
 			return CallLocalFunction(funcname,"is",playerid,"\1");
 		#endif
 	} else {
+		if(pos > MAX_CMD_NAME) pos = MAX_CMD_NAME;
 		strmid(funcname[4],cmdtext,1,pos,MAX_CMD_NAME);
 		while(cmdtext[pos] == ' ') pos++;
 		if(cmdtext[pos]){
