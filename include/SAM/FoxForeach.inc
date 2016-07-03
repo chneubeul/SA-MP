@@ -9,22 +9,38 @@
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.1                                                                                *
+ * File Version: 1.2                                                                                *
  *                                                                                                  *
  * Functions:                                                                                       *
- * FoxForeach(variable);                                                                            *
+ * FoxForeach(variable,tag); //Tags: Player, Bot, Character                                         *
+ *                                                                                                  *
+ * Player Functions:                                                                                *
  * CountFoxPlayer();                                                                                *
  * FoxForeachRandomPlayer();                                                                        *
  * bool:IsPlayerInFoxPool(playerid);                                                                *
+ *                                                                                                  *
+ * Bot Functions:                                                                                   *
+ * CountFoxBot();                                                                                   *
+ * FoxForeachRandomBot();                                                                           *
+ * bool:IsBotInFoxPool(playerid);                                                                   *
+ *                                                                                                  *
+ * Character Functions:                                                                             *
+ * CountFoxCharacter();                                                                             *
+ * FoxForeachRandomCharacter();                                                                     *
+ * bool:IsCharacterInFoxPool(playerid);                                                             *
  *                                                                                                  *
  * Extended functions:                                                                              *
  * foX(variable,beginning,end);                                                                     *
  * foreach(variable);                                                                               *
  *                                                                                                  *
  * Auto functions:                                                                                  *
+ * FoxForeachInit();                                                                                *
  * bool:FoxAddPlayer(playerid);                                                                     *
  * bool:FoxRemovePlayer(playerid);                                                                  *
- * FoxForeachInit();                                                                                *
+ * bool:FoxAddBot(playerid);                                                                        *
+ * bool:FoxRemoveBot(playerid);                                                                     *
+ * bool:FoxAddCharacter(playerid);                                                                  *
+ * bool:FoxRemoveCharacter(playerid);                                                               *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -33,8 +49,10 @@
 #endif
 #define _FoX_Foreach
 
-#define FoxForeach(%0)					for(new %0 = FoxPlayers[0], i_%0 = 0; i_%0 <= FoxUpperbound; i_%0++, %0 = FoxPlayers[i_%0])
-#define CountFoxPlayer()				(FoxUpperbound+1)
+#define FoxForeach(%0,%1)				for(new %0 = Fox%1[0], i_%0 = 0; i_%0 <= Fox%1Upp; i_%0++, %0 = Fox%1[i_%0])
+#define CountFoxPlayer()				(FoxPlayerUpp+1)
+#define CountFoxBot()					(FoxBotUpp+1)
+#define CountFoxCharacter()				(FoxCharacterUpp+1)
 
 #define foX(%1,%2,%3)					for(new %1 = %2; %1 <= %3; %1++)
 
@@ -42,12 +60,16 @@
 	#define foreach(%1)					for(new %1 = 0, p_%1 = GetPlayerPoolSize(); %1 <= p_%1; %1++)
 #endif
 
-new FoxPlayers[MAX_PLAYERS],
-	FoxUpperbound = -1;
+new FoxPlayer[MAX_PLAYERS],
+	FoxBot[MAX_PLAYERS],
+	FoxCharacter[MAX_PLAYERS],
+	FoxPlayerUpp = -1,
+	FoxBotUpp = -1,
+	FoxCharacterUpp = -1;
 
 stock bool:IsPlayerInFoxPool(playerid){
-	for(new i = 0; i <= FoxUpperbound; i++){
-		if(FoxPlayers[i] == playerid){
+	for(new i = 0; i <= FoxPlayerUpp; i++){
+		if(FoxPlayer[i] == playerid){
 			return true;
 		}
 	}
@@ -56,44 +78,133 @@ stock bool:IsPlayerInFoxPool(playerid){
 
 stock bool:FoxAddPlayer(playerid){
 	if(IsPlayerInFoxPool(playerid)) return false;
-	FoxUpperbound++;
-	FoxPlayers[FoxUpperbound] = playerid;
+	FoxPlayerUpp++;
+	FoxPlayer[FoxPlayerUpp] = playerid;
 	return true;
 }
 
 stock FoxForeachRandomPlayer(){
-	if(FoxUpperbound == -1) return 0;
-	new playerid = FoxPlayers[random(FoxUpperbound+1)];
+	if(FoxPlayerUpp == -1) return 0;
+	new playerid = FoxPlayer[random(FoxPlayerUpp+1)];
 	if(IsPlayerConnected(playerid)) return playerid;
 	return 0;
+}
+
+stock bool:FoxRemovePlayer(playerid){
+	if(!IsPlayerInFoxPool(playerid)) return false;
+	for(new i = 0; i <= FoxPlayerUpp; i++){
+		if(FoxPlayer[i] == playerid){
+			if(FoxPlayerUpp == 0){
+				FoxPlayer[i] = 0;
+			} else if(i == FoxPlayerUpp){
+				FoxPlayer[i] = 0;
+			} else {
+				FoxPlayer[i] = FoxPlayer[FoxPlayerUpp];
+				FoxPlayer[FoxPlayerUpp] = 0;
+			}
+			FoxPlayerUpp--;
+			break;
+		}
+	}
+	return true;
+}
+
+stock bool:IsBotInFoxPool(playerid){
+	for(new i = 0; i <= FoxBotUpp; i++){
+		if(FoxBot[i] == playerid){
+			return true;
+		}
+	}
+	return false;
+}
+
+stock bool:FoxAddBot(playerid){
+	if(IsBotInFoxPool(playerid)) return false;
+	FoxBotUpp++;
+	FoxBot[FoxBotUpp] = playerid;
+	return true;
+}
+
+stock FoxForeachRandomBot(){
+	if(FoxBotUpp == -1) return 0;
+	new playerid = FoxBot[random(FoxBotUpp+1)];
+	if(IsBotConnected(playerid)) return playerid;
+	return 0;
+}
+
+stock bool:FoxRemoveBot(playerid){
+	if(!IsBotInFoxPool(playerid)) return false;
+	for(new i = 0; i <= FoxBotUpp; i++){
+		if(FoxBot[i] == playerid){
+			if(FoxBotUpp == 0){
+				FoxBot[i] = 0;
+			} else if(i == FoxBotUpp){
+				FoxBot[i] = 0;
+			} else {
+				FoxBot[i] = FoxBot[FoxBotUpp];
+				FoxBot[FoxBotUpp] = 0;
+			}
+			FoxBotUpp--;
+			break;
+		}
+	}
+	return true;
+}
+
+stock bool:IsCharacterInFoxPool(playerid){
+	for(new i = 0; i <= FoxCharacterUpp; i++){
+		if(FoxCharacter[i] == playerid){
+			return true;
+		}
+	}
+	return false;
+}
+
+stock bool:FoxAddCharacter(playerid){
+	if(IsCharacterInFoxPool(playerid)) return false;
+	FoxCharacterUpp++;
+	FoxCharacter[FoxCharacterUpp] = playerid;
+	return true;
+}
+
+stock FoxForeachRandomCharacter(){
+	if(FoxCharacterUpp == -1) return 0;
+	new playerid = FoxCharacter[random(FoxCharacterUpp+1)];
+	if(IsCharacterConnected(playerid)) return playerid;
+	return 0;
+}
+
+stock bool:FoxRemoveCharacter(playerid){
+	if(!IsCharacterInFoxPool(playerid)) return false;
+	for(new i = 0; i <= FoxCharacterUpp; i++){
+		if(FoxCharacter[i] == playerid){
+			if(FoxCharacterUpp == 0){
+				FoxCharacter[i] = 0;
+			} else if(i == FoxCharacterUpp){
+				FoxCharacter[i] = 0;
+			} else {
+				FoxCharacter[i] = FoxCharacter[FoxCharacterUpp];
+				FoxCharacter[FoxCharacterUpp] = 0;
+			}
+			FoxCharacterUpp--;
+			break;
+		}
+	}
+	return true;
 }
 
 stock FoxForeachInit(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		if(IsPlayerConnected(i)){
-			FoxAddPlayer(i);
+			if(IsPlayerNPC(i)){
+				FoxAddBot(i);
+			} else {
+				FoxAddPlayer(i);
+			}
+			FoxAddCharacter(i);
 		}
 	}
 	return 1;
-}
-
-stock bool:FoxRemovePlayer(playerid){
-	if(!IsPlayerInFoxPool(playerid)) return false;
-	for(new i = 0; i <= FoxUpperbound; i++){
-		if(FoxPlayers[i] == playerid){
-			if(FoxUpperbound == 0){
-				FoxPlayers[i] = 0;
-			} else if(i == FoxUpperbound){
-				FoxPlayers[i] = 0;
-			} else {
-				FoxPlayers[i] = FoxPlayers[FoxUpperbound];
-				FoxPlayers[FoxUpperbound] = 0;
-			}
-			FoxUpperbound--;
-			break;
-		}
-	}
-	return true;
 }
 
 //Hook: OnFilterScriptInit
@@ -136,7 +247,12 @@ public OnGameModeInit(){
 
 //Hook: OnPlayerDisconnect
 public OnPlayerDisconnect(playerid,reason){
-	FoxRemovePlayer(playerid);
+	if(IsPlayerNPC(playerid)){
+		FoxRemoveBot(playerid);
+	} else {
+		FoxRemovePlayer(playerid);
+	}
+	FoxRemoveCharacter(playerid);
 	#if defined FoX_OnPlayerDisconnect
 		FoX_OnPlayerDisconnect(playerid,reason);
 	#endif
@@ -155,7 +271,12 @@ public OnPlayerDisconnect(playerid,reason){
 
 //Hook: OnPlayerConnect
 public OnPlayerConnect(playerid){
-	FoxAddPlayer(playerid);
+	if(IsPlayerNPC(playerid)){
+		FoxAddBot(playerid);
+	} else {
+		FoxAddPlayer(playerid);
+	}
+	FoxAddCharacter(playerid);
 	#if defined FoX_OnPlayerConnect
 		FoX_OnPlayerConnect(playerid);
 	#endif
