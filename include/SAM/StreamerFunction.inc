@@ -6,7 +6,7 @@
  *                                                                                                                                         *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
- * File Version: 2.3E                                                                                                                      *
+ * File Version: 2.3F                                                                                                                      *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
  * Plugins: Streamer                                                                                                                       *
@@ -234,11 +234,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.3E
+	#error [ADM] You need StreamerFunction.inc v2.3F
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.3E
-#elseif (Streamer_Spec_Version < 20305)
-	#error [ADM] Update you StreamerFunction.inc to v2.3E
+	#error [ADM] Update you StreamerFunction.inc to v2.3F
+#elseif (Streamer_Spec_Version < 20306)
+	#error [ADM] Update you StreamerFunction.inc to v2.3F
 #endif
 */
 
@@ -251,7 +251,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 					(20305) //a.b[c] 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20306) //a.b[c] 10000*a+100*b+c
 #define Valid_Streamer_Version 					(0x282001)
 
 #if !defined INVALID_STREAMER_ID
@@ -271,6 +271,8 @@
 #define INVALID_DYNAMIC_MAP_ICON_ID				INVALID_STREAMER_ID
 #define INVALID_DYNAMIC_3D_TEXT_LABEL_ID		INVALID_STREAMER_ID
 #define INVALID_DYNAMIC_AREA_ID					INVALID_STREAMER_ID
+
+#define INVALID_PICKUP_ID						-1
 
 #if !defined IsValidVehicle
 	native IsValidVehicle(vehicleid);
@@ -932,34 +934,6 @@ stock ResetDynamicObjectMaterialAll(objectid){
 	#endif
 	#define DestroyDynamicObject SF_DestroyDynamicObject
 
-	//Hook: DestroyObject
-	stock SF_DestroyObject(&objectid){
-		new dobj = DestroyObject(objectid);
-		objectid = INVALID_OBJECT_ID;
-		return dobj;
-	}
-
-	#if defined _ALS_DestroyObject
-		#undef DestroyObject
-	#else
-		#define _ALS_DestroyObject
-	#endif
-	#define DestroyObject SF_DestroyObject
-
-	//Hook: DestroyPlayerObject
-	stock SF_DestroyPlayerObject(playerid,&objectid){
-		new dobj = DestroyPlayerObject(playerid,objectid);
-		objectid = INVALID_OBJECT_ID;
-		return dobj;
-	}
-
-	#if defined _ALS_DestroyPlayerObject
-		#undef DestroyPlayerObject
-	#else
-		#define _ALS_DestroyPlayerObject
-	#endif
-	#define DestroyPlayerObject SF_DestroyPlayerObject
-
 	//Hook: DestroyDynamicPickup
 	stock SF_DestroyDynamicPickup(&pickupid){
 		new dobj = DestroyDynamicPickup(pickupid);
@@ -1059,6 +1033,77 @@ stock ResetDynamicObjectMaterialAll(objectid){
 		#define _LS_AttachDynamicObjectToObject
 	#endif
 	#define AttachDynamicObjectToObject SF_AttachDynamicObjectToObject
+	
+	
+	//Hook: DestroyObject
+	stock SF_DestroyObject(&objectid){
+		new dobj = DestroyObject(objectid);
+		objectid = INVALID_OBJECT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyObject
+		#undef DestroyObject
+	#else
+		#define _ALS_DestroyObject
+	#endif
+	#define DestroyObject SF_DestroyObject
+
+	//Hook: DestroyPlayerObject
+	stock SF_DestroyPlayerObject(playerid,&objectid){
+		new dobj = DestroyPlayerObject(playerid,objectid);
+		objectid = INVALID_OBJECT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyPlayerObject
+		#undef DestroyPlayerObject
+	#else
+		#define _ALS_DestroyPlayerObject
+	#endif
+	#define DestroyPlayerObject SF_DestroyPlayerObject
+	
+	//Hook: DestroyPickup
+	stock SF_DestroyPickup(&pickupid){
+		new dobj = DestroyPickup(pickupid);
+		pickupid = INVALID_PICKUP_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyPickup
+		#undef DestroyPickup
+	#else
+		#define _ALS_DestroyPickup
+	#endif
+	#define DestroyPickup SF_DestroyPickup
+	
+	//Hook: Delete3DTextLabel
+	stock SF_Delete3DTextLabel(&Text3D:id){
+		new dobj = Delete3DTextLabel(id);
+		id = INVALID_3DTEXT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_Delete3DTextLabel
+		#undef Delete3DTextLabel
+	#else
+		#define _ALS_Delete3DTextLabel
+	#endif
+	#define Delete3DTextLabel SF_Delete3DTextLabel
+	
+	//Hook: DeletePlayer3DTextLabel
+	stock SF_DeletePlayer3DTextLabel(playerid,&PlayerText3D:id){
+		new dobj = DeletePlayer3DTextLabel(playerid,id);
+		id = INVALID_3DTEXT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DeletePlayer3DTextLabel
+		#undef DeletePlayer3DTextLabel
+	#else
+		#define _ALS_DeletePlayer3DTextLabel
+	#endif
+	#define DeletePlayer3DTextLabel SF_DeletePlayer3DTextLabel
 
 #endif
 
