@@ -52,6 +52,7 @@
 #define INVALID_TEXT_DRAW						(0xFFFF)
 #define INVALID_GANG_ZONE						(-1)
 #define INVALID_3DTEXT_ID						(0xFFFF)
+#define INVALID_PICKUP_ID						(-1)
 
 // --------------------------------------------------
 // Natives
@@ -274,6 +275,7 @@ native ShowPlayerDialog(playerid, dialogid, style, caption[], info[], button1[],
 #define PLAYER_MARKERS_MODE_STREAMED	(2)
 
 // Weapons
+#define WEAPON_FIST						(0)
 #define WEAPON_BRASSKNUCKLE				(1)
 #define WEAPON_GOLFCLUB					(2)
 #define WEAPON_NITESTICK				(3)
@@ -292,6 +294,9 @@ native ShowPlayerDialog(playerid, dialogid, style, caption[], info[], button1[],
 #define WEAPON_GRENADE					(16)
 #define WEAPON_TEARGAS					(17)
 #define WEAPON_MOLTOV					(18)
+//Unknown								(19)
+//Unknown								(20)
+//Unknown								(21)
 #define WEAPON_COLT45					(22)
 #define WEAPON_SILENCED					(23)
 #define WEAPON_DEAGLE					(24)
@@ -314,36 +319,44 @@ native ShowPlayerDialog(playerid, dialogid, style, caption[], info[], button1[],
 #define WEAPON_SPRAYCAN					(41)
 #define WEAPON_FIREEXTINGUISHER			(42)
 #define WEAPON_CAMERA					(43)
+#define WEAPON_NIGHTGOGGLES				(44)
+#define WEAPON_THERMALGOGGLES 			(45)
 #define WEAPON_PARACHUTE				(46)
+#define WEAPON_FAKEPISTOL				(47)
+//Unknown								(48)
 #define WEAPON_VEHICLE					(49)
+#define WEAPON_HELICOPTERBLADES			(50)
+#define WEAPON_EXPLOSION				(51)
+//Unknown								(52)
 #define WEAPON_DROWN					(53)
 #define WEAPON_COLLISION				(54)
+#define WEAPON_SUICIDE					(255)
 
 // Keys
-#define KEY_ACTION				(1)
-#define KEY_CROUCH				(2)
-#define KEY_FIRE				(4)
-#define KEY_SPRINT				(8)
-#define KEY_SECONDARY_ATTACK	(16)
-#define KEY_JUMP				(32)
-#define KEY_LOOK_RIGHT			(64)
-#define KEY_HANDBRAKE			(128)
-#define KEY_LOOK_LEFT			(256)
-#define KEY_SUBMISSION			(512)
-#define KEY_LOOK_BEHIND			(512)
-#define KEY_WALK				(1024)
-#define KEY_ANALOG_UP			(2048)
-#define KEY_ANALOG_DOWN			(4096)
-#define KEY_ANALOG_LEFT			(8192)
-#define KEY_ANALOG_RIGHT		(16384)
-#define KEY_YES					(65536)
-#define KEY_NO					(131072)
-#define KEY_CTRL_BACK			(262144)
+#define KEY_ACTION						(1)
+#define KEY_CROUCH						(2)
+#define KEY_FIRE						(4)
+#define KEY_SPRINT						(8)
+#define KEY_SECONDARY_ATTACK			(16)
+#define KEY_JUMP						(32)
+#define KEY_LOOK_RIGHT					(64)
+#define KEY_HANDBRAKE					(128)
+#define KEY_LOOK_LEFT					(256)
+#define KEY_SUBMISSION					(512)
+#define KEY_LOOK_BEHIND					(512)
+#define KEY_WALK						(1024)
+#define KEY_ANALOG_UP					(2048)
+#define KEY_ANALOG_DOWN					(4096)
+#define KEY_ANALOG_LEFT					(8192)
+#define KEY_ANALOG_RIGHT				(16384)
+#define KEY_YES							(65536)
+#define KEY_NO							(131072)
+#define KEY_CTRL_BACK					(262144)
 
-#define KEY_UP					(-128)
-#define KEY_DOWN				(128)
-#define KEY_LEFT				(-128)
-#define KEY_RIGHT				(128)
+#define KEY_UP							(-128)
+#define KEY_DOWN						(128)
+#define KEY_LEFT						(-128)
+#define KEY_RIGHT						(128)
 
 // --------------------------------------------------
 // Forwards (Callback declarations)
@@ -403,23 +416,19 @@ forward OnIncomingConnection(playerid, ip_address[], port);
 forward OnTrailerUpdate(playerid, vehicleid);
 forward OnVehicleSirenStateChange(playerid, vehicleid, newstate);
 
-#define CLICK_SOURCE_SCOREBOARD		0
+#define CLICK_SOURCE_SCOREBOARD			0
 forward OnPlayerClickPlayer(playerid, clickedplayerid, source);
 
-#define EDIT_RESPONSE_CANCEL		0
-#define EDIT_RESPONSE_FINAL			1
-#define EDIT_RESPONSE_UPDATE		2
+#define EDIT_RESPONSE_CANCEL			0
+#define EDIT_RESPONSE_FINAL				1
+#define EDIT_RESPONSE_UPDATE			2
 
-forward OnPlayerEditObject( playerid, playerobject, objectid, response, 
-Float:fX, Float:fY, Float:fZ, Float:fRotX, Float:fRotY, Float:fRotZ );
+forward OnPlayerEditObject(playerid, playerobject, objectid, response, Float:fX, Float:fY, Float:fZ, Float:fRotX, Float:fRotY, Float:fRotZ);
 
-forward OnPlayerEditAttachedObject( playerid, response, index, modelid, boneid,
-Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ,
-Float:fRotX, Float:fRotY, Float:fRotZ,
-Float:fScaleX, Float:fScaleY, Float:fScaleZ );
+forward OnPlayerEditAttachedObject(playerid, response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ);
 
-#define SELECT_OBJECT_GLOBAL_OBJECT	1
-#define SELECT_OBJECT_PLAYER_OBJECT 2
+#define SELECT_OBJECT_GLOBAL_OBJECT		1
+#define SELECT_OBJECT_PLAYER_OBJECT		2
 
 forward OnPlayerSelectObject(playerid, type, objectid, modelid, Float:fX, Float:fY, Float:fZ);
 
