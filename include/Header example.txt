@@ -1,3 +1,7 @@
+/**************************
+ * Include Header Example *
+ **************************/
+
 //SA-MP includes
 #include <a_samp>
 #include <a_http>
@@ -33,6 +37,9 @@
 
 //3DTryg.inc Config
 //#define USE_OLD_PROTOTYPE_FUNCTION
+
+//Streamerfunction.inc
+#define DISABLE_STREAMER_SPEC_CHECK	//Turn off check streamer version
 
 //ADM.inc Config
 //#define DISABLE_ATM_FUNCTION
