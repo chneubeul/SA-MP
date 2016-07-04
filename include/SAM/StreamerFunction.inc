@@ -1183,12 +1183,18 @@ stock SF_DeletePlayer3DTextLabel(playerid,&PlayerText3D:id){
  *                                                                                                  *
  ****************************************************************************************************/
 
-forward OnPlayerEnterAntiArea(playerid,areaid);
-forward OnPlayerLeaveAntiArea(playerid,areaid);
+#if defined OnPlayerEnterAntiArea
+	forward OnPlayerEnterAntiArea(playerid,areaid);
+#endif
+#if defined OnPlayerLeaveAntiArea
+	forward OnPlayerLeaveAntiArea(playerid,areaid);
+#endif
 
 //Hook: OnPlayerEnterDynamicArea
 public OnPlayerEnterDynamicArea(playerid,areaid){
-	CallLocalFunction("OnPlayerLeaveAntiArea","dd",playerid,areaid);
+	#if defined OnPlayerLeaveAntiArea
+		CallLocalFunction("OnPlayerLeaveAntiArea","dd",playerid,areaid);
+	#endif
 	#if defined SSpec_OnPlayerEnterDynamicArea
 		SSpec_OnPlayerEnterDynamicArea(playerid,areaid);
 	#endif
@@ -1207,7 +1213,9 @@ public OnPlayerEnterDynamicArea(playerid,areaid){
 
 //Hook: OnPlayerLeaveDynamicArea
 public OnPlayerLeaveDynamicArea(playerid,areaid){
-	CallLocalFunction("OnPlayerEnterAntiArea","dd",playerid,areaid);
+	#if defined OnPlayerEnterAntiArea
+		CallLocalFunction("OnPlayerEnterAntiArea","dd",playerid,areaid);
+	#endif
 	#if defined SSpec_OnPlayerLeaveDynamicArea
 		SSpec_OnPlayerLeaveDynamicArea(playerid,areaid);
 	#endif

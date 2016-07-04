@@ -38,7 +38,7 @@
 //3DTryg.inc Config
 //#define USE_OLD_PROTOTYPE_FUNCTION
 
-//Streamerfunction.inc
+//StreamerFunction.inc
 #define DISABLE_STREAMER_SPEC_CHECK	//Turn off check streamer version
 
 //ADM.inc Config
