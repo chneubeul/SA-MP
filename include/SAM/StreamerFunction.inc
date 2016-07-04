@@ -1193,7 +1193,7 @@ stock SF_DeletePlayer3DTextLabel(playerid,&PlayerText3D:id){
 //Hook: OnPlayerEnterDynamicArea
 public OnPlayerEnterDynamicArea(playerid,areaid){
 	#if defined OnPlayerLeaveAntiArea
-		CallLocalFunction("OnPlayerLeaveAntiArea","dd",playerid,areaid);
+		OnPlayerLeaveAntiArea(playerid,areaid);
 	#endif
 	#if defined SSpec_OnPlayerEnterDynamicArea
 		SSpec_OnPlayerEnterDynamicArea(playerid,areaid);
@@ -1214,7 +1214,7 @@ public OnPlayerEnterDynamicArea(playerid,areaid){
 //Hook: OnPlayerLeaveDynamicArea
 public OnPlayerLeaveDynamicArea(playerid,areaid){
 	#if defined OnPlayerEnterAntiArea
-		CallLocalFunction("OnPlayerEnterAntiArea","dd",playerid,areaid);
+		OnPlayerEnterAntiArea(playerid,areaid);
 	#endif
 	#if defined SSpec_OnPlayerLeaveDynamicArea
 		SSpec_OnPlayerLeaveDynamicArea(playerid,areaid);
