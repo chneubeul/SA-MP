@@ -332,6 +332,9 @@ native ShowPlayerDialog(playerid, dialogid, style, caption[], info[], button1[],
 #define WEAPON_COLLISION				(54)
 #define WEAPON_SUICIDE					(255)
 
+#define ICON_CONNECT					(200)
+#define ICON_DISCONNECT					(201)
+
 // Keys
 #define KEY_ACTION						(1)
 #define KEY_CROUCH						(2)
