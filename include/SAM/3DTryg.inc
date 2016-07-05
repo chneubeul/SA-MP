@@ -6,10 +6,10 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * Plugins: MapAndreas                                                                                                            *
+ * Plugins: MapAndreas, ColAndreas                                                                                                *
  * Modules: MapAndreasEx                                                                                                          *
  *                                                                                                                                *
- * File Version: 2.5C                                                                                                             *
+ * File Version: 2.6                                                                                                              *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
@@ -33,10 +33,10 @@
  * CompRotation(rotation,&crotation=0); //CompressRotation                                                                        *
  * Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0); //CompressRotationFloat                                          *
  * GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty);                                                  *
+ * GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                       *
  * Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius);                                                      *
  * Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius);                                                    *
  * GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                    *
- * GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                       *
  * GetRotationFor2Point2D(Float:x,Float:y,Float:tx,Float:ty,&Float:rz);                                                           *
  * GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                                *
  * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);           *
@@ -68,10 +68,21 @@
  * bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);   *
  * bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);        *
  * bool:IsProbable(chance);                                                                                                       *
- * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
- * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
  * Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
  * Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
+ *                                                                                                                                *
+ * MapAndreas Functions:                                                                                                          *
+ * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
+ * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
+ *                                                                                                                                *
+ * ColAndreas Functions:                                                                                                          *
+ * MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z);              *
+ * GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                    *
+ * Float:GetPointInFrontOfPlayerCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                   *
+ * Float:GetPointInFrontOfCamera2DCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                 *
+ * GetPointInFrontOfCamera3DCol(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                 *
+ * Float:GetPointInFrontOfVehicle2DCol(vehicleid,&Float:tx,&Float:ty,Float:radius);                                               *
+ * GetPointInFrontOfVehicle3DCol(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);               *
  *                                                                                                                                *
  * Deprecated Functions:                                                                                                          *
  * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                          *
@@ -89,11 +100,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.6
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.5C
-#elseif (Tryg3D_Version < 20503)
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.6
+#elseif (Tryg3D_Version < 20601)
+	#error [ADM] Update you 3DTryg.inc to v2.6
 #endif
 */
 
@@ -102,7 +113,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20503) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version									(20601) //a.b[c] 10000*a+100*b+c
 
 #if defined _Map_Andreas_Ex
 	#define _3DTryg_MapAndreasFindZ						MapAndreasFindZ
@@ -207,7 +218,7 @@ stock Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius)
 	new Float:x,Float:y,Float:rz;
 	GetPlayerCameraPos(playerid,x,y,rz);
 	GetPlayerCameraZAngle(playerid,rz);
-	GetPointInFront2D(tx,ty,rz,radius,x,y);
+	GetPointInFront2D(x,y,rz,radius,tx,ty);
 	return rz;
 }
 
@@ -405,6 +416,7 @@ stock bool:IsProbable(chance){
 	return false;
 }
 
+//MapAndreas Functions
 #if defined MapAndreas_FindZ_For2DCoord
 	stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry){
 		new Float:tpx1,Float:tpy1,Float:tpz1,
@@ -422,9 +434,7 @@ stock bool:IsProbable(chance){
 		_3DTryg_MapAndreasFindZ(tpx2,tpy2,tpz2);
 		GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,ry,tmp);
 	}
-#endif
 
-#if defined MapAndreas_FindZ_For2DCoord
 	stock GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance){
 		new Float:tmpz;
 		_3DTryg_MapAndreasFindZ(x,y,tmpz);
@@ -462,6 +472,73 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	SetPlayerFacingAngle(playerid,rz);
 	return rz;
 }
+
+//ColAndreas 3DTryg
+#if defined COLANDREAS
+	
+	stock MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
+		CA_RayCastLine(StartX,StartY,StartZ,EndX,EndY,EndZ,x,y,z);
+		if(x == 0.0) x = EndX;
+		if(y == 0.0) y = EndY;
+		if(z == 0.0) z = EndZ;
+	}
+
+	//GetPointInFront3D (ColAndreas)
+	stock GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+		tx = x + (radius * floatsin(rx+90.0,degrees) * floatcos(rz+90.0,degrees));
+		ty = y + (radius * floatsin(rx+90.0,degrees) * floatsin(rz+90.0,degrees));
+		tz = z + (radius * floatcos(-rx+90.0,degrees));
+		MovePointCol(x,y,z,tx,ty,tz,tx,ty,tz);
+	}
+	
+	//GetPointInFrontOfPlayer (ColAndreas)
+	stock Float:GetPointInFrontOfPlayerCol(playerid,&Float:tx,&Float:ty,Float:radius){
+		new Float:rz,Float:z;
+		GetPlayerPos(playerid,tx,ty,z);
+		GetPlayerFacingAngle(playerid,rz);
+		if(IsPlayerInAnyVehicle(playerid)){
+			GetVehicleZAngle(GetPlayerVehicleID(playerid),rz);
+		}
+		GetPointInFront3DCol(tx,ty,z,0.0,rz,radius,tx,ty,z);
+		return rz;
+	}
+
+	//GetPointInFrontOfCamera2D (ColAndreas)
+	stock Float:GetPointInFrontOfCamera2DCol(playerid,&Float:tx,&Float:ty,Float:radius){
+		new Float:x,Float:y,Float:z,Float:rz;
+		GetPlayerCameraPos(playerid,x,y,z);
+		GetPlayerCameraZAngle(playerid,rz);
+		GetPointInFront3DCol(x,y,z,0.0,rz,radius,tx,ty,z);
+		return rz;
+	}
+
+	//GetPointInFrontOfCamera3D (ColAndreas)
+	stock GetPointInFrontOfCamera3DCol(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
+		new Float:x,Float:y,Float:z;
+		GetPlayerCameraPos(playerid,x,y,z);
+		GetPlayerCameraRotation(playerid,rx,rz);
+		GetPointInFront3DCol(x,y,z,rx,rz,radius,tx,ty,tz);
+	}
+	
+	
+	//GetPointInFrontOfVehicle2D (ColAndreas)
+	stock Float:GetPointInFrontOfVehicle2DCol(vehicleid,&Float:tx,&Float:ty,Float:radius){
+		new Float:rx,Float:ry,Float:rz,Float:x,Float:y,Float:z;
+		GetVehiclePos(vehicleid,x,y,z);
+		GetVehicleRotation(vehicleid,rx,ry,rz);
+		GetPointInFront3DCol(x,y,z,0.0,rz,radius,tx,ty,z);
+		return rz;
+	}
+
+	//GetPointInFrontOfVehicle3D (ColAndreas)
+	stock GetPointInFrontOfVehicle3DCol(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
+		new Float:ry,Float:x,Float:y,Float:z;
+		GetVehiclePos(vehicleid,x,y,z);
+		GetVehicleRotation(vehicleid,rx,ry,rz);
+		GetPointInFront3DCol(x,y,z,rx,rz,radius,tx,ty,tz);
+	}
+
+#endif
 
 #define GetXYInFrontOfPlayer							GetPointInFrontOfPlayer
 #define GetPointInFront									GetPointInFront3D
