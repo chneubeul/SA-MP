@@ -68,10 +68,6 @@
 	#error [ADM] Unknown Streamer Version
 #endif
 
-#if !defined MapAndreas_FindZ_For2DCoord
-	#error [ADM] Unknown MapAndreas Version
-#endif
-
 #if !defined COLANDREAS
 	#error [ADM] Unknown ColAndreas Version
 #endif
