@@ -92,11 +92,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.6
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.5C
-#elseif (Tryg3D_Version < 20503)
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.6
+#elseif (Tryg3D_Version < 20601)
+	#error [ADM] Update you 3DTryg.inc to v2.6
 #endif
 
 #if defined _veh_missile_launcher
