@@ -84,13 +84,16 @@
  * Float:GetPointInFrontOfVehicle2DCol(vehicleid,&Float:tx,&Float:ty,Float:radius);                                               *
  * GetPointInFrontOfVehicle3DCol(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);               *
  *                                                                                                                                *
- * Deprecated Functions:                                                                                                          *
+ * Functions extra names:                                                                                                         *
  * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                          *
  * GetPointInFront            -> GetPointInFront3D                                                                                *
  * GetPointInFrontOfCamera    -> GetPointInFrontOfCamera3D                                                                        *
  * GetDistanceBetweenPoints   -> GetDistanceBetweenPoints3D                                                                       *
  * CompressRotation           -> CompRotation                                                                                     *
  * CompressRotationFloat      -> CompRotationFloat                                                                                *
+ * GetXYInFrontOfPlayerCol    -> GetPointInFrontOfPlayerCol                                                                       *
+ * GetPointInFrontCol         -> GetPointInFront3DCol                                                                             *
+ * GetPointInFrontOfCameraCol -> GetPointInFrontOfCamera3DCol                                                                     *
  *                                                                                                                                *
  * Old prototype:                                                                                                                 *
  * GetAngle                   -> GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D                             *
@@ -416,8 +419,24 @@ stock bool:IsProbable(chance){
 	return false;
 }
 
+stock Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
+	new Float:mx, Float:my;
+	GetPlayerPos(playerid,mx,my,rz);
+	GetRotationFor2Point2D(mx,my,x,y,rz);
+	return rz;
+}
+
+stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
+	new Float:mx, Float:my;
+	GetPlayerPos(playerid,mx,my,rz);
+	GetRotationFor2Point2D(mx,my,x,y,rz);
+	SetPlayerFacingAngle(playerid,rz);
+	return rz;
+}
+
 //MapAndreas Functions
 #if defined MapAndreas_FindZ_For2DCoord
+
 	stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry){
 		new Float:tpx1,Float:tpy1,Float:tpz1,
 			Float:tpx2,Float:tpy2,Float:tpz2,
@@ -456,24 +475,10 @@ stock bool:IsProbable(chance){
 			_3DTryg_MapAndreasFindZ(tx,ty,tz);
 		}
 	}
+	
 #endif
 
-stock Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
-	new Float:mx, Float:my;
-	GetPlayerPos(playerid,mx,my,rz);
-	GetRotationFor2Point2D(mx,my,x,y,rz);
-	return rz;
-}
-
-stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
-	new Float:mx, Float:my;
-	GetPlayerPos(playerid,mx,my,rz);
-	GetRotationFor2Point2D(mx,my,x,y,rz);
-	SetPlayerFacingAngle(playerid,rz);
-	return rz;
-}
-
-//ColAndreas 3DTryg
+//ColAndreas Functions
 #if defined COLANDREAS
 	
 	stock MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
@@ -537,6 +542,10 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 		GetVehicleRotation(vehicleid,rx,ry,rz);
 		GetPointInFront3DCol(x,y,z,rx,rz,radius,tx,ty,tz);
 	}
+	
+	#define GetXYInFrontOfPlayerCol						GetPointInFrontOfPlayerCol
+	#define GetPointInFrontCol							GetPointInFront3DCol
+	#define GetPointInFrontOfCameraCol					GetPointInFrontOfCamera3DCol
 
 #endif
 
@@ -546,7 +555,7 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 #define GetDistanceBetweenPoints						GetDistanceBetweenPoints3D
 #define CompressRotation								CompRotation
 #define CompressRotationFloat							CompRotationFloat
-	
+
 #if !defined USE_OLD_PROTOTYPE_FUNCTION
 	
 	#if defined GetAngle
