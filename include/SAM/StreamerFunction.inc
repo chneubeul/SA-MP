@@ -6,7 +6,7 @@
  *                                                                                                                                         *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
- * File Version: 2.4                                                                                                                       *
+ * File Version: 2.5                                                                                                                       *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
  * Plugins: Streamer                                                                                                                       *
@@ -223,6 +223,13 @@
  * ForDynamic3DTextLabels(variable);                                                                                                       *
  * ForDynamicAreas(variable);                                                                                                              *
  *                                                                                                                                         *
+ * Nearest Item Functions:                                                                                                                 *
+ * GetNearestVisibleItem(playerid,type);                                                                                                   *
+ * GetNearestVisibleObject(playerid);                                                                                                      *
+ * GetNearestVisiblePickup(playerid);                                                                                                      *
+ * GetNearestVisibleMapIcon(playerid);                                                                                                     *
+ * GetNearestVisible3DText(playerid);                                                                                                      *
+ *                                                                                                                                         *
  * Extended Functions:                                                                                                                     *
  * bool:IsValidStreamer(version);                                                                                                          *
  * GetStreamerVersion();                                                                                                                   *
@@ -250,11 +257,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.4
+	#error [ADM] You need StreamerFunction.inc v2.5
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.4
-#elseif (Streamer_Spec_Version < 20401)
-	#error [ADM] Update you StreamerFunction.inc to v2.4
+	#error [ADM] Update you StreamerFunction.inc to v2.5
+#elseif (Streamer_Spec_Version < 20501)
+	#error [ADM] Update you StreamerFunction.inc to v2.5
 #endif
 */
 
@@ -267,7 +274,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 					(20401) //a.b[c] 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20501) //a.b[c] 10000*a+100*b+c
 #define Valid_Streamer_Version 					(0x282001)
 
 #if !defined INVALID_STREAMER_ID
@@ -285,7 +292,7 @@
 #define INVALID_DYNAMIC_CP_ID					INVALID_STREAMER_ID
 #define INVALID_DYNAMIC_RACE_CP_ID				INVALID_STREAMER_ID
 #define INVALID_DYNAMIC_MAP_ICON_ID				INVALID_STREAMER_ID
-#define INVALID_DYNAMIC_3D_TEXT_LABEL_ID		INVALID_STREAMER_ID
+#define INVALID_DYNAMIC_3D_TEXT_ID				Text3D:INVALID_STREAMER_ID
 #define INVALID_DYNAMIC_AREA_ID					INVALID_STREAMER_ID
 
 #if !defined INVALID_PICKUP_ID
@@ -302,6 +309,8 @@
 #define MOVE_OBJECT_STATE_STOP					(0)
 #define MOVE_OBJECT_STATE_MOVED					(1)
 #define MOVE_OBJECT_STATE_INVALID				(2)
+
+#define BULLET_HIT_TYPE_DYNAMIC_OBJECT			(15)
 
 #define GetStreamerVersion()					(Streamer_IncludeFileVersion)
 #define GetValidStreamerVersion()				(Valid_Streamer_Version)
@@ -442,6 +451,12 @@
 #define ForDynamicMapIcons(%1)					for(new %1 = 1, p_%1 = GetDynamicMapIconPoolSize(); %1 <= p_%1; %1++)
 #define ForDynamic3DTextLabels(%1)				for(new %1 = 1, p_%1 = GetDynamic3DTextPoolSize(); %1 <= p_%1; %1++)
 #define ForDynamicAreas(%1)						for(new %1 = 1, p_%1 = GetDynamicAreaPoolSize(); %1 <= p_%1; %1++)
+
+//GetNearestVisibleItem
+#define GetNearestVisibleObject(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_OBJECT)
+#define GetNearestVisiblePickup(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_PICKUP)
+#define GetNearestVisibleMapIcon(%0)			GetNearestVisibleItem((%0),STREAMER_TYPE_MAP_ICON)
+#define GetNearestVisible3DText(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_3D_TEXT_LABEL)
 
 stock bool:IsValidStreamer(version){
 	if(GetStreamerVersion() < version) return false;
@@ -984,6 +999,33 @@ stock CheckStreamerVersion(){
 	}
 }
 
+stock GetNearestVisibleItem(playerid,type){
+	new Float:x, Float:y, Float:z, max_element, tmp_item, itemid = INVALID_STREAMER_ID,
+		Float:min_radius = 20000.0, Float:distance, idx_max = 0, idx = 0;
+		
+	switch(type){
+		case STREAMER_TYPE_CP, STREAMER_TYPE_RACE_CP, STREAMER_TYPE_AREA: {
+			return INVALID_STREAMER_ID;
+		}
+	}
+	
+	GetPlayerPos(playerid,x,y,z);
+	idx_max = Streamer_CountVisibleItems(playerid,type,1);
+	max_element = Streamer_GetVisibleItems(type,playerid);
+	while(idx < max_element && idx_max > 0){
+		if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
+			idx_max--;
+			Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+			if(distance < min_radius){
+				itemid = tmp_item;
+				min_radius = distance;
+			}
+		}
+		idx++;
+	}
+	return itemid;
+}
+
 #define GetDynamicCuboidPos 					GetDynamicCubePos
 #define SetDynamicCuboidPos						SetDynamicCubePos
 
@@ -1230,6 +1272,39 @@ public OnPlayerLeaveDynamicArea(playerid,areaid){
 #define OnPlayerLeaveDynamicArea SSpec_OnPlayerLeaveDynamicArea
 #if defined SSpec_OnPlayerLeaveDynamicArea
 	forward SSpec_OnPlayerLeaveDynamicArea(playerid,areaid);
+#endif
+
+/****************************************************************************************************
+ *                                                                                                  *
+ * OnPlayerWeaponShot for Streamer Object                                                           *
+ *                                                                                                  *
+ ****************************************************************************************************/
+
+#if defined ENABLE_BULLET_DYNAMIC_OBJECT
+
+	//Hook: OnPlayerShootDynamicObject
+	public OnPlayerShootDynamicObject(playerid,weaponid,objectid,Float:x,Float:y,Float:z){
+		new Float:ox, Float:oy, Float:oz, Float:tx, Float:ty, Float:tz;
+		GetPlayerLastShotVectors(playerid,ox,oy,oz,tx,ty,tz);
+		#if defined OnPlayerWeaponShot
+			OnPlayerWeaponShot(playerid,weaponid,BULLET_HIT_TYPE_DYNAMIC_OBJECT,0,tx,ty,tz);
+		#endif
+		#if defined SSpec_OnShootDynamicObject
+			SSpec_OnShootDynamicObject(playerid,weaponid,objectid,x,y,z);
+		#endif
+		return 1;
+	}
+
+	#if defined _ALS_OnPlayerShootDynamicObject
+		#undef OnPlayerShootDynamicObject
+	#else
+		#define _ALS_OnPlayerShootDynamicObject
+	#endif
+	#define OnPlayerShootDynamicObject SSpec_OnShootDynamicObject
+	#if defined SSpec_OnShootDynamicObject
+		forward SSpec_OnShootDynamicObject(playerid,weaponid,objectid,Float:x,Float:y,Float:z);
+	#endif
+	
 #endif
 
 /****************************************************************************************************

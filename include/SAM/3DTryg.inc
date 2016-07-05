@@ -237,7 +237,7 @@ stock GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,
 	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 	if(radius > 0.0){
 		CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
-		CompRotationFloat((atan2(ty-y,tx-x)-90),rz);
+		CompRotationFloat((atan2(ty-y,tx-x)-90.0),rz);
 	} else {
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
 			print("[ADM] Warring: Get the rotation wrong, identical points.");
