@@ -1,6 +1,6 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- *                                                    Vehicle Missile Launcher                                                    *
+ *                                         Vehicle Missile Launcher (MapAndreas Version)                                          *
  *                                                                                                                                *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
