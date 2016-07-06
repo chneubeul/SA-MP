@@ -1,1 +1,7 @@
-Try this: https://github.com/YashasSamaga/I-ZCMD/blob/master/izcmd.inc
+Try this:
+
+ZCMD 0.3.1:
+http://forum.sa-mp.com/showthread.php?t=91354
+
+IZCMD:
+http://forum.sa-mp.com/showthread.php?t=576114
