@@ -9,7 +9,8 @@
  * Plugins: MapAndreas                                                                              *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.2                                                                                *
+ * File Version: 1.2.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
  * MapAndreas Version: 1.2.1                                                                        *
  *                                                                                                  *
  * Functions:                                                                                       *

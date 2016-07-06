@@ -9,7 +9,8 @@
  * Plugins: None                                                                                                                  *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 1.0D                                                                                                             *
+ * File Version: 1.0.4                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                           *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CheckAllScript(playerid = INVALID_PLAYER_ID, errorlevel = 0);                                                                  *
@@ -82,11 +83,11 @@
 /*
 //Check Version ScriptChecker.inc
 #if !defined _Script_Checker
-	#error [ADM] You need ScriptChecker.inc v1.0D
+	#error [ADM] You need ScriptChecker.inc v1.0.4
 #elseif !defined Script_Checker_Version
-	#error [ADM] Update you ScriptChecker.inc to v1.0D
+	#error [ADM] Update you ScriptChecker.inc to v1.0.4
 #elseif (Script_Checker_Version < 10004)
-	#error [ADM] Update you ScriptChecker.inc to v1.0D
+	#error [ADM] Update you ScriptChecker.inc to v1.0.4
 #endif
 */
 
@@ -95,7 +96,7 @@
 #endif
 #define _Script_Checker
 
-#define Script_Checker_Version 					(10004) //a.b[c] 10000*a+100*b+c
+#define Script_Checker_Version 			(10004) //a.b.c 10000*a+100*b+c
 
 #if !defined SCRIPT_NAME
 	#error [ADM] Please #define SCRIPT_NAME <script name> before including ScriptChecker.inc
@@ -123,7 +124,7 @@ stock CheckAllScript(playerid = INVALID_PLAYER_ID,errorlevel = 0){
 }
 
 stock SC_GetSAMIncludeVersion(value,name[],maxdest = sizeof(name)){
-	format(name,maxdest,"%d.%d%c",(value / 10000),((value % 10000) / 100),(((value % 10000) % 100) + 0x40));
+	format(name,maxdest,"%d.%d.%d",(value / 10000),((value % 10000) / 100),((value % 10000) % 100));
 }
 
 stock SC_GetStreamerVersionName(name[], value, maxdest = sizeof name){

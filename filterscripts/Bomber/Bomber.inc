@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Bomber NGC v1.0 made by Abyss Morgan                                                             *
+ * Bomber NGC v1.0.1 made by Abyss Morgan                                                           *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts/Bomber                  *
  *                                                                                                  *
@@ -52,8 +52,11 @@ forward NGCBomberGoTo(mobid,Float:x,Float:y,Float:z,Float:speed);
 forward OnBomberActive(mobid,Float:x,Float:y,Float:z);
 forward OnPackageLanded(mobid,objectid);
 
+new bool:CRC_Bomber = true;
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_Bomber){ CRC_Bomber = false; } else return 1; //Init Engine
 	Bomber_OnFilterScriptInit();
 	#if defined BMB_OnFilterScriptInit
 		BMB_OnFilterScriptInit();
@@ -92,6 +95,7 @@ public OnFilterScriptExit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_Bomber){ CRC_Bomber = false; } else return 1; //Init Engine
 	Bomber_OnFilterScriptInit();
 	#if defined BMB_OnGameModeInit
 		BMB_OnGameModeInit();

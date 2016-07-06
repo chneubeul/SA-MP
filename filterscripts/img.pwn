@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * Easy IMG Creator v1.1 made by Abyss Morgan                                                       *
+ * Easy IMG Creator v1.1.1 made by Abyss Morgan                                                     *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts                         *
  *                                                                                                  *
@@ -22,11 +22,11 @@ https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM/IMG%20Generator
 
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error [ADM] You need BINLDR.inc v2.2
+	#error [ADM] You need BINLDR.inc v2.2.1
 #elseif !defined Bin_Loader_Version
-	#error [ADM] Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2.1
 #elseif (Bin_Loader_Version < 20201)
-	#error [ADM] Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2.1
 #endif
 
 public OnFilterScriptInit(){

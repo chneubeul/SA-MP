@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- * FullServer Objects Loader v3.2                                                                   *
+ * FullServer Objects Loader v3.2.1                                                                 *
  * Authored by eider                                                                                *
  * Update by Abyss Morgan                                                                           *
  *                                                                                                  *
@@ -38,47 +38,47 @@ CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Floa
 
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.3D
+	#error [ADM] You need StreamerFunction.inc v2.3.4
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.3D
+	#error [ADM] Update you StreamerFunction.inc to v2.3.4
 #elseif (Streamer_Spec_Version < 20304)
-	#error [ADM] Update you StreamerFunction.inc to v2.3D
+	#error [ADM] Update you StreamerFunction.inc to v2.3.4
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.5.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5.3
 #elseif (Tryg3D_Version < 20503)
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.5.3
 #endif
 
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error [ADM] You need ADM.inc v2.2
+	#error [ADM] You need ADM.inc v2.2.1
 #elseif !defined ADM_Encryption_Version
-	#error [ADM] Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2.1
 #elseif (ADM_Encryption_Version < 20201)
-	#error [ADM] Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2.1
 #endif
 
 //Check Version DoT.inc
 #if !defined _DoT_Loader
-	#error [ADM] You need DoT.inc v1.3B
+	#error [ADM] You need DoT.inc v1.3.2
 #elseif !defined DoT_Loader_Version
-	#error [ADM] Update you DoT.inc to v1.3B
-#elseif (DoT_Loader_Version < 10301)
-	#error [ADM] Update you DoT.inc to v1.3B
+	#error [ADM] Update you DoT.inc to v1.3.2
+#elseif (DoT_Loader_Version < 10302)
+	#error [ADM] Update you DoT.inc to v1.3.2
 #endif
 
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error [ADM] You need BINLDR.inc v2.2
+	#error [ADM] You need BINLDR.inc v2.2.1
 #elseif !defined Bin_Loader_Version
-	#error [ADM] Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2.1
 #elseif (Bin_Loader_Version < 20201)
-	#error [ADM] Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2.1
 #endif
 
 new pliki[][32] = {

@@ -9,7 +9,11 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg, ATM                                                                                                           *
  *                                                                                                                                *
- * File Version: 1.6C                                                                                                             *
+ * File Version: 1.6.3                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                           *
+ * Streamer Version: 2.8.2                                                                                                        *
+ * 3DTryg Version: 2.6.2                                                                                                          *
+ * ATM Version: 1.4.2                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, *
@@ -27,11 +31,11 @@
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v1.6C
+	#error [ADM] You need Missile.inc v1.6.3
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v1.6C
+	#error [ADM] Update you Missile.inc to v1.6.3
 #elseif (Missile_Version < 10603)
-	#error [ADM] Update you Missile.inc to v1.6C
+	#error [ADM] Update you Missile.inc to v1.6.3
 #endif
 */
 
@@ -41,20 +45,20 @@
 
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error [ADM] You need ATM.inc v1.3D
+	#error [ADM] You need ATM.inc v1.4.2
 #elseif !defined ATM_Version
-	#error [ADM] Update you ATM.inc to v1.3D
-#elseif (ATM_Version < 10304)
-	#error [ADM] Update you ATM.inc to v1.3D
+	#error [ADM] Update you ATM.inc to v1.4.2
+#elseif (ATM_Version < 10402)
+	#error [ADM] Update you ATM.inc to v1.4.2
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.6.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.5C
-#elseif (Tryg3D_Version < 20503)
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
+#elseif (Tryg3D_Version < 20602)
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
 #endif
 
 #if defined _missile_launcher

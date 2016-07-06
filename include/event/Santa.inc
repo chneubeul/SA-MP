@@ -7,9 +7,15 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
  *                                                                                                  *
  * Plugins: Streamer, MapAndreas                                                                    *
- * Modules: StreamerFunction, 3DTryg, MapAndreasEx                                                  *
+ * Modules: 3DTryg, StreamerFunction, MapAndreasEx                                                  *
  *                                                                                                  *
- * File Version: 1.4                                                                                *
+ * File Version: 1.4.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
+ * Streamer Version: 2.8.2                                                                          *
+ * MapAndreas Version: 1.2.1                                                                        *
+ * 3DTryg Version: 2.6.2                                                                            *
+ * StreamerFunction Version: 2.5.1                                                                  *
+ * MapAndreasEx Version: 1.2.1                                                                      *
  *                                                                                                  *
  * Callbacks:                                                                                       *
  * OnSantaPickupReward(playerid);                                                                   *
@@ -26,20 +32,20 @@
 
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.3D
+	#error [ADM] You need StreamerFunction.inc v2.5.1
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.3D
-#elseif (Streamer_Spec_Version < 20304)
-	#error [ADM] Update you StreamerFunction.inc to v2.3D
+	#error [ADM] Update you StreamerFunction.inc to v2.5.1
+#elseif (Streamer_Spec_Version < 20501)
+	#error [ADM] Update you StreamerFunction.inc to v2.5.1
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.6.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.5C
-#elseif (Tryg3D_Version < 20503)
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
+#elseif (Tryg3D_Version < 20602)
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
 #endif
 
 //Check MapAndreasEx.inc
@@ -90,8 +96,11 @@ forward SantaReset(tec);
 forward SantaGiftCreate(giftid);
 forward SantaGiftReset(giftid);
 
+new bool:CRC_Santa = true;
+
 //Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_Santa){ CRC_Santa = false; } else return 1; //Init Engine
 	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -121,6 +130,7 @@ public OnGameModeInit(){
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_Santa){ CRC_Santa = false; } else return 1; //Init Engine
 	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){

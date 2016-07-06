@@ -9,7 +9,8 @@
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.7                                                                                *
+ * File Version: 1.7.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  * bit 0 - 31:                                                                                      *
  * (bit 31) --> 11111111000000001111010001010000 <-- (bit 0)                                        *

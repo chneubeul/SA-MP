@@ -9,7 +9,11 @@
  * Plugins: Streamer                                                                                *
  * Modules: 3DTryg, ATM                                                                             *
  *                                                                                                  *
- * File Version: 2.0                                                                                *
+ * File Version: 2.0.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
+ * Streamer Version: 2.8.2                                                                          *
+ * 3DTryg Version: 2.6.2                                                                            *
+ * ATM Version: 1.4.2                                                                               *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -19,20 +23,20 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.6.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.5C
-#elseif (Tryg3D_Version < 20503)
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
+#elseif (Tryg3D_Version < 20602)
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
 #endif
 
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error [ADM] You need ATM.inc v1.3
+	#error [ADM] You need ATM.inc v1.4.2
 #elseif !defined ATM_Version
-	#error [ADM] Update you ATM.inc to v1.3
-#elseif (ATM_Version < 10301)
-	#error [ADM] Update you ATM.inc to v1.3
+	#error [ADM] Update you ATM.inc to v1.4.2
+#elseif (ATM_Version < 10402)
+	#error [ADM] Update you ATM.inc to v1.4.2
 #endif
 
 #define FIREWORK_ELEMENT			(256)

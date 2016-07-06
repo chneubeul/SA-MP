@@ -9,7 +9,8 @@
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.0                                                                                *
+ * File Version: 1.0.0                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -83,8 +84,11 @@ stock bool:Lottery_RemovePlayer(playerid){
 	return true;
 }
 
+new bool:CRC_Lottery = true;
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_Lottery){ CRC_Lottery = false; } else return 1; //Init Engine
 	Lottery_OnGameModeInit();
 	#if defined LOT_OnFilterScriptInit
 		LOT_OnFilterScriptInit();
@@ -123,6 +127,7 @@ public OnFilterScriptExit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_Lottery){ CRC_Lottery = false; } else return 1; //Init Engine
 	Lottery_OnGameModeInit();
 	#if defined LOT_OnGameModeInit
 		LOT_OnGameModeInit();

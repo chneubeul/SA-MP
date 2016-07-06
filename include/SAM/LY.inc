@@ -9,7 +9,8 @@
  * Plugins: None                                                                                                                  *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 1.6                                                                                                              *
+ * File Version: 1.6.1                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                           *
  *                                                                                                                                *
  * Pawn Unsigned Long for 32 Bit language (precision 61-bit)                                                                      *
  * Available limit:                                                                                                               *
@@ -38,11 +39,11 @@
 /*
 //Check Version LY.inc
 #if !defined _Long_Yoyo
-	#error [ADM] You need LY.inc v1.6
+	#error [ADM] You need LY.inc v1.6.1
 #elseif !defined Long_Yoyo_Version
-	#error [ADM] Update you LY.inc to v1.6
+	#error [ADM] Update you LY.inc to v1.6.1
 #elseif (Long_Yoyo_Version < 10601)
-	#error [ADM] Update you LY.inc to v1.6
+	#error [ADM] Update you LY.inc to v1.6.1
 #endif
 */
 
@@ -51,7 +52,7 @@
 #endif
 #define _Long_Yoyo
 
-#define Long_Yoyo_Version				(10601) //a.b[c] 10000*a+100*b+c
+#define Long_Yoyo_Version				(10601) //a.b.c 10000*a+100*b+c
 
 #define LY_STRING_LEN					(20)
 #define SEP_LY_STRING_LEN				(LY_STRING_LEN+10)

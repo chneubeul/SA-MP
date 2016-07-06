@@ -9,7 +9,10 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: ATM                                                                                                                   *
  *                                                                                                                                *
- * File Version: 1.9                                                                                                              *
+ * File Version: 1.9.1                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                           *
+ * Streamer Version: 2.8.2                                                                                                        *
+ * ATM Version: 1.4.2                                                                                                             *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,            *
@@ -64,11 +67,11 @@
 
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error [ADM] You need ATM.inc v1.3D
+	#error [ADM] You need ATM.inc v1.4.2
 #elseif !defined ATM_Version
-	#error [ADM] Update you ATM.inc to v1.3D
-#elseif (ATM_Version < 10304)
-	#error [ADM] Update you ATM.inc to v1.3D
+	#error [ADM] Update you ATM.inc to v1.4.2
+#elseif (ATM_Version < 10402)
+	#error [ADM] Update you ATM.inc to v1.4.2
 #endif
 
 #if defined _dynamic_mine_system
@@ -260,8 +263,11 @@ forward RespawnDynamicMine(mobid);
 forward OnMineDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);
 forward OnMineDetectPlayer(playerid,mobid);
 
+new bool:CRC_Mines = true;
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_Mines){ CRC_Mines = false; } else return 1; //Init Engine
 	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
 	#if defined MDM_OnFilterScriptInit
 		MDM_OnFilterScriptInit();
@@ -300,6 +306,7 @@ public OnFilterScriptExit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_Mines){ CRC_Mines = false; } else return 1; //Init Engine
 	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
 	#if defined MDM_OnGameModeInit
 		MDM_OnGameModeInit();

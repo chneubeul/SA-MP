@@ -6,7 +6,7 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/filterscripts/Glitch%20Area%202.4     *
  *                                                                                                  *
- * File Version: 2.4B                                                                               *
+ * File Version: 2.4.2                                                                              *
  *                                                                                                  *
  * Install information:                                                                             *
  *                                                                                                  *

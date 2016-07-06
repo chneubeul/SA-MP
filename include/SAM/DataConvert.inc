@@ -9,7 +9,9 @@
  * Plugins: SScanf                                                                                  *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.7                                                                                *
+ * File Version: 1.7.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
+ * SScanf Version: 2.8.2                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileHandleID(File:handle);                                                                    *
@@ -44,11 +46,11 @@
 /*
 //Check Version DataConvert.inc
 #if !defined _Data_Convert
-	#error [ADM] You need DataConvert.inc v1.7
+	#error [ADM] You need DataConvert.inc v1.7.1
 #elseif !defined Data_Convert_Version
-	#error [ADM] Update you DataConvert.inc to v1.7
+	#error [ADM] Update you DataConvert.inc to v1.7.1
 #elseif (Data_Convert_Version < 10701)
-	#error [ADM] Update you DataConvert.inc to v1.7
+	#error [ADM] Update you DataConvert.inc to v1.7.1
 #endif
 */
 
@@ -61,7 +63,7 @@
 #endif
 #define _Data_Convert
 
-#define Data_Convert_Version		(10701) //a.b[c] 10000*a+100*b+c
+#define Data_Convert_Version		(10701) //a.b.c 10000*a+100*b+c
 
 #define FIRST_FILE_ADDRESS			(0x004E5A18)
 #define INVALID_FILE_ID				(0xFFB1A5E7)

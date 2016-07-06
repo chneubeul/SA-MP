@@ -9,7 +9,9 @@
  * Plugins: SScanf                                                                                  *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 2.2                                                                                *
+ * File Version: 2.2.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
+ * SScanf Version: 2.8.2                                                                            *
  *                                                                                                  *
  * Object Functions:                                                                                *
  * IMG:LoadBinaryObjectIMG(const name[],&count=0);                                                  *
@@ -40,11 +42,11 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 /*
 //Check Version BINLDR.inc
 #if !defined _Bin_Loader
-	#error [ADM] You need BINLDR.inc v2.2
+	#error [ADM] You need BINLDR.inc v2.2.1
 #elseif !defined Bin_Loader_Version
-	#error [ADM] Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2.1
 #elseif (Bin_Loader_Version < 20201)
-	#error [ADM] Update you BINLDR.inc to v2.2
+	#error [ADM] Update you BINLDR.inc to v2.2.1
 #endif
 */
 
@@ -62,7 +64,7 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 #endif
 #define _Bin_Loader
 
-#define Bin_Loader_Version 					(20201) //a.b[c] 10000*a+100*b+c
+#define Bin_Loader_Version 					(20201) //a.b.c 10000*a+100*b+c
 
 #define MAX_RAW_DATA						(42)
 #define MAX_BIN_FILE_SIZE					(68157440)	//64 MB

@@ -9,7 +9,9 @@
  * Plugins: None                                                                                    *
  * Modules: ADM                                                                                     *
  *                                                                                                  *
- * File Version: 1.3B                                                                               *
+ * File Version: 1.3.2                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
+ * ADM Version: 2.2.1                                                                               *
  *                                                                                                  *
  * Object Functions:                                                                                *
  * ADM:LoadDoTMap(const name[],&count=0);                                                           *
@@ -39,11 +41,11 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 /*
 //Check Version DoT.inc
 #if !defined _DoT_Loader
-	#error [ADM] You need DoT.inc v1.3B
+	#error [ADM] You need DoT.inc v1.3.2
 #elseif !defined DoT_Loader_Version
-	#error [ADM] Update you DoT.inc to v1.3B
-#elseif (DoT_Loader_Version < 10301)
-	#error [ADM] Update you DoT.inc to v1.3B
+	#error [ADM] Update you DoT.inc to v1.3.2
+#elseif (DoT_Loader_Version < 10302)
+	#error [ADM] Update you DoT.inc to v1.3.2
 #endif
 */
 
@@ -57,11 +59,11 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error [ADM] You need ADM.inc v2.2
+	#error [ADM] You need ADM.inc v2.2.1
 #elseif !defined ADM_Encryption_Version
-	#error [ADM] Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2.1
 #elseif (ADM_Encryption_Version < 20201)
-	#error [ADM] Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2.1
 #endif
 
 #if defined _DoT_Loader
@@ -69,7 +71,7 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 #endif
 #define _DoT_Loader
 
-#define DoT_Loader_Version 				(10302) //a.b[c] 10000*a+100*b+c
+#define DoT_Loader_Version 				(10302) //a.b.c 10000*a+100*b+c
 
 #define DOT_HEADER						"DoTv1.0"
 #define DOT_HEADER_SIZE					(32)

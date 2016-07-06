@@ -9,7 +9,8 @@
  * Plugins: None                                                                                                                  *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 1.4                                                                                                              *
+ * File Version: 1.4.2                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                           *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -23,7 +24,6 @@
  * KEY_RELEASED(key);                                                                                                             *
  * KEY_HOLDING(key);                                                                                                              *
  * CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,type,Float:radius,Float:expradius);                    *
- * Float:CalculatePercent(Float:value,Float:maxvalue);                                                                            *
  * GetSAMIncludeVersion(value,name[],maxdest = sizeof(name));                                                                     *
  * DisableADMLogging(bool:disable);                                                                                               *
  * SetPlayerWorldBoundsEx(playerid,Float:minx,Float:miny,Float:maxx,Float:maxy);                                                  *
@@ -35,11 +35,11 @@
 /*
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error [ADM] You need ATM.inc v1.4
+	#error [ADM] You need ATM.inc v1.4.2
 #elseif !defined ATM_Version
-	#error [ADM] Update you ATM.inc to v1.4
-#elseif (ATM_Version < 10401)
-	#error [ADM] Update you ATM.inc to v1.4
+	#error [ADM] Update you ATM.inc to v1.4.2
+#elseif (ATM_Version < 10402)
+	#error [ADM] Update you ATM.inc to v1.4.2
 #endif
 */
 
@@ -48,7 +48,7 @@
 #endif
 #define _ATM_Core
 
-#define ATM_Version											(10401) //a.b[c] 10000*a+100*b+c
+#define ATM_Version											(10402) //a.b.c 10000*a+100*b+c
 
 #if !defined isnull
 	#define isnull(%1) 										((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
@@ -122,8 +122,6 @@
 	#define KEY_HOLDING(%0) 								((newkeys & (%0)) == (%0))
 #endif
 
-#define CalculatePercent(%0,%1)								(((%0)/(%1))*100.0)
-
 enum e_Vectors {
 	Float:X, Float:Y, Float:Z, Float:A
 }
@@ -168,7 +166,7 @@ stock CreateExplosionForRangePoint(Float:x,Float:y,Float:z,worldid,interiorid,ty
 }
 
 stock GetSAMIncludeVersion(value,name[],maxdest = sizeof(name)){
-	format(name,maxdest,"%d.%d%c",(value / 10000),((value % 10000) / 100),(((value % 10000) % 100) + 0x40));
+	format(name,maxdest,"%d.%d.%d",(value / 10000),((value % 10000) / 100),((value % 10000) % 100));
 }
 
 stock DisableADMLogging(bool:disable){

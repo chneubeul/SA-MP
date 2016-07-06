@@ -9,7 +9,8 @@
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.0                                                                                *
+ * File Version: 1.0.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  * Functions:                                                                                       *
  * WriteLog(string[],file[]);                                                                       *

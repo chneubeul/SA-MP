@@ -9,7 +9,8 @@
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.2B                                                                               *
+ * File Version: 1.2.2                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  * Cheat Info:                                                                                      *
  * http://www.mpgh.net/forum/showthread.php?t=883161                                                *

@@ -10,13 +10,19 @@
  * Plugins: SScanf                                                                                  *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.1                                                                                *
+ * File Version: 1.1.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
+ * SScanf Version: 2.8.2                                                                            *
  *                                                                                                  *
  * Callbacks:                                                                                       *
  * OnPlayerCommandReceived(playerid,cmdtext[]);                                                     *
  * OnPlayerCommandPerformed(playerid,cmdtext[],success);                                            *
  *                                                                                                  *
  ****************************************************************************************************/
+
+#if defined CMD
+	#endinput
+#endif
 
 #if !defined sscanf
 	#tryinclude <sscanf2>
@@ -31,9 +37,11 @@
 #endif
 #define _scmd_included
 
+/*
 #if defined CMD
 	#error Detected another command system
 #endif
+*/
 
 #define CMD_SUCCESS 		1
 #define CMD_FAILURE 		0

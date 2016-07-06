@@ -9,7 +9,10 @@
  * Plugins: Streamer                                                                                *
  * Modules: 3DTryg                                                                                  *
  *                                                                                                  *
- * File Version: 2.3                                                                                *
+ * File Version: 2.3.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
+ * Streamer Version: 2.8.2                                                                          *
+ * 3DTryg Version: 2.6.2                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamKnifeShoot(bool:toggle);            //default: false                                *
@@ -27,11 +30,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.6.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.5C
-#elseif (Tryg3D_Version < 20503)
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
+#elseif (Tryg3D_Version < 20602)
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
 #endif
 
 #define KNIFE_SPEED 						(12.0)

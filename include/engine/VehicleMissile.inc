@@ -9,7 +9,13 @@
  * Plugins: Streamer, MapAndreas                                                                                                  *
  * Modules: 3DTryg, ATM, Missile                                                                                                  *
  *                                                                                                                                *
- * File Version: 1.4                                                                                                              *
+ * File Version: 1.4.1                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                           *
+ * Streamer Version: 2.8.2                                                                                                        *
+ * MapAndreas Version: 1.2.1                                                                                                      *
+ * 3DTryg Version: 2.6.2                                                                                                          *
+ * ATM Version: 1.4.2                                                                                                             *
+ * Missile Version: 1.6.3                                                                                                         *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * ToggleVehicleMiniMissile(vehicleid,toggle);                                                                                    *
@@ -74,29 +80,29 @@
 
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v1.6C
+	#error [ADM] You need Missile.inc v1.6.3
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v1.6C
+	#error [ADM] Update you Missile.inc to v1.6.3
 #elseif (Missile_Version < 10603)
-	#error [ADM] Update you Missile.inc to v1.6C
+	#error [ADM] Update you Missile.inc to v1.6.3
 #endif
 
 //Check Version ATM.inc
 #if !defined _ATM_Core
-	#error [ADM] You need ATM.inc v1.3D
+	#error [ADM] You need ATM.inc v1.4.2
 #elseif !defined ATM_Version
-	#error [ADM] Update you ATM.inc to v1.3D
-#elseif (ATM_Version < 10304)
-	#error [ADM] Update you ATM.inc to v1.3D
+	#error [ADM] Update you ATM.inc to v1.4.2
+#elseif (ATM_Version < 10402)
+	#error [ADM] Update you ATM.inc to v1.4.2
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.6.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.5C
-#elseif (Tryg3D_Version < 20503)
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
+#elseif (Tryg3D_Version < 20602)
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
 #endif
 
 #if defined _veh_missile_launcher
@@ -381,8 +387,11 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
 	forward VM_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
 #endif
 
+new bool:CRC_VehicleMissile = true;
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_VehicleMissile){ CRC_VehicleMissile = false; } else return 1; //Init Engine
 	OnVehicleMissileInit();
 	#if defined VM_OnFilterScriptInit
 		VM_OnFilterScriptInit();
@@ -402,6 +411,7 @@ public OnFilterScriptInit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_VehicleMissile){ CRC_VehicleMissile = false; } else return 1; //Init Engine
 	OnVehicleMissileInit();
 	#if defined VM_OnGameModeInit
 		VM_OnGameModeInit();

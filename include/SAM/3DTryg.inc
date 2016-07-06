@@ -9,9 +9,14 @@
  * Plugins: MapAndreas, ColAndreas                                                                                                *
  * Modules: MapAndreasEx                                                                                                          *
  *                                                                                                                                *
- * File Version: 2.6                                                                                                              *
+ * File Version: 2.6.2                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                           *
+ * MapAndreas Version: 1.2.1                                                                                                      *
+ * ColAndreas Version: 1.4.0                                                                                                      *
+ * MapAndreasEx Version: 1.2.1                                                                                                    *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
+ * Get3DTrygPrecision();                                                                                                          *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
@@ -68,6 +73,7 @@
  * bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);   *
  * bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);        *
  * bool:IsProbable(chance);                                                                                                       *
+ * Float:CalculatePercent(Float:value,Float:maxvalue);                                                                            * 
  * Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
  * Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
  *                                                                                                                                *
@@ -83,6 +89,15 @@
  * GetPointInFrontOfCamera3DCol(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                 *
  * Float:GetPointInFrontOfVehicle2DCol(vehicleid,&Float:tx,&Float:ty,Float:radius);                                               *
  * GetPointInFrontOfVehicle3DCol(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);               *
+ * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
+ * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
+ *                                                                                                                                *
+ * Extended ColAndreas Functions:                                                                                                 *
+ * GetColAndreasVersion();                                                                                                        *
+ * GetValidColAndreasVersion();                                                                                                   *
+ * bool:IsValidColAndreas(version);                                                                                               *
+ * GetColAndreasVersionName(name[], value = GET_COLANDREAS_VERSION, maxdest = sizeof name);                                       *
+ * CheckColAndreasVersion();                                                                                                      *
  *                                                                                                                                *
  * Functions extra names:                                                                                                         *
  * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                          *
@@ -94,6 +109,7 @@
  * GetXYInFrontOfPlayerCol    -> GetPointInFrontOfPlayerCol                                                                       *
  * GetPointInFrontCol         -> GetPointInFront3DCol                                                                             *
  * GetPointInFrontOfCameraCol -> GetPointInFrontOfCamera3DCol                                                                     *
+ * Tryg3DMapAndreasFindZ      -> CA_FindZ_For2DCoord / MapAndreasFindZ / MapAndreas_FindZ_For2DCoord                              *
  *                                                                                                                                *
  * Old prototype:                                                                                                                 *
  * GetAngle                   -> GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D                             *
@@ -103,11 +119,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6
+	#error [ADM] You need 3DTryg.inc v2.6.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6
-#elseif (Tryg3D_Version < 20601)
-	#error [ADM] Update you 3DTryg.inc to v2.6
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
+#elseif (Tryg3D_Version < 20602)
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
 #endif
 */
 
@@ -116,13 +132,46 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20601) //a.b[c] 10000*a+100*b+c
+#define Tryg3D_Version									(20602) //a.b.c 10000*a+100*b+c
 
-#if defined _Map_Andreas_Ex
-	#define _3DTryg_MapAndreasFindZ						MapAndreasFindZ
-#else
-	#define _3DTryg_MapAndreasFindZ						MapAndreas_FindZ_For2DCoord
+
+
+//Detect ColAndreas
+#if defined COLANDREAS
+	#define Tryg3D_ColAndreas
+	#define Tryg3D_ColAndreasVersion					(10400) //a.b.c 10000*a+100*b+c
 #endif
+
+#if !defined COLANDREAS_VERSION
+	#define COLANDREAS_VERSION							(0)
+#endif
+
+//Detect MapAndreas
+#if defined MapAndreas_FindZ_For2DCoord
+	#define Tryg3D_MapAndreas
+	#define Tryg3D_MapAndreasVersion					(10201) //a.b.c 10000*a+100*b+c
+#endif
+
+//Detect MapAndreasEx
+#if defined _Map_Andreas_Ex
+	#define Tryg3D_MapAndreasEx
+#endif
+
+//Define Precision
+#if defined Tryg3D_ColAndreas
+	#define Tryg3DMapAndreasFindZ						CA_FindZ_For2DCoord
+	#define Tryg3DPrecision								"3D:ColAndreas"
+#elseif defined Tryg3D_MapAndreasEx
+	#define Tryg3DMapAndreasFindZ						MapAndreasFindZ
+	#define Tryg3DPrecision								"3D:MapAndreasEx"
+#elseif defined Tryg3D_MapAndreas
+	#define Tryg3DMapAndreasFindZ						MapAndreas_FindZ_For2DCoord
+	#define Tryg3DPrecision								"3D:MapAndreas"
+#else
+	#define Tryg3DPrecision								"3D:Standard"
+#endif
+
+#define Get3DTrygPrecision()							(Tryg3DPrecision)
 
 #if !defined FLOAT_PI
 	#define FLOAT_PI		 							(3.14159265358979323846)
@@ -150,6 +199,7 @@
 
 #define IsEven(%0)										((((%0) % 2) == 0)?(true):(false))
 #define power(%0,%1)									(floatround(floatpower((%0),(%1))))
+#define CalculatePercent(%0,%1)							(((%0)/(%1))*100.0)
 
 #define ShiftDegreeToRadian(%0)							((%0)*((FLOAT_PI*2)/360.0))
 #define ShiftDegreeToRadianEx(%0)						((360.0-CompRotationFloat(%0))*(-((FLOAT_PI*2)/360.0)))
@@ -435,51 +485,53 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 }
 
 //MapAndreas Functions
-#if defined MapAndreas_FindZ_For2DCoord
-
+#if (defined Tryg3D_MapAndreas || defined Tryg3D_ColAndreas)
 	stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry){
 		new Float:tpx1,Float:tpy1,Float:tpz1,
 			Float:tpx2,Float:tpy2,Float:tpz2,
 			Float:tmp;
 		GetPointInFront2D(x,y,0.0,size,tpx1,tpy1);
 		GetPointInFront2D(x,y,180.0,size,tpx2,tpy2);
-		_3DTryg_MapAndreasFindZ(tpx1,tpy1,tpz1);
-		_3DTryg_MapAndreasFindZ(tpx2,tpy2,tpz2);
+		Tryg3DMapAndreasFindZ(tpx1,tpy1,tpz1);
+		Tryg3DMapAndreasFindZ(tpx2,tpy2,tpz2);
 		GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,rx,tmp);
 		
 		GetPointInFront2D(x,y,90.0,size,tpx1,tpy1);
 		GetPointInFront2D(x,y,270.0,size,tpx2,tpy2);
-		_3DTryg_MapAndreasFindZ(tpx1,tpy1,tpz1);
-		_3DTryg_MapAndreasFindZ(tpx2,tpy2,tpz2);
+		Tryg3DMapAndreasFindZ(tpx1,tpy1,tpz1);
+		Tryg3DMapAndreasFindZ(tpx2,tpy2,tpz2);
 		GetRotationFor2Point3D(tpx1,tpy1,tpz1,tpx2,tpy2,tpz2,ry,tmp);
 	}
-
-	stock GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance){
-		new Float:tmpz;
-		_3DTryg_MapAndreasFindZ(x,y,tmpz);
-		new Float:radius = GetDistanceBetweenPoints3D(x,y,z,x,y,tmpz),
-			Float:cos = floatcos(rx+90.0,degrees),
-			Float:dist;
-		if(cos == 0.0){
-			dist = radius;
-		} else {
-			dist = floatabs(radius/cos);
-		}
-		if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
-			dist = max_distance;
-		}
-		GetPointInFront3D(x,y,z,rx,rz,dist,tx,ty,tz);
-		if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
-
-		} else {
-			_3DTryg_MapAndreasFindZ(tx,ty,tz);
-		}
-	}
-	
 #endif
 
 //ColAndreas Functions
-#if defined COLANDREAS
+#if defined Tryg3D_ColAndreas
+
+	#define GET_COLANDREAS_VERSION					(0xFFFFFFFF)
+	
+	#define GetColAndreasVersion()					(COLANDREAS_VERSION)
+	#define GetValidColAndreasVersion()				(Tryg3D_ColAndreasVersion)
+
+	stock bool:IsValidColAndreas(version){
+		if(GetColAndreasVersion() < version) return false;
+		return true;
+	}
+
+	stock GetColAndreasVersionName(name[], value = GET_COLANDREAS_VERSION, maxdest = sizeof name){
+		if(value == GET_COLANDREAS_VERSION) value = GetColAndreasVersion();
+		format(name,maxdest,"%d.%d.%d",(value / 10000),((value % 10000) / 100),((value % 10000) % 100));
+	}
+
+	stock CheckColAndreasVersion(){
+		if(!IsValidColAndreas(GetValidColAndreasVersion())){
+			new str1[32], str2[32];
+			GetColAndreasVersionName(str1,GetColAndreasVersion());
+			GetColAndreasVersionName(str2,GetValidColAndreasVersion());
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				printf("[ADM] Warring: Your ColAndreas %s It is not compatible with this version 3DTryg, update your ColAndreas to %s",str1,str2);
+			}
+		}
+	}
 	
 	stock MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
 		CA_RayCastLine(StartX,StartY,StartZ,EndX,EndY,EndZ,x,y,z);
@@ -546,7 +598,32 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	#define GetXYInFrontOfPlayerCol						GetPointInFrontOfPlayerCol
 	#define GetPointInFrontCol							GetPointInFront3DCol
 	#define GetPointInFrontOfCameraCol					GetPointInFrontOfCamera3DCol
+	
+	#define GetPointInFrontOnGround(%0,%1,%2,%3,%4,%5,%6,%7,%8) GetPointInFront3DCol((%0),(%1),(%2),(%3),(%4),(%8),(%5),(%6),(%7))
 
+#elseif defined Tryg3D_MapAndreas
+	stock GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance){
+		new Float:tmpz;
+		Tryg3DMapAndreasFindZ(x,y,tmpz);
+		new Float:radius = GetDistanceBetweenPoints3D(x,y,z,x,y,tmpz),
+			Float:cos = floatcos(rx+90.0,degrees),
+			Float:dist;
+		if(cos == 0.0){
+			dist = radius;
+		} else {
+			dist = floatabs(radius/cos);
+		}
+		if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
+			dist = max_distance;
+		}
+		GetPointInFront3D(x,y,z,rx,rz,dist,tx,ty,tz);
+		if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
+
+		} else {
+			Tryg3DMapAndreasFindZ(tx,ty,tz);
+		}
+	}
+	
 #endif
 
 #define GetXYInFrontOfPlayer							GetPointInFrontOfPlayer
@@ -563,6 +640,58 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	#endif
 	
 	
+#endif
+
+/****************************************************************************************************
+ *                                                                                                  *
+ * FilterScript/GameMode Init Hook                                                                  *
+ *                                                                                                  *
+ ****************************************************************************************************/
+
+new bool:CRC_3DTryg = true;
+
+//Hook: OnFilterScriptInit
+public OnFilterScriptInit(){
+	if(CRC_3DTryg){ CRC_3DTryg = false; } else return 1; //Init Engine
+	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
+		CheckColAndreasVersion();
+	#endif
+	#if defined _3DTryg_OnFilterScriptInit
+		_3DTryg_OnFilterScriptInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptInit
+	#undef OnFilterScriptInit
+#else
+	#define _ALS_OnFilterScriptInit
+#endif
+#define OnFilterScriptInit _3DTryg_OnFilterScriptInit
+#if defined _3DTryg_OnFilterScriptInit
+	forward _3DTryg_OnFilterScriptInit();
+#endif
+
+//Hook: OnGameModeInit
+public OnGameModeInit(){
+	if(CRC_3DTryg){ CRC_3DTryg = false; } else return 1; //Init Engine
+	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
+		CheckColAndreasVersion();
+	#endif
+	#if defined _3DTryg_OnGameModeInit
+		_3DTryg_OnGameModeInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+#else
+	#define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit _3DTryg_OnGameModeInit
+#if defined _3DTryg_OnGameModeInit
+	forward _3DTryg_OnGameModeInit();
 #endif
 
 //EOF

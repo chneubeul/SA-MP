@@ -9,7 +9,8 @@
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.2                                                                                *
+ * File Version: 1.2.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  * Functions:                                                                                       *
  * FoxForeach(variable,tag); //Tags: Player, Bot, Character                                         *
@@ -207,8 +208,11 @@ stock FoxForeachInit(){
 	return 1;
 }
 
+new bool:CRC_FoxForeach = true;
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_FoxForeach){ CRC_FoxForeach = false; } else return 1; //Init Engine
 	FoxForeachInit();
 	#if defined FoX_OnFilterScriptInit
 		FoX_OnFilterScriptInit();
@@ -228,6 +232,7 @@ public OnFilterScriptInit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_FoxForeach){ CRC_FoxForeach = false; } else return 1; //Init Engine
 	FoxForeachInit();
 	#if defined FoX_OnGameModeInit
 		FoX_OnGameModeInit();

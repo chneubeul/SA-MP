@@ -9,7 +9,10 @@
  * Plugins: SScanf                                                                                                                *
  * Modules: ProtVar                                                                                                               *
  *                                                                                                                                *
- * File Version: 2.2                                                                                                              *
+ * File Version: 2.2.1                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                           *
+ * SScanf Version: 2.8.2                                                                                                          *
+ * ProtVar Version: 1.0.1                                                                                                         *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
  * ADM:InvertFile(const input[], const output[]);                                                                                 *
@@ -79,11 +82,11 @@
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error [ADM] You need ADM.inc v2.2
+	#error [ADM] You need ADM.inc v2.2.1
 #elseif !defined ADM_Encryption_Version
-	#error [ADM] Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2.1
 #elseif (ADM_Encryption_Version < 20201)
-	#error [ADM] Update you ADM.inc to v2.2
+	#error [ADM] Update you ADM.inc to v2.2.1
 #endif
 */
 
@@ -92,7 +95,7 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(20201) //a.b[c] 10000*a+100*b+c
+#define ADM_Encryption_Version 		(20201) //a.b.c 10000*a+100*b+c
 
 #if !defined sscanf
 	#error [ADM] Unknown SScanf Version

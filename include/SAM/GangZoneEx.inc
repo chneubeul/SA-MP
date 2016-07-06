@@ -9,7 +9,9 @@
  * Plugins: Streamer                                                                                *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.2                                                                                *
+ * File Version: 1.2.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
+ * Streamer Version: 2.8.2                                                                          *
  *                                                                                                  *
  * Notice:                                                                                          *
  * Fit with YSF.inc when it is before GangZoneEx.inc                                                *

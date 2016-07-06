@@ -6,11 +6,12 @@
  *                                                                                                                                         *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                                  *
  *                                                                                                                                         *
- * File Version: 2.5                                                                                                                       *
- * Streamer Version: 2.8.2                                                                                                                 *
- *                                                                                                                                         *
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
+ *                                                                                                                                         *
+ * File Version: 2.5.2                                                                                                                     *
+ * SA:MP Version: 0.3.7                                                                                                                    *
+ * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
  * GetDynamicObjectModel(objectid);                                                                                                        *
@@ -227,8 +228,11 @@
  * GetNearestVisibleItem(playerid,type);                                                                                                   *
  * GetNearestVisibleObject(playerid);                                                                                                      *
  * GetNearestVisiblePickup(playerid);                                                                                                      *
+ * GetNearestVisibleCP(playerid);                                                                                                          *
+ * GetNearestVisibleRaceCP(playerid);                                                                                                      *
  * GetNearestVisibleMapIcon(playerid);                                                                                                     *
  * GetNearestVisible3DText(playerid);                                                                                                      *
+ * GetNearestVisibleArea(playerid);                                                                                                        *
  *                                                                                                                                         *
  * Extended Functions:                                                                                                                     *
  * bool:IsValidStreamer(version);                                                                                                          *
@@ -257,11 +261,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.5
+	#error [ADM] You need StreamerFunction.inc v2.5.2
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.5
+	#error [ADM] Update you StreamerFunction.inc to v2.5.2
 #elseif (Streamer_Spec_Version < 20501)
-	#error [ADM] Update you StreamerFunction.inc to v2.5
+	#error [ADM] Update you StreamerFunction.inc to v2.5.2
 #endif
 */
 
@@ -274,7 +278,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 					(20501) //a.b[c] 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20502) //a.b.c 10000*a+100*b+c
 #define Valid_Streamer_Version 					(0x282001)
 
 #if !defined INVALID_STREAMER_ID
@@ -455,8 +459,11 @@
 //GetNearestVisibleItem
 #define GetNearestVisibleObject(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_OBJECT)
 #define GetNearestVisiblePickup(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_PICKUP)
+#define GetNearestVisibleCP(%0)					GetNearestVisibleItem((%0),STREAMER_TYPE_CP)
+#define GetNearestVisibleRaceCP(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_RACE_CP)
 #define GetNearestVisibleMapIcon(%0)			GetNearestVisibleItem((%0),STREAMER_TYPE_MAP_ICON)
 #define GetNearestVisible3DText(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_3D_TEXT_LABEL)
+#define GetNearestVisibleArea(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_AREA)
 
 stock bool:IsValidStreamer(version){
 	if(GetStreamerVersion() < version) return false;
@@ -1002,26 +1009,77 @@ stock CheckStreamerVersion(){
 stock GetNearestVisibleItem(playerid,type){
 	new Float:x, Float:y, Float:z, max_element, tmp_item, itemid = INVALID_STREAMER_ID,
 		Float:min_radius = 20000.0, Float:distance, idx_max = 0, idx = 0;
-		
-	switch(type){
-		case STREAMER_TYPE_CP, STREAMER_TYPE_RACE_CP, STREAMER_TYPE_AREA: {
-			return INVALID_STREAMER_ID;
-		}
-	}
 	
 	GetPlayerPos(playerid,x,y,z);
 	idx_max = Streamer_CountVisibleItems(playerid,type,1);
-	max_element = Streamer_GetVisibleItems(type,playerid);
-	while(idx < max_element && idx_max > 0){
-		if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
-			idx_max--;
-			Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
-			if(distance < min_radius){
-				itemid = tmp_item;
-				min_radius = distance;
+	switch(type){
+		case STREAMER_TYPE_OBJECT, STREAMER_TYPE_PICKUP, STREAMER_TYPE_MAP_ICON, STREAMER_TYPE_3D_TEXT_LABEL: {
+			max_element = Streamer_GetVisibleItems(type,playerid);
+			while(idx <= max_element && idx_max > 0){
+				if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
+					idx_max--;
+					Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+					if(distance < min_radius){
+						itemid = tmp_item;
+						min_radius = distance;
+					}
+				}
+				idx++;
 			}
 		}
-		idx++;
+
+		case STREAMER_TYPE_CP: {
+			max_element = GetDynamicCPPoolSize(), idx = 1;
+			while(idx <= max_element && idx_max > 0){
+				if(IsValidDynamicCP(idx)){
+					if(Streamer_IsItemVisible(playerid,type,i)){
+						idx_max--;
+						Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+						if(distance < min_radius){
+							itemid = tmp_item;
+							min_radius = distance;
+						}
+					}
+				}
+				idx++;
+			}
+		}
+		
+		case STREAMER_TYPE_RACE_CP: {
+			max_element = GetDynamicRaceCPPoolSize(), idx = 1;
+			while(idx <= max_element && idx_max > 0){
+				if(IsValidDynamicRaceCP(idx)){
+					if(Streamer_IsItemVisible(playerid,type,i)){
+						idx_max--;
+						Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+						if(distance < min_radius){
+							itemid = tmp_item;
+							min_radius = distance;
+						}
+					}
+				}
+				idx++;
+			}
+		}
+		
+		case STREAMER_TYPE_AREA: {
+			max_element = GetDynamicAreaPoolSize(), idx = 1;
+			while(idx <= max_element && idx_max > 0){
+				if(IsValidDynamicArea(idx)){
+					if(Streamer_IsItemVisible(playerid,type,i)){
+						idx_max--;
+						Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+						if(distance < min_radius){
+							itemid = tmp_item;
+							min_radius = distance;
+						}
+					}
+				}
+				idx++;
+			}
+		}
+		
+		default: return INVALID_STREAMER_ID;
 	}
 	return itemid;
 }
@@ -1313,8 +1371,11 @@ public OnPlayerLeaveDynamicArea(playerid,areaid){
  *                                                                                                  *
  ****************************************************************************************************/
 
+new bool:CRC_StreamerFunction = true;
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_StreamerFunction){ CRC_StreamerFunction = false; } else return 1; //Init Engine
 	#if !defined DISABLE_STREAMER_SPEC_CHECK
 		CheckStreamerVersion();
 	#endif
@@ -1336,6 +1397,7 @@ public OnFilterScriptInit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_StreamerFunction){ CRC_StreamerFunction = false; } else return 1; //Init Engine
 	#if !defined DISABLE_STREAMER_SPEC_CHECK
 		CheckStreamerVersion();
 	#endif

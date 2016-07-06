@@ -1,6 +1,7 @@
 /************************************
  *                                  *
  * SAM Include made by Abyss Morgan *
+ * SA:MP Version: 0.3.7             *
  *                                  *
  ************************************/
 
@@ -24,7 +25,9 @@
 #include "SAM/VehicleEx.inc"        //http://forum.sa-mp.com/showthread.php?p=3727224
 #include "SAM/Logs.inc"             //not published
 #include "SAM/ATM.inc"              //not published
-#include "SAM/scmd.inc"             //not published
+#if !defined CMD
+	#include "SAM/scmd.inc"         //not published
+#endif
 #include "SAM/FoxForeach.inc"       //http://forum.sa-mp.com/showthread.php?t=611175
 
 //EOF

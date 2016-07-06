@@ -9,7 +9,12 @@
  * Plugins: Streamer, MapAndreas                                                                                                  *
  * Modules: 3DTryg, MapAndreasEx                                                                                                  *
  *                                                                                                                                *
- * File Version: 5.1 X                                                                                                            *
+ * File Version: 5.1.24                                                                                                           *
+ * SA:MP Version: 0.3.7                                                                                                           *
+ * Streamer Version: 2.8.2                                                                                                        *
+ * MapAndreas Version: 1.2.1                                                                                                      *
+ * 3DTryg Version: 2.6.2                                                                                                          *
+ * MapAndreasEx Version: 1.2.1                                                                                                    *
  *                                                                                                                                *
  * Include created for the project Next Generation City Mod http://ngc.porobieni.com                                              *
  *                                                                                                                                *
@@ -55,11 +60,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.5C
+	#error [ADM] You need 3DTryg.inc v2.6.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.5C
-#elseif (Tryg3D_Version < 20503)
-	#error [ADM] Update you 3DTryg.inc to v2.5C
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
+#elseif (Tryg3D_Version < 20602)
+	#error [ADM] Update you 3DTryg.inc to v2.6.2
 #endif
 
 //Check MapAndreasEx.inc
@@ -123,8 +128,11 @@ public OnEngineXExit(){
 	return 1;
 }
 
+new bool:CRC_EngineX = true;
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_EngineX){ CRC_EngineX = false; } else return 1; //Init Engine
 	OnEngineXInit();
 	#if defined NOX_OnFilterScriptInit
 		NOX_OnFilterScriptInit();
@@ -163,6 +171,7 @@ public OnFilterScriptExit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_EngineX){ CRC_EngineX = false; } else return 1; //Init Engine
 	OnEngineXInit();
 	#if defined NOX_OnGameModeInit
 		NOX_OnGameModeInit();

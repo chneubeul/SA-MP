@@ -9,7 +9,8 @@
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 2.3                                                                                *
+ * File Version: 2.3.1                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  * Functions:                                                                                       *
  * RGBAToHex(color,&red,&green,&blue,&alpha); //ShiftRGBAToHex                                      *
