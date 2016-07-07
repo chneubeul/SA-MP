@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas                                                                                                *
  * Modules: MapAndreasEx                                                                                                          *
  *                                                                                                                                *
- * File Version: 2.6.2                                                                                                            *
+ * File Version: 2.6.3                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -73,7 +73,7 @@
  * bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);   *
  * bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);        *
  * bool:IsProbable(chance);                                                                                                       *
- * Float:CalculatePercent(Float:value,Float:maxvalue);                                                                            * 
+ * Float:CalculatePercent(Float:value,Float:maxvalue);                                                                            *
  * Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
  * Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
  *                                                                                                                                *
@@ -91,6 +91,15 @@
  * GetPointInFrontOfVehicle3DCol(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);               *
  * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
  * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
+ * bool:IsCollisionFlag(value,flag);                                                                                              *
+ * Float:UndergroundFindZ(Float:x,Float:y,&Float:z=0.0);                                                                          *
+ * Float:InteriorFindZ(Float:px,Float:py,Float:pz=1000.0,Float:size=2.0,&Float:z=0.0);                                            *
+ * bool:IsPointInWater(Float:x,Float:y,Float:z=0.0);                                                                              *
+ * bool:IsPointInUnderwater(Float:x,Float:y,Float:z);                                                                             *
+ * bool:IsPointInUnderground(Float:x,Float:y,Float:z);                                                                            *
+ * bool:IsPointInAir(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2);                                         *
+ * bool:IsPointInGround(Float:x,Float:y,Float:z,Float:max_distance=2.2);                                                          *
+ * GetPlayerCollisionFlags(playerid);                                                                                             *
  *                                                                                                                                *
  * Extended ColAndreas Functions:                                                                                                 *
  * GetColAndreasVersion();                                                                                                        *
@@ -119,11 +128,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.2
+	#error [ADM] You need 3DTryg.inc v2.6.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.2
-#elseif (Tryg3D_Version < 20602)
-	#error [ADM] Update you 3DTryg.inc to v2.6.2
+	#error [ADM] Update you 3DTryg.inc to v2.6.3
+#elseif (Tryg3D_Version < 20603)
+	#error [ADM] Update you 3DTryg.inc to v2.6.3
 #endif
 */
 
@@ -132,7 +141,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20602) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20603) //a.b.c 10000*a+100*b+c
 
 
 
@@ -175,6 +184,16 @@
 
 #if !defined FLOAT_PI
 	#define FLOAT_PI		 							(3.14159265358979323846)
+#endif
+
+#if defined Tryg3D_ColAndreas
+	#define POSITION_FLAG_WORLD							(0b00000001)
+	#define POSITION_FLAG_INTERIOR						(0b00000010)
+	#define POSITION_FLAG_AIR							(0b00000100)
+	#define POSITION_FLAG_GROUND						(0b00001000)
+	#define POSITION_FLAG_WATER							(0b00010000)
+	#define POSITION_FLAG_UNDERWATER					(0b00100000)
+	#define POSITION_FLAG_UNDERGROUND					(0b01000000)
 #endif
 
 #define ctg(%0,%1)										(1.0/floattan((%0),(%1)))
@@ -511,6 +530,8 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	
 	#define GetColAndreasVersion()					(COLANDREAS_VERSION)
 	#define GetValidColAndreasVersion()				(Tryg3D_ColAndreasVersion)
+	
+	#define IsCollisionFlag(%0,%1)					((%0) & (%1))
 
 	stock bool:IsValidColAndreas(version){
 		if(GetColAndreasVersion() < version) return false;
@@ -593,6 +614,82 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 		GetVehiclePos(vehicleid,x,y,z);
 		GetVehicleRotation(vehicleid,rx,ry,rz);
 		GetPointInFront3DCol(x,y,z,rx,rz,radius,tx,ty,tz);
+	}
+
+	stock Float:UndergroundFindZ(Float:x,Float:y,&Float:z=0.0){
+		z = 0.0;
+		CA_RayCastLine(x,y,-0.002,x,y,-100.0,x,y,z);
+		return z;
+	}
+
+	stock Float:InteriorFindZ(Float:px,Float:py,Float:pz=1000.0,Float:size=2.0,&Float:z=0.0){
+		z = 0.0;
+		CA_RayCastLine(px,py,pz+size,px,py,pz-100.0,px,py,z);
+		return z;
+	}
+
+	stock bool:IsPointInWater(Float:x,Float:y,Float:z=0.0){
+		if(z > 0.0) return false;
+		new Float:tmpzA, Float:tmpzB;
+		Tryg3DMapAndreasFindZ(x,y,tmpzA);
+		UndergroundFindZ(x,y,tmpzB);
+		if((z >= tmpzB) && (tmpzB < 0.0) && (tmpzA > -0.001 && tmpzA < 0.001)) return true;
+		return false;
+	}
+
+	stock bool:IsPointInUnderwater(Float:x,Float:y,Float:z){
+		if(IsPointInWater(x,y,z) && (z < -1.0)) return true;
+		return false;
+	}
+	
+	stock bool:IsPointInUnderground(Float:x,Float:y,Float:z){
+		new Float:tmpzA;
+		Tryg3DMapAndreasFindZ(x,y,tmpzA);
+		if(z < tmpzA && !IsPointInWater(x,y,z)) return true;
+		return false;
+	}
+
+	stock bool:IsPointInAir(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2){
+		new Float:tmpzA;
+		if(interior){
+			InteriorFindZ(x,y,z,2.0,tmpzA);
+		} else {
+			Tryg3DMapAndreasFindZ(x,y,tmpzA);
+		}
+		if(z >= tmpzA+max_distance) return true;
+		return false;
+	}
+
+	stock bool:IsPointInGround(Float:x,Float:y,Float:z,Float:max_distance=2.2){
+		if(z <= 0.0) return false;
+		new Float:tmpzA;
+		Tryg3DMapAndreasFindZ(x,y,tmpzA);
+		if(z <= tmpzA+max_distance) return true;
+		return false;
+	}
+
+	stock GetPlayerCollisionFlags(playerid){
+		new Float:x, Float:y, Float:z, bool:isinterior = false, flag_value;
+		GetPlayerPos(playerid,x,y,z);
+		if(GetPlayerInterior(playerid) != 0){
+			flag_value |= POSITION_FLAG_INTERIOR;
+			isinterior = true;
+		} else {
+			flag_value |= POSITION_FLAG_WORLD;
+		}
+		if(IsPointInUnderwater(x,y,z)){
+			flag_value |= POSITION_FLAG_WATER;
+			flag_value |= POSITION_FLAG_UNDERWATER;
+		} else if(IsPointInWater(x,y,z)){
+			flag_value |= POSITION_FLAG_WATER;
+		} else if(IsPointInAir(x,y,z,isinterior,2.2)){
+			flag_value |= POSITION_FLAG_AIR;
+		} else if(IsPointInUnderground(x,y,z)){
+			flag_value |= POSITION_FLAG_UNDERGROUND;
+		} else {
+			flag_value |= POSITION_FLAG_GROUND;
+		}
+		return flag_value;
 	}
 	
 	#define GetXYInFrontOfPlayerCol						GetPointInFrontOfPlayerCol
