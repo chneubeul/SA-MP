@@ -1,8 +1,8 @@
 //Include:
-#if defined _example_encryption
+#if defined _example_file
 	#endinput
 #endif
-#define _example_encryption
+#define _example_file
 
 #define example_Version			(20201)	 //a.b.c 10000*a+100*b+c
 
@@ -10,11 +10,11 @@
 //Script Check:
 
 //Check Version Example.inc
-#if !defined _adm_encryption
+#if !defined _example_file
 	#error [ADM] You need Example.inc v2.2.1
-#elseif !defined ADM_Encryption_Version
+#elseif !defined example_Version
 	#error [ADM] Update you Example.inc to v2.2.1
-#elseif (ADM_Encryption_Version < 20201)
+#elseif (example_Version < 20201)
 	#error [ADM] Update you Example.inc to v2.2.1
 #endif
 
