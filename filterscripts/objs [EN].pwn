@@ -165,7 +165,7 @@ stock Float:CalculateObjectDistance(objectid){
 	return 200.0;
 }
 
-WriteLog(file[],string[]){
+WriteLogEx(file[],string[]){
 	static wl_date[3],wl_time[3],wl_str[512],wl_file[64];
 	getdate(wl_date[0],wl_date[1],wl_date[2]);
    	gettime(wl_time[0],wl_time[1],wl_time[2]);
@@ -269,9 +269,9 @@ CMD:objstatus(playerid){
 public OnFilterScriptInit(){
 	new silo = GetTickCount(), buf[255], line[255], File:olist, cnt = 0, lnum = 0, ecnt = 0, totalcnt = 0;
 	SendClientMessageToAll(0xFF0000FF,"[IMPORTANT] It takes reloading of objects...");
-	WriteLog(LOG_FILE," ");
-	WriteLog(LOG_FILE,"[IMPORTANT] It takes reloading of objects...");
-	WriteLog(LOG_FILE," ");
+	WriteLogEx(LOG_FILE," ");
+	WriteLogEx(LOG_FILE,"[IMPORTANT] It takes reloading of objects...");
+	WriteLogEx(LOG_FILE," ");
 	for(new i=0;i<sizeof(pliki);i++){
 		if(fexist(pliki[i])){
 			olist = fopen(pliki[i], io_read);
@@ -287,14 +287,14 @@ public OnFilterScriptInit(){
 					} else {
 						ecnt++;
 						format(buf,sizeof buf,"%s, line %d, error in parsing: %s",pliki[i],lnum,line);
-						WriteLog(LOG_FILE,buf);
+						WriteLogEx(LOG_FILE,buf);
 					}
 				}
 			}
 			totalcnt += cnt;
 			fclose(olist);
 			format(line,sizeof line,"%s, lines: %d, objects: %d",pliki[i],lnum,cnt);
-			WriteLog(LOG_FILE,line);
+			WriteLogEx(LOG_FILE,line);
 		}
 	}
 	for(new i = 0, j = sizeof(DoTFile); i < j; i++){
@@ -314,17 +314,17 @@ public OnFilterScriptInit(){
 		}
 	}
 	if(ecnt > 0){
-		WriteLog(LOG_FILE," ");
+		WriteLogEx(LOG_FILE," ");
 		format(buf,sizeof buf,"Loaded %d objects in %d ms, was found %d errors",totalcnt,GetTickCount()-silo,ecnt);
 		print(buf);
-		WriteLog(LOG_FILE,buf);
-		WriteLog(LOG_FILE," ");
+		WriteLogEx(LOG_FILE,buf);
+		WriteLogEx(LOG_FILE," ");
 	} else {
-		WriteLog(LOG_FILE," ");
+		WriteLogEx(LOG_FILE," ");
 		format(buf,sizeof buf,"Loaded %d objects in %d ms",totalcnt,GetTickCount()-silo);
 		print(buf);
-		WriteLog(LOG_FILE,buf);
-		WriteLog(LOG_FILE," ");
+		WriteLogEx(LOG_FILE,buf);
+		WriteLogEx(LOG_FILE," ");
 	}
 	return 1;
 }
