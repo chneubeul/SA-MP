@@ -80,6 +80,7 @@
  * MapAndreas Functions:                                                                                                          *
  * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
  * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
+ * bool:IsPointInWaterFrontOfPlayer(playerid,Float:radius);                                                                       *
  *                                                                                                                                *
  * ColAndreas Functions:                                                                                                          *
  * MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z);              *
@@ -91,6 +92,7 @@
  * GetPointInFrontOfVehicle3DCol(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);               *
  * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
  * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
+ * GetPlayerCollisionFlags(playerid);                                                                                             *
  * bool:IsCollisionFlag(value,flag);                                                                                              *
  * Float:UndergroundFindZ(Float:x,Float:y,&Float:z=0.0);                                                                          *
  * Float:InteriorFindZ(Float:px,Float:py,Float:pz=1000.0,Float:size=2.0,&Float:z=0.0);                                            *
@@ -99,7 +101,7 @@
  * bool:IsPointInUnderground(Float:x,Float:y,Float:z);                                                                            *
  * bool:IsPointInAir(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2);                                         *
  * bool:IsPointInGround(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2);                                      *
- * GetPlayerCollisionFlags(playerid);                                                                                             *
+ * bool:IsPointInWaterFrontOfPlayer(playerid,Float:radius);                                                                       *
  *                                                                                                                                *
  * Extended ColAndreas Functions:                                                                                                 *
  * GetColAndreasVersion();                                                                                                        *
