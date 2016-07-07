@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas                                                                                                *
  * Modules: MapAndreasEx                                                                                                          *
  *                                                                                                                                *
- * File Version: 2.6.3                                                                                                            *
+ * File Version: 2.6.4                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -98,7 +98,7 @@
  * bool:IsPointInUnderwater(Float:x,Float:y,Float:z);                                                                             *
  * bool:IsPointInUnderground(Float:x,Float:y,Float:z);                                                                            *
  * bool:IsPointInAir(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2);                                         *
- * bool:IsPointInGround(Float:x,Float:y,Float:z,Float:max_distance=2.2);                                                          *
+ * bool:IsPointInGround(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2);                                      *
  * GetPlayerCollisionFlags(playerid);                                                                                             *
  *                                                                                                                                *
  * Extended ColAndreas Functions:                                                                                                 *
@@ -128,11 +128,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.3
+	#error [ADM] You need 3DTryg.inc v2.6.4
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.3
-#elseif (Tryg3D_Version < 20603)
-	#error [ADM] Update you 3DTryg.inc to v2.6.3
+	#error [ADM] Update you 3DTryg.inc to v2.6.4
+#elseif (Tryg3D_Version < 20604)
+	#error [ADM] Update you 3DTryg.inc to v2.6.4
 #endif
 */
 
@@ -141,7 +141,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20603) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20604) //a.b.c 10000*a+100*b+c
 
 
 
@@ -660,10 +660,14 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 		return false;
 	}
 
-	stock bool:IsPointInGround(Float:x,Float:y,Float:z,Float:max_distance=2.2){
+	stock bool:IsPointInGround(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2){
 		if(z <= 0.0) return false;
 		new Float:tmpzA;
-		Tryg3DMapAndreasFindZ(x,y,tmpzA);
+		if(interior){
+			InteriorFindZ(x,y,z,2.0,tmpzA);
+		} else {
+			Tryg3DMapAndreasFindZ(x,y,tmpzA);
+		}
 		if(z <= tmpzA+max_distance) return true;
 		return false;
 	}
@@ -721,6 +725,22 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 		}
 	}
 	
+#endif
+
+#if (defined Tryg3D_MapAndreas || defined Tryg3D_ColAndreas)
+	stock bool:IsPointInWaterFrontOfPlayer(playerid,Float:radius){
+		new Float:x, Float:y, Float:z;
+		GetPlayerPos(playerid,x,y,z);
+		GetPointInFrontOfPlayer(playerid,x,y,radius);
+		#if defined Tryg3D_ColAndreas
+			return IsPointInWater(x,y,0.0);
+		#else
+			new Float:tmpz;
+			Tryg3DMapAndreasFindZ(x,y,tmpz);
+			if(tmpz <= 0.0) return true;
+			return false;
+		#endif
+	}
 #endif
 
 #define GetXYInFrontOfPlayer							GetPointInFrontOfPlayer
