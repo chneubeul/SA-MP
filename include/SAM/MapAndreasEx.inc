@@ -27,14 +27,14 @@
 	#error [ADM] Unknown MapAndreas Version
 #endif
 
+#if defined _3D_Tryg
+	#endinput	//Functions already defined.
+#endif
+
 #if defined _Map_Andreas_Ex
 	#endinput
 #endif
 #define _Map_Andreas_Ex
-
-#if defined _3D_Tryg
-	#endinput	//Functions already defined.
-#endif
 
 stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
 	if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
