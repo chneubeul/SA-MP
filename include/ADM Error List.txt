@@ -13,12 +13,15 @@ This option is available in ATM.inc
 [ADM] Warring: Get speed error, the wrong time.
 [ADM] Warring: Invalid lengthsq OR maxdist
 [ADM] Warring: Your ColAndreas ... It is not compatible with this version 3DTryg, update your ColAndreas to ...
-[ADM] Error: MapAndreas failed to initiated
+[ADM] Error: MapAndreas failed to initiated.
 [ADM] Error: ColAndreas failed to initiated.
+[ADM] Error: Cannot load /scriptfiles/SAfull.hmap
+[ADM] Error: Cannot load /scriptfiles/colandreas/ColAndreas.cadb
 
 //MapAndreasEx.inc
 [ADM] Info: MapAndreas successfully init.
-[ADM] Error: MapAndreas failed to initiated
+[ADM] Error: MapAndreas failed to initiated.
+[ADM] Error: Cannot load /scriptfiles/SAfull.hmap
 
 //GangZoneEx.inc
 [ADM] Warring: Invalid zoneid, range 0 - 1023

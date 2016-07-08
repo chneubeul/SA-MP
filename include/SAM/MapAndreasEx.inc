@@ -62,6 +62,7 @@ stock SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(nam
 	if(!IsMapAndreasInit()){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
 			print("[ADM] Error: MapAndreas failed to initiated.");
+			print("[ADM] Error: Cannot load /scriptfiles/SAfull.hmap");
 		}
 	} else {
 		if(MapAndreasLastStat){

@@ -818,6 +818,7 @@ new bool:CRC_3DTryg = true;
 		if(!Tryg3D_IsColAndreasInit()){
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
 				print("[ADM] Error: ColAndreas failed to initiated.");
+				print("[ADM] Error: Cannot load /scriptfiles/colandreas/ColAndreas.cadb");
 			}
 		} else {
 			if(ColAndreasLastStat){
@@ -852,6 +853,7 @@ new bool:CRC_3DTryg = true;
 		if(!Tryg3D_IsMapAndreasInit()){
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
 				print("[ADM] Error: MapAndreas failed to initiated.");
+				print("[ADM] Error: Cannot load /scriptfiles/SAfull.hmap");
 			}
 		} else {
 			if(MapAndreasLastStat){
