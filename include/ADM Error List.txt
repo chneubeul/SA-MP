@@ -7,14 +7,18 @@ This option is available in ATM.inc
 [ADM] Warring: Your Streamer ... It is not compatible with this version Streamer Functions, update your streamer to ...
 
 //3DTryg.inc
+[ADM] Info: MapAndreas successfully init.
+[ADM] Info: ColAndreas successfully init.
 [ADM] Warring: Get the rotation wrong, identical points.
 [ADM] Warring: Get speed error, the wrong time.
 [ADM] Warring: Invalid lengthsq OR maxdist
 [ADM] Warring: Your ColAndreas ... It is not compatible with this version 3DTryg, update your ColAndreas to ...
+[ADM] Error: MapAndreas failed to initiated
+[ADM] Error: ColAndreas failed to initiated.
 
 //MapAndreasEx.inc
-[ADM] Error: MapAndreas failed to initiated
 [ADM] Info: MapAndreas successfully init.
+[ADM] Error: MapAndreas failed to initiated
 
 //GangZoneEx.inc
 [ADM] Warring: Invalid zoneid, range 0 - 1023

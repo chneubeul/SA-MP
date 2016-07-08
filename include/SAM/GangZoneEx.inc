@@ -14,7 +14,7 @@
  * Streamer Version: 2.8.2                                                                          *
  *                                                                                                  *
  * Notice:                                                                                          *
- * Fit with YSF.inc when it is before GangZoneEx.inc                                                *
+ * - Fit with YSF.inc when it is before GangZoneEx.inc                                              *
  *                                                                                                  *
  * Functions:                                                                                       *
  * IsValidGangZone(zoneid);                                                                         *

@@ -6,6 +6,42 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+//Check Version 3DTryg.inc
+#if !defined _3D_Tryg
+	#error [ADM] You need 3DTryg.inc v2.6.5
+#elseif !defined Tryg3D_Version
+	#error [ADM] Update you 3DTryg.inc to v2.6.5
+#elseif (Tryg3D_Version < 20605)
+	#error [ADM] Update you 3DTryg.inc to v2.6.5
+#endif
+
+//Check Version StreamerFunction.inc
+#if !defined _streamer_spec
+	#error [ADM] You need StreamerFunction.inc v2.5.2
+#elseif !defined Streamer_Spec_Version
+	#error [ADM] Update you StreamerFunction.inc to v2.5.2
+#elseif (Streamer_Spec_Version < 20501)
+	#error [ADM] Update you StreamerFunction.inc to v2.5.2
+#endif
+
+//Check Version EngineX.inc
+#if !defined _NOX_ENGINE_X
+	#error [ADM] You need EngineX.inc v5.1.24
+#elseif !defined NOX_ENGINE_X_Version
+	#error [ADM] Update you EngineX.inc to v5.1.24
+#elseif (NOX_ENGINE_X_Version < 50124)
+	#error [ADM] Update you EngineX.inc to v5.1.24
+#endif
+
+//Check Version ATM.inc
+#if !defined _ATM_Core
+	#error [ADM] You need ATM.inc v1.4.2
+#elseif !defined ATM_Version
+	#error [ADM] Update you ATM.inc to v1.4.2
+#elseif (ATM_Version < 10402)
+	#error [ADM] Update you ATM.inc to v1.4.2
+#endif
+
 //#define CHANGE_DIRECTION_OF_FLIGHT
 //#define CHANGE_COLOR_AIRCRAFT
 

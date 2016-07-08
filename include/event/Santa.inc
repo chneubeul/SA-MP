@@ -7,15 +7,14 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
  *                                                                                                  *
  * Plugins: Streamer, MapAndreas                                                                    *
- * Modules: 3DTryg, StreamerFunction, MapAndreasEx                                                  *
+ * Modules: 3DTryg, StreamerFunction                                                                *
  *                                                                                                  *
  * File Version: 1.4.1                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
  * Streamer Version: 2.8.2                                                                          *
  * MapAndreas Version: 1.2.1                                                                        *
- * 3DTryg Version: 2.6.2                                                                            *
+ * 3DTryg Version: 2.6.5                                                                            *
  * StreamerFunction Version: 2.5.1                                                                  *
- * MapAndreasEx Version: 1.2.1                                                                      *
  *                                                                                                  *
  * Callbacks:                                                                                       *
  * OnSantaPickupReward(playerid);                                                                   *
@@ -41,17 +40,13 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.2
+	#error [ADM] You need 3DTryg.inc v2.6.5
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.2
-#elseif (Tryg3D_Version < 20602)
-	#error [ADM] Update you 3DTryg.inc to v2.6.2
+	#error [ADM] Update you 3DTryg.inc to v2.6.5
+#elseif (Tryg3D_Version < 20605)
+	#error [ADM] Update you 3DTryg.inc to v2.6.5
 #endif
 
-//Check MapAndreasEx.inc
-#if !defined _Map_Andreas_Ex
-	#error [ADM] You need MapAndreasEx.inc
-#endif
 
 #if defined _santa_gifts
 	#endinput

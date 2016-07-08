@@ -8,13 +8,12 @@
 #include <mapandreas>
 
 //SAM Includes
-#include "SAM/StreamerFunction.inc"
-#include "SAM/3DTryg.inc"
-#include "SAM/MapAndreasEx.inc"
-#include "SAM/ATM.inc"
+#include <SAM/StreamerFunction>
+#include <SAM/3DTryg>
+#include <SAM/ATM>
 
-#include <EngineX.inc>
-#include "Bomber.inc"
+#include <EngineX>
+#include <Bomber>
 
 public OnFilterScriptInit(){
 

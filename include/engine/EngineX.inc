@@ -7,14 +7,13 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
  * Plugins: Streamer, MapAndreas                                                                                                  *
- * Modules: 3DTryg, MapAndreasEx                                                                                                  *
+ * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
  * File Version: 5.1.24                                                                                                           *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
  * MapAndreas Version: 1.2.1                                                                                                      *
- * 3DTryg Version: 2.6.2                                                                                                          *
- * MapAndreasEx Version: 1.2.1                                                                                                    *
+ * 3DTryg Version: 2.6.5                                                                                                          *
  *                                                                                                                                *
  * Include created for the project Next Generation City Mod http://ngc.porobieni.com                                              *
  *                                                                                                                                *
@@ -45,6 +44,16 @@
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
+/*
+//Check Version EngineX.inc
+#if !defined _NOX_ENGINE_X
+	#error [ADM] You need EngineX.inc v5.1.24
+#elseif !defined NOX_ENGINE_X_Version
+	#error [ADM] Update you EngineX.inc to v5.1.24
+#elseif (NOX_ENGINE_X_Version < 50124)
+	#error [ADM] Update you EngineX.inc to v5.1.24
+#endif
+*/
 
 #if defined NGCM_KERNEL
 	#error [ADM] Fatal error incompatible NOX
@@ -60,16 +69,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.2
+	#error [ADM] You need 3DTryg.inc v2.6.5
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.2
-#elseif (Tryg3D_Version < 20602)
-	#error [ADM] Update you 3DTryg.inc to v2.6.2
-#endif
-
-//Check MapAndreasEx.inc
-#if !defined _Map_Andreas_Ex
-	#error [ADM] You need MapAndreasEx.inc
+	#error [ADM] Update you 3DTryg.inc to v2.6.5
+#elseif (Tryg3D_Version < 20605)
+	#error [ADM] Update you 3DTryg.inc to v2.6.5
 #endif
 
 #if defined _NOX_ENGINE_X

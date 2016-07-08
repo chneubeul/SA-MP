@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                                  MapAndreas Extended Functions                                   *
+ *                    MapAndreas Extended Functions (Deprecated use 3DTryg.inc)                     *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
@@ -12,6 +12,9 @@
  * File Version: 1.2.1                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
  * MapAndreas Version: 1.2.1                                                                        *
+ *                                                                                                  *
+ * Notice:                                                                                          *
+ * - This include is contain in 3DTryg                                                              *
  *                                                                                                  *
  * Functions:                                                                                       *
  * bool:IsMapAndreasInit();                                                                         *
@@ -30,7 +33,7 @@
 #define _Map_Andreas_Ex
 
 #if defined _3D_Tryg
-	#error [ADM] Please include MapAndreasEx.inc before 3DTryg.inc
+	#endinput	//Functions already defined.
 #endif
 
 stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){

@@ -7,13 +7,18 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
  * Plugins: MapAndreas, ColAndreas                                                                                                *
- * Modules: MapAndreasEx                                                                                                          *
+ * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.6.4                                                                                                            *
+ * File Version: 2.6.5                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
- * MapAndreasEx Version: 1.2.1                                                                                                    *
+ *                                                                                                                                *
+ * 3DTryg Precision List:                                                                                                         *
+ * 1. 3D:ColAndreas   - The most accurate precision with ColAndreas plugin.                                                       *
+ * 2. 3D:MapAndreasEx - Average precision MapAndreas plugin + MapAndreasEx Module.                                                *
+ * 3. 3D:MapAndreas   - Average precision MapAndreas plugin.                                                                      *
+ * 4. 3D:Standard     - The default precision, lack of special functions.                                                         *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Get3DTrygPrecision();                                                                                                          *
@@ -78,9 +83,14 @@
  * Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
  *                                                                                                                                *
  * MapAndreas Functions:                                                                                                          *
+ * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0);                                                                           *
  * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                             *
  * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);           *
  * bool:IsPointInWaterFrontOfPlayer(playerid,Float:radius);                                                                       *
+ *                                                                                                                                *
+ * MapAndreas Extended Functions:                                                                                                 *
+ * bool:IsMapAndreasInit();                                                                                                       *
+ * SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(name));                                                 *
  *                                                                                                                                *
  * ColAndreas Functions:                                                                                                          *
  * MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z);              *
@@ -103,7 +113,9 @@
  * bool:IsPointInGround(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2);                                      *
  * bool:IsPointInWaterFrontOfPlayer(playerid,Float:radius);                                                                       *
  *                                                                                                                                *
- * Extended ColAndreas Functions:                                                                                                 *
+ * ColAndreas Extended Functions:                                                                                                 *
+ * bool:IsColAndreasInit();                                                                                                       *
+ * SafeColAndreasInit();                                                                                                          *
  * GetColAndreasVersion();                                                                                                        *
  * GetValidColAndreasVersion();                                                                                                   *
  * bool:IsValidColAndreas(version);                                                                                               *
@@ -130,11 +142,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.4
+	#error [ADM] You need 3DTryg.inc v2.6.5
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.4
-#elseif (Tryg3D_Version < 20604)
-	#error [ADM] Update you 3DTryg.inc to v2.6.4
+	#error [ADM] Update you 3DTryg.inc to v2.6.5
+#elseif (Tryg3D_Version < 20605)
+	#error [ADM] Update you 3DTryg.inc to v2.6.5
 #endif
 */
 
@@ -143,7 +155,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20604) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20605) //a.b.c 10000*a+100*b+c
 
 
 
@@ -166,6 +178,24 @@
 //Detect MapAndreasEx
 #if defined _Map_Andreas_Ex
 	#define Tryg3D_MapAndreasEx
+#endif
+
+#if (!defined Tryg3D_MapAndreasEx && defined Tryg3D_MapAndreas)
+	//Auto Create MapAndreasEx
+	#define IsMapAndreasInit			Tryg3D_IsMapAndreasInit
+	#define SafeMapAndreasInit			Tryg3D_SafeMapAndreasInit
+	
+	stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
+		if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
+			z = 0.0;
+		} else {
+			MapAndreas_FindZ_For2DCoord(x,y,z);
+		}
+		return z;
+	}
+	
+	#define Tryg3D_MapAndreasEx
+	
 #endif
 
 //Define Precision
@@ -769,12 +799,106 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 
 new bool:CRC_3DTryg = true;
 
+#if defined Tryg3D_ColAndreas
+	
+	stock bool:Tryg3D_IsColAndreasInit(){
+		new Float:mapunit;
+		CA_FindZ_For2DCoord(0.0,0.0,mapunit);
+		if(mapunit <= 0.0) return false;
+		return true;
+	}
+
+	stock Tryg3D_SafeColAndreasInit(){
+		//check ColAndreas Init
+		new bool:ColAndreasLastStat = false;
+		if(!Tryg3D_IsColAndreasInit()){
+			CA_Init();
+			ColAndreasLastStat = true;
+		}
+		if(!Tryg3D_IsColAndreasInit()){
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: ColAndreas failed to initiated.");
+			}
+		} else {
+			if(ColAndreasLastStat){
+				if(GetSVarInt("ADM:Logging:Disable") == 0){
+					print("[ADM] Info: ColAndreas successfully init.");
+				}
+			}
+		}
+	}
+	
+	#define IsColAndreasInit			Tryg3D_IsColAndreasInit
+	#define SafeColAndreasInit 			Tryg3D_SafeColAndreasInit
+	
+#endif
+
+#if (defined Tryg3D_MapAndreasEx || defined Tryg3D_MapAndreas)
+
+	stock bool:Tryg3D_IsMapAndreasInit(){
+		new Float:mapunit;
+		MapAndreas_FindZ_For2DCoord(0.0,0.0,mapunit);
+		if(mapunit <= 0.0) return false;
+		return true;
+	}
+
+	stock Tryg3D_SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(name)){
+		//check MapAndreas Init
+		new bool:MapAndreasLastStat = false;
+		if(!Tryg3D_IsMapAndreasInit()){
+			MapAndreas_Init(mode,name,len);
+			MapAndreasLastStat = true;
+		}
+		if(!Tryg3D_IsMapAndreasInit()){
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Error: MapAndreas failed to initiated.");
+			}
+		} else {
+			if(MapAndreasLastStat){
+				if(GetSVarInt("ADM:Logging:Disable") == 0){
+					print("[ADM] Info: MapAndreas successfully init.");
+				}
+			}
+		}
+	}
+	
+#endif
+
+#if (!defined Tryg3D_MapAndreasEx && defined Tryg3D_MapAndreas)
+
+	#define IsMapAndreasInit			Tryg3D_IsMapAndreasInit
+	#define SafeMapAndreasInit			Tryg3D_SafeMapAndreasInit
+	
+	stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
+		if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
+			z = 0.0;
+		} else {
+			MapAndreas_FindZ_For2DCoord(x,y,z);
+		}
+		return z;
+	}
+	
+#endif
+
+stock Tryg3DInit(){
+	#if defined Tryg3D_ColAndreas
+		Tryg3D_SafeColAndreasInit();
+	#elseif defined Tryg3D_MapAndreasEx
+		Tryg3D_SafeMapAndreasInit(MAP_ANDREAS_MODE_FULL);
+	#elseif defined Tryg3D_MapAndreas
+		Tryg3D_SafeMapAndreasInit(MAP_ANDREAS_MODE_FULL);
+	#else
+		
+	#endif
+}
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
 	if(CRC_3DTryg){ CRC_3DTryg = false; } else return 1; //Init Engine
 	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
 		CheckColAndreasVersion();
 	#endif
+	Tryg3DInit();
 	#if defined _3DTryg_OnFilterScriptInit
 		_3DTryg_OnFilterScriptInit();
 	#endif
@@ -797,6 +921,7 @@ public OnGameModeInit(){
 	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
 		CheckColAndreasVersion();
 	#endif
+	Tryg3DInit();
 	#if defined _3DTryg_OnGameModeInit
 		_3DTryg_OnGameModeInit();
 	#endif
