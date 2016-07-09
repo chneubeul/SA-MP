@@ -9,7 +9,11 @@
  * Plugins: Streamer, ColAndreas                                                                                                   *
  * Modules: 3DTryg                                                                                                                 *
  *                                                                                                                                 *
- * File Version: 6.0 X                                                                                                             *
+ * File Version: 6.0.24                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                            *
+ * Streamer Version: 2.8.2                                                                                                         *
+ * ColAndreas Version: 1.4.0                                                                                                       *
+ * 3DTryg Version: 2.6.6                                                                                                           *
  *                                                                                                                                 *
  * Include created for the project Next Generation City Mod http://ngc.porobieni.com                                               *
  *                                                                                                                                 *
