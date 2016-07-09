@@ -155,6 +155,7 @@ public OnEngineXInit(){
 }
 
 public OnEngineXExit(){
+
 	if(!EngineXLoaded) return 0;
 	if(GetSVarInt("ADM:Logging:Disable") == 0){
 		printf("[ADM] Info: NGCM Mob Move Engine System %s unloaded.",NOX_VERSION);
@@ -163,8 +164,11 @@ public OnEngineXExit(){
 	return 1;
 }
 
+new bool:CRC_EngineX = true;
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_EngineX){ CRC_EngineX = false; } else return 1; //Init Engine
 	OnEngineXInit();
 	#if defined NOX_OnFilterScriptInit
 		NOX_OnFilterScriptInit();
@@ -203,6 +207,7 @@ public OnFilterScriptExit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_EngineX){ CRC_EngineX = false; } else return 1; //Init Engine
 	OnEngineXInit();
 	#if defined NOX_OnGameModeInit
 		NOX_OnGameModeInit();
