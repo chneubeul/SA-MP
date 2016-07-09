@@ -11,7 +11,8 @@ This option is available in ATM.inc
 [ADM] Info: ColAndreas successfully init.
 [ADM] Warring: Get the rotation wrong, identical points.
 [ADM] Warring: Get speed error, the wrong time.
-[ADM] Warring: Invalid lengthsq OR maxdist
+[ADM] Warring: Invalid cylinder posision, identical points.
+[ADM] Warring: Invalid cylinder size.
 [ADM] Warring: Your ColAndreas ... It is not compatible with this version 3DTryg, update your ColAndreas to ...
 [ADM] Error: MapAndreas failed to initiated.
 [ADM] Error: ColAndreas failed to initiated.
@@ -49,4 +50,4 @@ This option is available in ATM.inc
 
 //Global
 [ADM] Error: Invalid MapAndreas Memory.
-
+[ADM] Error: Invalid ColAndreas Memory.

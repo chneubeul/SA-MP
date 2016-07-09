@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas                                                                                                *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.6.5                                                                                                            *
+ * File Version: 2.6.6                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -76,11 +76,19 @@
  * bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB);                *
  * bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist);                              *
  * bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);   *
- * bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist);        *
+ * bool:IsPointInCircle(Float:px,Float:py,Float:x,Float:y,Float:size);                                                            *
+ * bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:size);           *
+ * bool:IsPointInSphere(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:size);                                           *
+ * bool:IsPointInRectangle(Float:x,Float:y,Float:minx,Float:miny,Float:maxx,Float:maxy);                                          *
+ * bool:IsPointInCube(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                 *
+ * bool:IsPointInPolygon(Float:x,Float:y,{Float,_}:...);                                                                          *
  * bool:IsProbable(chance);                                                                                                       *
  * Float:CalculatePercent(Float:value,Float:maxvalue);                                                                            *
  * Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
  * Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
+ *                                                                                                                                *
+ * Symbols:                                                                                                                       *
+ * FLOAT_PI - pi constant value                                                                                                   *
  *                                                                                                                                *
  * MapAndreas Functions:                                                                                                          *
  * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0);                                                                           *
@@ -94,6 +102,8 @@
  *                                                                                                                                *
  * ColAndreas Functions:                                                                                                          *
  * MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z);              *
+ * MovePointColCutLine(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0);      *
+ * MovePointColCutLineEx(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0);    *
  * GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                    *
  * Float:GetPointInFrontOfPlayerCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                   *
  * Float:GetPointInFrontOfCamera2DCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                 *
@@ -142,11 +152,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.5
+	#error [ADM] You need 3DTryg.inc v2.6.6
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.5
-#elseif (Tryg3D_Version < 20605)
-	#error [ADM] Update you 3DTryg.inc to v2.6.5
+	#error [ADM] Update you 3DTryg.inc to v2.6.6
+#elseif (Tryg3D_Version < 20606)
+	#error [ADM] Update you 3DTryg.inc to v2.6.6
 #endif
 */
 
@@ -155,7 +165,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20605) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20606) //a.b.c 10000*a+100*b+c
 
 
 
@@ -217,6 +227,8 @@
 #if !defined FLOAT_PI
 	#define FLOAT_PI		 							(3.14159265358979323846)
 #endif
+
+#define MAX_POLYGON_POINTS 								(32)
 
 #if defined Tryg3D_ColAndreas
 	#define POSITION_FLAG_WORLD							(0b00000001)
@@ -462,8 +474,8 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 	return false;
 }
 
-//Orig: Greg James - gjames@NVIDIA.com SRC: http://www.flipcode.com/archives/Fast_Point-In-Cylinder_Test.shtml
-stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+//Orig: Greg James - gjames@NVIDIA.com SRC:http://www.flipcode.com/archives/Fast_Point-In-Cylinder_Test.shtml
+stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:size){
 	new Float:dx,Float:dy,Float:dz,Float:pdx,Float:pdy,Float:pdz,Float:dot,Float:dsq,Float:lengthsq;
 	
 	dx = xB - xA;
@@ -478,9 +490,14 @@ stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:
 	
 	lengthsq = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
 	lengthsq = lengthsq*lengthsq;
-	if(lengthsq <= 0.0 || maxdist <= 0.0){
+	if(lengthsq <= 0.0){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Warring: Invalid lengthsq OR maxdist");
+			print("[ADM] Warring: Invalid cylinder posision, identical points.");
+		}
+		return false;
+	} else if(size <= 0.0){
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			print("[ADM] Warring: Invalid cylinder size.");
 		}
 		return false;
 	}
@@ -488,14 +505,56 @@ stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:
 		return false;
 	} else {
 		dsq = (pdx*pdx + pdy*pdy + pdz*pdz) - dot*dot/lengthsq;
-		if(dsq <= (maxdist*maxdist)){
+		if(dsq <= (size*size)){
 			return true;
 		}
 	}
 	return false;
 }
 
-//Prototype function
+stock bool:IsPointInCube(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
+	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz)) return true;
+	return false;
+}
+
+stock bool:IsPointInRectangle(Float:x,Float:y,Float:minx,Float:miny,Float:maxx,Float:maxy){
+	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy)) return true;
+	return false;
+}
+
+//Polygon Test by RyDeR SRC:http://forum.sa-mp.com/showpost.php?p=1154971&postcount=1871
+stock bool:IsPointInPolygon(Float:x,Float:y,{Float,_}:...){
+	
+	new args_Total = numargs(), polygon_Sides = (args_Total - 2) / 2;
+	if((args_Total - 2) & 0b1 || MAX_POLYGON_POINTS <= polygon_Sides || polygon_Sides < 3) return false;
+
+	new Float:polygon_Data[2][MAX_POLYGON_POINTS], cross_Total;
+	
+	for(new i = 2, j; i < args_Total; i += 2, j++){
+		polygon_Data[0][j] = Float:getarg(i);
+		polygon_Data[1][j] = Float:getarg(i+1);
+	}
+	for(new i, j = polygon_Sides - 1; i < polygon_Sides; j = i, i++){
+		if(polygon_Data[1][i] < y && polygon_Data[1][j] >= y || polygon_Data[1][j] < y && polygon_Data[1][i] >= y){
+			if(polygon_Data[0][i] + (y - polygon_Data[1][i]) / (polygon_Data[1][j] - polygon_Data[1][i]) * (polygon_Data[0][j] - polygon_Data[0][i]) < x){
+				cross_Total++;
+			}
+		}
+	}
+	return bool:(cross_Total & 0x1);
+}
+
+stock bool:IsPointInCircle(Float:px,Float:py,Float:x,Float:y,Float:size){
+	if(GetDistanceBetweenPoints2D(px-x,py-y) <= size) return true;
+	return false;
+}
+
+stock bool:IsPointInSphere(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:size){
+	if(GetDistanceBetweenPoints3D(px-x,py-y,pz-z) <= size) return true;
+	return false;
+}
+
+//Abyss Morgan Algorithm (False Ellipse Test 2D)
 stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
 	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
 		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
@@ -504,7 +563,7 @@ stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,F
 	return false;
 }
 
-//Prototype function
+//Abyss Morgan Algorithm (False Ellipse Test 3D)
 stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
 	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
 		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
@@ -592,7 +651,49 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 		if(y == 0.0) y = EndY;
 		if(z == 0.0) z = EndZ;
 	}
+	
+	stock MovePointColCutLine(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
+		new Float:radius, Float:rx, Float:rz;
+		CA_RayCastLine(SX,SY,SZ,EX,EY,EZ,x,y,z);
+		if(x == 0.0) x = EX;
+		if(y == 0.0) y = EY;
+		if(z == 0.0) z = EZ;
+		radius = GetDistanceBetweenPoints3D(SX,SY,SZ,x,y,z);
+		if(radius > 0.0){
+			CompRotationFloat(-(acos((z-SZ)/radius)-90.0),rx);
+			CompRotationFloat((atan2(y-SY,x-SX)-90.0),rz);
+			if(radius-cut_size > 0.0) radius -= cut_size;
+			GetPointInFront3D(SX,SY,SZ,rx,rz,radius,x,y,z);
+		} else {
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Warring: Invalid resize line, identical points.");
+			}
+		}
+	}
 
+	stock MovePointColCutLineEx(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
+		new Float:radius, Float:rx, Float:rz;
+		CA_RayCastLine(SX,SY,SZ,EX,EY,EZ,x,y,z);
+		if(x == 0.0) x = EX;
+		if(y == 0.0) y = EY;
+		if(z == 0.0) z = EZ;
+		radius = GetDistanceBetweenPoints3D(SX,SY,SZ,x,y,z);
+		if(radius > 0.0){
+			CompRotationFloat(-(acos((z-SZ)/radius)-90.0),rx);
+			CompRotationFloat((atan2(y-SY,x-SX)-90.0),rz);
+			if((radius-cut_size > cut_size) && (radius-cut_size > 0.0)){
+				radius -= cut_size;
+			} else {
+				radius = 0.0001;
+			}
+			GetPointInFront3D(SX,SY,SZ,rx,rz,radius,x,y,z);
+		} else {
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Warring: Invalid resize line, identical points.");
+			}
+		}
+	}
+	
 	//GetPointInFront3D (ColAndreas)
 	stock GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 		tx = x + (radius * floatsin(rx+90.0,degrees) * floatcos(rz+90.0,degrees));
