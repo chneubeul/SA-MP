@@ -496,20 +496,6 @@ public OnThisScriptCheck(playerid,errorlevel){
 		WriteCheckLog("Include: 'Missile' Author: 'Abyss Morgan'",SCRIPT_CHECK_FILE);
 	#endif
 	
-
-	
-
-
-	
-	//SAM Include Config
-	#if defined FIX_OBJECTS
-		WriteCheckLog("Option 'FIX_OBJECTS' is active",SCRIPT_CHECK_FILE);
-	#endif
-	
-	#if defined USE_OLD_PROTOTYPE_FUNCTION
-		WriteCheckLog("Option 'USE_OLD_PROTOTYPE_FUNCTION' is active",SCRIPT_CHECK_FILE);
-	#endif
-	
 	CallLocalFunction("OnScriptCheck","dd",playerid,errorlevel);
 	
 	WriteCheckLog("End of Detect",SCRIPT_CHECK_FILE);
@@ -517,7 +503,11 @@ public OnThisScriptCheck(playerid,errorlevel){
 	return 1;
 }
 
+bool:CRC_ScriptChecker = true;
+
+//Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
+	if(CRC_ScriptChecker){ CRC_ScriptChecker = false; } else return 1; //Init Engine
 	FilterScriptActiveTime = GetTickCount();
 	#if defined SC_OnFilterScriptInit
 		SC_OnFilterScriptInit();
@@ -535,7 +525,9 @@ public OnFilterScriptInit(){
 	forward SC_OnFilterScriptInit();
 #endif
 
+//Hook: OnGameModeInit
 public OnGameModeInit(){
+	if(CRC_ScriptChecker){ CRC_ScriptChecker = false; } else return 1; //Init Engine
 	FilterScriptActiveTime = GetTickCount();
 	#if defined SC_OnGameModeInit
 		SC_OnGameModeInit();

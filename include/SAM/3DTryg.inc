@@ -1001,7 +1001,9 @@ public OnFilterScriptInit(){
 	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
 		CheckColAndreasVersion();
 	#endif
-	Tryg3DInit();
+	#if !defined DISABLE_3D_TRYG_INIT
+		Tryg3DInit();
+	#endif
 	#if defined _3DTryg_OnFilterScriptInit
 		_3DTryg_OnFilterScriptInit();
 	#endif
@@ -1024,7 +1026,9 @@ public OnGameModeInit(){
 	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
 		CheckColAndreasVersion();
 	#endif
-	Tryg3DInit();
+	#if !defined DISABLE_3D_TRYG_INIT
+		Tryg3DInit();
+	#endif
 	#if defined _3DTryg_OnGameModeInit
 		_3DTryg_OnGameModeInit();
 	#endif

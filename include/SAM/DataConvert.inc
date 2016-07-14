@@ -9,7 +9,7 @@
  * Plugins: SScanf                                                                                  *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.7.1                                                                              *
+ * File Version: 1.7.2                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
  * SScanf Version: 2.8.2                                                                            *
  *                                                                                                  *
@@ -40,17 +40,19 @@
  * swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2));             *
  * FloatToInt(Float:value); //Convert Float binary data to Integer binary data                      *
  * Float:IntToFloat(value); //Convert Integer binary data to Float binary data                      *
+ * bool:ContainInSeries(value,...);                                                                 *
+ * bool:ContainInSeriesFloat(Float:value,Float:...);                                                *
  *                                                                                                  *
  ****************************************************************************************************/
 
 /*
 //Check Version DataConvert.inc
 #if !defined _Data_Convert
-	#error [ADM] You need DataConvert.inc v1.7.1
+	#error [ADM] You need DataConvert.inc v1.7.2
 #elseif !defined Data_Convert_Version
-	#error [ADM] Update you DataConvert.inc to v1.7.1
-#elseif (Data_Convert_Version < 10701)
-	#error [ADM] Update you DataConvert.inc to v1.7.1
+	#error [ADM] Update you DataConvert.inc to v1.7.2
+#elseif (Data_Convert_Version < 10702)
+	#error [ADM] Update you DataConvert.inc to v1.7.2
 #endif
 */
 
@@ -63,7 +65,7 @@
 #endif
 #define _Data_Convert
 
-#define Data_Convert_Version		(10701) //a.b.c 10000*a+100*b+c
+#define Data_Convert_Version		(10702) //a.b.c 10000*a+100*b+c
 
 #define FIRST_FILE_ADDRESS			(0x004E5A18)
 #define INVALID_FILE_ID				(0xFFB1A5E7)
@@ -239,6 +241,20 @@ stock code128(input[],output[]){
 		output[i] = (0xFF & input[i]+128);
 	}
 	output[strlen(input)] = EOS;
+}
+
+stock bool:ContainInSeries(value,...){
+	for(new i = 1, j = numargs(); i < j; i++){
+		if(getarg(i) == value) return true;
+	}
+	return false;
+}
+
+stock bool:ContainInSeriesFloat(Float:value,Float:...){
+	for(new i = 1, j = numargs(); i < j; i++){
+		if((Float:getarg(i)) == value) return true;
+	}
+	return false;
 }
 
 //EOF
