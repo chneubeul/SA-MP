@@ -9,7 +9,7 @@
  * Plugins: SScanf                                                                                  *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.7.2                                                                              *
+ * File Version: 1.7.3                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
  * SScanf Version: 2.8.2                                                                            *
  *                                                                                                  *
@@ -32,7 +32,7 @@
  * strcopy(input[],output[]);  //string copy for warning 224: indeterminate array size              *
  * fstrcopy(input[],output[],maxdest = sizeof(output));   //fast string copy                        *
  * ABCToCBA(input[],output[]);                                                                      *
- * AnyToInt(str[],type,&bool:flag);                                                                 *
+ * AnyToInt(string[],type,&bool:flag);                                                              *
  * IntToAny(value,output[],type);                                                                   *
  * rot13(string[]);                                                                                 *
  * code128(input[],output[]);                                                                       *
@@ -48,11 +48,11 @@
 /*
 //Check Version DataConvert.inc
 #if !defined _Data_Convert
-	#error [ADM] You need DataConvert.inc v1.7.2
+	#error [ADM] You need DataConvert.inc v1.7.3
 #elseif !defined Data_Convert_Version
-	#error [ADM] Update you DataConvert.inc to v1.7.2
-#elseif (Data_Convert_Version < 10702)
-	#error [ADM] Update you DataConvert.inc to v1.7.2
+	#error [ADM] Update you DataConvert.inc to v1.7.3
+#elseif (Data_Convert_Version < 10703)
+	#error [ADM] Update you DataConvert.inc to v1.7.3
 #endif
 */
 
@@ -65,7 +65,7 @@
 #endif
 #define _Data_Convert
 
-#define Data_Convert_Version		(10702) //a.b.c 10000*a+100*b+c
+#define Data_Convert_Version		(10703) //a.b.c 10000*a+100*b+c
 
 #define FIRST_FILE_ADDRESS			(0x004E5A18)
 #define INVALID_FILE_ID				(0xFFB1A5E7)
@@ -95,16 +95,12 @@ stock bool:swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = si
 }
 
 stock GetFileID(File:handle){
-	if(handle == INVALID_FILE_HANDLE){
-		return INVALID_FILE_ID;
-	} else {
-		return ((GetFileHandleID(handle)-FIRST_FILE_ADDRESS)/32);
-	}
+	return (handle == INVALID_FILE_HANDLE)?INVALID_FILE_ID:((GetFileHandleID(handle)-FIRST_FILE_ADDRESS)/32);
 }
 
 stock BinToInt(string[]){
 	new int = 0;
-	sscanf(string","b",int);
+	if(sscanf(string,"b",int)) return 0;
 	return int;
 }
 
@@ -117,14 +113,14 @@ stock HexToBin(string[]){
 
 stock BinToHex(string[]){
 	new str[10], value = 0;
-	sscanf(string,"b",value);
+	if(sscanf(string,"b",value)) return 0;
 	format(str,sizeof(str),"%06x",value);
 	return str;
 }
 
 stock BinToHexEx(string[]){
 	new str[10], value = 0;
-	sscanf(string,"b",value);
+	if(sscanf(string,"b",value)) return 0;
 	format(str,sizeof(str),"%x",value);
 	return str;
 }
@@ -136,11 +132,7 @@ stock IntToBin(value){
 }
 
 stock bool:StringToBool(string[]){
-	if(string[0] == '0'){
-		return false;
-	} else {
-		return true;
-	}
+	return (string[0] != '0');
 }
 
 stock strcopy(input[],output[]){
@@ -150,7 +142,7 @@ stock strcopy(input[],output[]){
 	output[strlen(input)] = EOS;
 }
 
-stock fstrcopy(input[], output[], maxdest = sizeof(output)){
+stock fstrcopy(input[],output[],maxdest = sizeof(output)){
 	output[0] = EOS;
 	strcat(output,input);
 	output[strlen(input)] = EOS;
@@ -158,7 +150,7 @@ stock fstrcopy(input[], output[], maxdest = sizeof(output)){
 
 stock HexToInt(string[]){
 	new int = 0;
-	sscanf(string,"x",int);
+	if(sscanf(string,"x",int)) return 0;
 	return int;
 }
 
@@ -174,19 +166,19 @@ stock IntToHexEx(int){
 	return result;
 }
 
-stock ABCToCBA(input[], output[]){
+stock ABCToCBA(input[],output[]){
 	for(new i = 0, j = strlen(input); i < j; i++){
 		output[j-(i+1)] = input[i];
 	}
 	output[strlen(input)] = EOS;
 }
 
-stock AnyToInt(str[], type, &bool:flag){
-	new k, n = strlen(str), i = 1, val;
-	if(str[0] >= 0x30 && str[0] <= 0x39){
-		val = str[0] - 48;
+stock AnyToInt(string[],type,&bool:flag){
+	new k, n = strlen(string), i = 1, val;
+	if(string[0] >= 0x30 && string[0] <= 0x39){
+		val = string[0] - 48;
 	} else {
-		val = str[0] - 55;
+		val = string[0] - 55;
 	}
 	if(val >= type){
 		flag = false;
@@ -194,10 +186,10 @@ stock AnyToInt(str[], type, &bool:flag){
 	}
 
 	while(i < n){
-		if(str[i] >= 0x30 && str[i] <= 0x39){
-	    	k = str[i] - 48;
+		if(string[i] >= 0x30 && string[i] <= 0x39){
+	    	k = string[i] - 48;
 		} else {
-			k = str[i] - 55;
+			k = string[i] - 55;
 		}
 		if(k >= type){
 			flag = false;
