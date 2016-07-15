@@ -105,24 +105,24 @@ stock BinToInt(string[]){
 }
 
 stock HexToBin(string[]){
-	new str[34], value = 0;
+	new tStr[34], value = 0;
 	sscanf(string,"x",value);
-	format(str,sizeof(str),"%b",value);
-	return str;
+	format(tStr,sizeof(tStr),"%b",value);
+	return tStr;
 }
 
 stock BinToHex(string[]){
-	new str[10], value = 0;
+	new tStr[10], value = 0;
 	if(sscanf(string,"b",value)) return 0;
-	format(str,sizeof(str),"%06x",value);
-	return str;
+	format(tStr,sizeof(tStr),"%06x",value);
+	return tStr;
 }
 
 stock BinToHexEx(string[]){
-	new str[10], value = 0;
+	new tStr[10], value = 0;
 	if(sscanf(string,"b",value)) return 0;
-	format(str,sizeof(str),"%x",value);
-	return str;
+	format(tStr,sizeof(tStr),"%x",value);
+	return tStr;
 }
 
 stock IntToBin(value){

@@ -472,9 +472,9 @@ stock bool:IsValidStreamer(version){
 
 stock GetStreamerVersionName(name[], value = GET_STREAMER_VERSION, maxdest = sizeof name){
 	if(value == GET_STREAMER_VERSION) value = GetStreamerVersion();
-	new str[10];
-	format(str,sizeof(str),"%06x",value);
-	format(name,maxdest,"%d.%d.%dr%d",(str[0]-48),(str[1]-48),(str[2]-48),(((str[3]-48)*100) + ((str[4]-48)*10) + (str[5]-48)));
+	new ver_str[10];
+	format(ver_str,sizeof(ver_str),"%06x",value);
+	format(name,maxdest,"%d.%d.%dr%d",(ver_str[0]-48),(ver_str[1]-48),(ver_str[2]-48),(((ver_str[3]-48)*100) + ((ver_str[4]-48)*10) + (ver_str[5]-48)));
 }
 
 stock SetDynamicObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
