@@ -17,6 +17,12 @@
  * ATM Version: 1.4.2                                                                                                             *
  * Missile Version: 1.6.3                                                                                                         *
  *                                                                                                                                *
+ * Vehicle Weapons:                                                                                                               *
+ * - Mini Missile (Dual rocket)                                                                                                   *
+ * - Heavy Missile (Six rocket of high firepower)                                                                                 *
+ * - Rhino Missile (Rhino explosion)                                                                                              *
+ * - Bomber Missile (Quadruple-ground missiles)                                                                                   *
+ *                                                                                                                                *
  * Functions:                                                                                                                     *
  * ToggleVehicleMiniMissile(vehicleid,toggle);                                                                                    *
  * ToggleVehicleHeavyMissile(vehicleid,toggle);                                                                                   *
