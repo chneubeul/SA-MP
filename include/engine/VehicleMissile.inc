@@ -13,7 +13,7 @@
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
  * MapAndreas Version: 1.2.1                                                                                                      *
- * 3DTryg Version: 2.6.2                                                                                                          *
+ * 3DTryg Version: 2.6.6                                                                                                          *
  * ATM Version: 1.4.2                                                                                                             *
  * Missile Version: 1.6.3                                                                                                         *
  *                                                                                                                                *
