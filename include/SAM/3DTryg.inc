@@ -6,22 +6,22 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  *                                                                                                                                *
- * Plugins: MapAndreas, ColAndreas                                                                                                *
+ * Plugins: MapAndreas, ColAndreas, YSF                                                                                           *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.6.6                                                                                                            *
+ * File Version: 2.7.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
+ * YSF Version: 2.2.0 (IS4)                                                                                                       *
  *                                                                                                                                *
- * 3DTryg Precision List:                                                                                                         *
- * 1. 3D:ColAndreas   - The most accurate precision with ColAndreas plugin.                                                       *
- * 2. 3D:MapAndreasEx - Average precision MapAndreas plugin + MapAndreasEx Module.                                                *
- * 3. 3D:MapAndreas   - Average precision MapAndreas plugin.                                                                      *
- * 4. 3D:Standard     - The default precision, lack of special functions.                                                         *
+ * 3DTryg FindZ Precision:                                                                                                        *
+ * 1. ColAndreas   - The most accurate precision with ColAndreas plugin.                                                          *
+ * 2. MapAndreasEx - Average precision MapAndreas plugin + MapAndreasEx Module.                                                   *
+ * 3. MapAndreas   - Average precision MapAndreas plugin.                                                                         *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
- * Get3DTrygPrecision();                                                                                                          *
+ * Get3DTrygModules(&modules_count=0);                                                                                            *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                       *
  * abs(value);                                                                                                                    *
  * power(value,Float:exponent);                                                                                                   *
@@ -81,14 +81,19 @@
  * bool:IsPointInSphere(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:size);                                           *
  * bool:IsPointInRectangle(Float:x,Float:y,Float:minx,Float:miny,Float:maxx,Float:maxy);                                          *
  * bool:IsPointInCube(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                 *
- * bool:IsPointInPolygon(Float:x,Float:y,{Float,_}:...);                                                                          *
+ * bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoints = sizeof(points));                                              *
  * bool:IsProbable(chance);                                                                                                       *
  * Float:CalculatePercent(Float:value,Float:maxvalue);                                                                            *
  * Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
  * Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                            *
+ * Float:GetVehicleSpeed(vehicleid);                                                                                              *
+ * Float:GetPlayerSpeed(playerid);                                                                                                *
+ * CreateDynamicExplosion(Float:x,Float:y,Float:z,type,Float:radius,worldid=-1,interiorid=-1,playerid=-1,Float:distance=200.0);   *
  *                                                                                                                                *
  * Symbols:                                                                                                                       *
- * FLOAT_PI - pi constant value                                                                                                   *
+ * FLOAT_PI  - pi constant value                                                                                                  *
+ * VBTP      - value bigger than possible                                                                                         *
+ * FLOAT_NAN - Float NaN                                                                                                          *
  *                                                                                                                                *
  * MapAndreas Functions:                                                                                                          *
  * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0);                                                                           *
@@ -132,6 +137,17 @@
  * GetColAndreasVersionName(name[], value = GET_COLANDREAS_VERSION, maxdest = sizeof name);                                       *
  * CheckColAndreasVersion();                                                                                                      *
  *                                                                                                                                *
+ * YSF Functions:                                                                                                                 *
+ * Float:GetPlayerHydraReactorRX(playerid);                                                                                       *
+ * GetPlayerRotation(playerid,&Float:rx,&Float:ry,&Float:rz);                                                                     *
+ * GetPlayerTimeline(playerid);                                                                                                   *
+ * SetPlayerTimeline(playerid,timeline);                                                                                          *
+ * GetPlayerPos4D(playerid,&Float:x,&Float:y,&Float:z,&timeline);                                                                 *
+ * SetPlayerPos4D(playerid,Float:x,Float:y,Float:z,timeline=0);                                                                   *
+ *                                                                                                                                *
+ * YSF Extended Functions:                                                                                                        *
+ * UpdatePlayerTimeline(playerid);                                                                                                *
+ *                                                                                                                                *
  * Functions extra names:                                                                                                         *
  * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                          *
  * GetPointInFront            -> GetPointInFront3D                                                                                *
@@ -142,21 +158,26 @@
  * GetXYInFrontOfPlayerCol    -> GetPointInFrontOfPlayerCol                                                                       *
  * GetPointInFrontCol         -> GetPointInFront3DCol                                                                             *
  * GetPointInFrontOfCameraCol -> GetPointInFrontOfCamera3DCol                                                                     *
+ * GetXYZInFrontOfVehicle     -> GetPointInFrontOfVehicle3D (Attention, different syntax)                                         *
+ * GetVehicleAngle            -> GetVehicleRotation                                                                               *
  * Tryg3DMapAndreasFindZ      -> CA_FindZ_For2DCoord / MapAndreasFindZ / MapAndreas_FindZ_For2DCoord                              *
  *                                                                                                                                *
  * Old prototype:                                                                                                                 *
  * GetAngle                   -> GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D                             *
+ *                                                                                                                                *
+ * Deprecated functions:                                                                                                          *
+ * GetXYZInFrontOfVehicle(vehicleid,Float:distance,&Float:x,&Float:y,&Float:z);                                                   *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.6
+	#error [ADM] You need 3DTryg.inc v2.7.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.6
-#elseif (Tryg3D_Version < 20606)
-	#error [ADM] Update you 3DTryg.inc to v2.6.6
+	#error [ADM] Update you 3DTryg.inc to v2.7.0
+#elseif (Tryg3D_Version < 20700)
+	#error [ADM] Update you 3DTryg.inc to v2.7.0
 #endif
 */
 
@@ -165,7 +186,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20606) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20700) //a.b.c 10000*a+100*b+c
 
 
 
@@ -177,6 +198,11 @@
 
 #if !defined COLANDREAS_VERSION
 	#define COLANDREAS_VERSION							(0)
+#endif
+
+//Detect YSF
+#if defined _YSF_included
+	#define Tryg3D_YSF
 #endif
 
 //Detect MapAndreas
@@ -208,27 +234,54 @@
 	
 #endif
 
-//Define Precision
+//Define FindZ Precision
 #if defined Tryg3D_ColAndreas
 	#define Tryg3DMapAndreasFindZ						CA_FindZ_For2DCoord
-	#define Tryg3DPrecision								"3D:ColAndreas"
 #elseif defined Tryg3D_MapAndreasEx
 	#define Tryg3DMapAndreasFindZ						MapAndreasFindZ
-	#define Tryg3DPrecision								"3D:MapAndreasEx"
 #elseif defined Tryg3D_MapAndreas
 	#define Tryg3DMapAndreasFindZ						MapAndreas_FindZ_For2DCoord
-	#define Tryg3DPrecision								"3D:MapAndreas"
-#else
-	#define Tryg3DPrecision								"3D:Standard"
 #endif
 
-#define Get3DTrygPrecision()							(Tryg3DPrecision)
+stock Get3DTrygModules(&modules_count=0){
+	modules_count = 0;
+	new tryg_str[128];
+	format(tryg_str,sizeof(tryg_str),"3D");
+	
+	#if defined Tryg3D_MapAndreas
+		format(tryg_str,sizeof(tryg_str),"%s:MapAndreas",tryg_str);
+		modules_count++;
+	#endif
+	
+	#if defined Tryg3D_ColAndreas
+		format(tryg_str,sizeof(tryg_str),"%s:ColAndreas",tryg_str);
+		modules_count++;
+	#endif
+	
+	#if defined Tryg3D_YSF
+		format(tryg_str,sizeof(tryg_str),"%s:YSF",tryg_str);
+		modules_count++;
+	#endif
+	
+	return tryg_str;
+}
+
+#define Get3DTrygPrecision	Get3DTrygModules
+
 
 #if !defined FLOAT_PI
 	#define FLOAT_PI		 							(3.14159265358979323846)
 #endif
 
-#define MAX_POLYGON_POINTS 								(32)
+#if !defined VBTP
+	#define VBTP 										(0x7FFFFFFF)
+#endif
+
+#if !defined FLOAT_NAN
+	#define FLOAT_NAN 									(Float:0xFFFFFFFF)
+#endif
+
+#define MAX_POLYGON_POINTS 								(256)
 
 #if defined Tryg3D_ColAndreas
 	#define POSITION_FLAG_WORLD							(0b00000001)
@@ -277,6 +330,35 @@
 
 //old code version made by Zoutdaxv (modified version)
 #define GetRotationFor2Point2D(%0,%1,%2,%3,%4)			(CompRotationFloat((atan2((%3)-(%1),(%2)-(%0))-90.0),(%4)))
+
+stock Float:GetVehicleSpeed(vehicleid){
+	new Float:x,Float:y,Float:z;
+	GetVehicleVelocity(vehicleid,x,y,z);
+	return floatmul(VectorSize(x,y,z),190.0);
+}
+
+//Prototype function
+stock Float:GetPlayerSpeed(playerid){
+	new Float:x,Float:y,Float:z;
+	GetPlayerVelocity(playerid,x,y,z);
+	return VectorSize(x,y,z);
+}
+
+stock CreateDynamicExplosion(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,playerid = -1,Float:distance = 200.0){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		if(IsPlayerConnected(i)){
+			new Float:px, Float:py, Float:pz;
+			if(IsPlayerInAnyVehicle(i)){
+				GetVehiclePos(GetPlayerVehicleID(i),px,py,pz);
+			} else {
+				GetPlayerPos(i,px,py,pz);
+			}
+			if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (i == playerid || playerid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
+				CreateExplosionForPlayer(i,x,y,z,type,radius);
+			}
+		}
+	}
+}
 
 stock GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz){
 	tx = x + (random(range * 2 + 1)-range);
@@ -410,9 +492,9 @@ stock Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:
 stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 	new Float:qw,Float:qx,Float:qy,Float:qz;
 	GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
-	rx = asin(2*qy*qz-2*qx*qw);
-	ry = -atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy);
-	rz = -atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz);
+	CompRotationFloat(asin(2*qy*qz-2*qx*qw),rx);
+	CompRotationFloat(-atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy),ry);
+	CompRotationFloat(-atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz),rz);
 }
 
 stock Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius){
@@ -522,17 +604,16 @@ stock bool:IsPointInRectangle(Float:x,Float:y,Float:minx,Float:miny,Float:maxx,F
 	return false;
 }
 
-//Polygon Test by RyDeR SRC:http://forum.sa-mp.com/showpost.php?p=1154971&postcount=1871
-stock bool:IsPointInPolygon(Float:x,Float:y,{Float,_}:...){
+//Polygon Test by RyDeR SRC:http://forum.sa-mp.com/showpost.php?p=1154971&postcount=1871 (Updated)
+stock bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoints = sizeof(points)){
+	new polygon_Sides = ((maxpoints - 2) / 2);
+	if((maxpoints - 2) & 0b1 || polygon_Sides < 3) return false;
 	
-	new args_Total = numargs(), polygon_Sides = (args_Total - 2) / 2;
-	if((args_Total - 2) & 0b1 || MAX_POLYGON_POINTS <= polygon_Sides || polygon_Sides < 3) return false;
-
 	new Float:polygon_Data[2][MAX_POLYGON_POINTS], cross_Total;
 	
 	for(new i = 2, j; i < args_Total; i += 2, j++){
-		polygon_Data[0][j] = Float:getarg(i);
-		polygon_Data[1][j] = Float:getarg(i+1);
+		polygon_Data[0][j] = points[i];
+		polygon_Data[1][j] = points[i+1];
 	}
 	for(new i, j = polygon_Sides - 1; i < polygon_Sides; j = i, i++){
 		if(polygon_Data[1][i] < y && polygon_Data[1][j] >= y || polygon_Data[1][j] < y && polygon_Data[1][i] >= y){
@@ -860,6 +941,107 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	
 #endif
 
+//YSF Functions
+#if defined Tryg3D_YSF
+
+	#define GetPlayerHydraReactorRX(%0) 		CompRotationFloat((GetPlayerHydraReactorAngle(%0)/55.5555555)+180.0)
+	
+	stock GetPlayerRotation(playerid,&Float:rx,&Float:ry,&Float:rz){
+		new Float:qw,Float:qx,Float:qy,Float:qz;
+		GetPlayerRotationQuat(playerid,qw,qx,qy,qz);
+		CompRotationFloat(asin(2*qy*qz-2*qx*qw),rx);
+		CompRotationFloat(-atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy),ry);
+		CompRotationFloat(-atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz),rz);
+	}
+	
+	#define GetPlayerTimeline(%0)				GetPVarInt((%0),"PlayerTimeline")
+
+	stock UpdatePlayerTimeline(playerid){
+		new tline = GetPlayerTimeline(playerid), pskin = GetPlayerSkin(playerid), pcolor = GetPlayerColor(playerid);
+		for(new i = 0; i < MAX_PLAYERS; i++){
+			if(tline == GetPlayerTimeline(i)){
+				ShowPlayerForPlayer(i,playerid);
+				ShowPlayerForPlayer(playerid,i);
+				
+				SetPlayerSkinForPlayer(i,playerid,pskin);
+				SetPlayerSkinForPlayer(playerid,i,GetPlayerSkin(i));
+				
+				SetPlayerMarkerForPlayer(i,playerid,(pcolor & 0xFFFFFF00));
+				SetPlayerMarkerForPlayer(playerid,i,(GetPlayerColor(i) & 0xFFFFFF00));
+			} else {
+				HidePlayerForPlayer(i,playerid);
+				HidePlayerForPlayer(playerid,i);
+				
+				SetPlayerMarkerForPlayer(i,playerid,pcolor);
+				SetPlayerMarkerForPlayer(playerid,i,GetPlayerColor(i));
+			}
+		}
+	}
+
+	stock SetPlayerTimeline(playerid,timeline){
+		SetPVarInt(playerid,"PlayerTimeline",timeline);
+		UpdatePlayerTimeline(playerid);
+	}
+
+	stock GetPlayerPos4D(playerid,&Float:x,&Float:y,&Float:z,&timeline){
+		GetPlayerPos(playerid,x,y,z);
+		timeline = GetPlayerTimeline(playerid);
+	}
+
+	stock SetPlayerPos4D(playerid,Float:x,Float:y,Float:z,timeline=0){
+		SetPlayerPos(playerid,x,y,z);
+		if(GetPlayerTimeline(playerid) != timeline) SetPlayerTimeline(playerid,timeline);
+	}
+	
+	//Hook: OnPlayerStreamIn
+	public OnPlayerStreamIn(playerid,forplayerid){
+		if(GetPlayerTimeline(playerid) == GetPlayerTimeline(forplayerid)){
+			ShowPlayerForPlayer(forplayerid,playerid);
+			SetPlayerSkinForPlayer(forplayerid,playerid,GetPlayerSkin(playerid));
+			SetPlayerSkinForPlayer(playerid,forplayerid,GetPlayerSkin(forplayerid));
+			SetPlayerMarkerForPlayer(forplayerid,playerid,GetPlayerColor(playerid));
+		} else {
+			HidePlayerForPlayer(forplayerid,playerid);
+			SetPlayerMarkerForPlayer(forplayerid,playerid,(GetPlayerColor(playerid) & 0xFFFFFF00));
+		}
+		#if defined _3DTryg_OnPlayerStreamIn
+			_3DTryg_OnPlayerStreamIn(playerid,forplayerid);
+		#endif
+		return 1;
+	}
+
+	#if defined _ALS_OnPlayerStreamIn
+		#undef OnPlayerStreamIn
+	#else
+		#define _ALS_OnPlayerStreamIn
+	#endif
+	#define OnPlayerStreamIn _3DTryg_OnPlayerStreamIn
+	#if defined _3DTryg_OnPlayerStreamIn
+		forward _3DTryg_OnPlayerStreamIn(playerid,forplayerid);
+	#endif
+
+
+	//Hook: OnPlayerConnect
+	public OnPlayerConnect(playerid){
+		SetPVarInt(playerid,"PlayerTimeline",0);
+		#if defined _3DTryg_OnPlayerConnect
+			_3DTryg_OnPlayerConnect(playerid);
+		#endif
+		return 1;
+	}
+
+	#if defined _ALS_OnPlayerConnect
+		#undef OnPlayerConnect
+	#else
+		#define _ALS_OnPlayerConnect
+	#endif
+	#define OnPlayerConnect _3DTryg_OnPlayerConnect
+	#if defined _3DTryg_OnPlayerConnect
+		forward _3DTryg_OnPlayerConnect(playerid);
+	#endif
+
+#endif
+
 #if (defined Tryg3D_MapAndreas || defined Tryg3D_ColAndreas)
 	stock bool:IsPointInWaterFrontOfPlayer(playerid,Float:radius){
 		new Float:x, Float:y, Float:z;
@@ -882,6 +1064,8 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 #define GetDistanceBetweenPoints						GetDistanceBetweenPoints3D
 #define CompressRotation								CompRotation
 #define CompressRotationFloat							CompRotationFloat
+#define GetXYZInFrontOfVehicle(%0,%1,%2,%3,%4) 			GetPointInFrontOfVehicle3D((%0),(%2),(%3),(%4),(%1))
+#define GetVehicleAngle									GetVehicleRotation
 
 #if !defined USE_OLD_PROTOTYPE_FUNCTION
 	
