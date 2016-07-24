@@ -997,12 +997,19 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	public OnPlayerStreamIn(playerid,forplayerid){
 		if(GetPlayerTimeline(playerid) == GetPlayerTimeline(forplayerid)){
 			ShowPlayerForPlayer(forplayerid,playerid);
+			ShowPlayerForPlayer(playerid,forplayerid);
+			
 			SetPlayerSkinForPlayer(forplayerid,playerid,GetPlayerSkin(playerid));
 			SetPlayerSkinForPlayer(playerid,forplayerid,GetPlayerSkin(forplayerid));
+			
 			SetPlayerMarkerForPlayer(forplayerid,playerid,GetPlayerColor(playerid));
+			SetPlayerMarkerForPlayer(playerid,forplayerid,GetPlayerColor(forplayerid));
 		} else {
 			HidePlayerForPlayer(forplayerid,playerid);
+			HidePlayerForPlayer(playerid,forplayerid);
+			
 			SetPlayerMarkerForPlayer(forplayerid,playerid,(GetPlayerColor(playerid) & 0xFFFFFF00));
+			SetPlayerMarkerForPlayer(playerid,forplayerid,(GetPlayerColor(forplayerid) & 0xFFFFFF00));
 		}
 		#if defined _3DTryg_OnPlayerStreamIn
 			_3DTryg_OnPlayerStreamIn(playerid,forplayerid);
