@@ -776,7 +776,7 @@ stock bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoints = sizeof(po
 	
 	new Float:polygon_Data[2][MAX_POLYGON_POINTS], cross_Total;
 	
-	for(new i = 2, j; i < args_Total; i += 2, j++){
+	for(new i = 0, j; i < args_Total; i += 2, j++){
 		polygon_Data[0][j] = points[i];
 		polygon_Data[1][j] = points[i+1];
 	}
