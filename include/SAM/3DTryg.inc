@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF                                                                                           *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.7.1                                                                                                            *
+ * File Version: 2.7.2                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -199,11 +199,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.7.1
+	#error [ADM] You need 3DTryg.inc v2.7.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.7.1
-#elseif (Tryg3D_Version < 20701)
-	#error [ADM] Update you 3DTryg.inc to v2.7.1
+	#error [ADM] Update you 3DTryg.inc to v2.7.2
+#elseif (Tryg3D_Version < 20702)
+	#error [ADM] Update you 3DTryg.inc to v2.7.2
 #endif
 */
 
@@ -212,7 +212,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20701) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20702) //a.b.c 10000*a+100*b+c
 
 
 #define TRYG3D_MODULEID_MAPANDREAS						(Tryg3DModule:1)
@@ -585,9 +585,8 @@ stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty
 }
 
 stock GetRandomPointInCircle(Float:x,Float:y,Float:size,&Float:tx,&Float:ty){
-	size *= 2;
-	tx = x + (random(floatround(size)+1)-size);
-	ty = y + (random(floatround(size)+1)-size);
+	tx = x + (random(floatround(size * 2)+1)-size);
+	ty = y + (random(floatround(size * 2)+1)-size);
 }
 
 stock GetRandomPointInCylinder(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:size,&Float:tx,&Float:ty,&Float:tz){
@@ -598,17 +597,15 @@ stock GetRandomPointInCylinder(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Floa
 }
 
 stock GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:size,&Float:tx,&Float:ty,&Float:tz){
-	size *= 2;
-	tx = x + (random(floatround(size)+1)-size);
-	ty = y + (random(floatround(size)+1)-size);
+	tx = x + (random(floatround(size * 2)+1)-size);
+	ty = y + (random(floatround(size * 2)+1)-size);
 	tz = random(floatround(floatsqroot(floatpower(minz-maxz,2)))+1)+minz;
 }
 
 stock GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:size,&Float:tx,&Float:ty,&Float:tz){
-	size *= 2;
-	tx = x + (random(floatround(size)+1)-size);
-	ty = y + (random(floatround(size)+1)-size);
-	tz = z + (random(floatround(size)+1)-size);
+	tx = x + (random(floatround(size * 2)+1)-size);
+	ty = y + (random(floatround(size * 2)+1)-size);
+	tz = z + (random(floatround(size * 2)+1)-size);
 }
 
 stock GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty){
