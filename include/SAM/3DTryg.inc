@@ -53,7 +53,6 @@
  * GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                                *
  * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);           *
  * GetRandomPointInCircle(Float:x,Float:y,Float:size,&Float:tx,&Float:ty);                                                        *
- * GetRandomPointInCylinder(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:size,&Float:tx,&Float:ty,&Float:tz);      *
  * GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:size,&Float:tx,&Float:ty,&Float:tz);                    *
  * GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:size,&Float:tx,&Float:ty,&Float:tz);                                      *  
  * GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty);                                    *
@@ -589,12 +588,15 @@ stock GetRandomPointInCircle(Float:x,Float:y,Float:size,&Float:tx,&Float:ty){
 	ty = y + (random(floatround(size * 2)+1)-size);
 }
 
+/*
+//temporarily removed, doesn't work
 stock GetRandomPointInCylinder(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:size,&Float:tx,&Float:ty,&Float:tz){
 	new Float:dist = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB), rand_line = random(floatround(dist)),
 		Float:line_x, Float:line_y, Float:line_z;
 	GetPointFor2Point3D(xA,yA,zA,xB,yB,zB,((float(rand_line)/dist)*100.0),line_x,line_y,line_z);
 	GetPointInFront3D(line_x,line_y,line_z,float(random(360)),0.0,float(random(floatround(size))+1),tx,ty,tz);
 }
+*/
 
 stock GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:size,&Float:tx,&Float:ty,&Float:tz){
 	tx = x + (random(floatround(size * 2)+1)-size);
