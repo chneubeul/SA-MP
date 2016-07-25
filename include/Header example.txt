@@ -39,10 +39,11 @@
 //#define USE_OLD_PROTOTYPE_FUNCTION
 //#define DISABLE_3D_TRYG_CHECK
 //#define DISABLE_3D_TRYG_INIT
+//#define ENABLE_3D_TRYG_TIMELINE_SYNC
 
 //StreamerFunction.inc
-#define DISABLE_STREAMER_SPEC_CHECK	 //Turn off check streamer version
-#define ENABLE_BULLET_DYNAMIC_OBJECT //Turn on call OnPlayerWeaponShot when we shoot in a dynamic object
+//#define DISABLE_STREAMER_SPEC_CHECK  //Turn off check streamer version
+//#define ENABLE_BULLET_DYNAMIC_OBJECT //Turn on call OnPlayerWeaponShot when we shoot in a dynamic object
 
 //ADM.inc Config
 //#define DISABLE_ATM_FUNCTION
