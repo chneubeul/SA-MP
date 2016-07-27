@@ -9,7 +9,7 @@
  * Plugins: Streamer, MapAndreas                                                                                                  *
  * Modules: 3DTryg, Missile                                                                                                       *
  *                                                                                                                                *
- * File Version: 1.5.1                                                                                                            *
+ * File Version: 1.5.3                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
  * MapAndreas Version: 1.2.1                                                                                                      *

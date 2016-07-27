@@ -9,7 +9,7 @@
  * Plugins: Streamer, ColAndreas                                                                                                  *
  * Modules: 3DTryg, Missile                                                                                                       *
  *                                                                                                                                *
- * File Version: 1.5.2                                                                                                            *
+ * File Version: 1.5.3                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
