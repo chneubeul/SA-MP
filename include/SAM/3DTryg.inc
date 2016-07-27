@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF                                                                                           *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.7.2                                                                                                            *
+ * File Version: 2.7.3                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -34,6 +34,10 @@
  * even_clock(max,id);                                                                                                            *
  * uneven_clock(max,id);                                                                                                          *
  * IsEven(value);                                                                                                                 *
+ * randomex(min,max);                                                                                                             *
+ * Tryg3DKeyPressed(key);                                                                                                         *
+ * Tryg3DKeyReleased(key);                                                                                                        *
+ * Tryg3DKeyHolding(key);                                                                                                         *
  * GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz);                                                     *
  * Float:GetDistanceBetweenPoints1D(Float:x1,Float:x2);                                                                           *
  * Float:GetDistanceBetweenPoints2D(Float:x1,Float:y1,Float:x2,Float:y2);                                                         *
@@ -54,7 +58,7 @@
  * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);           *
  * GetRandomPointInCircle(Float:x,Float:y,Float:size,&Float:tx,&Float:ty);                                                        *
  * GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:size,&Float:tx,&Float:ty,&Float:tz);                    *
- * GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:size,&Float:tx,&Float:ty,&Float:tz);                                      *  
+ * GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:size,&Float:tx,&Float:ty,&Float:tz);                                      *
  * GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty);                                    *
  * GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:tx,&Float:ty,&Float:tz);         *
  * Float:ShiftDegreeToRadian(Float:deg);                                                                                          *
@@ -198,11 +202,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.7.2
+	#error [ADM] You need 3DTryg.inc v2.7.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.7.2
-#elseif (Tryg3D_Version < 20702)
-	#error [ADM] Update you 3DTryg.inc to v2.7.2
+	#error [ADM] Update you 3DTryg.inc to v2.7.3
+#elseif (Tryg3D_Version < 20703)
+	#error [ADM] Update you 3DTryg.inc to v2.7.3
 #endif
 */
 
@@ -211,7 +215,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20702) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20703) //a.b.c 10000*a+100*b+c
 
 
 #define TRYG3D_MODULEID_MAPANDREAS						(Tryg3DModule:1)
@@ -392,6 +396,63 @@ stock bool:IsTryg3DModuleLoaded(Tryg3DModule:moduleid){
 #define GetVehicleFlags(%0)								GetVehicleFlagsByModel(GetVehicleModel(%0))
 #define IsVehicleFlag(%0,%1)							((%0) & (%1))
 
+#if !defined randomex
+	#define randomex(%0,%1) 							(random((%1)-(%0)+1)+(%0))
+#endif
+
+#define T3D:											v3D
+
+//ATM Module
+#define Tryg3DKeyPressed(%0) 							(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
+#define Tryg3DKeyReleased(%0)							(((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
+#define Tryg3DKeyHolding(%0) 							((newkeys & (%0)) == (%0))
+
+enum Vectors3D {
+	Float:T3D:X, Float:T3D:Y, Float:T3D:Z, Float:T3D:A
+}
+
+enum Float3D {
+	Float:T3D:X, Float:T3D:Y, Float:T3D:Z,
+	Float:T3D:rX, Float:T3D:rY, Float:T3D:rZ,
+	
+	Float:T3D:tX, Float:T3D:tY, Float:T3D:tZ,
+	
+	T3D:VW, T3D:INT, Float:T3D:SPEED
+}
+
+enum Float4D {
+	Float:T3D:X, Float:T3D:Y, Float:T3D:Z,
+	Float:T3D:rX, Float:T3D:rY, Float:T3D:rZ,
+	
+	Float:T3D:tX, Float:T3D:tY, Float:T3D:tZ,
+	
+	T3D:VW, T3D:INT, T3D:TL, Float:T3D:SPEED
+}
+
+enum LongFloat3D {
+	Float:T3D:X, Float:T3D:Y, Float:T3D:Z,
+	Float:T3D:rX, Float:T3D:rY, Float:T3D:rZ,
+	
+	Float:T3D:tX, Float:T3D:tY, Float:T3D:tZ,
+	Float:T3D:trX, Float:T3D:trY, Float:T3D:trZ,
+	
+	Float:T3D:VecX, Float:T3D:VecY, Float:T3D:VecZ,
+	
+	T3D:VW, T3D:INT, Float:T3D:SPEED
+}
+
+enum LongFloat4D {
+	Float:T3D:X, Float:T3D:Y, Float:T3D:Z,
+	Float:T3D:rX, Float:T3D:rY, Float:T3D:rZ,
+	
+	Float:T3D:tX, Float:T3D:tY, Float:T3D:tZ,
+	Float:T3D:trX, Float:T3D:trY, Float:T3D:trZ,
+	
+	Float:T3D:VecX, Float:T3D:VecY, Float:T3D:VecZ,
+	
+	T3D:VW, T3D:INT, T3D:TL, Float:T3D:SPEED
+}
+
 stock Float:GetVehicleSpeed(vehicleid){
 	new Float:x,Float:y,Float:z;
 	GetVehicleVelocity(vehicleid,x,y,z);
@@ -480,16 +541,30 @@ stock CountActors(){
 }
 
 stock CreateDynamicExplosion(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,playerid = -1,Float:distance = 200.0){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		if(IsPlayerConnected(i)){
-			new Float:px, Float:py, Float:pz;
-			if(IsPlayerInAnyVehicle(i)){
-				GetVehiclePos(GetPlayerVehicleID(i),px,py,pz);
-			} else {
-				GetPlayerPos(i,px,py,pz);
+	if(playerid == -1){
+		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+			if(IsPlayerConnected(i)){
+				new Float:px, Float:py, Float:pz;
+				if(IsPlayerInAnyVehicle(i)){
+					GetVehiclePos(GetPlayerVehicleID(i),px,py,pz);
+				} else {
+					GetPlayerPos(i,px,py,pz);
+				}
+				if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
+					CreateExplosionForPlayer(i,x,y,z,type,radius);
+				}
 			}
-			if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (i == playerid || playerid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
-				CreateExplosionForPlayer(i,x,y,z,type,radius);
+		}
+	} else {
+		if(IsPlayerConnected(playerid)){
+			new Float:px, Float:py, Float:pz;
+			if(IsPlayerInAnyVehicle(playerid)){
+				GetVehiclePos(GetPlayerVehicleID(playerid),px,py,pz);
+			} else {
+				GetPlayerPos(playerid,px,py,pz);
+			}
+			if((GetPlayerInterior(playerid) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(playerid) == worldid || worldid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
+				CreateExplosionForPlayer(playerid,x,y,z,type,radius);
 			}
 		}
 	}
@@ -1174,21 +1249,23 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 		stock UpdatePlayerTimeline(playerid){
 			new tline = GetPlayerTimeline(playerid), pskin = GetPlayerSkin(playerid), pcolor = GetPlayerColor(playerid);
 			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-				if(tline == GetPlayerTimeline(i)){
-					ShowPlayerForPlayer(i,playerid);
-					ShowPlayerForPlayer(playerid,i);
-					
-					SetPlayerSkinForPlayer(i,playerid,pskin);
-					SetPlayerSkinForPlayer(playerid,i,GetPlayerSkin(i));
-					
-					SetPlayerMarkerForPlayer(i,playerid,(pcolor & 0xFFFFFF00));
-					SetPlayerMarkerForPlayer(playerid,i,(GetPlayerColor(i) & 0xFFFFFF00));
-				} else {
-					HidePlayerForPlayer(i,playerid);
-					HidePlayerForPlayer(playerid,i);
-					
-					SetPlayerMarkerForPlayer(i,playerid,pcolor);
-					SetPlayerMarkerForPlayer(playerid,i,GetPlayerColor(i));
+				if(i != playerid){
+					if(tline == GetPlayerTimeline(i)){
+						ShowPlayerForPlayer(i,playerid);
+						ShowPlayerForPlayer(playerid,i);
+						
+						SetPlayerSkinForPlayer(i,playerid,pskin);
+						SetPlayerSkinForPlayer(playerid,i,GetPlayerSkin(i));
+						
+						SetPlayerMarkerForPlayer(i,playerid,pcolor);
+						SetPlayerMarkerForPlayer(playerid,i,GetPlayerColor(i));
+					} else {
+						HidePlayerForPlayer(i,playerid);
+						HidePlayerForPlayer(playerid,i);
+						
+						SetPlayerMarkerForPlayer(i,playerid,(pcolor & 0xFFFFFF00));
+						SetPlayerMarkerForPlayer(playerid,i,(GetPlayerColor(i) & 0xFFFFFF00));
+					}
 				}
 			}
 		}
@@ -1209,18 +1286,32 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 		}
 		
 		stock CreateDynamicExplosion4D(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,timeline = -1,playerid = -1,Float:distance = 200.0){
-			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-				if(IsPlayerConnected(i)){
-					new Float:px, Float:py, Float:pz;
-					if(IsPlayerInAnyVehicle(i)){
-						GetVehiclePos(GetPlayerVehicleID(i),px,py,pz);
-					} else {
-						GetPlayerPos(i,px,py,pz);
-					}
-					if(GetPlayerTimeline(i) == timeline || timeline == -1){
-						if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (i == playerid || playerid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
-							CreateExplosionForPlayer(i,x,y,z,type,radius);
+			if(playerid == -1){
+				for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+					if(IsPlayerConnected(i)){
+						new Float:px, Float:py, Float:pz;
+						if(IsPlayerInAnyVehicle(i)){
+							GetVehiclePos(GetPlayerVehicleID(i),px,py,pz);
+						} else {
+							GetPlayerPos(i,px,py,pz);
 						}
+						if(GetPlayerTimeline(i) == timeline || timeline == -1){
+							if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
+								CreateExplosionForPlayer(i,x,y,z,type,radius);
+							}
+						}
+					}
+				}
+			} else {
+				if(IsPlayerConnected(playerid)){
+					new Float:px, Float:py, Float:pz;
+					if(IsPlayerInAnyVehicle(playerid)){
+						GetVehiclePos(GetPlayerVehicleID(playerid),px,py,pz);
+					} else {
+						GetPlayerPos(playerid,px,py,pz);
+					}
+					if((GetPlayerInterior(playerid) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(playerid) == worldid || worldid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
+						CreateExplosionForPlayer(playerid,x,y,z,type,radius);
 					}
 				}
 			}

@@ -7,13 +7,12 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
  * Plugins: Streamer                                                                                                              *
- * Modules: 3DTryg, ATM                                                                                                           *
+ * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
  * File Version: 1.6.4                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
- * 3DTryg Version: 2.6.6                                                                                                          *
- * ATM Version: 1.4.2                                                                                                             *
+ * 3DTryg Version: 2.7.3                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, *
@@ -45,22 +44,13 @@
 	#error [ADM] Unknown Streamer Version
 #endif
 
-//Check Version ATM.inc
-#if !defined _ATM_Core
-	#error [ADM] You need ATM.inc v1.4.2
-#elseif !defined ATM_Version
-	#error [ADM] Update you ATM.inc to v1.4.2
-#elseif (ATM_Version < 10402)
-	#error [ADM] Update you ATM.inc to v1.4.2
-#endif
-
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.6
+	#error [ADM] You need 3DTryg.inc v2.7.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.6
-#elseif (Tryg3D_Version < 20606)
-	#error [ADM] Update you 3DTryg.inc to v2.6.6
+	#error [ADM] Update you 3DTryg.inc to v2.7.3
+#elseif (Tryg3D_Version < 20703)
+	#error [ADM] Update you 3DTryg.inc to v2.7.3
 #endif
 
 #if defined _missile_launcher
@@ -261,7 +251,7 @@ stock MissileDestroy(mobid,type,playerid){
 		interiorid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MissileComponent[mobid][missile_objectid],E_STREAMER_INTERIOR_ID);
 	
 	GetDynamicObjectPos(MissileComponent[mobid][missile_objectid],x,y,z);
-	CreateExplosionForRangePoint(x,y,z,worldid,interiorid,MissileComponent[mobid][missile_type],GetMissileExplodeVisibility(),MissileComponent[mobid][missile_explode]);
+	CreateDynamicExplosion(x,y,z,MissileComponent[mobid][missile_type],MissileComponent[mobid][missile_explode],worldid,interiorid,-1,GetMissileExplodeVisibility());
 	if(IsAnyPlayerInDynamicArea(MissileComponent[mobid][missile_areaid],1)){
 		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 			if(IsPlayerConnected(i)){
