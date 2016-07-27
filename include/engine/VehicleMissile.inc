@@ -14,7 +14,7 @@
  * Streamer Version: 2.8.2                                                                                                        *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * 3DTryg Version: 2.7.3                                                                                                          *
- * Missile Version: 1.6.3                                                                                                         *
+ * Missile Version: 1.6.5                                                                                                         *
  *                                                                                                                                *
  * Vehicle Weapons:                                                                                                               *
  * - Mini Missile (Dual rocket)                                                                                                   *
@@ -85,11 +85,11 @@
 
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v1.6.3
+	#error [ADM] You need Missile.inc v1.6.5
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v1.6.3
-#elseif (Missile_Version < 10603)
-	#error [ADM] Update you Missile.inc to v1.6.3
+	#error [ADM] Update you Missile.inc to v1.6.5
+#elseif (Missile_Version < 10605)
+	#error [ADM] Update you Missile.inc to v1.6.5
 #endif
 
 //Check Version 3DTryg.inc

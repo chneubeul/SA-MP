@@ -9,7 +9,7 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.6.4                                                                                                            *
+ * File Version: 1.6.5                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
  * 3DTryg Version: 2.7.3                                                                                                          *
@@ -32,11 +32,11 @@
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v1.6.4
+	#error [ADM] You need Missile.inc v1.6.5
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v1.6.4
-#elseif (Missile_Version < 10604)
-	#error [ADM] Update you Missile.inc to v1.6.4
+	#error [ADM] Update you Missile.inc to v1.6.5
+#elseif (Missile_Version < 10605)
+	#error [ADM] Update you Missile.inc to v1.6.5
 #endif
 */
 
@@ -58,7 +58,7 @@
 #endif
 #define _missile_launcher
 
-#define Missile_Version						(10604)
+#define Missile_Version						(10605)
 
 #define MISSILE_OBJECT_NORMAL				(0)
 #define MISSILE_OBJECT_BIG					(1)
