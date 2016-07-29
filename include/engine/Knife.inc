@@ -9,10 +9,10 @@
  * Plugins: Streamer                                                                                *
  * Modules: 3DTryg                                                                                  *
  *                                                                                                  *
- * File Version: 2.3.1                                                                              *
+ * File Version: 2.3.2                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
  * Streamer Version: 2.8.2                                                                          *
- * 3DTryg Version: 2.6.2                                                                            *
+ * 3DTryg Version: 2.7.3                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamKnifeShoot(bool:toggle);            //default: false                                *
@@ -24,17 +24,17 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
-#if !defined Streamer_AppendArrayData
+#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
 	#error [ADM] Unknown Streamer Version
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.2
+	#error [ADM] You need 3DTryg.inc v2.7.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.2
-#elseif (Tryg3D_Version < 20602)
-	#error [ADM] Update you 3DTryg.inc to v2.6.2
+	#error [ADM] Update you 3DTryg.inc to v2.7.3
+#elseif (Tryg3D_Version < 20703)
+	#error [ADM] Update you 3DTryg.inc to v2.7.3
 #endif
 
 #define KNIFE_SPEED 						(12.0)
@@ -138,7 +138,12 @@ public KnifeShot(playerid){
 					pvw = GetPlayerVirtualWorld(i);
 					pint = GetPlayerInterior(i);
 					if(pvw == mvw && pint == mint){
+					
+					#if defined USE_OLD_KNIFE_DATIVE
 						if(IsPointNearly2Points3D(px,py,pz, mx,my,mz, mtx,mty,mz, 1.0)){
+					#else
+						if(IsPointInCylinder(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
+					#endif
 							new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
 							if(dist < ldist){
 								ldist = dist;

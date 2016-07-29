@@ -269,7 +269,7 @@
 #endif
 */
 
-#if !defined Streamer_AppendArrayData
+#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
 	#error [ADM] Unknown Streamer Version
 #endif
 

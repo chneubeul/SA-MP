@@ -18,6 +18,7 @@ https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM/IMG%20Generator
 
 #include <a_samp>
 #include <sscanf2>
+#include <streamer>
 #include <SAM/BINLDR>
 
 //Check Version BINLDR.inc

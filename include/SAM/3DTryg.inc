@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF                                                                                           *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.7.3                                                                                                            *
+ * File Version: 2.7.4                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -202,11 +202,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.7.3
+	#error [ADM] You need 3DTryg.inc v2.7.4
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.7.3
-#elseif (Tryg3D_Version < 20703)
-	#error [ADM] Update you 3DTryg.inc to v2.7.3
+	#error [ADM] Update you 3DTryg.inc to v2.7.4
+#elseif (Tryg3D_Version < 20704)
+	#error [ADM] Update you 3DTryg.inc to v2.7.4
 #endif
 */
 
@@ -215,7 +215,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20703) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20704) //a.b.c 10000*a+100*b+c
 
 
 #define TRYG3D_MODULEID_MAPANDREAS						(Tryg3DModule:1)
@@ -1247,18 +1247,22 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 		#define GetPlayerTimeline(%0)				GetPVarInt((%0),"PlayerTimeline")
 
 		stock UpdatePlayerTimeline(playerid){
-			new tline = GetPlayerTimeline(playerid), pskin = GetPlayerSkin(playerid), pcolor = GetPlayerColor(playerid);
+			new tline = GetPlayerTimeline(playerid), pskin = GetPlayerSkin(playerid), pcolor = GetPlayerColor(playerid),
+				Float:px, Float:py, Float:pz;
+			GetPlayerPos(playerid,px,py,pz);
 			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 				if(i != playerid){
 					if(tline == GetPlayerTimeline(i)){
-						ShowPlayerForPlayer(i,playerid);
-						ShowPlayerForPlayer(playerid,i);
-						
 						SetPlayerSkinForPlayer(i,playerid,pskin);
 						SetPlayerSkinForPlayer(playerid,i,GetPlayerSkin(i));
 						
-						SetPlayerMarkerForPlayer(i,playerid,pcolor);
-						SetPlayerMarkerForPlayer(playerid,i,GetPlayerColor(i));
+						ShowPlayerForPlayer(i,playerid);
+						ShowPlayerForPlayer(playerid,i);
+						
+						if(GetPlayerDistanceFromPoint(i,px,py,pz) <= 300.0){
+							SetPlayerMarkerForPlayer(i,playerid,pcolor);
+							SetPlayerMarkerForPlayer(playerid,i,GetPlayerColor(i));
+						}
 					} else {
 						HidePlayerForPlayer(i,playerid);
 						HidePlayerForPlayer(playerid,i);

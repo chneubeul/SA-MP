@@ -1,48 +1,48 @@
-/**********************************************************************************************************************************
- *                                                                                                                                *
- *                                            NGCM Mob Move Engine System 5.1 Delta X                                             *
- *                                                                                                                                *
- * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
- *                                                                                                                                *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
- *                                                                                                                                *
- * Plugins: Streamer, MapAndreas                                                                                                  *
- * Modules: 3DTryg                                                                                                                *
- *                                                                                                                                *
- * File Version: 5.1.24                                                                                                           *
- * SA:MP Version: 0.3.7                                                                                                           *
- * Streamer Version: 2.8.2                                                                                                        *
- * MapAndreas Version: 1.2.1                                                                                                      *
- * 3DTryg Version: 2.6.5                                                                                                          *
- *                                                                                                                                *
- * Include created for the project Next Generation City Mod http://ngc.porobieni.com                                              *
- *                                                                                                                                *
- * Functions:                                                                                                                     *
- * bool:IsPointInWaterEx(Float:x,Float:y,Float:z);                                                                                *
- * GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);                 *
- *                                                                                                                                *
- * Gamma Engine X Functions:                                                                                                      *
- * EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed);                                          *
- * EngineExcavatorUpdate(objectid,areaid,EngineX:engineid,Float:speed);                                                           *
- *                                                                                                                                *
- * Delta Engine X Functions:                                                                                                      *
- * DeltaEngineRotation(objectid,EngineX:engineid,Float:speed = 0.05);                                                             *
- * DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed);                                     *
- *                                                                                                                                *
- **********************************************************************************************************************************
- *                                                                                                                                *
- * Why delta since the fifth version ?                                                                                            *
- *                                                                                                                                *
- * 1.0 - Do whatever you want. (Sphere)                                                                                           *
- * 2.0 Alpha - Turn, look straight ahead, fly. (Sphere)                                                                           *
- * 3.0 Beta - Turn, look straight ahead, fly. (Area Cube)                                                                         *
- * 4.0 Gamma X - Choose a direction, look straight ahead, fly. (Any Area)                                                         *
- * 5.0 Delta X - Choose a direction, slowly turn, look straight ahead, fly. (Any Area)                                            *
- *                                                                                                                                *
- * Why X ?                                                                                                                        *
- * Do not ask XD                                                                                                                  *
- *                                                                                                                                *
- **********************************************************************************************************************************/
+/***********************************************************************************************************************************
+ *                                                                                                                                 *
+ *                                            NGCM Mob Move Engine System 5.1 Delta X                                              *
+ *                                                                                                                                 *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                             *
+ *                                                                                                                                 *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                       *
+ *                                                                                                                                 *
+ * Plugins: Streamer, MapAndreas                                                                                                   *
+ * Modules: 3DTryg                                                                                                                 *
+ *                                                                                                                                 *
+ * File Version: 5.1.24                                                                                                            *
+ * SA:MP Version: 0.3.7                                                                                                            *
+ * Streamer Version: 2.8.2                                                                                                         *
+ * MapAndreas Version: 1.2.1                                                                                                       *
+ * 3DTryg Version: 2.6.5                                                                                                           *
+ *                                                                                                                                 *
+ * Include created for the project Next Generation City Mod http://ngc.porobieni.com                                               *
+ *                                                                                                                                 *
+ * Functions:                                                                                                                      *
+ * bool:IsPointInWaterEx(Float:x,Float:y,Float:z);                                                                                 *
+ * GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);                  *
+ *                                                                                                                                 *
+ * Gamma Engine X Functions:                                                                                                       *
+ * EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed);                                           *
+ * EngineExcavatorUpdate(objectid,areaid,EngineX:engineid,Float:speed);                                                            *
+ *                                                                                                                                 *
+ * Delta Engine X Functions:                                                                                                       *
+ * DeltaEngineRotation(objectid,EngineX:engineid,Float:speed = 0.05);                                                              *
+ * DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Float:speed);                                      *
+ *                                                                                                                                 *
+ ***********************************************************************************************************************************
+ *                                                                                                                                 *
+ * Why delta since the fifth version ?                                                                                             *
+ *                                                                                                                                 *
+ * 1.0 - Do whatever you want. (Sphere)                                                                                            *
+ * 2.0 Alpha - Turn, look straight ahead, fly. (Sphere)                                                                            *
+ * 3.0 Beta - Turn, look straight ahead, fly. (Area Cube)                                                                          *
+ * 4.0 Gamma X - Choose a direction, look straight ahead, fly. (Any Area)                                                          *
+ * 5.0 Delta X - Choose a direction, slowly turn, look straight ahead, fly. (Any Area)                                             *
+ *                                                                                                                                 *
+ * Why X ?                                                                                                                         *
+ * Do not ask XD                                                                                                                   *
+ *                                                                                                                                 *
+ ***********************************************************************************************************************************/
 
 /*
 //Check Version EngineX.inc
@@ -59,7 +59,7 @@
 	#error [ADM] Fatal error incompatible NOX
 #endif
 
-#if !defined Streamer_AppendArrayData
+#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
 	#error [ADM] Unknown Streamer Version
 #endif
 

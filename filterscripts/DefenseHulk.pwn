@@ -12,7 +12,6 @@
 #include <mapandreas>
 #include <YSF>
 
-#include <SAM/MapAndreasEx>
 #include <SAM/3DTryg>
 #include <EngineX>
 
