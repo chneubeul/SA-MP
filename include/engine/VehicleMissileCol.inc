@@ -9,7 +9,7 @@
  * Plugins: Streamer, ColAndreas                                                                                                  *
  * Modules: 3DTryg, Missile                                                                                                       *
  *                                                                                                                                *
- * File Version: 1.5.3                                                                                                            *
+ * File Version: 1.5.4                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -22,70 +22,94 @@
  * - Rhino Missile (Rhino explosion)                                                                                              *
  * - Bomber Missile (Quadruple-ground missiles)                                                                                   *
  * - Mortar Missile (Marica mortar)                                                                                               *
+ * - Mega Missile (Heavy Marica mortar)                                                                                           *
  *                                                                                                                                *
- * Functions:                                                                                                                     *
+ * Functions Mini Missile:                                                                                                        *
  * ToggleVehicleMiniMissile(vehicleid,toggle);                                                                                    *
- * ToggleVehicleHeavyMissile(vehicleid,toggle);                                                                                   *
- * ToggleVehicleRhinoMissile(vehicleid,toggle);                                                                                   *
- * ToggleVehicleBomberMissile(vehicleid,toggle);                                                                                  *
- * ToggleVehicleMortarMissile(vehicleid,toggle);                                                                                  *
  * IsToggleVehicleMiniMissile(vehicleid);                                                                                         *
- * IsToggleVehicleHeavyMissile(vehicleid);                                                                                        *
- * IsToggleVehicleRhinoMissile(vehicleid);                                                                                        *
- * IsToggleVehicleBomberMissile(vehicleid);                                                                                       *
- * IsToggleVehicleMortarMissile(vehicleid);                                                                                       *
- *                                                                                                                                *
  * Float:GetVehicleMiniMissileSpeed(vehicleid);                                                                                   *
- * Float:GetVehicleHeavyMissileSpeed(vehicleid);                                                                                  *
- * Float:GetVehicleBomberMissileSpeed(vehicleid);                                                                                 *
- * Float:GetVehicleMortarMissileSpeed(vehicleid);                                                                                 *
  * SetVehicleMiniMissileSpeed(vehicleid,Float:speed);                                                                             *
- * SetVehicleHeavyMissileSpeed(vehicleid,Float:speed);                                                                            *
- * SetVehicleBomberMissileSpeed(vehicleid,Float:speed);                                                                           *
- * SetVehicleMortarMissileSpeed(vehicleid,Float:speed);                                                                           *
- *                                                                                                                                *
  * GetVehicleMiniMissileReload(vehicleid);                                                                                        *
- * GetVehicleHeavyMissileReload(vehicleid);                                                                                       *
- * GetVehicleBomberMissileReload(vehicleid);                                                                                      *
- * GetVehicleRhinoMissileReload(vehicleid);                                                                                       *
- * GetVehicleMortarMissileReload(vehicleid);                                                                                      *
  * SetVehicleMiniMissileReload(vehicleid,time);                                                                                   *
- * SetVehicleHeavyMissileReload(vehicleid,time);                                                                                  *
- * SetVehicleBomberMissileReload(vehicleid,time);                                                                                 *
- * SetVehicleRhinoMissileReload(vehicleid,time);                                                                                  *
- * SetVehicleMortarMissileReload(vehicleid,time);                                                                                 *
- *                                                                                                                                *
  * Float:GetVehicleMiniMissileDistance(vehicleid);                                                                                *
- * Float:GetVehicleHeavyMissileDistance(vehicleid);                                                                               *
- * Float:GetVehicleBomberMissileDistance(vehicleid);                                                                              *
- * Float:GetVehicleRhinoMissileDistance(vehicleid);                                                                               *
- * Float:GetVehicleMortarMissileDistance(vehicleid);                                                                              *
  * SetVehicleMiniMissileDistance(vehicleid,Float:distance);                                                                       *
- * SetVehicleHeavyMissileDistance(vehicleid,Float:distance);                                                                      *
- * SetVehicleBomberMissileDistance(vehicleid,Float:distance);                                                                     *
- * SetVehicleRhinoMissileDistance(vehicleid,Float:distance);                                                                      *
- * SetVehicleMortarMissileDistance(vehicleid,Float:distance);                                                                     *
- *                                                                                                                                *
  * GetVehicleMiniMissileKey(vehicleid);                                                                                           *
- * GetVehicleHeavyMissileKey(vehicleid);                                                                                          *
- * GetVehicleBomberMissileKey(vehicleid);                                                                                         *
- * GetVehicleRhinoMissileKey(vehicleid);                                                                                          *
- * GetVehicleMortarMissileKey(vehicleid);                                                                                         *
  * SetVehicleMiniMissileKey(vehicleid,key);                                                                                       *
- * SetVehicleHeavyMissileKey(vehicleid,key);                                                                                      *
- * SetVehicleBomberMissileKey(vehicleid,key);                                                                                     *
- * SetVehicleRhinoMissileKey(vehicleid,key);                                                                                      *
- * SetVehicleMortarMissileKey(vehicleid,key);                                                                                     *
  *                                                                                                                                *
+ * Functions Heavy Missile:                                                                                                       *
+ * ToggleVehicleHeavyMissile(vehicleid,toggle);                                                                                   *
+ * IsToggleVehicleHeavyMissile(vehicleid);                                                                                        *
+ * Float:GetVehicleHeavyMissileSpeed(vehicleid);                                                                                  *
+ * SetVehicleHeavyMissileSpeed(vehicleid,Float:speed);                                                                            *
+ * GetVehicleHeavyMissileReload(vehicleid);                                                                                       *
+ * SetVehicleHeavyMissileReload(vehicleid,time);                                                                                  *
+ * Float:GetVehicleHeavyMissileDistance(vehicleid);                                                                               *
+ * SetVehicleHeavyMissileDistance(vehicleid,Float:distance);                                                                      *
+ * GetVehicleHeavyMissileKey(vehicleid);                                                                                          *
+ * SetVehicleHeavyMissileKey(vehicleid,key);                                                                                      *
+ *                                                                                                                                *
+ * Functions Rhino Missile:                                                                                                       *
+ * ToggleVehicleRhinoMissile(vehicleid,toggle);                                                                                   *
+ * IsToggleVehicleRhinoMissile(vehicleid);                                                                                        *
+ * GetVehicleRhinoMissileReload(vehicleid);                                                                                       *
+ * SetVehicleRhinoMissileReload(vehicleid,time);                                                                                  *
+ * Float:GetVehicleRhinoMissileDistance(vehicleid);                                                                               *
+ * SetVehicleRhinoMissileDistance(vehicleid,Float:distance);                                                                      *
+ * GetVehicleRhinoMissileKey(vehicleid);                                                                                          *
+ * SetVehicleRhinoMissileKey(vehicleid,key);                                                                                      *
+ *                                                                                                                                *
+ * Functions Bomber Missile:                                                                                                      *
+ * ToggleVehicleBomberMissile(vehicleid,toggle);                                                                                  *
+ * IsToggleVehicleBomberMissile(vehicleid);                                                                                       *
+ * Float:GetVehicleBomberMissileSpeed(vehicleid);                                                                                 *
+ * SetVehicleBomberMissileSpeed(vehicleid,Float:speed);                                                                           *
+ * GetVehicleBomberMissileReload(vehicleid);                                                                                      *
+ * SetVehicleBomberMissileReload(vehicleid,time);                                                                                 *
+ * Float:GetVehicleBomberMissileDistance(vehicleid);                                                                              *
+ * SetVehicleBomberMissileDistance(vehicleid,Float:distance);                                                                     *
+ * GetVehicleBomberMissileKey(vehicleid);                                                                                         *
+ * SetVehicleBomberMissileKey(vehicleid,key);                                                                                     *
+ *                                                                                                                                *
+ * Functions Mortar Missile:                                                                                                      *
+ * ToggleVehicleMortarMissile(vehicleid,toggle);                                                                                  *
+ * IsToggleVehicleMortarMissile(vehicleid);                                                                                       *
+ * Float:GetVehicleMortarMissileSpeed(vehicleid);                                                                                 *
+ * SetVehicleMortarMissileSpeed(vehicleid,Float:speed);                                                                           *
+ * GetVehicleMortarMissileReload(vehicleid);                                                                                      *
+ * SetVehicleMortarMissileReload(vehicleid,time);                                                                                 *
+ * Float:GetVehicleMortarMissileDistance(vehicleid);                                                                              *
+ * SetVehicleMortarMissileDistance(vehicleid,Float:distance);                                                                     *
+ * GetVehicleMortarMissileKey(vehicleid);                                                                                         *
+ * SetVehicleMortarMissileKey(vehicleid,key);                                                                                     *
  * Float:GetVehicleMortarMissileHeight(vehicleid);                                                                                *
  * SetVehicleMortarMissileHeight(vehicleid,Float:height);                                                                         *
  *                                                                                                                                *
+ * Functions Mega Missile:                                                                                                        *
+ * ToggleVehicleMegaMissile(vehicleid,toggle);                                                                                    *
+ * IsToggleVehicleMegaMissile(vehicleid);                                                                                         *
+ * Float:GetVehicleMegaMissileSpeed(vehicleid);                                                                                   *
+ * SetVehicleMegaMissileSpeed(vehicleid,Float:speed);                                                                             *
+ * GetVehicleMegaMissileReload(vehicleid);                                                                                        *
+ * SetVehicleMegaMissileReload(vehicleid,time);                                                                                   *
+ * Float:GetVehicleMegaMissileDistance(vehicleid);                                                                                *
+ * SetVehicleMegaMissileDistance(vehicleid,Float:distance);                                                                       *
+ * GetVehicleMegaMissileKey(vehicleid);                                                                                           *
+ * SetVehicleMegaMissileKey(vehicleid,key);                                                                                       *
+ * Float:GetVehicleMegaMissileHeight(vehicleid);                                                                                  *
+ * SetVehicleMegaMissileHeight(vehicleid,Float:height);                                                                           *
+ *                                                                                                                                *
+ * Extended Functions:                                                                                                            *
  * Float:GetMissileStreamDistance();                                                                                              *
  * SetMissileStreamDistance(Float:streamdistance);                                                                                *
  * DisarmVehicleMissile(vehicleid);                                                                                               *
- *                                                                                                                                *
+ * SetVehicleMissileDefaultConfig(vehicleid);                                                                                     *
+ * ToggleMissileAutoDisarm(bool:toggle);                                                                                          *
+ * bool:IsToggleMissileAutoDisarm();                                                                                              *
  * OnVehicleShot(playerid,type);                                                                                                  *
  * OnVehicleMissileInit();                                                                                                        *
+ *                                                                                                                                *
+ * Callbacks:                                                                                                                     *
+ * OnVehicleArmed(playerid,vehicleid);                                                                                            *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -120,37 +144,43 @@
 #endif
 #define _veh_missile_launcher
 
-#define MAX_VEHICLE_MISSILE_TYPE				(5)
+#define MAX_VEHICLE_MISSILE_TYPE				(6)
 #define VEHICLE_MISSILE_TYPE_MINI				(0)
 #define VEHICLE_MISSILE_TYPE_HEAVY				(1)
 #define VEHICLE_MISSILE_TYPE_BOMBER				(2)
 #define VEHICLE_MISSILE_TYPE_RHINO				(3)
 #define VEHICLE_MISSILE_TYPE_MORTAR				(4)
+#define VEHICLE_MISSILE_TYPE_MEGA				(5)
 
 #define VEHICLE_MISSILE_SPEED_MINI				(40.0)
 #define VEHICLE_MISSILE_SPEED_HEAVY				(40.0)
 #define VEHICLE_MISSILE_SPEED_BOMBER			(40.0)
 #define VEHICLE_MISSILE_SPEED_MORTAR			(40.0)
+#define VEHICLE_MISSILE_SPEED_MEGA				(40.0)
 
 #define VEHICLE_MISSILE_RELOAD_MINI				(500) //500 ms
 #define VEHICLE_MISSILE_RELOAD_HEAVY			(3000)
 #define VEHICLE_MISSILE_RELOAD_BOMBER			(1000)
 #define VEHICLE_MISSILE_RELOAD_RHINO			(250)
 #define VEHICLE_MISSILE_RELOAD_MORTAR			(500)
+#define VEHICLE_MISSILE_RELOAD_MEGA				(500)
 
 #define VEHICLE_MISSILE_DISTANCE_MINI			(1200.0)
 #define VEHICLE_MISSILE_DISTANCE_HEAVY			(2000.0)
 #define VEHICLE_MISSILE_DISTANCE_BOMBER			(1200.0)
 #define VEHICLE_MISSILE_DISTANCE_RHINO			(12.0)
 #define VEHICLE_MISSILE_DISTANCE_MORTAR			(250.0)
+#define VEHICLE_MISSILE_DISTANCE_MEGA			(250.0)
 
 #define VEHICLE_MISSILE_KEY_MINI				(KEY_FIRE)
 #define VEHICLE_MISSILE_KEY_HEAVY				(KEY_ACTION)
 #define VEHICLE_MISSILE_KEY_BOMBER				(KEY_YES)
 #define VEHICLE_MISSILE_KEY_RHINO				(KEY_FIRE)
 #define VEHICLE_MISSILE_KEY_MORTAR				(KEY_YES)
+#define VEHICLE_MISSILE_KEY_MEGA				(KEY_YES)
 
 #define VEHICLE_MISSILE_HEIGHT_MORTAR			(50.0)
+#define VEHICLE_MISSILE_HEIGHT_MEGA				(50.0)
 
 //Get Compress Adress
 #define GetVehicleConfigAddress(%0)				(floatround((%0)/32))
@@ -165,77 +195,94 @@ new VehicleConfigMiniMissile[64],
 	VehicleConfigRhinoMissile[64],
 	VehicleConfigBomberMissile[64],
 	VehicleConfigMortarMissile[64],
+	VehicleConfigMegaMissile[64],
+	
 	VehicleWeaponTick[MAX_PLAYERS][MAX_VEHICLE_MISSILE_TYPE],
 	VehicleWeaponReload[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
 	VehicleWeaponKey[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
 	Float:VehicleWeaponSpeed[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
 	Float:VehicleWeaponDistance[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
+	
 	Float:VehicleMortarHeight[MAX_VEHICLES+1],
-	Float:MissileStreamDistance = 200.0;
+	Float:VehicleMegaHeight[MAX_VEHICLES+1],
+	
+	Float:MissileStreamDistance = 200.0,
+	bool:VehicleMissileAutoDisarm = false;
+
 
 #define IsToggleVehicleMiniMissile(%0)			VM_GetValueBit(VehicleConfigMiniMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define IsToggleVehicleHeavyMissile(%0)			VM_GetValueBit(VehicleConfigHeavyMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define IsToggleVehicleRhinoMissile(%0)			VM_GetValueBit(VehicleConfigRhinoMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define IsToggleVehicleBomberMissile(%0)		VM_GetValueBit(VehicleConfigBomberMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define IsToggleVehicleMortarMissile(%0)		VM_GetValueBit(VehicleConfigMortarMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-
 #define ToggleVehicleMiniMissile(%0,%1)			VM_SetValueBit(VehicleConfigMiniMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
-#define ToggleVehicleHeavyMissile(%0,%1)		VM_SetValueBit(VehicleConfigHeavyMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
-#define ToggleVehicleRhinoMissile(%0,%1)		VM_SetValueBit(VehicleConfigRhinoMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
-#define ToggleVehicleBomberMissile(%0,%1)		VM_SetValueBit(VehicleConfigBomberMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
-#define ToggleVehicleMortarMissile(%0,%1)		VM_SetValueBit(VehicleConfigMortarMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
-
 #define GetVehicleMiniMissileSpeed(%0)			VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_MINI]
-#define GetVehicleHeavyMissileSpeed(%0)			VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
-#define GetVehicleBomberMissileSpeed(%0)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
-#define GetVehicleMortarMissileSpeed(%0)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
-
 #define SetVehicleMiniMissileSpeed(%0,%1)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_MINI] = (%1)
-#define SetVehicleHeavyMissileSpeed(%0,%1)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
-#define SetVehicleBomberMissileSpeed(%0,%1)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
-#define SetVehicleMortarMissileSpeed(%0,%1)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
-
 #define GetVehicleMiniMissileReload(%0)			VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_MINI]
-#define GetVehicleHeavyMissileReload(%0)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
-#define GetVehicleBomberMissileReload(%0)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
-#define GetVehicleRhinoMissileReload(%0)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
-#define GetVehicleMortarMissileReload(%0)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
-
 #define SetVehicleMiniMissileReload(%0,%1)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_MINI] = (%1)
-#define SetVehicleHeavyMissileReload(%0,%1)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
-#define SetVehicleBomberMissileReload(%0,%1)	VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
-#define SetVehicleRhinoMissileReload(%0,%1)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
-#define SetVehicleMortarMissileReload(%0,%1)	VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
-
 #define GetVehicleMiniMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_MINI]
-#define GetVehicleHeavyMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
-#define GetVehicleBomberMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
-#define GetVehicleRhinoMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
-#define GetVehicleMortarMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
-
 #define SetVehicleMiniMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_MINI] = (%1)
-#define SetVehicleHeavyMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
-#define SetVehicleBomberMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
-#define SetVehicleRhinoMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
-#define SetVehicleMortarMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
-
 #define GetVehicleMiniMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MINI]
-#define GetVehicleHeavyMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
-#define GetVehicleBomberMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
-#define GetVehicleRhinoMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
-#define GetVehicleMortarMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
-
 #define SetVehicleMiniMissileKey(%0,%1)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MINI] = (%1)
-#define SetVehicleHeavyMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
-#define SetVehicleBomberMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
-#define SetVehicleRhinoMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
-#define SetVehicleMortarMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
 
+#define IsToggleVehicleHeavyMissile(%0)			VM_GetValueBit(VehicleConfigHeavyMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleHeavyMissile(%0,%1)		VM_SetValueBit(VehicleConfigHeavyMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define GetVehicleHeavyMissileSpeed(%0)			VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
+#define SetVehicleHeavyMissileSpeed(%0,%1)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
+#define GetVehicleHeavyMissileReload(%0)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
+#define SetVehicleHeavyMissileReload(%0,%1)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
+#define GetVehicleHeavyMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
+#define SetVehicleHeavyMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
+#define GetVehicleHeavyMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
+#define SetVehicleHeavyMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
+
+#define IsToggleVehicleBomberMissile(%0)		VM_GetValueBit(VehicleConfigBomberMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleBomberMissile(%0,%1)		VM_SetValueBit(VehicleConfigBomberMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define GetVehicleBomberMissileSpeed(%0)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
+#define SetVehicleBomberMissileSpeed(%0,%1)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
+#define GetVehicleBomberMissileReload(%0)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
+#define SetVehicleBomberMissileReload(%0,%1)	VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
+#define GetVehicleBomberMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
+#define SetVehicleBomberMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
+#define GetVehicleBomberMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
+#define SetVehicleBomberMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
+
+#define IsToggleVehicleRhinoMissile(%0)			VM_GetValueBit(VehicleConfigRhinoMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleRhinoMissile(%0,%1)		VM_SetValueBit(VehicleConfigRhinoMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define GetVehicleRhinoMissileReload(%0)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
+#define SetVehicleRhinoMissileReload(%0,%1)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
+#define GetVehicleRhinoMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
+#define SetVehicleRhinoMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
+#define GetVehicleRhinoMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
+#define SetVehicleRhinoMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
+
+#define IsToggleVehicleMortarMissile(%0)		VM_GetValueBit(VehicleConfigMortarMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleMortarMissile(%0,%1)		VM_SetValueBit(VehicleConfigMortarMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define GetVehicleMortarMissileSpeed(%0)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
+#define SetVehicleMortarMissileSpeed(%0,%1)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
+#define GetVehicleMortarMissileReload(%0)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
+#define SetVehicleMortarMissileReload(%0,%1)	VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
+#define GetVehicleMortarMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
+#define SetVehicleMortarMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
+#define GetVehicleMortarMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
+#define SetVehicleMortarMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
 #define GetVehicleMortarMissileHeight(%0)		VehicleMortarHeight[(%0)]
 #define SetVehicleMortarMissileHeight(%0,%1)	VehicleMortarHeight[(%0)] = (%1)
 
+#define IsToggleVehicleMegaMissile(%0)			VM_GetValueBit(VehicleConfigMegaMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleMegaMissile(%0,%1)			VM_SetValueBit(VehicleConfigMegaMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define GetVehicleMegaMissileSpeed(%0)			VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_MEGA]
+#define SetVehicleMegaMissileSpeed(%0,%1)		VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_MEGA] = (%1)
+#define GetVehicleMegaMissileReload(%0)			VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_MEGA]
+#define SetVehicleMegaMissileReload(%0,%1)		VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_MEGA] = (%1)
+#define GetVehicleMegaMissileDistance(%0)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_MEGA]
+#define SetVehicleMegaMissileDistance(%0,%1)	VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_MEGA] = (%1)
+#define GetVehicleMegaMissileKey(%0)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MEGA]
+#define SetVehicleMegaMissileKey(%0,%1)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MEGA] = (%1)
+#define GetVehicleMegaMissileHeight(%0)			VehicleMegaHeight[(%0)]
+#define SetVehicleMegaMissileHeight(%0,%1)		VehicleMegaHeight[(%0)] = (%1)
+
 #define GetMissileStreamDistance()				MissileStreamDistance
 #define SetMissileStreamDistance(%0)			MissileStreamDistance = (%0)
+
+#define IsToggleMissileAutoDisarm()				VehicleMissileAutoDisarm
+#define ToggleMissileAutoDisarm(%0)				VehicleMissileAutoDisarm = (%0)
 
 stock DisarmVehicleMissile(vehicleid){
 	ToggleVehicleMiniMissile(vehicleid,0);
@@ -243,10 +290,45 @@ stock DisarmVehicleMissile(vehicleid){
 	ToggleVehicleRhinoMissile(vehicleid,0);
 	ToggleVehicleBomberMissile(vehicleid,0);
 	ToggleVehicleMortarMissile(vehicleid,0);
+	ToggleVehicleMegaMissile(vehicleid,0);
+}
+
+stock SetVehicleMissileDefaultConfig(vehicleid){
+	SetVehicleMiniMissileSpeed(vehicleid,VEHICLE_MISSILE_SPEED_MINI);
+	SetVehicleMiniMissileReload(vehicleid,VEHICLE_MISSILE_RELOAD_MINI);
+	SetVehicleMiniMissileDistance(vehicleid,VEHICLE_MISSILE_DISTANCE_MINI);
+	SetVehicleMiniMissileKey(vehicleid,VEHICLE_MISSILE_KEY_MINI);
+	
+	SetVehicleHeavyMissileSpeed(vehicleid,VEHICLE_MISSILE_SPEED_HEAVY);
+	SetVehicleHeavyMissileReload(vehicleid,VEHICLE_MISSILE_RELOAD_HEAVY);
+	SetVehicleHeavyMissileDistance(vehicleid,VEHICLE_MISSILE_DISTANCE_HEAVY);
+	SetVehicleHeavyMissileKey(vehicleid,VEHICLE_MISSILE_KEY_HEAVY);
+	
+	SetVehicleBomberMissileSpeed(vehicleid,VEHICLE_MISSILE_SPEED_BOMBER);
+	SetVehicleBomberMissileReload(vehicleid,VEHICLE_MISSILE_RELOAD_BOMBER);
+	SetVehicleBomberMissileDistance(vehicleid,VEHICLE_MISSILE_DISTANCE_BOMBER);
+	SetVehicleBomberMissileKey(vehicleid,VEHICLE_MISSILE_KEY_BOMBER);
+	
+	SetVehicleRhinoMissileReload(vehicleid,VEHICLE_MISSILE_RELOAD_RHINO);
+	SetVehicleRhinoMissileDistance(vehicleid,VEHICLE_MISSILE_DISTANCE_RHINO);
+	SetVehicleRhinoMissileKey(vehicleid,VEHICLE_MISSILE_KEY_RHINO);
+	
+	SetVehicleMortarMissileSpeed(vehicleid,VEHICLE_MISSILE_SPEED_MORTAR);
+	SetVehicleMortarMissileReload(vehicleid,VEHICLE_MISSILE_RELOAD_MORTAR);
+	SetVehicleMortarMissileDistance(vehicleid,VEHICLE_MISSILE_DISTANCE_MORTAR);
+	SetVehicleMortarMissileKey(vehicleid,VEHICLE_MISSILE_KEY_MORTAR);
+	SetVehicleMortarMissileHeight(vehicleid,VEHICLE_MISSILE_HEIGHT_MORTAR);
+	
+	SetVehicleMegaMissileSpeed(vehicleid,VEHICLE_MISSILE_SPEED_MEGA);
+	SetVehicleMegaMissileReload(vehicleid,VEHICLE_MISSILE_RELOAD_MEGA);
+	SetVehicleMegaMissileDistance(vehicleid,VEHICLE_MISSILE_DISTANCE_MEGA);
+	SetVehicleMegaMissileKey(vehicleid,VEHICLE_MISSILE_KEY_MEGA);
+	SetVehicleMegaMissileHeight(vehicleid,VEHICLE_MISSILE_HEIGHT_MEGA);
 }
 
 forward OnVehicleShot(playerid,type);
 forward OnVehicleMissileInit();
+forward OnVehicleArmed(playerid,vehicleid);
 
 public OnVehicleShot(playerid,type){
 	new vid = GetPlayerVehicleID(playerid);
@@ -372,6 +454,46 @@ public OnVehicleShot(playerid,type){
 				VehicleWeaponTick[playerid][type] = GetTickCount();
 			}
 		}
+		
+		case VEHICLE_MISSILE_TYPE_MEGA: {
+			if(GetTickCount()-VehicleWeaponTick[playerid][type] < GetVehicleMegaMissileReload(vid)) return 1;
+			
+			new F4[e_float], F5[e_float];
+			GetPlayerCameraZAngle(playerid,F4[rZ]);
+			GetVehiclePos(vid,F5[X],F5[Y],F5[Z]);
+			
+			GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,CompRotationFloat(F4[rZ]+60.0),8.0,F4[X],F4[Y],F4[Z]);
+			GetPointInFront2D(F4[X],F4[Y],F4[rZ],GetVehicleMegaMissileDistance(vid),F4[tX],F4[tY]);
+			Tryg3DMapAndreasFindZ(F4[tX],F4[tY],F4[tZ]);
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[X],F4[Y],F4[Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[tX],F4[tY],F4[tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+
+			GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,CompRotationFloat(F4[rZ]+120.0),8.0,F4[X],F4[Y],F4[Z]);
+			GetPointInFront2D(F4[X],F4[Y],F4[rZ],GetVehicleMegaMissileDistance(vid),F4[tX],F4[tY]);
+			Tryg3DMapAndreasFindZ(F4[tX],F4[tY],F4[tZ]);
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[X],F4[Y],F4[Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[tX],F4[tY],F4[tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+
+			GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,CompRotationFloat(F4[rZ]+180.0),8.0,F4[X],F4[Y],F4[Z]);
+			GetPointInFront2D(F4[X],F4[Y],F4[rZ],GetVehicleMegaMissileDistance(vid),F4[tX],F4[tY]);
+			Tryg3DMapAndreasFindZ(F4[tX],F4[tY],F4[tZ]);
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[X],F4[Y],F4[Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[tX],F4[tY],F4[tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+
+			GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,CompRotationFloat(F4[rZ]+240.0),8.0,F4[X],F4[Y],F4[Z]);
+			GetPointInFront2D(F4[X],F4[Y],F4[rZ],GetVehicleMegaMissileDistance(vid),F4[tX],F4[tY]);
+			Tryg3DMapAndreasFindZ(F4[tX],F4[tY],F4[tZ]);
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[X],F4[Y],F4[Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[tX],F4[tY],F4[tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+
+			GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,CompRotationFloat(F4[rZ]+300.0),8.0,F4[X],F4[Y],F4[Z]);
+			GetPointInFront2D(F4[X],F4[Y],F4[rZ],GetVehicleMegaMissileDistance(vid),F4[tX],F4[tY]);
+			Tryg3DMapAndreasFindZ(F4[tX],F4[tY],F4[tZ]);
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[X],F4[Y],F4[Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[tX],F4[tY],F4[tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+
+			GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,F4[rZ],8.0,F4[X],F4[Y],F4[Z]);
+			GetPointInFront2D(F4[X],F4[Y],F4[rZ],GetVehicleMegaMissileDistance(vid),F4[tX],F4[tY]);
+			Tryg3DMapAndreasFindZ(F4[tX],F4[tY],F4[tZ]);
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[X],F4[Y],F4[Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[tX],F4[tY],F4[tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+
+			VehicleWeaponTick[playerid][type] = GetTickCount();
+		}
 	}
 
 	return 1;
@@ -379,30 +501,8 @@ public OnVehicleShot(playerid,type){
 
 public OnVehicleMissileInit(){
 	for(new i = 0; i <= MAX_VEHICLES; i++){
-		SetVehicleMiniMissileSpeed(i,VEHICLE_MISSILE_SPEED_MINI);
-		SetVehicleHeavyMissileSpeed(i,VEHICLE_MISSILE_SPEED_HEAVY);
-		SetVehicleBomberMissileSpeed(i,VEHICLE_MISSILE_SPEED_BOMBER);
-		SetVehicleMortarMissileSpeed(i,VEHICLE_MISSILE_SPEED_MORTAR);
-
-		SetVehicleMiniMissileReload(i,VEHICLE_MISSILE_RELOAD_MINI);
-		SetVehicleHeavyMissileReload(i,VEHICLE_MISSILE_RELOAD_HEAVY);
-		SetVehicleBomberMissileReload(i,VEHICLE_MISSILE_RELOAD_BOMBER);
-		SetVehicleRhinoMissileReload(i,VEHICLE_MISSILE_RELOAD_RHINO);
-		SetVehicleMortarMissileReload(i,VEHICLE_MISSILE_RELOAD_MORTAR);
-		
-		SetVehicleMiniMissileDistance(i,VEHICLE_MISSILE_DISTANCE_MINI);
-		SetVehicleHeavyMissileDistance(i,VEHICLE_MISSILE_DISTANCE_HEAVY);
-		SetVehicleBomberMissileDistance(i,VEHICLE_MISSILE_DISTANCE_BOMBER);
-		SetVehicleRhinoMissileDistance(i,VEHICLE_MISSILE_DISTANCE_RHINO);
-		SetVehicleMortarMissileDistance(i,VEHICLE_MISSILE_DISTANCE_MORTAR);
-		
-		SetVehicleMiniMissileKey(i,VEHICLE_MISSILE_KEY_MINI);
-		SetVehicleHeavyMissileKey(i,VEHICLE_MISSILE_KEY_HEAVY);
-		SetVehicleBomberMissileKey(i,VEHICLE_MISSILE_KEY_BOMBER);
-		SetVehicleRhinoMissileKey(i,VEHICLE_MISSILE_KEY_RHINO);
-		SetVehicleMortarMissileKey(i,VEHICLE_MISSILE_KEY_MORTAR);
-		
-		SetVehicleMortarMissileHeight(i,VEHICLE_MISSILE_HEIGHT_MORTAR);
+		SetVehicleMissileDefaultConfig(i);
+		DisarmVehicleMissile(i);
 	}
 	return 1;
 }
@@ -434,6 +534,11 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 		if(Tryg3DKeyPressed(GetVehicleMortarMissileKey(vid))){
 			if(IsToggleVehicleMortarMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_MORTAR);
+			}
+		}
+		if(Tryg3DKeyPressed(GetVehicleMegaMissileKey(vid))){
+			if(IsToggleVehicleMegaMissile(vid)){
+				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_MEGA);
 			}
 		}
 	}
@@ -493,6 +598,117 @@ public OnGameModeInit(){
 #define OnGameModeInit VM_OnGameModeInit
 #if defined VM_OnGameModeInit
 	forward VM_OnGameModeInit();
+#endif
+
+//Hook: CreateVehicle
+stock VM_CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,respawn_delay,addsiren=0){
+	new vehicleid = CreateVehicle(modelid,x,y,z,angle,color1,color2,respawn_delay,addsiren);
+	if(IsToggleMissileAutoDisarm()){
+		DisarmVehicleMissile(vehicleid);
+		SetVehicleMissileDefaultConfig(vehicleid);
+	}
+	return vehicleid;
+}
+ 
+#if defined _ALS_CreateVehicle
+	#undef CreateVehicle
+#else
+	#define _ALS_CreateVehicle
+#endif
+#define CreateVehicle VM_CreateVehicle
+ 
+//Hook: AddStaticVehicle
+stock VM_AddStaticVehicle(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Float:angle,color1,color2){
+	new vehicleid = AddStaticVehicle(modelid,spawn_x,spawn_y,spawn_z,angle,color1,color2);
+	if(IsToggleMissileAutoDisarm()){
+		DisarmVehicleMissile(vehicleid);
+		SetVehicleMissileDefaultConfig(vehicleid);
+	}
+	return vehicleid;
+}
+ 
+#if defined _ALS_AddStaticVehicle
+	#undef AddStaticVehicle
+#else
+	#define _ALS_AddStaticVehicle
+#endif
+#define AddStaticVehicle VM_AddStaticVehicle
+ 
+//Hook: AddStaticVehicleEx
+stock VM_AddStaticVehicleEx(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Float:angle,color1,color2,respawn_delay,addsiren=0){
+	new vehicleid = AddStaticVehicleEx(modelid,spawn_x,spawn_y,spawn_z,angle,color1,color2,respawn_delay,addsiren);
+	if(IsToggleMissileAutoDisarm()){
+		DisarmVehicleMissile(vehicleid);
+		SetVehicleMissileDefaultConfig(vehicleid);
+	}
+	return vehicleid;
+}
+ 
+#if defined _ALS_AddStaticVehicleEx
+	#undef AddStaticVehicleEx
+#else
+	#define _ALS_AddStaticVehicleEx
+#endif
+#define AddStaticVehicleEx VM_AddStaticVehicleEx
+ 
+//Hook: DestroyVehicle
+stock VM_DestroyVehicle(vehicleid){
+	if(IsToggleMissileAutoDisarm()){
+		DisarmVehicleMissile(vehicleid);
+		SetVehicleMissileDefaultConfig(vehicleid);
+	}
+	return DestroyVehicle(vehicleid);
+}
+ 
+#if defined _ALS_DestroyVehicle
+	#undef DestroyVehicle
+#else
+	#define _ALS_DestroyVehicle
+#endif
+#define DestroyVehicle VM_DestroyVehicle
+
+//Hook: PutPlayerInVehicle
+stock VM_PutPlayerInVehicle(playerid,vehicleid,seatid){
+	if(seatid == 0){
+		if(IsToggleMissileAutoDisarm()){
+			DisarmVehicleMissile(vehicleid);
+			SetVehicleMissileDefaultConfig(vehicleid);
+		}
+		CallLocalFunction("OnVehicleArmed","dd",playerid,vehicleid);
+	}
+	return PutPlayerInVehicle(playerid,vehicleid,seatid);
+}
+
+#if defined _ALS_PutPlayerInVehicle
+    #undef PutPlayerInVehicle
+#else
+    #define _ALSPutPlayerInVehicle
+#endif
+#define PutPlayerInVehicle VM_PutPlayerInVehicle
+
+//Hook: OnPlayerEnterVehicle
+public OnPlayerEnterVehicle(playerid,vehicleid,ispassenger){
+	if(ispassenger == 0){
+		if(IsToggleMissileAutoDisarm()){
+			DisarmVehicleMissile(vehicleid);
+			SetVehicleMissileDefaultConfig(vehicleid);
+		}
+		CallLocalFunction("OnVehicleArmed","dd",playerid,vehicleid);
+	}
+	#if defined VM_OnPlayerEnterVehicle
+		VM_OnPlayerEnterVehicle(playerid,vehicleid,ispassenger);
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnPlayerEnterVehicle
+	#undef OnPlayerEnterVehicle
+#else
+	#define _ALS_OnPlayerEnterVehicle
+#endif
+#define OnPlayerEnterVehicle VM_OnPlayerEnterVehicle
+#if defined VM_OnPlayerEnterVehicle
+	forward VM_OnPlayerEnterVehicle(playerid,vehicleid,ispassenger);
 #endif
 
 //EOF

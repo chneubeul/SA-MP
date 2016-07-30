@@ -216,8 +216,8 @@ public SantaGiftCreate(giftid){
 	
 	SantaErrorPos:
 	GetRandomPointInCube(-3000.0,-3000.0,0.0,3000.0,3000.0,1.0,piox,pioy,pioz);
-	MapAndreasFindZ(piox,pioy,pioz);
-	if(pioz == 0.0) goto SantaErrorPos; //water
+	Tryg3DMapAndreasFindZ(piox,pioy,pioz);
+	if(pioz <= 0.0) goto SantaErrorPos; //water
 	
 	pioz+=1.0;
 	SantaGift[giftid] = CreateDynamicPickup(SantaPickupModel[smodel][0],2,piox,pioy,pioz,0,0);
@@ -229,8 +229,8 @@ public SantaGiftReset(giftid){
 	
 	SantaErrorPos:
 	GetRandomPointInCube(-3000.0,-3000.0,0.0,3000.0,3000.0,1.0,piox,pioy,pioz);
-	MapAndreasFindZ(piox,pioy,pioz);
-	if(pioz == 0.0) goto SantaErrorPos; //water
+	Tryg3DMapAndreasFindZ(piox,pioy,pioz);
+	if(pioz <= 0.0) goto SantaErrorPos; //water
 	
 	pioz+=1.0;
 	SetDynamicPickupPos(SantaGift[giftid],piox,pioy,pioz);
