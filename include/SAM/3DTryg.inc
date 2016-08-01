@@ -613,6 +613,7 @@ stock bool:IsTryg3DModuleLoaded(Tryg3DModule:moduleid){
 	return false;
 }
 
+//Author: hesambia random.inc
 stock Float:RandomFloat(Float:min,Float:max,accuracy = 4){
 	if(min >= max) return 0.0;
 	if(min < 0.0 || max < 0.0) return 0.0;
