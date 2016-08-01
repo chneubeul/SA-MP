@@ -74,7 +74,6 @@
 #include <SAM/VehicleEx>
 #include <SAM/Logs>
 #include <SAM/ATM>
-#include <SAM/scmd>               //Incompatible with ZCMD.inc !
 #include <SAM/FoxForeach>         //Incompatible with foreach.inc !
 
 //Other includes created by Abyss Morgan

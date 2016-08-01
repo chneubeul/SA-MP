@@ -1001,7 +1001,7 @@ stock CheckStreamerVersion(){
 		GetStreamerVersionName(str1,GetStreamerVersion());
 		GetStreamerVersionName(str2,GetValidStreamerVersion());
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Warring: Your Streamer %s It is not compatible with this version Streamer Functions, update your streamer to %s",str1,str2);
+			printf("[ADM] Warring: Your Streamer %s It is not compatible with this version Streamer Functions, update your Streamer to %s",str1,str2);
 		}
 	}
 }
