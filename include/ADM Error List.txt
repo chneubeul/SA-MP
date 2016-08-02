@@ -1,5 +1,4 @@
-﻿
-Use DisableADMLogging(true); to disable notifications [ADM]
+﻿Use DisableADMLogging(true); to disable notifications [ADM]
 This option is available in ATM.inc
 
 
