@@ -6,34 +6,38 @@
 #include <a_samp>
 #include <a_http>
 
+
 //Plugin includes
-#include <sscanf2>
-#include <streamer>               //https://github.com/samp-incognito/samp-streamer-plugin
-#include <audio>                  //https://github.com/samp-incognito/samp-audio-server-plugin
+#include <sscanf2>                  //http://forum.sa-mp.com/showthread.php?t=570927
+#include <streamer>                 //http://forum.sa-mp.com/showthread.php?t=102865
+#include <audio>                    //http://forum.sa-mp.com/showthread.php?t=82162
 #include <a_mysql>
-#include <mapandreas>
-#include <ColAndreas>             //https://github.com/Pottus/ColAndreas
+#include <mapandreas>               //http://forum.sa-mp.com/showthread.php?t=275492
+#include <ColAndreas>               //http://forum.sa-mp.com/showthread.php?t=586068
 #include <regex>
-#include <crashdetect>            //https://github.com/Zeex/samp-plugin-crashdetect
-#include <YSF>                    //https://github.com/kurta999/YSF
-#include <SAOI>                   //Beta Version: https://github.com/AbyssMorgan/SAOI
-#include <profiler>               //https://github.com/Zeex/samp-plugin-profiler
+#include <crashdetect>              //http://forum.sa-mp.com/showthread.php?t=262796
+#include <YSF>                      //http://forum.sa-mp.com/showthread.php?t=609499
+#include <SAOI>                     //Beta Version: https://github.com/AbyssMorgan/SAOI
+#include <profiler>                 //http://forum.sa-mp.com/showthread.php?t=271129
+
 
 //Other includes
 #include <foreach>
 
-#include <samp/zcmd>
-#include <samp/progress>
-#include <samp/md5>
-#include <samp/Dini>
-#include <samp/SHA256>
-#include <samp/pointers>
-#include <samp/y_timers>
+
+#include <izcmd>                    //http://forum.sa-mp.com/showthread.php?t=576114
+#include <progress>                 //http://forum.sa-mp.com/showthread.php?t=113443
+#include <md5>
+#include <Dini>
+#include <SHA256>
+#include <pointers>
+#include <y_timers>
 
 
 //ProtVar Config
 //#define ProtVar:: <salt>
 //#define ENABLE_PROTECTION_VARIABLES
+
 
 //3DTryg.inc Config
 //#define USE_OLD_PROTOTYPE_FUNCTION
@@ -41,57 +45,70 @@
 //#define DISABLE_3D_TRYG_INIT
 //#define ENABLE_3D_TRYG_TIMELINE_SYNC
 
-//StreamerFunction.inc
+
+//StreamerFunction.inc Config
 //#define DISABLE_STREAMER_SPEC_CHECK  //Turn off check streamer version
 //#define ENABLE_BULLET_DYNAMIC_OBJECT //Turn on call OnPlayerWeaponShot when we shoot in a dynamic object
+
 
 //ADM.inc Config
 //#define DISABLE_ATM_FUNCTION
 //#define DISABLE_ATM_EXEC
 //#define DISABLE_ATM_PUB_VAR
 
+
 //Logs.inc Config
-#define EMPTY_LOG_BUFFER    "My Log File\n"
+//#define EMPTY_LOG_BUFFER          "My Log File\n"
+
 
 //Knife.inc Config
 //#define DISABLE_KNIFE_SOUND
 //#define DISABLE_KNIFE_CALL_DAMAGE
 
+
+//Santa.inc Config
+//#define SANTA_IS_EASTER_EVENT     //Change to Easter Event 
+//#define SANTA_IS_EASTER_HALLOWEEN //Change to Halloween Event 
+
+
+
 //SAM Includes
-#include <SAM/StreamerFunction>
-#include <SAM/BitFunctions>
-#include <SAM/RGB>
-#include <SAM/MapAndreasEx>
-#include <SAM/3DTryg>
-#include <SAM/BINLDR>
-#include <SAM/LY>
-#include <SAM/ADM>
-#include <SAM/DoT>
-#include <SAM/GangZoneEx>
-#include <SAM/HTMLColor>
-#include <SAM/DataConvert>
-#include <SAM/TextDrawEx>
-#include <SAM/VehicleEx>
-#include <SAM/Logs>
-#include <SAM/ATM>
-#include <SAM/FoxForeach>         //Incompatible with foreach.inc !
+#include <SAM/StreamerFunction>     //http://forum.sa-mp.com/showthread.php?t=590918
+#include <SAM/BitFunctions>         //http://forum.sa-mp.com/showthread.php?t=591223
+#include <SAM/RGB>                  //http://forum.sa-mp.com/showthread.php?t=590770
+#include <SAM/MapAndreasEx>         //This include is deprecated, 3DTryg contain all of its functions
+#include <SAM/3DTryg>               //http://forum.sa-mp.com/showthread.php?t=591010
+#include <SAM/BINLDR>               //http://forum.sa-mp.com/showthread.php?p=3653547
+#include <SAM/LY>                   //http://forum.sa-mp.com/showthread.php?t=598933
+#include <SAM/ADM>                  //http://forum.sa-mp.com/showthread.php?t=595203
+#include <SAM/DoT>                  //not published
+#include <SAM/GangZoneEx>           //not published
+#include <SAM/HTMLColor>            //not published
+#include <SAM/DataConvert>          //http://forum.sa-mp.com/showthread.php?p=3719467
+#include <SAM/TextDrawEx>           //not published
+#include <SAM/VehicleEx>            //http://forum.sa-mp.com/showthread.php?p=3727224
+#include <SAM/Logs>                 //not published
+#include <SAM/ATM>                  //not published
+#include <SAM/FoxForeach>           //http://forum.sa-mp.com/showthread.php?t=611175 (Incompatible with foreach.inc !)
+
 
 //Other includes created by Abyss Morgan
 
 #include <other/AntiSupremeTroll>
 #include <other/Interiors>
 
-#include <engine/EngineX>         //Incompatible with NGCM Core
-#include <engine/Knife>
-#include <engine/Mines>
-#include <engine/Missile>
-#include <engine/VehicleMissile>
+#include <engine/EngineX>           //http://forum.sa-mp.com/showthread.php?t=600617 [Old Version] (Incompatible with NGCM Core)
+#include <engine/EngineV6>          //http://forum.sa-mp.com/showthread.php?t=600617 [New Version] (Compatible with NGCM Core)
+#include <engine/Knife>             //http://forum.sa-mp.com/showthread.php?t=599773
+#include <engine/Mines>             //http://forum.sa-mp.com/showthread.php?t=600369
+#include <engine/Missile>           //http://forum.sa-mp.com/showthread.php?t=608018
+#include <engine/VehicleMissile>    //http://forum.sa-mp.com/showthread.php?t=609788
 
 #include <event/Fireworks>
-#include <event/Lottery>
-#include <event/Santa>
+#include <event/Lottery>            //http://forum.sa-mp.com/showthread.php?t=604954
+#include <event/Santa>              //http://forum.sa-mp.com/showthread.php?t=595265
 
-#include <security/ScriptSecure>  //or MultiScriptSecure
+#include <security/ScriptSecure>    //http://forum.sa-mp.com/showthread.php?t=600408
 #include <security/ScriptChecker>
 
 //EOF
