@@ -126,6 +126,9 @@
  * Float:GetPlayerObjectDistance(playerid,objectid);                                                                              *
  * SetPlayerLookAtPlayer(playerid,targetid,cut = CAMERA_CUT);                                                                     *
  * bool:IsPlayerLookAtSky(playerid);                                                                                              *
+ * GetVehicleUpVector(vehicleid,&Float:vx,&Float:vy,&Float:vz);                                                                   *
+ * GetVehicleUpPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z);                                                            *
+ * GetVehicleDownPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z);                                                          *
  *                                                                                                                                *
  * Extended Functions:                                                                                                            *
  * Get3DTrygModules(&modules_count=0);                                                                                            *
@@ -881,6 +884,32 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 	CompRotationFloat(-atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz),rz);
 }
 
+//GetVehicleUpVector by Shiska
+stock GetVehicleUpVector(vehicleid,&Float:vx,&Float:vy,&Float:vz){
+	new Float:qw,Float:qx,Float:qy,Float:qz;
+	GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
+	qx *= -1, qy *= -1, qz *= -1;
+	vx = 2.0*(qy*qw+qz*qx);
+	vy = 2.0*(qz*qy-qx*qw);
+	vz = 1.0-(2.0*(qx*qx+qy*qy));
+}
+
+stock GetVehicleUpPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z){
+	new Float:rx,Float:rz;
+	GetVehicleUpVector(vehicleid,x,y,z);
+	ShiftVectorToRotation(x,y,z,rx,rz);
+	GetVehiclePos(vehicleid,x,y,z);
+	GetPointInFront3D(x,y,z,rx,rz,radius,x,y,z);
+}
+
+stock GetVehicleDownPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z){
+	new Float:rx,Float:rz;
+	GetVehicleUpVector(vehicleid,x,y,z);
+	ShiftVectorToRotation(x,y,z,rx,rz);
+	GetVehiclePos(vehicleid,x,y,z);
+	GetPointInFront3D(x,y,z,CompRotationFloat(rx-180.0),rz,radius,x,y,z);
+}
+
 stock Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius){
 	new Float:rx,Float:ry,Float:rz,Float:x,Float:y;
 	GetVehiclePos(vehicleid,x,y,rz);
@@ -1199,10 +1228,10 @@ stock GetVehicleOrientationPos(vehicleid,element_orientation:orientation,Float:d
 			GetPointInFront3D(x,y,z,CompRotationFloat(ry+180.0),CompRotationFloat(rz+90.0),distance,tx,ty,tz);
 		}
 		case o_up: {
-			GetPointInFront3D(x,y,z,CompRotationFloat(ry+90.0),CompRotationFloat(rz+90.0),distance,tx,ty,tz);
+			GetVehicleUpPos(vehicleid,distance,tx,ty,tz);
 		}
 		case o_down: {
-			GetPointInFront3D(x,y,z,CompRotationFloat(ry-90.0),CompRotationFloat(rz+90.0),distance,tx,ty,tz);
+			GetVehicleDownPos(vehicleid,distance,tx,ty,tz);
 		}
 		case o_front: {
 			GetPointInFront3D(x,y,z,rx,rz,distance,tx,ty,tz);
@@ -1576,10 +1605,12 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 				GetPointInFront3DCol(x,y,z,CompRotationFloat(ry+180.0),CompRotationFloat(rz+90.0),distance,tx,ty,tz);
 			}
 			case o_up: {
-				GetPointInFront3DCol(x,y,z,CompRotationFloat(ry+90.0),CompRotationFloat(rz+90.0),distance,tx,ty,tz);
+				GetVehicleUpPos(vehicleid,distance,tx,ty,tz);
+				MovePointCol(x,y,z,tx,ty,tz,tx,ty,tz);
 			}
 			case o_down: {
-				GetPointInFront3DCol(x,y,z,CompRotationFloat(ry-90.0),CompRotationFloat(rz+90.0),distance,tx,ty,tz);
+				GetVehicleDownPos(vehicleid,distance,tx,ty,tz);
+				MovePointCol(x,y,z,tx,ty,tz,tx,ty,tz);
 			}
 			case o_front: {
 				GetPointInFront3DCol(x,y,z,rx,rz,distance,tx,ty,tz);
