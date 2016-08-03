@@ -884,7 +884,7 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 	CompRotationFloat(-atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz),rz);
 }
 
-//GetVehicleUpVector by Shiska
+//GetVehicleUpVector by Nero_3D
 stock GetVehicleUpVector(vehicleid,&Float:vx,&Float:vy,&Float:vz){
 	new Float:qw,Float:qx,Float:qy,Float:qz;
 	GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
