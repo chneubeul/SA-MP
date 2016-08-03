@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer                                                                                 *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.7.5                                                                                                            *
+ * File Version: 2.7.6                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -242,11 +242,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.7.5
+	#error [ADM] You need 3DTryg.inc v2.7.6
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.7.5
-#elseif (Tryg3D_Version < 20705)
-	#error [ADM] Update you 3DTryg.inc to v2.7.5
+	#error [ADM] Update you 3DTryg.inc to v2.7.6
+#elseif (Tryg3D_Version < 20706)
+	#error [ADM] Update you 3DTryg.inc to v2.7.6
 #endif
 */
 
@@ -255,7 +255,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20705) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20706) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -736,10 +736,10 @@ stock Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0){
 	return crotation;
 }
 
-//old code version
+//Old code version, Updated by Shiska
 stock GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty){
-	tx = x + (radius*floatsin(-rz,degrees));
-	ty = y + (radius*floatcos(-rz,degrees));
+	tx = x - (radius*floatsin(rz,degrees));
+	ty = y + (radius*floatcos(rz,degrees));
 }
 
 //new code version support 3D made by Abyss Morgan
@@ -795,7 +795,7 @@ stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty
 	new rand = random(360);
 	if(rz == -1000.0) rz = rand;
 	GetPointInFront3D(x,y,z,0.0,rz,radius,tx,ty,tz);
-	CompRotationFloat(rz-180,trz);
+	CompRotationFloat(rz-180.0,trz);
 }
 
 stock GetRandomPointInCircle(Float:x,Float:y,Float:size,&Float:tx,&Float:ty){
