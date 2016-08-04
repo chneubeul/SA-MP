@@ -50,7 +50,7 @@
  * Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius);                                                    *
  * GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                    *
  * GetRotationFor2Point2D(Float:x,Float:y,Float:tx,Float:ty,&Float:rz);                                                           *
- * GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                                *
+ * bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                           *
  * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);           *
  * GetRandomPointInCircle(Float:x,Float:y,Float:size,&Float:tx,&Float:ty);                                                        *
  * GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:size,&Float:tx,&Float:ty,&Float:tz);                    *
@@ -780,17 +780,12 @@ stock Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius)
 }
 
 //new code version support 3D made by Abyss Morgan
-stock GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz){
+stock bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz){
 	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
-	if(radius > 0.0){
-		CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
-		CompRotationFloat((atan2(ty-y,tx-x)-90.0),rz);
-	} else {
-		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Warring: Get the rotation wrong, identical points.");
-		}
-		Update3DTrygWarringCount();
-	}
+	if(radius <= 0.0) return false;
+	CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
+	CompRotationFloat((atan2(ty-y,tx-x)-90.0),rz);
+	return true;
 }
 
 //random clock pos
