@@ -13,3 +13,17 @@ https://github.com/AbyssMorgan/SA-MP/issues
 Or send me a private message on:
 
 http://forum.sa-mp.com/member.php?u=255806
+
+Repository developer:
+
+Abyss Morgan
+
+
+Special Thanks for:
+
+Crayder, eider, Zoutdaxv, RyDeR, Greg James, IllidanS4, hesambia, tsynotnu, Nero_3D, Shiska
+
+
+Beta Testers:
+
+banangame, FerilanS, Kozdyr0, Nizzur
