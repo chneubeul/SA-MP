@@ -143,7 +143,7 @@
  * Tryg3DKeyPressed(key);                                                                                                         *
  * Tryg3DKeyReleased(key);                                                                                                        *
  * Tryg3DKeyHolding(key);                                                                                                         *
- * isnull(string);                                                                                                                *
+ * isnull(string[]);                                                                                                              *
  *                                                                                                                                *
  * Streamer Functions:                                                                                                            *
  * GetDynamicObjectOrientationPos(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);         *
@@ -745,11 +745,11 @@ stock GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:t
 	ty = y + (radius*floatcos(rz,degrees));
 }
 
-//new code version support 3D made by Abyss Morgan
+//new code version support 3D made by Abyss Morgan, Update by Shiska
 stock GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
-	tx = x + (radius * floatsin(rx+90.0,degrees) * floatcos(rz+90.0,degrees));
-	ty = y + (radius * floatsin(rx+90.0,degrees) * floatsin(rz+90.0,degrees));
-	tz = z + (radius * floatcos(-rx+90.0,degrees));
+	tx = x - (radius * floatcos(rx,degrees) * floatsin(rz,degrees));
+	ty = y + (radius * floatcos(rx,degrees) * floatcos(rz,degrees));
+	tz = z + (radius * floatsin(rx,degrees));
 }
 
 //GetXYInFrontOfPlayer
@@ -1457,9 +1457,9 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 	
 	//GetPointInFront3D (ColAndreas)
 	stock GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
-		tx = x + (radius * floatsin(rx+90.0,degrees) * floatcos(rz+90.0,degrees));
-		ty = y + (radius * floatsin(rx+90.0,degrees) * floatsin(rz+90.0,degrees));
-		tz = z + (radius * floatcos(-rx+90.0,degrees));
+		tx = x - (radius * floatcos(rx,degrees) * floatsin(rz,degrees));
+		ty = y + (radius * floatcos(rx,degrees) * floatcos(rz,degrees));
+		tz = z + (radius * floatsin(rx,degrees));
 		MovePointCol(x,y,z,tx,ty,tz,tx,ty,tz);
 	}
 	
@@ -1709,8 +1709,8 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 		GetPlayerPos(playerid,xA,yA,zA);
 		GetPlayerPos(targetid,xB,yB,zB);
 		MovePointCol(xA,yA,zA,xB,yB,zB,xC,yC,zC);
-		if(xB != xC || yB != yC || zB != zC) return true;
-		return false;
+		if(xB == xC && yB == yC && zB == zC) return false;
+		return true;
 	}
 	
 	stock bool:IsBetweenPlayerToPointIsWall(playerid,Float:x,Float:y,Float:z){
@@ -1718,8 +1718,8 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 			Float:xC,Float:yC,Float:zC;
 		GetPlayerPos(playerid,xA,yA,zA);
 		MovePointCol(xA,yA,zA,x,y,z,xC,yC,zC);
-		if(x != xC || y != yC || z != zC) return true;
-		return false;
+		if(xB == xC && yB == yC && zB == zC) return false;
+		return true;
 	}
 	
 	#define GetXYInFrontOfPlayerCol						GetPointInFrontOfPlayerCol

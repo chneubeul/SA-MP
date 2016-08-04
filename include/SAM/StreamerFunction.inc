@@ -9,7 +9,7 @@
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
  *                                                                                                                                         *
- * File Version: 2.5.2                                                                                                                     *
+ * File Version: 2.5.3                                                                                                                     *
  * SA:MP Version: 0.3.7                                                                                                                    *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
@@ -44,6 +44,10 @@
  * SetDynamicObjectArea(objectid,areaid);                                                                                                  *
  * GetDynamicObjectPriority(objectid);                                                                                                     *
  * SetDynamicObjectPriority(objectid,priority);                                                                                            *
+ * GetDynamicObjectDatagram(objectid,data[]);                                                                                              *
+ * SetDynamicObjectDatagram(objectid,data[]);                                                                                              *
+ * RemoveDynamicObjectDatagram(objectid,data[]);                                                                                           *
+ * bool:IsSetDynamicObjectDatagram(objectid);                                                                                              *
  *                                                                                                                                         *
  * SAMP Functions:                                                                                                                         *
  * GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                                  *
@@ -81,6 +85,10 @@
  * SetDynamicCPArea(checkpointid,areaid);                                                                                                  *
  * GetDynamicCPPriority(checkpointid);                                                                                                     *
  * SetDynamicCPPriority(checkpointid,priority);                                                                                            *
+ * GetDynamicCPDatagram(checkpointid,data[]);                                                                                              *
+ * SetDynamicCPDatagram(checkpointid,data[]);                                                                                              *
+ * RemoveDynamicCPDatagram(checkpointid,data[]);                                                                                           *
+ * bool:IsSetDynamicCPDatagram(checkpointid);                                                                                              *
  *                                                                                                                                         *
  * Race Check Point Functions:                                                                                                             *
  * GetDynamicRaceCPPos(checkpointid,&Float:x,&Float:y,&Float:z);                                                                           *
@@ -101,6 +109,10 @@
  * SetDynamicRaceCPArea(checkpointid,areaid);                                                                                              *
  * GetDynamicRaceCPPriority(checkpointid);                                                                                                 *
  * SetDynamicRaceCPPriority(checkpointid,priority);                                                                                        *
+ * GetDynamicRaceCPDatagram(checkpointid,data[]);                                                                                          *
+ * SetDynamicRaceCPDatagram(checkpointid,data[]);                                                                                          *
+ * RemoveDynamicRaceCPDatagram(checkpointid,data[]);                                                                                       *
+ * bool:IsSetDynamicRaceCPDatagram(checkpointid);                                                                                          *
  *                                                                                                                                         *
  * Player Functions:                                                                                                                       *
  * DestroyPlayerDynamicObject(playerid);                                                                                                   *
@@ -125,6 +137,10 @@
  * SetDynamicMapIconArea(iconid,areaid);                                                                                                   *
  * GetDynamicMapIconPriority(iconid);                                                                                                      *
  * SetDynamicMapIconPriority(iconid,priority);                                                                                             *
+ * GetDynamicMapIconDatagram(iconid,data[]);                                                                                               *
+ * SetDynamicMapIconDatagram(iconid,data[]);                                                                                               *
+ * RemoveDynamicMapIconDatagram(iconid,data[]);                                                                                            *
+ * bool:IsSetDynamicMapIconDatagram(iconid);                                                                                               *
  *                                                                                                                                         *
  * Pickup Functions:                                                                                                                       *
  * GetDynamicPickupPos(pickupid,&Float:x,&Float:y,&Float:z);                                                                               *
@@ -143,6 +159,10 @@
  * SetDynamicPickupArea(pickupid,areaid);                                                                                                  *
  * GetDynamicPickupPriority(pickupid);                                                                                                     *
  * SetDynamicPickupPriority(pickupid,priority);                                                                                            *
+ * GetDynamicPickupDatagram(pickupid,data[]);                                                                                              *
+ * SetDynamicPickupDatagram(pickupid,data[]);                                                                                              *
+ * RemoveDynamicPickupDatagram(pickupid,data[]);                                                                                           *
+ * bool:IsSetDynamicPickupDatagram(pickupid);                                                                                              *
  *                                                                                                                                         *
  * 3DText Functions:                                                                                                                       *
  * GetDynamic3DTextPos(Text3D:id,&Float:x,&Float:y,&Float:z);                                                                              *
@@ -164,6 +184,10 @@
  * SetDynamic3DTextTestLos(Text3D:id,testlos);                                                                                             *
  * SetDynamic3DTextAttachPlayer(Text3D:id,attachedplayer);                                                                                 *
  * SetDynamic3DTextAttachVehicle(Text3D:id,attachedvehicle);                                                                               *
+ * GetDynamic3DTextDatagram(Text3D:id,data[]);                                                                                             *
+ * SetDynamic3DTextDatagram(Text3D:id,data[]);                                                                                             *
+ * RemoveDynamic3DTextDatagram(Text3D:id,data[]);                                                                                          *
+ * bool:IsSetDynamic3DTextDatagram(Text3D:id);                                                                                             *
  *                                                                                                                                         *
  * Area Functions:                                                                                                                         *
  * GetDynamicCirclePos(areaid,&Float:x,&Float:y);                                                                                          *
@@ -184,6 +208,10 @@
  * SetDynamicAreaINT(areaid,interiorid);                                                                                                   *
  * GetDynamicAreaSize(areaid,Float:size);                                                                                                  *
  * SetDynamicAreaSize(areaid,Float:size);                                                                                                  *
+ * GetDynamicAreaDatagram(areaid,data[]);                                                                                                  *
+ * SetDynamicAreaDatagram(areaid,data[]);                                                                                                  *
+ * RemoveDynamicAreaDatagram(areaid,data[]);                                                                                               *
+ * bool:IsSetDynamicAreaDatagram(areaid);                                                                                                  *
  *                                                                                                                                         *
  * Anti Area Functions:                                                                                                                    *
  * IsPointInAntiArea(areaid,Float:x,Float:y,Float:z);                                                                                      *
@@ -240,6 +268,10 @@
  * GetValidStreamerVersion();                                                                                                              *
  * GetStreamerVersionName(name[], value = GET_STREAMER_VERSION, maxdest = sizeof name);                                                    *
  * CheckStreamerVersion();                                                                                                                 *
+ * GetStreamDatagram(type,id,data[]);                                                                                                      *
+ * SetStreamDatagram(type,id,data[]);                                                                                                      *
+ * RemoveStreamDatagram(type,id);                                                                                                          *
+ * bool:IsSetStreamDatagram(type,id);                                                                                                      *
  *                                                                                                                                         *
  * Fixes:                                                                                                                                  *
  * DestroyDynamicObject         -> Resets the variable after the destruction of the DynamicObject.                                         *
@@ -261,11 +293,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.5.2
+	#error [ADM] You need StreamerFunction.inc v2.5.3
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.5.2
-#elseif (Streamer_Spec_Version < 20501)
-	#error [ADM] Update you StreamerFunction.inc to v2.5.2
+	#error [ADM] Update you StreamerFunction.inc to v2.5.3
+#elseif (Streamer_Spec_Version < 20503)
+	#error [ADM] Update you StreamerFunction.inc to v2.5.3
 #endif
 */
 
@@ -278,7 +310,7 @@
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 					(20502) //a.b.c 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20503) //a.b.c 10000*a+100*b+c
 #define Valid_Streamer_Version 					(0x282001)
 
 #if !defined INVALID_STREAMER_ID
@@ -303,10 +335,17 @@
 	#define INVALID_PICKUP_ID					-1
 #endif
 
+#if !defined MAX_STREAM_SIZE
+	#define MAX_STREAM_SIZE						256
+#endif
+
 #if !defined IsValidVehicle
 	native IsValidVehicle(vehicleid);
 #endif
 
+#if !defined isnull
+	#define isnull(%1) 							((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+#endif
 
 #define GET_STREAMER_VERSION					(0xFFFFFFFF)
 
@@ -318,6 +357,11 @@
 
 #define GetStreamerVersion()					(Streamer_IncludeFileVersion)
 #define GetValidStreamerVersion()				(Valid_Streamer_Version)
+
+//Global
+#define GetStreamDatagram(%0,%1,%2)				GetSVarString("Stream:"#%0":"#%1"",(%2),MAX_STREAM_SIZE)
+#define SetStreamDatagram(%0,%1,%2)				SetSVarString("Stream:"#%0":"#%1"",(%2))
+#define RemoveStreamDatagram(%0,%1) 			DeleteSVar("Stream:"#%0":"#%1"")
 
 //DynamicObject
 #define GetDynamicObjectModel(%1)				Streamer_GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_MODEL_ID)
@@ -338,6 +382,10 @@
 #define SetDynamicObjectArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_AREA_ID,(%2))
 #define GetDynamicObjectPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_PRIORITY)
 #define SetDynamicObjectPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicObjectDatagram(%1,%2)			GetStreamDatagram(STREAMER_TYPE_OBJECT,(%1),(%2))
+#define SetDynamicObjectDatagram(%1,%2)			SetStreamDatagram(STREAMER_TYPE_OBJECT,(%1),(%2))
+#define RemoveDynamicObjectDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_OBJECT,(%1))
+#define IsSetDynamicObjectDatagram(%1)			IsSetStreamDatagram(STREAMER_TYPE_OBJECT,(%1))
 
 //DynamicPickup
 #define GetDynamicPickupModel(%1)				Streamer_GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_MODEL_ID)
@@ -354,6 +402,10 @@
 #define SetDynamicPickupArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_AREA_ID,(%2))
 #define GetDynamicPickupPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_PRIORITY)
 #define SetDynamicPickupPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicPickupDatagram(%1,%2)			GetStreamDatagram(STREAMER_TYPE_PICKUP,(%1),(%2))
+#define SetDynamicPickupDatagram(%1,%2)			SetStreamDatagram(STREAMER_TYPE_PICKUP,(%1),(%2))
+#define RemoveDynamicPickupDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_PICKUP,(%1))
+#define IsSetDynamicPickupDatagram(%1)			IsSetStreamDatagram(STREAMER_TYPE_PICKUP,(%1))
 
 //DynamicCP
 #define GetDynamicCPSize(%1,%2)					Streamer_GetFloatData(STREAMER_TYPE_CP,(%1),E_STREAMER_SIZE,(%2))
@@ -368,6 +420,10 @@
 #define SetDynamicCPVW(%1,%2)					Streamer_SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_WORLD_ID,(%2))
 #define GetDynamicCPINT(%1)						Streamer_GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_INTERIOR_ID)
 #define SetDynamicCPINT(%1,%2)					Streamer_SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicCPDatagram(%1,%2)				GetStreamDatagram(STREAMER_TYPE_CP,(%1),(%2))
+#define SetDynamicCPDatagram(%1,%2)				SetStreamDatagram(STREAMER_TYPE_CP,(%1),(%2))
+#define RemoveDynamicCPDatagram(%1)				RemoveStreamDatagram(STREAMER_TYPE_CP,(%1))
+#define IsSetDynamicCPDatagram(%1)				IsSetStreamDatagram(STREAMER_TYPE_CP,(%1))
 
 //DynamicRaceCP
 #define GetDynamicRaceCPSize(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_SIZE,(%2))
@@ -384,6 +440,10 @@
 #define SetDynamicRaceCPVW(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_WORLD_ID,(%2))
 #define GetDynamicRaceCPINT(%1)					Streamer_GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_INTERIOR_ID)
 #define SetDynamicRaceCPINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicRaceCPDatagram(%1,%2)			GetStreamDatagram(STREAMER_TYPE_RACE_CP,(%1),(%2))
+#define SetDynamicRaceCPDatagram(%1,%2)			SetStreamDatagram(STREAMER_TYPE_RACE_CP,(%1),(%2))
+#define RemoveDynamicRaceCPDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_RACE_CP,(%1))
+#define IsSetDynamicRaceCPDatagram(%1)			IsSetStreamDatagram(STREAMER_TYPE_RACE_CP,(%1))
 
 //DynamicMapIcon
 #define GetDynamicMapIconColor(%1)				Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_COLOR)
@@ -402,6 +462,10 @@
 #define SetDynamicMapIconINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_INTERIOR_ID,(%2))
 #define GetDynamicMapIconStyle(%1)				Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STYLE)
 #define SetDynamicMapIconStyle(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STYLE,(%2))
+#define GetDynamicMapIconDatagram(%1,%2)		GetStreamDatagram(STREAMER_TYPE_MAP_ICON,(%1),(%2))
+#define SetDynamicMapIconDatagram(%1,%2)		SetStreamDatagram(STREAMER_TYPE_MAP_ICON,(%1),(%2))
+#define RemoveDynamicMapIconDatagram(%1)		RemoveStreamDatagram(STREAMER_TYPE_MAP_ICON,(%1))
+#define IsSetDynamicMapIconDatagram(%1)			IsSetStreamDatagram(STREAMER_TYPE_MAP_ICON,(%1))
 
 //3DText
 #define GetDynamic3DTextDD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_DRAW_DISTANCE,(%2))
@@ -421,6 +485,10 @@
 #define SetDynamic3DTextArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_AREA_ID,(%2))
 #define GetDynamic3DTextPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_PRIORITY)
 #define SetDynamic3DTextPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamic3DTextDatagram(%1,%2)			GetStreamDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1),(%2))
+#define SetDynamic3DTextDatagram(%1,%2)			SetStreamDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1),(%2))
+#define RemoveDynamic3DTextDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1))
+#define IsSetDynamic3DTextDatagram(%1)			IsSetStreamDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1))
 
 //DynamicArea
 #define GetDynamicAreaVW(%1)					Streamer_GetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_WORLD_ID)
@@ -429,7 +497,10 @@
 #define SetDynamicAreaINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_INTERIOR_ID,(%2))
 #define GetDynamicAreaSize(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_AREA,(%1),E_STREAMER_SIZE,(%2))
 #define SetDynamicAreaSize(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_AREA,(%1),E_STREAMER_SIZE,(%2))
-
+#define GetDynamicAreaDatagram(%1,%2)			GetStreamDatagram(STREAMER_TYPE_AREA,(%1),(%2))
+#define SetDynamicAreaDatagram(%1,%2)			SetStreamDatagram(STREAMER_TYPE_AREA,(%1),(%2))
+#define RemoveDynamicAreaDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_AREA,(%1))
+#define IsSetDynamicAreaDatagram(%1)			IsSetStreamDatagram(STREAMER_TYPE_AREA,(%1))
 
 //DynamicAntiArea
 #define IsPlayerInAntiArea(%0,%1,%2)			(!IsPlayerInDynamicArea(%0,%1,%2))
@@ -1004,6 +1075,13 @@ stock CheckStreamerVersion(){
 			printf("[ADM] Warring: Your Streamer %s It is not compatible with this version Streamer Functions, update your Streamer to %s",str1,str2);
 		}
 	}
+}
+
+stock bool:IsSetStreamDatagram(type,id){
+	new stream_data[MAX_STREAM_SIZE];
+	GetStreamDatagram(type,id,stream_data);
+	if(isnull(stream_data)) return false;
+	return true;
 }
 
 stock GetNearestVisibleItem(playerid,type){
