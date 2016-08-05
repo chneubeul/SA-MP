@@ -9,7 +9,7 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.6.5                                                                                                            *
+ * File Version: 1.6.6                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
  * 3DTryg Version: 2.7.3                                                                                                          *
@@ -32,11 +32,11 @@
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v1.6.5
+	#error [ADM] You need Missile.inc v1.6.6
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v1.6.5
-#elseif (Missile_Version < 10605)
-	#error [ADM] Update you Missile.inc to v1.6.5
+	#error [ADM] Update you Missile.inc to v1.6.6
+#elseif (Missile_Version < 10606)
+	#error [ADM] Update you Missile.inc to v1.6.6
 #endif
 */
 
@@ -58,7 +58,7 @@
 #endif
 #define _missile_launcher
 
-#define Missile_Version						(10605)
+#define Missile_Version						(10606)
 
 #define MISSILE_OBJECT_NORMAL				(0)
 #define MISSILE_OBJECT_BIG					(1)
@@ -144,9 +144,6 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(345,x,y,z,rx,0.0,rz,worldid,interiorid,playerid,streamdistance);
 		}
 	}
-	
-	MissileComponent[mobid][missile_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
-	AttachDynamicAreaToObject(MissileComponent[mobid][missile_areaid],MissileComponent[mobid][missile_objectid]);
 	MissileComponent[mobid][missile_explode] = explode_radius;
 	MissileComponent[mobid][missile_active] = true;
 	MissileComponent[mobid][missile_playerid] = byplayerid;
@@ -203,6 +200,10 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 		MissileComponent[mobid][missile_remote_count] = 0;
 	}
 	MissileComponent[mobid][missile_vehicleid] = GetPlayerVehicleID(byplayerid);
+	
+	MissileComponent[mobid][missile_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
+	AttachDynamicAreaToObject(MissileComponent[mobid][missile_areaid],MissileComponent[mobid][missile_objectid]);
+	
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MissileComponent[mobid][missile_objectid],E_STREAMER_EXTRA_ID,(mobid+MISSILE_EXTRA_ID_OFFSET));
 	Streamer_SetIntData(STREAMER_TYPE_AREA,MissileComponent[mobid][missile_areaid],E_STREAMER_EXTRA_ID,(mobid+MISSILE_EXTRA_ID_OFFSET));
 	MissileComponent[mobid][missile_type] = type;
