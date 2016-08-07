@@ -49,7 +49,7 @@
 #define ShiftRGBAToRGB(%0)				(((%0) >>> 8) & 0xFFFFFF)
 #define ShiftRGBToRGBA(%0,%1)			(((%0) << 8) | (%1))
 
-#define ShiftRGBToARGB(%0,%1)			((%0) | (%1 << 24))
+#define ShiftRGBToARGB(%0,%1)			((%0) | ((%1) << 24))
 #define ShiftARGBToRGB(%0)				((%0) & 0x00FFFFFF)
 
 #define ShiftRGBAToARGB(%0)				((((%0) << 24) & 0xFF000000) | (((%0) >>> 8) & 0xFFFFFF))
