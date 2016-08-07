@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer                                                                                 *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.7.6                                                                                                            *
+ * File Version: 2.7.7                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * MapAndreas Version: 1.2.1                                                                                                      *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -29,9 +29,9 @@
  * Float:ctg(Float:value,anglemode:mode=radian);                                                                                  *
  * Float:secans(Float:value,anglemode:mode=radian);                                                                               *
  * Float:cosecans(Float:value,anglemode:mode=radian);                                                                             *
- * single_clock(max,id);                                                                                                          *
- * even_clock(max,id);                                                                                                            *
- * uneven_clock(max,id);                                                                                                          *
+ * single_clock(max,id); //For GetRandomClockPos parameter rz                                                                     *
+ * even_clock(max,id);   //For GetRandomClockPos parameter rz                                                                     *
+ * uneven_clock(max,id); //For GetRandomClockPos parameter rz                                                                     *
  * IsEven(value);                                                                                                                 *
  * Float:RandomFloat(Float:min,Float:max,accuracy = 4);                                                                           *
  * GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz);                                                     *
@@ -42,8 +42,12 @@
  * NMTZ(value);              //NotMoreThanZero                                                                                    *
  * Float:NLTZF(Float:value); //NotLessThanZeroFloat                                                                               *
  * Float:NMTZF(Float:value); //NotMoreThanZeroFloat                                                                               *
- * CompRotation(rotation,&crotation=0); //CompressRotation                                                                        *
- * Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0); //CompressRotationFloat                                          *
+ * CompRotation(rotation,&crotation=0);   //CompressRotation                                                                      *
+ * DeCompRotation(rotation,&crotation=0); //DeCompressRotation                                                                    *
+ * Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0);   //CompressRotationFloat                                        *
+ * Float:DeCompRotationFloat(Float:rotation,&Float:crotation=0.0); //DeCompressRotationFloat                                      *
+ * RecoilFloat(Float:value,Float:recoil);                                                                                         *
+ * RecoilVector(&Float:vx,&Float:vy,&Float:vz,Float:sx,Float:sy,Float:sz);                                                        *
  * GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty);                                                  *
  * GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                       *
  * Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius);                                                      *
@@ -51,7 +55,7 @@
  * GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                    *
  * GetRotationFor2Point2D(Float:x,Float:y,Float:tx,Float:ty,&Float:rz);                                                           *
  * bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                           *
- * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0);           *
+ * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = INVALID_ROTATION);  *
  * GetRandomPointInCircle(Float:x,Float:y,Float:size,&Float:tx,&Float:ty);                                                        *
  * GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:size,&Float:tx,&Float:ty,&Float:tz);                    *
  * GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:size,&Float:tx,&Float:ty,&Float:tz);                                      *
@@ -76,6 +80,8 @@
  * Float:GetPlayerCameraZAngle(playerid,&Float:rz=0.0);                                                                           *
  * GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty);                               *
  * GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz);   *
+ * GetPointFor2Point2DEx(Float:x1,Float:y1,Float:x2,Float:y2,Float:distance,&Float:tx,&Float:ty);                                 *
+ * GetPointFor2Point3DEx(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:distance,&Float:tx,&Float:ty,&Float:tz);     *
  * ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz);                                                         *
  * ShiftRotationToVector(Float:rx,Float:rz,&Float:vx,&Float:vy,&Float:vz);                                                        *
  * bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB);                                           *
@@ -129,6 +135,7 @@
  * GetVehicleUpVector(vehicleid,&Float:vx,&Float:vy,&Float:vz);                                                                   *
  * GetVehicleUpPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z);                                                            *
  * GetVehicleDownPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z);                                                          *
+ * GetQuatUpVector(Float:qw,Float:qx,Float:qy,Float:qz,&Float:vx,&Float:vy,&Float:vz);                                            *
  *                                                                                                                                *
  * Extended Functions:                                                                                                            *
  * Get3DTrygModules(&modules_count=0);                                                                                            *
@@ -215,10 +222,11 @@
  * UpdatePlayerTimeline(playerid);                                                                                                *
  *                                                                                                                                *
  * Symbols:                                                                                                                       *
- * FLOAT_PI    - pi constant value                                                                                                *
- * FLOAT_EULER - Euler number                                                                                                     *
- * FLOAT_NAN   - Float NaN                                                                                                        *
- * VBTP        - Value Bigger Than Possible                                                                                       *
+ * FLOAT_PI     - pi constant value                                                                                               *
+ * FLOAT_EULER  - Euler number                                                                                                    *
+ * FLOAT_NAN    - Float NaN                                                                                                       *
+ * FLOAT_DEFECT - Float defect (Arc Test)                                                                                         *
+ * VBTP         - Value Bigger Than Possible                                                                                      *
  *                                                                                                                                *
  * Functions extra names:                                                                                                         *
  * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                          *
@@ -227,6 +235,8 @@
  * GetDistanceBetweenPoints   -> GetDistanceBetweenPoints3D                                                                       *
  * CompressRotation           -> CompRotation                                                                                     *
  * CompressRotationFloat      -> CompRotationFloat                                                                                *
+ * DeCompressRotation         -> DeCompRotation                                                                                   *
+ * DeCompressRotationFloat    -> DeCompRotationFloat                                                                              *
  * GetXYInFrontOfPlayerCol    -> GetPointInFrontOfPlayerCol                                                                       *
  * GetPointInFrontCol         -> GetPointInFront3DCol                                                                             *
  * GetPointInFrontOfCameraCol -> GetPointInFrontOfCamera3DCol                                                                     *
@@ -245,11 +255,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.7.6
+	#error [ADM] You need 3DTryg.inc v2.7.7
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.7.6
-#elseif (Tryg3D_Version < 20706)
-	#error [ADM] Update you 3DTryg.inc to v2.7.6
+	#error [ADM] Update you 3DTryg.inc to v2.7.7
+#elseif (Tryg3D_Version < 20707)
+	#error [ADM] Update you 3DTryg.inc to v2.7.7
 #endif
 */
 
@@ -258,7 +268,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20706) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20707) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -369,6 +379,14 @@
 	#define FLOAT_NAN 									(Float:0xFFFFFFFF)
 #endif
 
+#if !defined FLOAT_DEFECT
+	#define FLOAT_DEFECT								(0.000001)
+#endif
+
+#if !defined INVALID_ROTATION
+	#define INVALID_ROTATION							(-1000.0)
+#endif
+
 #if !defined VBTP
 	#define VBTP 										(0x7FFFFFFF)
 #endif
@@ -440,6 +458,8 @@
 #define ShiftGradesToRadian(%0)							(ShiftDegreeToRadian(ShiftGradesToDegree(%0)))
 
 #define ShiftRotationToVector(%0,%1,%2,%3,%4)			(GetPointInFront3D(0.0,0.0,0.0,(%0),(%1),1.0,(%2),(%3),(%4)))
+
+#define RecoilFloat(%0,%1)								(((%0) >= 0.0)?((%0)+(%1)):((%0)-(%1)))
 
 //old code version made by Zoutdaxv (modified version)
 #define GetRotationFor2Point2D(%0,%1,%2,%3,%4)			(CompRotationFloat((atan2((%3)-(%1),(%2)-(%0))-90.0),(%4)))
@@ -555,6 +575,12 @@ stock Get3DTrygModules(&modules_count=0){
 	#endif
 	
 	return tryg_str;
+}
+
+stock RecoilVector(&Float:vx,&Float:vy,&Float:vz,Float:sx,Float:sy,Float:sz){
+	vx = RecoilFloat(vx,sx);
+	vy = RecoilFloat(vy,sy);
+	vz = RecoilFloat(vz,sz);
 }
 
 stock Float:GetActorDistanceFromPoint(actorid,Float:x,Float:y,Float:z){
@@ -739,6 +765,26 @@ stock Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0){
 	return crotation;
 }
 
+stock DeCompRotation(rotation,&crotation=0){
+	crotation = rotation;
+	while(crotation >= 180) crotation -= 360;
+	while(crotation < -180) crotation += 360;
+	return crotation;
+}
+
+stock Float:DeCompRotationFloat(Float:rotation,&Float:crotation=0.0){
+	crotation = rotation;
+	while(crotation >= 180.0) crotation -= 360.0;
+	while(crotation < -180.0) crotation += 360.0;
+	return crotation;
+}
+
+stock Tryg3D_QuatToEuler(Float:qw,Float:qx,Float:qy,Float:qz,&Float:rx,&Float:ry,&Float:rz){
+	CompRotationFloat(asin(2*qy*qz-2*qx*qw),rx);
+	CompRotationFloat(-atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy),ry);
+	CompRotationFloat(-atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz),rz);
+}
+
 //Old code version, Updated by Shiska
 stock GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty){
 	tx = x - (radius*floatsin(rz,degrees));
@@ -789,16 +835,15 @@ stock bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Floa
 }
 
 //random clock pos
-stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = -1000.0){
+stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = INVALID_ROTATION){
 	new rand = random(360);
-	if(rz == -1000.0) rz = rand;
+	if(rz == INVALID_ROTATION) rz = rand;
 	GetPointInFront3D(x,y,z,0.0,rz,radius,tx,ty,tz);
 	CompRotationFloat(rz-180.0,trz);
 }
 
 stock GetRandomPointInCircle(Float:x,Float:y,Float:size,&Float:tx,&Float:ty){
-	tx = x + (random(floatround(size * 2)+1)-size);
-	ty = y + (random(floatround(size * 2)+1)-size);
+	GetPointInFront2D(x,y,RandomFloat(0.0,360.0),RandomFloat(0.0,size),tx,ty);
 }
 
 /*
@@ -813,15 +858,12 @@ stock GetRandomPointInCylinder(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Floa
 */
 
 stock GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:size,&Float:tx,&Float:ty,&Float:tz){
-	tx = x + (random(floatround(size * 2)+1)-size);
-	ty = y + (random(floatround(size * 2)+1)-size);
-	tz = random(floatround(floatsqroot(floatpower(minz-maxz,2)))+1)+minz;
+	GetPointInFront2D(x,y,RandomFloat(0.0,360.0),RandomFloat(0.0,size),tx,ty);
+	tz = RandomFloat(0.0,floatsqroot(floatpower(minz-maxz,2)))+minz;
 }
 
 stock GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:size,&Float:tx,&Float:ty,&Float:tz){
-	tx = x + (random(floatround(size * 2)+1)-size);
-	ty = y + (random(floatround(size * 2)+1)-size);
-	tz = z + (random(floatround(size * 2)+1)-size);
+	GetPointInFront3D(x,y,z,RandomFloat(0.0,360.0),RandomFloat(0.0,360.0),RandomFloat(0.0,size),tx,ty,tz);
 }
 
 stock GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty){
@@ -870,6 +912,14 @@ stock Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:
 	return speed;
 }
 
+//QuatUpVector by Nero_3D
+stock GetQuatUpVector(Float:qw,Float:qx,Float:qy,Float:qz,&Float:vx,&Float:vy,&Float:vz){
+	qx *= -1, qy *= -1, qz *= -1;
+	vx = 2.0*(qy*qw+qz*qx);
+	vy = 2.0*(qz*qy-qx*qw);
+	vz = 1.0-(2.0*(qx*qx+qy*qy));
+}
+
 //GetVehicleRotation Created by IllidanS4
 stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 	new Float:qw,Float:qx,Float:qy,Float:qz;
@@ -883,10 +933,7 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 stock GetVehicleUpVector(vehicleid,&Float:vx,&Float:vy,&Float:vz){
 	new Float:qw,Float:qx,Float:qy,Float:qz;
 	GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
-	qx *= -1, qy *= -1, qz *= -1;
-	vx = 2.0*(qy*qw+qz*qx);
-	vy = 2.0*(qz*qy-qx*qw);
-	vz = 1.0-(2.0*(qx*qx+qy*qy));
+	GetQuatUpVector(qw,qx,qy,qz,vx,vy,vz);
 }
 
 stock GetVehicleUpPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z){
@@ -960,6 +1007,20 @@ stock GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,
 	dest_dist = (dist*(percent_size/100.0));
 	GetRotationFor2Point3D(x1,y1,z1,x2,y2,z2,rx,rz);
 	GetPointInFront3D(x1,y1,z1,rx,rz,dest_dist,tx,ty,tz);
+}
+
+stock GetPointFor2Point2DEx(Float:x1,Float:y1,Float:x2,Float:y2,Float:distance,&Float:tx,&Float:ty){
+	new Float:dist,Float:rz;
+	dist = GetDistanceBetweenPoints2D(x1,y1,x2,y2);
+	GetRotationFor2Point2D(x1,y1,x2,y2,rz);
+	GetPointInFront2D(x1,y1,rz,distance,tx,ty);
+}
+
+stock GetPointFor2Point3DEx(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+	new Float:dist,Float:rx,Float:rz;
+	dist = GetDistanceBetweenPoints3D(x1,y1,z1,x2,y2,z2);
+	GetRotationFor2Point3D(x1,y1,z1,x2,y2,z2,rx,rz);
+	GetPointInFront3D(x1,y1,z1,rx,rz,distance,tx,ty,tz);
 }
 
 stock bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB){
@@ -1698,22 +1759,19 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 	}
 	
 	stock bool:IsBetweenPlayersIsWall(playerid,targetid){
-		new Float:xA,Float:yA,Float:zA,
-			Float:xB,Float:yB,Float:zB,
-			Float:xC,Float:yC,Float:zC;
+		new Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:xC,Float:yC,Float:zC;
 		GetPlayerPos(playerid,xA,yA,zA);
 		GetPlayerPos(targetid,xB,yB,zB);
-		MovePointCol(xA,yA,zA,xB,yB,zB,xC,yC,zC);
-		if(xB == xC && yB == yC && zB == zC) return false;
+		CA_RayCastLine(xA,yA,zA,xB,yB,zB,xC,yC,zC);
+		if(xC == 0.0 || yC == 0.0 || zC == 0.0) return false;
 		return true;
 	}
 	
 	stock bool:IsBetweenPlayerToPointIsWall(playerid,Float:x,Float:y,Float:z){
-		new Float:xA,Float:yA,Float:zA,
-			Float:xC,Float:yC,Float:zC;
+		new Float:xA,Float:yA,Float:zA,Float:xC,Float:yC,Float:zC;
 		GetPlayerPos(playerid,xA,yA,zA);
-		MovePointCol(xA,yA,zA,x,y,z,xC,yC,zC);
-		if(xB == xC && yB == yC && zB == zC) return false;
+		CA_RayCastLine(xA,yA,zA,x,y,z,xC,yC,zC);
+		if(xC == 0.0 || yC == 0.0 || zC == 0.0) return false;
 		return true;
 	}
 	
@@ -1951,6 +2009,8 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 #define GetDistanceBetweenPoints						GetDistanceBetweenPoints3D
 #define CompressRotation								CompRotation
 #define CompressRotationFloat							CompRotationFloat
+#define DeCompressRotation								DeCompRotation
+#define DeCompressRotationFloat							DeCompRotationFloat
 #define GetXYZInFrontOfVehicle(%0,%1,%2,%3,%4) 			GetPointInFrontOfVehicle3D((%0),(%2),(%3),(%4),(%1))
 #define GetVehicleAngle									GetVehicleRotation
 #define Get3DTrygPrecision								Get3DTrygModules
