@@ -12,7 +12,7 @@ This option is available in ATM.inc
 [ADM] Info: YSF Timeline Sync successfully init.
 [ADM] Warring: Get speed error, the wrong time.
 [ADM] Warring: Invalid cylinder posision, identical points.
-[ADM] Warring: Invalid cylinder size.
+[ADM] Warring: Invalid cylinder radius.
 [ADM] Warring: Your ColAndreas ... It is not compatible with this version 3DTryg, update your ColAndreas to ...
 [ADM] Warring: Your Streamer ... It is not compatible with this version 3DTryg, update your Streamer to ...
 [ADM] Error: MapAndreas failed to initiated.
