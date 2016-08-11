@@ -22,9 +22,6 @@
 [submodule "resources/YSF - kurta999"]
 	path = resources/YSF - kurta999
 	url = https://github.com/kurta999/YSF
-[submodule "resources/YSF - IS4"]
-	path = resources/YSF - IS4
-	url = https://github.com/IllidanS4/YSF
 [submodule "resources/Pawn.CMD"]
 	path = resources/Pawn.CMD
 	url = https://github.com/urShadow/Pawn.CMD
@@ -46,3 +43,6 @@
 [submodule "include/samp/IZCMD"]
 	path = include/samp/IZCMD
 	url = https://github.com/YashasSamaga/I-ZCMD
+[submodule "resources/YSF - IS4"]
+	path = resources/YSF - IS4
+	url = https://github.com/IllidanS4/YSF
