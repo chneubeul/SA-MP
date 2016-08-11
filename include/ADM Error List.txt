@@ -3,20 +3,18 @@ This option is available in ATM.inc
 
 
 //StreamerFunction.inc
-[ADM] Warring: Invalid Object Component type.
-[ADM] Warring: Your Streamer ... It is not compatible with this version Streamer Functions, update your Streamer to ...
+[ADM] Error: Your Streamer ... It is not compatible with this version Streamer Functions, update your Streamer to ...
 
 //3DTryg.inc
 [ADM] Info: MapAndreas successfully init.
 [ADM] Info: ColAndreas successfully init.
 [ADM] Info: YSF Timeline Sync successfully init.
-[ADM] Warring: Get speed error, the wrong time.
-[ADM] Warring: Invalid cylinder posision, identical points.
-[ADM] Warring: Invalid cylinder radius.
-[ADM] Warring: Your ColAndreas ... It is not compatible with this version 3DTryg, update your ColAndreas to ...
-[ADM] Warring: Your Streamer ... It is not compatible with this version 3DTryg, update your Streamer to ...
+[ADM] Info: Streamer successfully init.
+[ADM] Error: Your ColAndreas ... It is not compatible with this version 3DTryg, update your ColAndreas to ...
+[ADM] Error: Your Streamer ... It is not compatible with this version 3DTryg, update your Streamer to ...
 [ADM] Error: MapAndreas failed to initiated.
 [ADM] Error: ColAndreas failed to initiated.
+[ADM] Error: Streamer failed to initiated.
 [ADM] Error: Cannot load /scriptfiles/SAfull.hmap
 [ADM] Error: Cannot load /scriptfiles/colandreas/ColAndreas.cadb
 
@@ -26,8 +24,8 @@ This option is available in ATM.inc
 [ADM] Error: Cannot load /scriptfiles/SAfull.hmap
 
 //GangZoneEx.inc
-[ADM] Warring: Invalid zoneid, range 0 - 1023
-[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE
+[ADM] Error: Invalid zoneid, range 0 - 1023
+[ADM] Error: GangZoneCreate returned INVALID_GANG_ZONE
 
 //ScriptSecure.inc & MultiScriptSecure.inc
 [ADM] Info: Local server detect.

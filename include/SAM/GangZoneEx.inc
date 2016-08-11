@@ -39,7 +39,7 @@ stock GangZoneCreateEx(Float:minx,Float:miny,Float:maxx,Float:maxy,worldid = -1,
 	new tid = GangZoneCreate(minx,miny,maxx,maxy);
 	if(tid == INVALID_GANG_ZONE){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE");
+			print("[ADM] Error: GangZoneCreate returned INVALID_GANG_ZONE");
 		}
 		return INVALID_GANG_ZONE;
 	}
@@ -49,13 +49,8 @@ stock GangZoneCreateEx(Float:minx,Float:miny,Float:maxx,Float:maxy,worldid = -1,
 
 //Hook: GangZoneCreate
 stock GZ_GangZoneCreate(Float:minx,Float:miny,Float:maxx,Float:maxy){
-	new tid = GangZoneCreate(minx,miny,maxx,maxy);
-	if(tid == INVALID_GANG_ZONE){
-		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Warring: GangZoneCreate returned INVALID_GANG_ZONE");
-		}
-		return INVALID_GANG_ZONE;
-	}
+	new tid;
+	if((tid = GangZoneCreate(minx,miny,maxx,maxy)) == INVALID_GANG_ZONE) return INVALID_GANG_ZONE;
 	GangZoneArea[tid] = CreateDynamicRectangle(minx,miny,maxx,maxy,-1,-1,-1);
 	return tid;
 }
@@ -69,12 +64,7 @@ stock GZ_GangZoneCreate(Float:minx,Float:miny,Float:maxx,Float:maxy){
 
 //Hook: GangZoneDestroy
 stock GZ_GangZoneDestroy(zoneid){
-	if(zoneid < 0 || zoneid > MAX_GANG_ZONES){
-		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
-		}
-		return 0;
-	}
+	if(zoneid < 0 || zoneid > MAX_GANG_ZONES) return 0;
 	if(IsValidDynamicArea(GangZoneArea[zoneid])) DestroyDynamicArea(GangZoneArea[zoneid]);
 	return GangZoneDestroy(zoneid);
 }

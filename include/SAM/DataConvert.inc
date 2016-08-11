@@ -56,14 +56,14 @@
 #endif
 */
 
-#if !defined sscanf
-	#error [ADM] Unknown SScanf Version
-#endif
-
 #if defined _Data_Convert
 	#endinput
 #endif
 #define _Data_Convert
+
+#if !defined sscanf
+	#error [ADM] Unknown SScanf Version
+#endif
 
 #define Data_Convert_Version		(10703) //a.b.c 10000*a+100*b+c
 

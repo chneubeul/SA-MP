@@ -7,9 +7,9 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                           *
  *                                                                                                                                  *
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer                                                                                   *
- * Modules: None                                                                                                                    *
+ * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.7.8                                                                                                              *
+ * File Version: 2.8.0                                                                                                              *
  * SA:MP Version: 0.3.7                                                                                                             *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -20,6 +20,11 @@
  * 1. ColAndreas   - The most accurate precision with ColAndreas plugin.                                                            *
  * 2. MapAndreasEx - Average precision MapAndreas plugin + MapAndreasEx Module.                                                     *
  * 3. MapAndreas   - Average precision MapAndreas plugin.                                                                           *
+ *                                                                                                                                  *
+ * Foreach Types:                                                                                                                   *
+ * 1. FoxForeach                                                                                                                    *
+ * 2. YSIForeach                                                                                                                    *
+ * 3. GetPlayerPoolSize                                                                                                             *
  *                                                                                                                                  *
  * Functions:                                                                                                                       *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                         *
@@ -72,8 +77,8 @@
  * Float:ShiftGradesToRadian(Float:grad);                                                                                           *
  * ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz);                           *
  * ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3);                         *
- * GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime);                                              *
- * Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                                *
+ * GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime=0);                                            *
+ * GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime);                                      *
  * GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz);                                                                     *
  * Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius);                                                    *
  * GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                    *
@@ -150,9 +155,7 @@
  * bool:IsTryg3DModuleLoaded(Tryg3DModule:moduleid);                                                                                *
  * Get3DTrygEfficiency(bool:use_colandreas=false);                                                                                  *
  * Get3DTrygErrorCount();                                                                                                           *
- * Get3DTrygWarringCount();                                                                                                         *
  * Reset3DTrygErrorCount();                                                                                                         *
- * Reset3DTrygWarringCount();                                                                                                       *
  *                                                                                                                                  *
  * ATM Module Functions:                                                                                                            *
  * randomex(min,max);                                                                                                               *
@@ -184,8 +187,8 @@
  *                                                                                                                                  *
  * ColAndreas Functions:                                                                                                            *
  * MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z);                *
- * MovePointColCutLine(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0);        *
- * MovePointColCutLineEx(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0);      *
+ * bool:MovePointColCutLine(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0);   *
+ * bool:MovePointColCutLineEx(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0); *
  * GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                      *
  * Float:GetPointInFrontOfPlayerCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                     *
  * Float:GetPointInFrontOfCamera2DCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                   *
@@ -219,6 +222,9 @@
  * bool:IsValidColAndreas(version);                                                                                                 *
  * GetColAndreasVersionName(name[], value = GET_COLANDREAS_VERSION, maxdest = sizeof name);                                         *
  * CheckColAndreasVersion();                                                                                                        *
+ *                                                                                                                                  *
+ * ColAndreas Callbacks:                                                                                                            *
+ * OnColAndreasRemoveBuilding();                                                                                                    *
  *                                                                                                                                  *
  * YSF Functions:                                                                                                                   *
  * Float:GetPlayerHydraReactorRX(playerid);                                                                                         *
@@ -264,19 +270,16 @@
  * GetObjectsDistance         -> GetDistanceBetweenObjects                                                                          *
  * GetDynamicObjectsDistance  -> GetDistanceBetweenDynamicObject                                                                    *
  *                                                                                                                                  *
- * Old prototype:                                                                                                                   *
- * GetAngle                   -> GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D                               *
- *                                                                                                                                  *
  ************************************************************************************************************************************/
 
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.7.8
+	#error [ADM] You need 3DTryg.inc v2.8.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.7.8
-#elseif (Tryg3D_Version < 20708)
-	#error [ADM] Update you 3DTryg.inc to v2.7.8
+	#error [ADM] Update you 3DTryg.inc to v2.8.0
+#elseif (Tryg3D_Version < 20800)
+	#error [ADM] Update you 3DTryg.inc to v2.8.0
 #endif
 */
 
@@ -285,7 +288,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20708) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20800) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -293,6 +296,8 @@
 #define TRYG3D_MODULEID_COLANDREAS						(Tryg3DModule:2)
 #define TRYG3D_MODULEID_YSF								(Tryg3DModule:3)
 #define TRYG3D_MODULEID_STREAMER						(Tryg3DModule:4)
+#define TRYG3D_MODULEID_FOXFOREACH						(Tryg3DModule:5)
+#define TRYG3D_MODULEID_YSIFOREACH						(Tryg3DModule:6)
 
 //Detect ColAndreas
 #if defined COLANDREAS
@@ -336,6 +341,26 @@
 //Detect MapAndreasEx
 #if defined _Map_Andreas_Ex
 	#define Tryg3D_MapAndreasEx
+#endif
+
+//Detect FoxForeach OR Foreach
+#if defined _FoX_Foreach
+	#define Tryg3DForeach(%0) 							FoxForeach(%0,Character)
+	#define Tryg3D_FoxForeach
+	
+	#define Tryg3D_Module_FoxForeach					(true)
+	#define Tryg3D_Module_YSIForeach					(false)
+#elseif defined _FOREACH_LOCAL_VERSION
+	#define Tryg3DForeach(%0)							foreach(new %0 : Character)
+	#define Tryg3D_YSIForeach
+	
+	#define Tryg3D_Module_FoxForeach					(false)
+	#define Tryg3D_Module_YSIForeach					(true)
+#else
+	#define Tryg3DForeach(%0)							for(new %0 = 0, p_%0 = GetPlayerPoolSize(); %0 <= p_%0; %0++) if(IsPlayerConnected(%0))
+	
+	#define Tryg3D_Module_FoxForeach					(false)
+	#define Tryg3D_Module_YSIForeach					(false)
 #endif
 
 //Auto Create MapAndreasEx
@@ -414,6 +439,14 @@
 
 #if !defined VEHICLE_SPEED_MULTIPLIER
 	#define VEHICLE_SPEED_MULTIPLIER 					(170.00)
+#endif
+
+#if !defined INVALID_MOVE_TIME
+	#define INVALID_MOVE_TIME 							(-1)
+#endif
+
+#if !defined INVALID_MOVE_SPEED
+	#define INVALID_MOVE_SPEED							(-1.0)
 #endif
 
 #if defined Tryg3D_ColAndreas
@@ -508,14 +541,11 @@
 #define Tryg3D_swap_int(%0,%1)							(((%0) ^= (%1)), ((%1) ^= (%0)), ((%0) ^= (%1)))
 
 #define Get3DTrygErrorCount() 							GetSVarInt("ADM:3DTryg:Error")
-#define Get3DTrygWarringCount() 						GetSVarInt("ADM:3DTryg:Warring")
 
 #define Reset3DTrygErrorCount() 						SetSVarInt("ADM:3DTryg:Error",0)
-#define Reset3DTrygWarringCount() 						SetSVarInt("ADM:3DTryg:Warring",0)
 
 //Only available for 3DTryg
 #define Update3DTrygErrorCount() 						SetSVarInt("ADM:3DTryg:Error",Get3DTrygErrorCount()+1)
-#define Update3DTrygWarringCount() 						SetSVarInt("ADM:3DTryg:Warring",Get3DTrygWarringCount()+1)
 //-------------------------
 
 /****************************************************************************************************
@@ -588,7 +618,11 @@ enum LongFloat4D {
 stock Get3DTrygModules(&modules_count=0){
 	modules_count = 0;
 	new tryg_str[128];
-	format(tryg_str,sizeof(tryg_str),"3D");
+	#if (defined Tryg3D_YSF && defined ENABLE_3D_TRYG_TIMELINE_SYNC)
+		format(tryg_str,sizeof(tryg_str),"4D");
+	#else
+		format(tryg_str,sizeof(tryg_str),"3D");
+	#endif
 	
 	#if defined Tryg3D_MapAndreas
 		format(tryg_str,sizeof(tryg_str),"%s:MapAndreas",tryg_str);
@@ -607,6 +641,16 @@ stock Get3DTrygModules(&modules_count=0){
 	
 	#if defined Tryg3D_Streamer
 		format(tryg_str,sizeof(tryg_str),"%s:Streamer",tryg_str);
+		modules_count++;
+	#endif
+	
+	#if defined Tryg3D_FoxForeach
+		format(tryg_str,sizeof(tryg_str),"%s:FoxForeach",tryg_str);
+		modules_count++;
+	#endif
+	
+	#if defined Tryg3D_YSIForeach
+		format(tryg_str,sizeof(tryg_str),"%s:YSIForeach",tryg_str);
 		modules_count++;
 	#endif
 	
@@ -781,10 +825,8 @@ stock GetVehicleFlagsByModel(modelid){
 
 stock CountPlayers(){
 	new cnt = 0;
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		if(IsPlayerConnected(i)){
-			cnt++;
-		}
+	Tryg3DForeach(i){
+		cnt++;
 	}
 	return cnt;
 }
@@ -948,25 +990,19 @@ stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Floa
 
 stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime=0){
 	if(speed <= 0.0){
-		rtime = 0x7F800000;
+		rtime = INVALID_MOVE_TIME;
 	} else {
-		new Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
-		rtime = floatround((dist/speed)*1000.0);
+		rtime = floatround((GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz)/speed)*1000.0);
 	}
 	return rtime;
 }
 
-stock Float:GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
+stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
 	if(rtime/1000.0 <= 0.0){
-		speed = Float:0x7F800000;
-		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Warring: Get speed error, the wrong time.");
-		}
-		Update3DTrygWarringCount();
+		speed = INVALID_MOVE_SPEED;
 	} else {
 		speed = (GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz)/(rtime/1000.0));
 	}
-	return speed;
 }
 
 //QuatUpVector by Nero_3D
@@ -1114,6 +1150,7 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 
 //Orig: Greg James - gjames@NVIDIA.com SRC:http://www.flipcode.com/archives/Fast_Point-In-Cylinder_Test.shtml
 stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius){
+	if(radius <= 0.0) return false;
 	new Float:pdx,Float:pdy,Float:pdz,Float:dot,Float:dsq,Float:lengthsq;
 	
 	pdx = px-xA;
@@ -1122,21 +1159,8 @@ stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:
 	
 	dot = pdx*(xB-xA) + pdy*(yB-yA) + pdz*(zB-zA);
 	
-	lengthsq = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
+	if((lengthsq = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB)) <= 0.0) return false;
 	lengthsq = lengthsq*lengthsq;
-	if(lengthsq <= 0.0){
-		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Warring: Invalid cylinder posision, identical points.");
-		}
-		Update3DTrygWarringCount();
-		return false;
-	} else if(radius <= 0.0){
-		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Warring: Invalid cylinder radius.");
-		}
-		Update3DTrygWarringCount();
-		return false;
-	}
 	if(dot < 0.0 || dot > lengthsq){
 		return false;
 	} else {
@@ -1318,17 +1342,15 @@ stock GetObjectDownPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 
 stock CreateDynamicExplosion(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,playerid = -1,Float:distance = 200.0){
 	if(playerid == -1){
-		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-			if(IsPlayerConnected(i)){
-				new Float:px, Float:py, Float:pz;
-				if(IsPlayerInAnyVehicle(i)){
-					GetVehiclePos(GetPlayerVehicleID(i),px,py,pz);
-				} else {
-					GetPlayerPos(i,px,py,pz);
-				}
-				if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
-					CreateExplosionForPlayer(i,x,y,z,type,radius);
-				}
+		Tryg3DForeach(i){
+			new Float:px, Float:py, Float:pz;
+			if(IsPlayerInAnyVehicle(i)){
+				GetVehiclePos(GetPlayerVehicleID(i),px,py,pz);
+			} else {
+				GetPlayerPos(i,px,py,pz);
+			}
+			if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
+				CreateExplosionForPlayer(i,x,y,z,type,radius);
 			}
 		}
 	} else {
@@ -1443,6 +1465,8 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 //Streamer Functions
 #if defined Tryg3D_Streamer
 
+	new bool:T3D:Tryg3DStreamerExam = false;
+
 	#define TRYG3D_GET_STREAMER_VERSION					(0xFFFFFFFF)
 	
 	#define Tryg3D_GetStreamerVersion()					(Streamer_IncludeFileVersion)
@@ -1462,13 +1486,16 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 
 	stock Tryg3D_CheckStreamerVersion(){
 		if(!Tryg3D_IsValidStreamer(Tryg3D_GetValidStreamerVersion())){
+			T3D:Tryg3DStreamerExam = false;
 			new str1[32], str2[32];
 			Tryg3D_GetStreamerVersionName(str1,Tryg3D_GetStreamerVersion());
 			Tryg3D_GetStreamerVersionName(str2,Tryg3D_GetValidStreamerVersion());
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				printf("[ADM] Warring: Your Streamer %s It is not compatible with this version 3DTryg, update your streamer to %s",str1,str2);
+				printf("[ADM] Error: Your Streamer %s It is not compatible with this version 3DTryg, update your streamer to %s",str1,str2);
 			}
-			Update3DTrygWarringCount();
+			Update3DTrygErrorCount();
+		} else {
+			T3D:Tryg3DStreamerExam = true;
 		}
 	}
 	
@@ -1590,9 +1617,9 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 			GetColAndreasVersionName(str1,GetColAndreasVersion());
 			GetColAndreasVersionName(str2,GetValidColAndreasVersion());
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				printf("[ADM] Warring: Your ColAndreas %s It is not compatible with this version 3DTryg, update your ColAndreas to %s",str1,str2);
+				printf("[ADM] Error: Your ColAndreas %s It is not compatible with this version 3DTryg, update your ColAndreas to %s",str1,str2);
 			}
-			Update3DTrygWarringCount();
+			Update3DTrygErrorCount();
 		}
 	}
 	
@@ -1603,48 +1630,36 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 		if(z == 0.0) z = EndZ;
 	}
 	
-	stock MovePointColCutLine(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
+	stock bool:MovePointColCutLine(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
 		CA_RayCastLine(SX,SY,SZ,EX,EY,EZ,x,y,z);
 		if(x == 0.0) x = EX;
 		if(y == 0.0) y = EY;
 		if(z == 0.0) z = EZ;
-		radius = GetDistanceBetweenPoints3D(SX,SY,SZ,x,y,z);
-		if(radius > 0.0){
-			CompRotationFloat(-(acos((z-SZ)/radius)-90.0),rx);
-			CompRotationFloat((atan2(y-SY,x-SX)-90.0),rz);
-			if(radius-cut_size > 0.0) radius -= cut_size;
-			GetPointInFront3D(SX,SY,SZ,rx,rz,radius,x,y,z);
-		} else {
-			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				print("[ADM] Warring: Invalid resize line, identical points.");
-			}
-			Update3DTrygWarringCount();
-		}
+		if((radius = GetDistanceBetweenPoints3D(SX,SY,SZ,x,y,z)) <= 0.0) return false;
+		CompRotationFloat(-(acos((z-SZ)/radius)-90.0),rx);
+		CompRotationFloat((atan2(y-SY,x-SX)-90.0),rz);
+		if(radius-cut_size > 0.0) radius -= cut_size;
+		GetPointInFront3D(SX,SY,SZ,rx,rz,radius,x,y,z);
+		return true;
 	}
 
-	stock MovePointColCutLineEx(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
+	stock bool:MovePointColCutLineEx(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
 		CA_RayCastLine(SX,SY,SZ,EX,EY,EZ,x,y,z);
 		if(x == 0.0) x = EX;
 		if(y == 0.0) y = EY;
 		if(z == 0.0) z = EZ;
-		radius = GetDistanceBetweenPoints3D(SX,SY,SZ,x,y,z);
-		if(radius > 0.0){
-			CompRotationFloat(-(acos((z-SZ)/radius)-90.0),rx);
-			CompRotationFloat((atan2(y-SY,x-SX)-90.0),rz);
-			if((radius-cut_size > cut_size) && (radius-cut_size > 0.0)){
-				radius -= cut_size;
-			} else {
-				radius = 0.0001;
-			}
-			GetPointInFront3D(SX,SY,SZ,rx,rz,radius,x,y,z);
+		if((radius = GetDistanceBetweenPoints3D(SX,SY,SZ,x,y,z)) <= 0.0) return false;
+		CompRotationFloat(-(acos((z-SZ)/radius)-90.0),rx);
+		CompRotationFloat((atan2(y-SY,x-SX)-90.0),rz);
+		if((radius-cut_size > cut_size) && (radius-cut_size > 0.0)){
+			radius -= cut_size;
 		} else {
-			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				print("[ADM] Warring: Invalid resize line, identical points.");
-			}
-			Update3DTrygWarringCount();
+			radius = 0.0001;
 		}
+		GetPointInFront3D(SX,SY,SZ,rx,rz,radius,x,y,z);
+		return true;
 	}
 	
 	//GetPointInFront3D (ColAndreas)
@@ -1985,7 +2000,7 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 			new tline = GetPlayerTimeline(playerid), pskin = GetPlayerSkin(playerid), pcolor = GetPlayerColor(playerid),
 				Float:px, Float:py, Float:pz;
 			GetPlayerPos(playerid,px,py,pz);
-			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+			Tryg3DForeach(i){
 				if(i != playerid){
 					if(tline == GetPlayerTimeline(i)){
 						SetPlayerSkinForPlayer(i,playerid,pskin);
@@ -2026,18 +2041,16 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 		
 		stock CreateDynamicExplosion4D(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,timeline = -1,playerid = -1,Float:distance = 200.0){
 			if(playerid == -1){
-				for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-					if(IsPlayerConnected(i)){
-						new Float:px, Float:py, Float:pz;
-						if(IsPlayerInAnyVehicle(i)){
-							GetVehiclePos(GetPlayerVehicleID(i),px,py,pz);
-						} else {
-							GetPlayerPos(i,px,py,pz);
-						}
-						if(GetPlayerTimeline(i) == timeline || timeline == -1){
-							if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
-								CreateExplosionForPlayer(i,x,y,z,type,radius);
-							}
+				Tryg3DForeach(i){
+					new Float:px, Float:py, Float:pz;
+					if(IsPlayerInAnyVehicle(i)){
+						GetVehiclePos(GetPlayerVehicleID(i),px,py,pz);
+					} else {
+						GetPlayerPos(i,px,py,pz);
+					}
+					if(GetPlayerTimeline(i) == timeline || timeline == -1){
+						if((GetPlayerInterior(i) == interiorid || interiorid == -1) && (GetPlayerVirtualWorld(i) == worldid || worldid == -1) && (VectorSize(px-x,py-y,pz-z) <= distance)){
+							CreateExplosionForPlayer(i,x,y,z,type,radius);
 						}
 					}
 				}
@@ -2214,14 +2227,6 @@ stock Get3DTrygEfficiency(bool:use_colandreas=false){
 #define GetVehiclesDistance								GetDistanceBetweenVehicles
 #define GetObjectsDistance								GetDistanceBetweenObjects
 
-#if !defined USE_OLD_PROTOTYPE_FUNCTION
-	
-	#if defined GetAngle
-		#error [ADM] GetAngle is old prototype. Use GetPlayerTargetAngle / SetPlayerTargetAngle / GetRotationFor2Point2D
-	#endif
-	
-#endif
-
 /****************************************************************************************************
  *                                                                                                  *
  * FilterScript/GameMode Init Hook                                                                  *
@@ -2231,7 +2236,9 @@ stock Get3DTrygEfficiency(bool:use_colandreas=false){
 new bool:CRC_3DTryg = true;
 
 #if defined Tryg3D_ColAndreas
-	
+
+	forward OnColAndreasRemoveBuilding();
+
 	stock bool:Tryg3D_IsColAndreasInit(){
 		new Float:mapunit;
 		CA_FindZ_For2DCoord(0.0,0.0,mapunit);
@@ -2243,6 +2250,7 @@ new bool:CRC_3DTryg = true;
 		//check ColAndreas Init
 		new bool:ColAndreasLastStat = false;
 		if(!Tryg3D_IsColAndreasInit()){
+			CallLocalFunction("OnColAndreasRemoveBuilding","");
 			CA_Init();
 			ColAndreasLastStat = true;
 		}
@@ -2299,7 +2307,7 @@ new bool:CRC_3DTryg = true;
 	
 #endif
 
-stock Tryg3DInit(){
+stock Tryg3DInit_MapPrecision(){
 	#if defined Tryg3D_ColAndreas
 		Tryg3D_SafeColAndreasInit();
 	#elseif defined Tryg3D_MapAndreasEx
@@ -2311,14 +2319,12 @@ stock Tryg3DInit(){
 	#endif
 }
 
-//Hook: OnFilterScriptInit
-public OnFilterScriptInit(){
-	if(CRC_3DTryg){ CRC_3DTryg = false; } else return 1; //Init Engine
+stock Tryg3DInit(){
 	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
 		CheckColAndreasVersion();
 	#endif
 	#if !defined DISABLE_3D_TRYG_INIT
-		Tryg3DInit();
+		Tryg3DInit_MapPrecision();
 	#endif
 	#if ((defined Tryg3D_YSF) && (defined ENABLE_3D_TRYG_TIMELINE_SYNC))
 		if(GetSVarInt("ADM:3DTryg:YSF:TIMELINE") == 0){
@@ -2331,6 +2337,25 @@ public OnFilterScriptInit(){
 	#if (!defined DISABLE_3D_TRYG_CHECK && defined Tryg3D_Streamer)
 		Tryg3D_CheckStreamerVersion();
 	#endif
+	#if defined Tryg3D_Streamer
+		if(GetSVarInt("ADM:3DTryg:Streamer") == 0){
+			SetSVarInt("ADM:3DTryg:Streamer",1);
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				if(T3D:Tryg3DStreamerExam){
+					print("[ADM] Info: Streamer successfully init.");
+				} else {
+					print("[ADM] Error: Streamer failed to initiated.");
+					Update3DTrygErrorCount();
+				}
+			}
+		}
+	#endif
+}
+
+//Hook: OnFilterScriptInit
+public OnFilterScriptInit(){
+	if(CRC_3DTryg){ CRC_3DTryg = false; } else return 1; //Init Engine
+	Tryg3DInit();
 	#if defined _3DTryg_OnFilterScriptInit
 		_3DTryg_OnFilterScriptInit();
 	#endif
@@ -2350,23 +2375,7 @@ public OnFilterScriptInit(){
 //Hook: OnGameModeInit
 public OnGameModeInit(){
 	if(CRC_3DTryg){ CRC_3DTryg = false; } else return 1; //Init Engine
-	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
-		CheckColAndreasVersion();
-	#endif
-	#if !defined DISABLE_3D_TRYG_INIT
-		Tryg3DInit();
-	#endif
-	#if ((defined Tryg3D_YSF) && (defined ENABLE_3D_TRYG_TIMELINE_SYNC))
-		if(GetSVarInt("ADM:3DTryg:YSF:TIMELINE") == 0){
-			SetSVarInt("ADM:3DTryg:YSF:TIMELINE",1);
-			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				print("[ADM] Info: YSF Timeline Sync successfully init.");
-			}
-		}
-	#endif
-	#if (!defined DISABLE_3D_TRYG_CHECK && defined Tryg3D_Streamer)
-		Tryg3D_CheckStreamerVersion();
-	#endif
+	Tryg3DInit();
 	#if defined _3DTryg_OnGameModeInit
 		_3DTryg_OnGameModeInit();
 	#endif
@@ -2385,6 +2394,5 @@ public OnGameModeInit(){
 
 
 #undef Update3DTrygErrorCount
-#undef Update3DTrygWarringCount
 
 //EOF

@@ -50,19 +50,18 @@ LoadBinaryObjectIMG("Christmas.bin"); //Load Binary Object IMG
 #endif
 */
 
-#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
-	#error [ADM] Unknown Streamer Version
-#endif
-
-
-#if !defined sscanf
-	#error [ADM] Unknown SScanf Version
-#endif
-
 #if defined _Bin_Loader
 	#endinput
 #endif
 #define _Bin_Loader
+
+#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
+	#error [ADM] Unknown Streamer Version
+#endif
+
+#if !defined sscanf
+	#error [ADM] Unknown SScanf Version
+#endif
 
 #define Bin_Loader_Version 					(20201) //a.b.c 10000*a+100*b+c
 

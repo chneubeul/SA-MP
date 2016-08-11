@@ -45,6 +45,10 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if defined _3D_Tryg
+	#error [ADM] Error please include FoxForeach before 3DTryg, for increase loop speed.
+#endif
+
 #if defined _FoX_Foreach
 	#endinput
 #endif

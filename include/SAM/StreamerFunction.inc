@@ -9,7 +9,7 @@
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
  *                                                                                                                                         *
- * File Version: 2.5.3                                                                                                                     *
+ * File Version: 2.5.4                                                                                                                     *
  * SA:MP Version: 0.3.7                                                                                                                    *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
@@ -293,24 +293,24 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.5.3
+	#error [ADM] You need StreamerFunction.inc v2.5.4
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.5.3
-#elseif (Streamer_Spec_Version < 20503)
-	#error [ADM] Update you StreamerFunction.inc to v2.5.3
+	#error [ADM] Update you StreamerFunction.inc to v2.5.4
+#elseif (Streamer_Spec_Version < 20504)
+	#error [ADM] Update you StreamerFunction.inc to v2.5.4
 #endif
 */
-
-#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
-	#error [ADM] Unknown Streamer Version
-#endif
 
 #if defined _streamer_spec
 	#endinput
 #endif
 #define _streamer_spec
 
-#define Streamer_Spec_Version 					(20503) //a.b.c 10000*a+100*b+c
+#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
+	#error [ADM] Unknown Streamer Version
+#endif
+
+#define Streamer_Spec_Version 					(20504) //a.b.c 10000*a+100*b+c
 #define Valid_Streamer_Version 					(0x282001)
 
 #if !defined INVALID_STREAMER_ID
@@ -337,6 +337,10 @@
 
 #if !defined MAX_STREAM_SIZE
 	#define MAX_STREAM_SIZE						256
+#endif
+
+#if !defined INVALID_STREAMER_COMPONENT
+	#define INVALID_STREAMER_COMPONENT			-1
 #endif
 
 #if !defined IsValidVehicle
@@ -942,12 +946,7 @@ stock DestroyDynamicObjectComponent(objectid,type){
 						DestroyDynamicArea(i);
 						count++;
 					}
-					default: {
-						if(GetSVarInt("ADM:Logging:Disable") == 0){
-							print("[ADM] Warring: Invalid Object Component type.");
-						}
-						return 0;
-					}
+					default: return INVALID_STREAMER_COMPONENT;
 				}
 			}
 		}
@@ -969,12 +968,7 @@ stock DeattachDynamicObjectComponent(objectid,type){
 						Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_VEHICLE_ID);
 						count++;
 					}
-					default: {
-						if(GetSVarInt("ADM:Logging:Disable") == 0){
-							print("[ADM] Warring: Invalid Object Component type.");
-						}
-						return 0;
-					}
+					default: return INVALID_STREAMER_COMPONENT;
 				}
 			}
 		}
@@ -1072,7 +1066,7 @@ stock CheckStreamerVersion(){
 		GetStreamerVersionName(str1,GetStreamerVersion());
 		GetStreamerVersionName(str2,GetValidStreamerVersion());
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Warring: Your Streamer %s It is not compatible with this version Streamer Functions, update your Streamer to %s",str1,str2);
+			printf("[ADM] Error: Your Streamer %s It is not compatible with this version Streamer Functions, update your Streamer to %s",str1,str2);
 		}
 	}
 }

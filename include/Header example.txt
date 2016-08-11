@@ -40,7 +40,6 @@
 
 
 //3DTryg.inc Config
-//#define USE_OLD_PROTOTYPE_FUNCTION
 //#define DISABLE_3D_TRYG_CHECK
 //#define DISABLE_3D_TRYG_INIT
 //#define ENABLE_3D_TRYG_TIMELINE_SYNC
@@ -77,6 +76,7 @@
 #include <SAM/BitFunctions>         //http://forum.sa-mp.com/showthread.php?t=591223
 #include <SAM/RGB>                  //http://forum.sa-mp.com/showthread.php?t=590770
 #include <SAM/MapAndreasEx>         //This include is deprecated, 3DTryg contain all of its functions
+#include <SAM/FoxForeach>           //http://forum.sa-mp.com/showthread.php?t=611175 (Incompatible with foreach.inc !)
 #include <SAM/3DTryg>               //http://forum.sa-mp.com/showthread.php?t=591010
 #include <SAM/BINLDR>               //http://forum.sa-mp.com/showthread.php?p=3653547
 #include <SAM/LY>                   //http://forum.sa-mp.com/showthread.php?t=598933
@@ -89,8 +89,6 @@
 #include <SAM/VehicleEx>            //http://forum.sa-mp.com/showthread.php?p=3727224
 #include <SAM/Logs>                 //not published
 #include <SAM/ATM>                  //not published
-#include <SAM/FoxForeach>           //http://forum.sa-mp.com/showthread.php?t=611175 (Incompatible with foreach.inc !)
-
 
 //Other includes created by Abyss Morgan
 

@@ -49,6 +49,11 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 #endif
 */
 
+#if defined _DoT_Loader
+	#endinput
+#endif
+#define _DoT_Loader
+
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
 	#error [ADM] Unknown Streamer Version
 #endif
@@ -65,11 +70,6 @@ LoadDoTMap("Christmas.dot"); //Load DoT File
 #elseif (ADM_Encryption_Version < 20201)
 	#error [ADM] Update you ADM.inc to v2.2.1
 #endif
-
-#if defined _DoT_Loader
-	#endinput
-#endif
-#define _DoT_Loader
 
 #define DoT_Loader_Version 				(10302) //a.b.c 10000*a+100*b+c
 
