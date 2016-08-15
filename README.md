@@ -17,8 +17,8 @@ Abyss Morgan
 
 
 ### Special Thanks for:
-Crayder, Nero_3D, IllidanS4, eider, Witkacy, Zoutdaxv, RyDeR, Greg James, hesambia, tsynotnu, Shiska, Neil Lamoureux
+Crayder, Nero_3D, IllidanS4, eider, Witkacy, Zoutdaxv, RyDeR, Greg James, hesambia, tsynotnu, Shiska, Neil Lamoureux, Freaksken
 
 
 ### Beta Testers:
-banangame, FerilanS, Kozdyr0, Nizzur
+banangame, FerilanS, Kozdyr0, Nizzur, Muchomor

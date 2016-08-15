@@ -9,13 +9,13 @@
  * Plugins: None                                                                                                                  *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 1.1.1                                                                                                            *
+ * File Version: 1.2.0                                                                                                            *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * GetVehiclePanels(vehicleid,&front_left,&front_right,&rear_left,&rear_right,&windshield,&front_bumper,&rear_bumper);            *
  * SetVehiclePanels(vehicleid,front_left,front_right,rear_left,rear_right,windshield,front_bumper,rear_bumper);                   *
- * GetVehicleLights(vehicleid,&light1,&light2,&light3,&light4);                                                                   *
- * SetVehicleLights(vehicleid,light1,light2,light3,light4);                                                                       *
+ * GetVehicleLights(vehicleid,&front_left_light,&front_right_light,&back_lights);                                                 *
+ * SetVehicleLights(vehicleid,front_left_light,front_right_light,back_lights);                                                    *
  * GetVehicleDoors(vehicleid,&bonnet,&boot,&driver_door,&passenger_door);                                                         *
  * SetVehicleDoors(vehicleid,bonnet,boot,driver_door,passenger_door);                                                             *
  * GetVehicleTires(vehicleid,&front_left,&front_right,&rear_left,&rear_right);                                                    *
@@ -81,19 +81,20 @@ stock SetVehiclePanels(vehicleid,front_left,front_right,rear_left,rear_right,win
 	UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 }
 
-stock GetVehicleLights(vehicleid,&light1,&light2,&light3,&light4){
+//Update by Freaksken
+stock GetVehicleLights(vehicleid,&front_left_light,&front_right_light,&back_lights){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
-	light1 = (lights & 0x1);
-	light2 = (lights >> 1 & 0x1);
-	light3 = (lights >> 2 & 0x1);
-	light4 = (lights >> 3 & 0x1);
+	front_left_light = (lights & 0x1);
+    front_right_light = (lights >> 2 & 0x1);
+    back_lights = (lights >> 6 & 0x1);
 }
 
-stock SetVehicleLights(vehicleid,light1,light2,light3,light4){
+//Update by Freaksken
+stock SetVehicleLights(vehicleid,front_left_light,front_right_light,back_lights){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
-	lights = (light1 | (light2 << 1) | (light3 << 2) | (light4 << 3));
+	lights = (front_left_light | (front_right_light << 2) | (back_lights << 6));
 	UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 }
 
