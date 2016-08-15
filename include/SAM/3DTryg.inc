@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer                                                                                   *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.8.0                                                                                                              *
+ * File Version: 2.8.1                                                                                                              *
  * SA:MP Version: 0.3.7                                                                                                             *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -149,6 +149,10 @@
  * GetQuatFromRot(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz);                                              *
  * Float:GetLineSize2D(Float:points[][],maxpoints=sizeof(points));                                                                  *
  * Float:GetLineSize3D(Float:points[][],maxpoints=sizeof(points));                                                                  *
+ * bool:GetLineRotatedVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                     *
+ * bool:GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                  *
+ * bool:GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                  *
+ * bool:GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                *
  *                                                                                                                                  *
  * Extended Functions:                                                                                                              *
  * Get3DTrygModules(&modules_count=0);                                                                                              *
@@ -173,6 +177,7 @@
  * GetDynamicObjectUpVector(Objectid,&Float:vx,&Float:vy,&Float:vz);                                                                *
  * GetDynamicObjectUpPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                         *
  * GetDynamicObjectDownPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                       *
+ * bool:GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                           *
  *                                                                                                                                  *
  * MapAndreas Functions:                                                                                                            *
  * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0);                                                                             *
@@ -275,11 +280,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.8.0
+	#error [ADM] You need 3DTryg.inc v2.8.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.8.0
-#elseif (Tryg3D_Version < 20800)
-	#error [ADM] Update you 3DTryg.inc to v2.8.0
+	#error [ADM] Update you 3DTryg.inc to v2.8.1
+#elseif (Tryg3D_Version < 20801)
+	#error [ADM] Update you 3DTryg.inc to v2.8.1
 #endif
 */
 
@@ -288,7 +293,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20800) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20801) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -1462,6 +1467,52 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 	}
 }
 
+stock bool:GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	new Float:px,Float:py,Float:pz;
+	GetPlayerPos(playerid,px,py,pz);
+	if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
+		ShiftRotationToVector(rx,rz,vx,vy,vz);
+		return true;
+	} else {
+		vx = 0.0, vy = 0.0, vz = 0.0;
+		return false;
+	}
+}
+
+stock bool:GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	new Float:px,Float:py,Float:pz;
+	GetObjectPos(objectid,px,py,pz);
+	if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
+		ShiftRotationToVector(rx,rz,vx,vy,vz);
+		return true;
+	} else {
+		vx = 0.0, vy = 0.0, vz = 0.0;
+		return false;
+	}
+}
+
+stock bool:GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	new Float:px,Float:py,Float:pz;
+	GetVehiclePos(vehicleid,px,py,pz);
+	if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
+		ShiftRotationToVector(rx,rz,vx,vy,vz);
+		return true;
+	} else {
+		vx = 0.0, vy = 0.0, vz = 0.0;
+		return false;
+	}
+}
+
+stock bool:GetLineRotatedVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	if(GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz)){
+		ShiftRotationToVector(rx,rz,vx,vy,vz);
+		return true;
+	} else {
+		vx = 0.0, vy = 0.0, vz = 0.0;
+		return false;
+	}
+}
+
 //Streamer Functions
 #if defined Tryg3D_Streamer
 
@@ -1565,6 +1616,18 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 		new Float:x,Float:y,Float:z;
 		GetDynamicObjectPos(objectid,x,y,z);
 		return GetPlayerDistanceFromPoint(playerid,x,y,z);
+	}
+	
+	stock bool:GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+		new Float:px,Float:py,Float:pz;
+		GetDynamicObjectPos(objectid,px,py,pz);
+		if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
+			ShiftRotationToVector(rx,rz,vx,vy,vz);
+			return true;
+		} else {
+			vx = 0.0, vy = 0.0, vz = 0.0;
+			return false;
+		}
 	}
 	
 	#define GetDynamicObjectsDistance					GetDistanceBetweenDynamicObject
