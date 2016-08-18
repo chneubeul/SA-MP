@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer                                                                                   *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.8.1                                                                                                              *
+ * File Version: 2.8.2                                                                                                              *
  * SA:MP Version: 0.3.7                                                                                                             *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -149,10 +149,16 @@
  * GetQuatFromRot(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz);                                              *
  * Float:GetLineSize2D(Float:points[][],maxpoints=sizeof(points));                                                                  *
  * Float:GetLineSize3D(Float:points[][],maxpoints=sizeof(points));                                                                  *
- * bool:GetLineRotatedVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                     *
- * bool:GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                  *
- * bool:GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                  *
- * bool:GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                *
+ * bool:GetPointToPointVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                    *
+ * bool:GetPlayerToPointVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                  *
+ * bool:GetObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                  *
+ * bool:GetVehicleToPointVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                *
+ * GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,                *
+ *                        Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                                  *
+ * GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,                *
+ *                        Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                                  *
+ * GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,              *
+ *                        Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                                  *
  *                                                                                                                                  *
  * Extended Functions:                                                                                                              *
  * Get3DTrygModules(&modules_count=0);                                                                                              *
@@ -160,6 +166,10 @@
  * Get3DTrygEfficiency(bool:use_colandreas=false);                                                                                  *
  * Get3DTrygErrorCount();                                                                                                           *
  * Reset3DTrygErrorCount();                                                                                                         *
+ *                                                                                                                                  *
+ * Useless functions:                                                                                                               *
+ * ShiftPositionToOrion(Float:x,Float:y,Float:z,&Float:orion,&Float:lon,&Float:lat);                                                *
+ * ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,&Float:y,&Float:z);                                                *
  *                                                                                                                                  *
  * ATM Module Functions:                                                                                                            *
  * randomex(min,max);                                                                                                               *
@@ -177,7 +187,9 @@
  * GetDynamicObjectUpVector(Objectid,&Float:vx,&Float:vy,&Float:vz);                                                                *
  * GetDynamicObjectUpPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                         *
  * GetDynamicObjectDownPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                       *
- * bool:GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                           *
+ * bool:GetDynamicObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                           *
+ * GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,         *
+ *                               Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                           *
  *                                                                                                                                  *
  * MapAndreas Functions:                                                                                                            *
  * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0);                                                                             *
@@ -280,11 +292,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.8.1
+	#error [ADM] You need 3DTryg.inc v2.8.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.8.1
-#elseif (Tryg3D_Version < 20801)
-	#error [ADM] Update you 3DTryg.inc to v2.8.1
+	#error [ADM] Update you 3DTryg.inc to v2.8.2
+#elseif (Tryg3D_Version < 20802)
+	#error [ADM] Update you 3DTryg.inc to v2.8.2
 #endif
 */
 
@@ -293,7 +305,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20801) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20802) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -525,7 +537,8 @@
 
 #define T3D:											v3D
 
-//ATM Module
+//Module: ATM.inc
+//Code anti-collision: YES
 #if !defined randomex
 	#define randomex(%0,%1) 							(random((%1)-(%0)+1)+(%0))
 #endif
@@ -537,6 +550,7 @@
 #if !defined isnull
 	#define isnull(%1) 									((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
+//End Module: ATM.inc
 
 #if !defined IsValidVehicle
 	native IsValidVehicle(vehicleid);
@@ -1467,8 +1481,8 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 	}
 }
 
-stock bool:GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
-	new Float:px,Float:py,Float:pz;
+stock bool:GetPlayerToPointVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
 	GetPlayerPos(playerid,px,py,pz);
 	if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
 		ShiftRotationToVector(rx,rz,vx,vy,vz);
@@ -1479,8 +1493,8 @@ stock bool:GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,
 	}
 }
 
-stock bool:GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
-	new Float:px,Float:py,Float:pz;
+stock bool:GetObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
 	GetObjectPos(objectid,px,py,pz);
 	if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
 		ShiftRotationToVector(rx,rz,vx,vy,vz);
@@ -1491,8 +1505,8 @@ stock bool:GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,
 	}
 }
 
-stock bool:GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
-	new Float:px,Float:py,Float:pz;
+stock bool:GetVehicleToPointVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
 	GetVehiclePos(vehicleid,px,py,pz);
 	if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
 		ShiftRotationToVector(rx,rz,vx,vy,vz);
@@ -1503,7 +1517,8 @@ stock bool:GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:v
 	}
 }
 
-stock bool:GetLineRotatedVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+stock bool:GetPointToPointVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	new Float:rx,Float:rz;
 	if(GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz)){
 		ShiftRotationToVector(rx,rz,vx,vy,vz);
 		return true;
@@ -1512,6 +1527,246 @@ stock bool:GetLineRotatedVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:
 		return false;
 	}
 }
+
+
+//Module: rotation.inc by Nero_3D
+//Code anti-collision: YES
+enum tryg3d_eulermode {
+	// Proper / Classic Euler angles
+	euler_xzx,
+	euler_xyx,
+	euler_yxy,
+	euler_yzy,
+	euler_zyz,
+	euler_zxz,
+	// Tait-Bryan angles
+	euler_xzy,
+	euler_xyz,
+	euler_yxz,
+	euler_yzx,
+	euler_zyx, // pitch roll yaw
+	euler_zxy // sa-mp
+}
+
+const tryg3d_eulermode: tryg3d_euler_default = euler_zxy;
+
+//GetRotationMatrixFromEuler by Nero_3D
+stock Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,tryg3d_eulermode:mode=tryg3d_euler_default){
+	new // could be done with matrix multiplication but would be slower
+		Float:cosX = floatcos(rx,degrees),
+		Float:cosY = floatcos(ry,degrees),
+		Float:cosZ = floatcos(rz,degrees),
+		Float:sinX = floatsin(rx,degrees),
+		Float:sinY = floatsin(ry,degrees),
+		Float:sinZ = floatsin(rz,degrees);
+
+	switch(mode){
+		//Proper Euler angles - 1(rx), 2(ry), 3(rz)
+		case euler_xzx: {
+			matrix[0][0] = cosY;
+			matrix[0][1] = -cosZ * sinY;
+			matrix[0][2] = sinY * sinZ;
+			matrix[1][0] = cosX * sinY;
+			matrix[1][1] = cosX * cosY * cosZ - sinX * sinZ;
+			matrix[1][2] = -cosZ * sinX - cosX * cosY * sinZ;
+			matrix[2][0] = sinX * sinY;
+			matrix[2][1] = cosX * sinZ + cosY * cosZ * sinX;
+			matrix[2][2] = cosX * cosZ - cosY * sinX * sinZ;
+		}
+		case euler_xyx: {
+			matrix[0][0] = cosY;
+			matrix[0][1] = sinY * sinZ;
+			matrix[0][2] = cosZ * sinY;
+			matrix[1][0] = sinX * sinY;
+			matrix[1][1] = cosX * cosZ - cosY * sinX * sinZ;
+			matrix[1][2] = -cosX * sinZ - cosY * cosZ * sinX;
+			matrix[2][0] = -cosX * sinY;
+			matrix[2][1] = cosZ * sinX + cosX * cosY * sinZ;
+			matrix[2][2] = cosX * cosY * cosZ - sinX * sinZ;
+		}
+		case euler_yxy: {
+			matrix[0][0] = cosX * cosZ - cosY * sinX * sinZ;
+			matrix[0][1] = sinX * sinY;
+			matrix[0][2] = cosX * sinZ + cosY * cosZ * sinX;
+			matrix[1][0] = sinY * sinZ;
+			matrix[1][1] = cosY;
+			matrix[1][2] = -cosZ * sinY;
+			matrix[2][0] = -cosZ * sinX - cosX * cosY * sinZ;
+			matrix[2][1] = cosX * sinY;
+			matrix[2][2] = cosX * cosY * cosZ - sinX * sinZ;
+		}
+		case euler_yzy: {
+			matrix[0][0] = cosX * cosY * cosZ - sinX * sinZ;
+			matrix[0][1] = -cosX * sinY;
+			matrix[0][2] = cosZ * sinX + cosX * cosY * sinZ;
+			matrix[1][0] = cosZ * sinY;
+			matrix[1][1] = cosY;
+			matrix[1][2] = sinY * sinZ;
+			matrix[2][0] = -cosX * sinZ - cosY * cosZ * sinX;
+			matrix[2][1] = sinX * sinY;
+			matrix[2][2] = cosX * cosZ - cosY * sinX * sinZ;
+		}
+		case euler_zyz: {
+			matrix[0][0] = cosX * cosY * cosZ - sinX * sinZ;
+			matrix[0][1] = -cosZ * sinX - cosX * cosY * sinZ;
+			matrix[0][2] = cosX * sinY;
+			matrix[1][0] = cosX * sinZ + cosY * cosZ * sinX;
+			matrix[1][1] = cosX * cosZ - cosY * sinX * sinZ;
+			matrix[1][2] = sinX * sinY;
+			matrix[2][0] = -cosZ * sinY;
+			matrix[2][1] = sinY * sinZ;
+			matrix[2][2] = cosY;
+		}
+		case euler_zxz: {
+			matrix[0][0] = cosX * cosZ - cosY * sinX * sinZ;
+			matrix[0][1] = -cosX * sinZ - cosY * cosZ * sinX;
+			matrix[0][2] = sinX * sinY;
+			matrix[1][0] = cosZ * sinX + cosX * cosY * sinZ;
+			matrix[1][1] = cosX * cosY * cosZ - sinX * sinZ;
+			matrix[1][2] = -cosX * sinY;
+			matrix[2][0] = sinY * sinZ;
+			matrix[2][1] = cosZ * sinY;
+			matrix[2][2] = cosY;
+		}
+		//Tait-Bryan angles - X(rx), Y(ry), Z(rz)
+		case euler_xzy: {
+			matrix[0][0] = cosZ * cosY;
+			matrix[0][1] = -sinZ;
+			matrix[0][2] = cosZ * sinY;
+			matrix[1][0] = sinX * sinY + cosX * cosY * sinZ;
+			matrix[1][1] = cosX * cosZ;
+			matrix[1][2] = cosX * sinZ * sinY - cosY * sinX;
+			matrix[2][0] = cosY * sinX * sinZ - cosX * sinY;
+			matrix[2][1] = cosZ * sinX;
+			matrix[2][2] = cosX * cosY + sinX * sinZ * sinY;
+		}
+		case euler_xyz: {
+			matrix[0][0] = cosY * cosZ;
+			matrix[0][1] = -cosY * sinZ;
+			matrix[0][2] = sinY;
+			matrix[1][0] = cosX * sinZ + cosZ * sinX * sinY;
+			matrix[1][1] = cosX * cosZ - sinX * sinY * sinZ;
+			matrix[1][2] = -cosY * sinX;
+			matrix[2][0] = sinX * sinZ - cosX * cosZ * sinY;
+			matrix[2][1] = cosZ * sinX + cosX * sinY * sinZ;
+			matrix[2][2] = cosX * cosY;
+		}
+		case euler_yxz: {
+			matrix[0][0] = cosY * cosZ + sinY * sinX * sinZ;
+			matrix[0][1] = cosZ * sinY * sinX - cosY * sinZ;
+			matrix[0][2] = cosX * sinY;
+			matrix[1][0] = cosX * sinZ;
+			matrix[1][1] = cosX * cosZ;
+			matrix[1][2] = -sinX;
+			matrix[2][0] = cosY * sinX * sinZ - cosZ * sinY;
+			matrix[2][1] = cosY * cosZ * sinX + sinY * sinZ;
+			matrix[2][2] = cosY * cosX;
+		}
+		case euler_yzx: {
+			matrix[0][0] = cosY * cosZ;
+			matrix[0][1] = sinY * sinX - cosY * cosX * sinZ;
+			matrix[0][2] = cosX * sinY + cosY * sinZ * sinX;
+			matrix[1][0] = sinZ;
+			matrix[1][1] = cosZ * cosX;
+			matrix[1][2] = -cosZ * sinX;
+			matrix[2][0] = -cosZ * sinY;
+			matrix[2][1] = cosY * sinX + cosX * sinY * sinZ;
+			matrix[2][2] = cosY * cosX - sinY * sinZ * sinX;
+		}
+		case euler_zyx: { // pitch roll yaw
+			matrix[0][0] = cosZ * cosY;
+			matrix[0][1] = cosZ * sinY * sinX - cosX * sinZ;
+			matrix[0][2] = sinZ * sinX + cosZ * cosX * sinY;
+			matrix[1][0] = cosY * sinZ;
+			matrix[1][1] = cosZ * cosX + sinZ * sinY * sinX;
+			matrix[1][2] = cosX * sinZ * sinY - cosZ * sinX;
+			matrix[2][0] = -sinY;
+			matrix[2][1] = cosY * sinX;
+			matrix[2][2] = cosY * cosX;
+		}
+		case euler_zxy: { // sa-mp
+			matrix[0][0] = cosZ * cosY - sinZ * sinX * sinY;
+			matrix[0][1] = -sinZ * cosX;
+			matrix[0][2] = cosZ * sinY + sinZ * sinX * cosY;
+			matrix[1][0] = sinZ * cosY + cosZ * sinX * sinY;
+			matrix[1][1] = cosZ * cosX;
+			matrix[1][2] = sinZ * sinY - cosZ * sinX * cosY;
+			matrix[2][0] = -cosX * sinY;
+			matrix[2][1] = sinX;
+			matrix[2][2] = cosX * cosY;
+		}
+	}
+}
+
+//MatrixRotate by Nero_3D
+stock Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&Float:y,&Float:z){
+	x += oX * matrix[0][0] + oY * matrix[0][1] + oZ * matrix[0][2]; // M * v | v = [oX, oY, oZ]
+	y += oX * matrix[1][0] + oY * matrix[1][1] + oZ * matrix[1][2];
+	z += oX * matrix[2][0] + oY * matrix[2][1] + oZ * matrix[2][2];
+}
+
+//Original code by Nero_3D
+stock ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
+	//Get difference
+	eX -= sX;
+	eY -= sY;
+	eZ -= sZ;
+	//Get rotation matrix from degrees
+	new Float:matrix[3][3];
+	Tryg3D_GetRotationMatrixEuler(matrix,rx,ry,rz);
+	Tryg3D_MatrixRotate(matrix,eX,eY,eZ,nX,nY,nZ);
+}
+
+//Original code by Nero_3D
+stock ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
+	//Get difference
+	eX -= sX;
+	eY -= sY;
+	eZ -= sZ;
+	
+	//Normalizing, but isn't needed for the matrix rotation
+	new Float:dist = VectorSize(eX,eY,eZ);
+	eX /= dist;
+	eY /= dist;
+	eZ /= dist;
+	
+	//Get rotation matrix from degrees
+	new Float:matrix[3][3];
+	Tryg3D_GetRotationMatrixEuler(matrix,rx,ry,rz);
+	Tryg3D_MatrixRotate(matrix,eX,eY,eZ,nX,nY,nZ);
+}
+//End Module: rotation.inc
+
+stock GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+	new Float:px,Float:py,Float:pz;
+	GetPlayerPos(playerid,px,py,pz);
+	if(return_vector){
+		ShiftLineRotationVector(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
+	} else {
+		ShiftLineRotation(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
+	}
+}
+
+stock GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+	new Float:px,Float:py,Float:pz;
+	GetObjectPos(objectid,px,py,pz);
+	if(return_vector){
+		ShiftLineRotationVector(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
+	} else {
+		ShiftLineRotation(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
+	}
+}
+
+stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+	new Float:px,Float:py,Float:pz;
+	GetVehiclePos(vehicleid,px,py,pz);
+	if(return_vector){
+		ShiftLineRotationVector(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
+	} else {
+		ShiftLineRotation(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
+	}
+}
+
 
 //Streamer Functions
 #if defined Tryg3D_Streamer
@@ -1618,8 +1873,8 @@ stock bool:GetLineRotatedVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:
 		return GetPlayerDistanceFromPoint(playerid,x,y,z);
 	}
 	
-	stock bool:GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
-		new Float:px,Float:py,Float:pz;
+	stock bool:GetDynamicObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+		new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
 		GetDynamicObjectPos(objectid,px,py,pz);
 		if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
 			ShiftRotationToVector(rx,rz,vx,vy,vz);
@@ -1627,6 +1882,16 @@ stock bool:GetLineRotatedVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:
 		} else {
 			vx = 0.0, vy = 0.0, vz = 0.0;
 			return false;
+		}
+	}
+	
+	stock GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+		new Float:px,Float:py,Float:pz;
+		GetDynamicObjectPos(objectid,px,py,pz);
+		if(return_vector){
+			ShiftLineRotationVector(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
+		} else {
+			ShiftLineRotation(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
 		}
 	}
 	
@@ -2267,6 +2532,36 @@ stock Get3DTrygEfficiency(bool:use_colandreas=false){
 		}
 	#endif
 	return (GetTickCount()-test_time);
+}
+
+/****************************************************************************************************
+ *                                                                                                  *
+ * Useless functions                                                                                *
+ *                                                                                                  *
+ ****************************************************************************************************/
+
+//These functions has been created in order to hinder thieves life.
+stock ShiftPositionToOrion(Float:x,Float:y,Float:z,&Float:orion,&Float:lon,&Float:lat){
+	orion = VectorSize(x,y,z);
+	if(orion == 0.0){
+		lon = 0.0;
+		lat = 0.0;
+	} else {
+		x /= orion;
+		y /= orion;
+		z /= orion;
+		ShiftVectorToRotation(x,y,z,lon,lat);
+	}
+}
+
+stock ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,&Float:y,&Float:z){
+	if(orion == 0.0){
+		x = 0.0;
+		y = 0.0;
+		z = 0.0;
+	} else {
+		GetPointInFront3D(0.0,0.0,0.0,lon,lat,orion,x,y,z);
+	}
 }
 
 /****************************************************************************************************
