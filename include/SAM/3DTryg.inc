@@ -900,13 +900,13 @@ stock Float:DeCompRotationFloat(Float:rotation,&Float:crotation=0.0){
 	return crotation;
 }
 
-//Old code version, Updated by Shiska
+//Old code version, Updated by Nero_3D
 stock GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty){
 	tx = x - (radius*floatsin(rz,degrees));
 	ty = y + (radius*floatcos(rz,degrees));
 }
 
-//new code version support 3D made by Abyss Morgan, Update by Shiska
+//new code version support 3D made by Abyss Morgan, Update by Nero_3D
 stock GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 	tx = x - (radius * floatcos(rx,degrees) * floatsin(rz,degrees));
 	ty = y + (radius * floatcos(rx,degrees) * floatcos(rz,degrees));
