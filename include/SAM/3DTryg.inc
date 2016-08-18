@@ -1710,8 +1710,10 @@ stock Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&
 	y += oX * matrix[1][0] + oY * matrix[1][1] + oZ * matrix[1][2];
 	z += oX * matrix[2][0] + oY * matrix[2][1] + oZ * matrix[2][2];
 }
+//End Module: rotation.inc
 
-//Original code by Nero_3D
+
+//Original code by Crayder
 stock ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
 	//Get difference
 	eX -= sX;
@@ -1723,7 +1725,7 @@ stock ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Fl
 	Tryg3D_MatrixRotate(matrix,eX,eY,eZ,nX,nY,nZ);
 }
 
-//Original code by Nero_3D
+//Original code by Crayder
 stock ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
 	//Get difference
 	eX -= sX;
@@ -1741,7 +1743,6 @@ stock ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float
 	Tryg3D_GetRotationMatrixEuler(matrix,rx,ry,rz);
 	Tryg3D_MatrixRotate(matrix,eX,eY,eZ,nX,nY,nZ);
 }
-//End Module: rotation.inc
 
 stock GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
 	new Float:px,Float:py,Float:pz;
