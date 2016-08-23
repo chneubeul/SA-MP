@@ -9,7 +9,7 @@
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 2.3.1                                                                              *
+ * File Version: 2.4.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  * Functions:                                                                                       *
@@ -31,7 +31,10 @@
  * GetGHexFromRGBA(color);                    //RGBA:0xFAB0A0FF G:0xB0                              *
  * GetBHexFromRGBA(color);                    //RGBA:0xFAB0A0FF B:0xA0                              *
  * GetAHexFromRGBA(color);                    //RGBA:0xFAB0A0FF A:0xFF                              *
- * GetColor(color);                           //Return {RGB}                                        *
+ * GetColorRGBA(color);                       //Return {RGB}                                        *
+ * GetColorRGB(color);                        //Return {RGB}                                        *
+ * GetColorARGB(color);                       //Return {RGB}                                        *
+ * AdjustColorLuminance(color,Float:adjust);                                                        *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -65,10 +68,32 @@
 #define GetBHexFromRGBA(%0)				(((%0) >>> 8) & 0xFF)
 #define GetAHexFromRGBA(%0)				((%0) & 0xFF)
 
-stock GetColor(color){
+stock GetColorRGBA(color){
     new string[10];
     format(string,sizeof(string),"{%06x}",ShiftRGBAToRGB(color));
     return string;
+}
+
+stock GetColorARGB(color){
+    new string[10];
+    format(string,sizeof(string),"{%06x}",ShiftARGBToRGB(color));
+    return string;
+}
+
+stock GetColorRGB(color){
+    new string[10];
+    format(string,sizeof(string),"{%06x}",(color & 0x00FFFFFF));
+    return string;
+}
+
+stock AdjustColorLuminance(color,Float:adjust){
+	new r,g,b,a; 
+	ShiftRGBAToHex(color,r,g,b,a);
+	r = (floatround(r*adjust) & 0xFF);
+	g = (floatround(g*adjust) & 0xFF);
+	b = (floatround(b*adjust) & 0xFF);
+	ShiftHexToRGBA(color,r,g,b,a);
+	return color;
 }
 
 #define RGBAToHex						ShiftRGBAToHex
@@ -81,5 +106,6 @@ stock GetColor(color){
 #define ARGBToRGB						ShiftARGBToRGB
 #define RGBAToARGB						ShiftRGBAToARGB
 #define ARGBToRGBA						ShiftARGBToRGBA
+#define GetColor						GetColorRGBA
 
 //EOF
