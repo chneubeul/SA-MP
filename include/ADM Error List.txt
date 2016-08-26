@@ -47,6 +47,9 @@ This option is available in ATM.inc
 [ADM] Info: NGCM Mob Move Engine System ... unloaded
 [ADM] Error: NGCM Mob Move Engine System ... not loaded.
 
+//SAOI.inc
+[ADM] Error: This SAOI file is protected.
+
 //Global
 [ADM] Error: Invalid MapAndreas Memory.
 [ADM] Error: Invalid ColAndreas Memory.
