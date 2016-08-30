@@ -1,15 +1,15 @@
-#include <a_samp>
-#include <sscanf2>
-#include <streamer>
-#include <mapandreas>
-#include <zcmd>
+#include <samp/a_samp>
+#include <3rdparty/sscanf2>
+#include <3rdparty/streamer>
+#include <3rdparty/mapandreas>
+#include <3rdparty/izcmd>
 
+#include <SAM/FoxForeach>
 #include <SAM/3DTryg>
 #include <SAM/StreamerFunction>
-#include <SAM/ATM>
 
-#include <Missile.inc>
-#include "DarkNGCCommander.inc"
+#include <engine/Missile.inc>
+#include <NGCR/DarkNGCCommander>
 
 public OnFilterScriptInit(){
 

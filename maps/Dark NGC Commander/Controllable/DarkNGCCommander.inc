@@ -265,9 +265,9 @@ stock DarkNGCInit(){
 	DarkNGC[idx++] = CreateObject(1489,0.000000,-200.000000,100.000000,0.000000,0.000000,0.000000,1300.0); //camera
 	DarkNGC[idx++] = CreateObject(1489,0.000000,-200.000000,100.000000,0.000000,0.000000,0.000000,1300.0); //camera
 	foX(i,1,149){
-		new F4[e_float];
-		GetObjectPosAndRot(DarkNGC[i],F4[X],F4[Y],F4[Z],F4[rX],F4[rY],F4[rZ]);
-		AttachObjectToObject(DarkNGC[i],DarkNGC[0],F4[X],F4[Y],F4[Z],F4[rX],F4[rY],F4[rZ],1);
+		new F4[Float3D];
+		GetObjectPosAndRot(DarkNGC[i],F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
+		AttachObjectToObject(DarkNGC[i],DarkNGC[0],F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ],1);
 	}
 
 	SetDarkNGCShipColor(0xFFFF0000);
@@ -352,36 +352,36 @@ stock OnDarkNGCControl(playerid){
 	new Keys, ud, lr;
 	GetPlayerKeys(playerid,Keys,ud,lr);
 	
-	new F4[e_float];
-	GetObjectPosAndRot(DarkNGC[0],F4[X],F4[Y],F4[Z],F4[rX],F4[rY],F4[rZ]);
+	new F4[Float3D];
+	GetObjectPosAndRot(DarkNGC[0],F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
 	
 	if(DarkNGCMoveType){
 		if(ud == KEY_UP){
 			//up move
-			GetObjectPosAndRot(DarkNGC[0],F4[X],F4[Y],F4[Z],F4[rX],F4[rY],F4[rZ]);
-			if(F4[Z]+DarkNGCSpeed < 1000.0){
-				MoveObject(DarkNGC[0],F4[X],F4[Y],F4[Z]+DarkNGCSpeed,DarkNGCSpeed,F4[rX],F4[rY],F4[rZ]);
+			GetObjectPosAndRot(DarkNGC[0],F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
+			if(F4[T3D:Z]+DarkNGCSpeed < 1000.0){
+				MoveObject(DarkNGC[0],F4[T3D:X],F4[T3D:Y],F4[T3D:Z]+DarkNGCSpeed,DarkNGCSpeed,F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
 			}
 		} else if(ud == KEY_DOWN){
 			//down move
-			GetObjectPosAndRot(DarkNGC[0],F4[X],F4[Y],F4[Z],F4[rX],F4[rY],F4[rZ]);
-			if(F4[Z]-DarkNGCSpeed > -80.0){
-				MoveObject(DarkNGC[0],F4[X],F4[Y],F4[Z]-DarkNGCSpeed,DarkNGCSpeed,F4[rX],F4[rY],F4[rZ]);
+			GetObjectPosAndRot(DarkNGC[0],F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
+			if(F4[T3D:Z]-DarkNGCSpeed > -80.0){
+				MoveObject(DarkNGC[0],F4[T3D:X],F4[T3D:Y],F4[T3D:Z]-DarkNGCSpeed,DarkNGCSpeed,F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
 			}
 		}
 	} else {
 		if(ud == KEY_UP){
-			GetPointInFront2D(F4[X],F4[Y],CompRotationFloat(F4[rZ]-180.0),DarkNGCSpeed,F4[tX],F4[tY]);
-			MoveObject(DarkNGC[0],F4[tX],F4[tY],F4[Z],DarkNGCSpeed,F4[rX],F4[rY],F4[rZ]);
+			GetPointInFront2D(F4[T3D:X],F4[T3D:Y],CompRotationFloat(F4[T3D:rZ]-180.0),DarkNGCSpeed,F4[T3D:tX],F4[T3D:tY]);
+			MoveObject(DarkNGC[0],F4[T3D:tX],F4[T3D:tY],F4[T3D:Z],DarkNGCSpeed,F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
 		} else if(ud == KEY_DOWN){
-			GetPointInFront2D(F4[X],F4[Y],CompRotationFloat(F4[rZ]),DarkNGCSpeed,F4[tX],F4[tY]);
-			MoveObject(DarkNGC[0],F4[tX],F4[tY],F4[Z],DarkNGCSpeed,F4[rX],F4[rY],F4[rZ]);
+			GetPointInFront2D(F4[T3D:X],F4[T3D:Y],CompRotationFloat(F4[T3D:rZ]),DarkNGCSpeed,F4[T3D:tX],F4[T3D:tY]);
+			MoveObject(DarkNGC[0],F4[T3D:tX],F4[T3D:tY],F4[T3D:Z],DarkNGCSpeed,F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
 		}
 	}
 	if(lr == KEY_LEFT){
-		MoveObject(DarkNGC[0],F4[X],F4[Y],F4[Z]+0.05,0.05,F4[rX],F4[rY],F4[rZ]+1.0);
+		MoveObject(DarkNGC[0],F4[T3D:X],F4[T3D:Y],F4[T3D:Z]+0.05,0.05,F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]+1.0);
 	} else if(lr == KEY_RIGHT){
-		MoveObject(DarkNGC[0],F4[X],F4[Y],F4[Z]+0.05,0.05,F4[rX],F4[rY],F4[rZ]-1.0);
+		MoveObject(DarkNGC[0],F4[T3D:X],F4[T3D:Y],F4[T3D:Z]+0.05,0.05,F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]-1.0);
 	}
  
 }
@@ -390,9 +390,9 @@ stock DarkNGCKeyUpdate(playerid,newkeys,oldkeys){
 	new k = FindDarkNGCSlot(playerid);
 	if(k == -1) return 0;
 	
-	if(KEY_PRESSED(KEY_SECONDARY_ATTACK)){
+	if(Tryg3DKeyPressed(KEY_SECONDARY_ATTACK)){
 		ExitPlayerDarkNGC(playerid);
-	} else if(KEY_PRESSED(KEY_FIRE)){
+	} else if(Tryg3DKeyPressed(KEY_FIRE)){
 		if(GetTickCount()-DarkNGCLaunchA[playerid] < 200){
 			
 		} else {
@@ -412,7 +412,7 @@ stock DarkNGCKeyUpdate(playerid,newkeys,oldkeys){
 	}
 
 	if(DarkNGCDrive[0] == playerid){
-		if(KEY_PRESSED(KEY_JUMP)){
+		if(Tryg3DKeyPressed(KEY_JUMP)){
 			if(GetTickCount()-DarkNGCLaunchB[playerid] < 30000){
 				GameTextForPlayer(playerid,"Heavy Missile Overheating",1000,4);
 			} else {
@@ -447,17 +447,17 @@ stock DarkNGCKeyUpdate(playerid,newkeys,oldkeys){
 				}
 				GameTextForPlayer(playerid,"Heavy Missile Launch",2000,4);
 			}
-		} else if(KEY_PRESSED(KEY_WALK)){
+		} else if(Tryg3DKeyPressed(KEY_WALK)){
 			DarkNGCMoveType = (!DarkNGCMoveType);
 			if(DarkNGCMoveType){
 				GameTextForPlayer(playerid,"Move Type Height",1000,4);
 			} else {
 				GameTextForPlayer(playerid,"Move Type Forward",1000,4);
 			}
-		} else if(KEY_PRESSED(KEY_CTRL_BACK)){
+		} else if(Tryg3DKeyPressed(KEY_CTRL_BACK)){
 			//stop
 			StopObject(DarkNGC[0]);
-		} else if(KEY_PRESSED(KEY_ANALOG_RIGHT)){
+		} else if(Tryg3DKeyPressed(KEY_ANALOG_RIGHT)){
 			//speed increase
 			DarkNGCSpeed += 5.0;
 			if(DarkNGCSpeed > 200.0){
@@ -467,7 +467,7 @@ stock DarkNGCKeyUpdate(playerid,newkeys,oldkeys){
 				format(buffer,sizeof buffer,"Speed: %.1f",DarkNGCSpeed);
 				GameTextForPlayer(playerid,buffer,500,4);
 			}
-		} else if(KEY_PRESSED(KEY_ANALOG_LEFT)){
+		} else if(Tryg3DKeyPressed(KEY_ANALOG_LEFT)){
 			//speed decrease
 			DarkNGCSpeed -= 5.0;
 			if(DarkNGCSpeed < 0.0){
