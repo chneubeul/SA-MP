@@ -7,20 +7,20 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  *                                                                                                                                *
  * Plugins: Streamer                                                                                                              *
- * Modules: ATM                                                                                                                   *
+ * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.9.1                                                                                                            *
+ * File Version: 2.0.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
- * ATM Version: 1.4.2                                                                                                             *
+ * 3DTryg Version: 2.8.3                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,            *
  *                   worldid,interiorid,playerid,Float:streamdistance,mine_object = MINE_OBJECT_STANDARD,teamid = ANY_TEAM,       *
- *                   detect_type = MINE_DETECT_TYPE_ALL);                                                                         *
+ *                   detect_type = MINE_DETECT_TYPE_ALL,byplayerid = INVALID_PLAYER_ID);                                          *
  * CreateDynamicMineEx(objectid,type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z, *
  *                     Float:rx,Float:ry,Float:rz,worldid,interiorid,playerid,Float:streamdistance,teamid = ANY_TEAM,             *
- *                     detect_type = MINE_DETECT_TYPE_ALL);                                                                       *
+ *                     detect_type = MINE_DETECT_TYPE_ALL,byplayerid = INVALID_PLAYER_ID);                                        *
  * DestroyDynamicMine(mobid);                                                                                                     *
  * Float:GetMineExplodeVisibility();                                                                                              *
  * SetMineExplodeVisibility(Float:explode_stream);                                                                                *
@@ -56,8 +56,7 @@
  * SetDynamicMineRespawntime(mobid,respawntime);                                                                                  *
  *                                                                                                                                *
  * Callbacks:                                                                                                                     *
- * OnMineDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);                                                                    *
- * OnMineDetectPlayer(playerid,mobid);                                                                                            *
+ * OnMineDestroy(mobid,Float:x,Float:y,Float:z,type,killerid,Float:radius,damagerid);                                             *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
@@ -65,13 +64,13 @@
 	#error [ADM] Unknown Streamer Version
 #endif
 
-//Check Version ATM.inc
-#if !defined _ATM_Core
-	#error [ADM] You need ATM.inc v1.4.2
-#elseif !defined ATM_Version
-	#error [ADM] Update you ATM.inc to v1.4.2
-#elseif (ATM_Version < 10402)
-	#error [ADM] Update you ATM.inc to v1.4.2
+//Check Version 3DTryg.inc
+#if !defined _3D_Tryg
+	#error [ADM] You need 3DTryg.inc v2.8.3
+#elseif !defined Tryg3D_Version
+	#error [ADM] Update you 3DTryg.inc to v2.8.3
+#elseif (Tryg3D_Version < 20803)
+	#error [ADM] Update you 3DTryg.inc to v2.8.3
 #endif
 
 #if defined _dynamic_mine_system
@@ -110,64 +109,6 @@
 	#define ANY_TEAM							(0xFFFF)
 #endif
 
-static const Float:MDM_WeaponDamage[] = {
-	1.0,	// 0 - Fist
-	1.0,	// 1 - Brass knuckles
-	1.0,	// 2 - Golf club
-	1.0,	// 3 - Nitestick
-	1.0,	// 4 - Knife
-	1.0,	// 5 - Bat
-	1.0,	// 6 - Shovel
-	1.0,	// 7 - Pool cue
-	1.0,	// 8 - Katana
-	1.0,	// 9 - Chainsaw
-	1.0,	// 10 - Dildo
-	1.0,	// 11 - Dildo 2
-	1.0,	// 12 - Vibrator
-	1.0,	// 13 - Vibrator 2
-	1.0,	// 14 - Flowers
-	1.0,	// 15 - Cane
-	82.5,	// 16 - Grenade
-	0.0,	// 17 - Teargas
-	1.0,	// 18 - Molotov
-	9.9,	// 19 - Vehicle M4 (custom)
-	46.2,	// 20 - Vehicle minigun (custom)
-	0.0,	// 21
-	8.25,	// 22 - Colt 45
-	13.2,	// 23 - Silenced
-	46.2,	// 24 - Deagle
-	3.3,	// 25 - Shotgun
-	3.3,	// 26 - Sawed-off
-	4.95,	// 27 - Spas
-	6.6,	// 28 - UZI
-	8.25,	// 29 - MP5
-	9.9,	// 30 - AK47
-	9.9,	// 31 - M4
-	6.6,	// 32 - Tec9
-	24.75,	// 33 - Cuntgun
-	41.25,	// 34 - Sniper
-	82.5,	// 35 - Rocket launcher
-	82.5,	// 36 - Heatseeker
-	1.0,	// 37 - Flamethrower
-	46.2,	// 38 - Minigun
-	82.5,	// 39 - Satchel
-	0.0,	// 40 - Detonator
-	0.33,	// 41 - Spraycan
-	0.33,	// 42 - Fire extinguisher
-	0.0,	// 43 - Camera
-	0.0,	// 44 - Night vision
-	0.0,	// 45 - Infrared
-	0.0,	// 46 - Parachute
-	0.0,	// 47 - Fake pistol
-	2.64,	// 48 - Pistol whip (custom)
-	9.9,	// 49 - Vehicle
-	330.0,	// 50 - Helicopter blades
-	82.5,	// 51 - Explosion
-	1.0,	// 52 - Car park (custom)
-	1.0,	// 53 - Drowning
-	165.0	// 54 - Splat
-};
-
 enum e_mine {
 	mine_status,
 	mine_objectid,
@@ -179,7 +120,8 @@ enum e_mine {
 	Float:mine_maxhealth,
 	Float:mine_explode,
 	mine_teamid,
-	mine_dtype
+	mine_dtype,
+	mine_playerid
 }
 
 new MineComponent[MAX_MINES][e_mine],
@@ -260,8 +202,7 @@ forward ForceRespawnDynamicMine(mobid);
 forward DestroyDynamicMine(mobid);
 forward ExplodeDynamicMine(mobid,type,playerid);
 forward RespawnDynamicMine(mobid);
-forward OnMineDestroy(mobid,Float:x,Float:y,Float:z,type,killerid);
-forward OnMineDetectPlayer(playerid,mobid);
+forward OnMineDestroy(mobid,Float:x,Float:y,Float:z,type,killerid,Float:radius,damagerid);
 
 new bool:CRC_Mines = true;
 
@@ -367,7 +308,7 @@ public ForceRespawnDynamicMine(mobid){
 	return 1;
 }
 
-stock CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,mine_object = MINE_OBJECT_STANDARD,teamid = ANY_TEAM,detect_type = MINE_DETECT_TYPE_ALL){
+stock CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,worldid,interiorid,playerid,Float:streamdistance,mine_object=MINE_OBJECT_STANDARD,teamid=ANY_TEAM,detect_type=MINE_DETECT_TYPE_ALL,byplayerid=INVALID_PLAYER_ID){
 	new mobid = FindFreeMineID();
 	if(mobid == INVALID_MINE_ID){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -375,6 +316,17 @@ stock CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:he
 		}
 		return INVALID_MINE_ID;
 	}
+	
+	MineComponent[mobid][mine_health] = health;
+	MineComponent[mobid][mine_maxhealth] = health;
+	MineComponent[mobid][mine_explode] = explode_radius;
+	MineComponent[mobid][mine_tickcount] = 0;
+	MineComponent[mobid][mine_type] = type;
+	MineComponent[mobid][mine_respawntime] = respawntime;
+	MineComponent[mobid][mine_teamid] = teamid;
+	MineComponent[mobid][mine_dtype] = detect_type;
+	MineComponent[mobid][mine_playerid] = byplayerid;
+	
 	switch(mine_object){
 		case MINE_OBJECT_STANDARD:		MineComponent[mobid][mine_objectid] = CreateDynamicObject(19602,x,y,z-0.93,0.0,0.0,0.0,worldid,interiorid,playerid,streamdistance);
 		case MINE_OBJECT_UNDERWATER:	MineComponent[mobid][mine_objectid] = CreateDynamicObject(2918,x,y,z-0.10,0.0,0.0,0.0,worldid,interiorid,playerid,streamdistance);
@@ -385,14 +337,7 @@ stock CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:he
 	}
 	MineComponent[mobid][mine_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
 	AttachDynamicAreaToObject(MineComponent[mobid][mine_areaid],MineComponent[mobid][mine_objectid]);
-	MineComponent[mobid][mine_health] = health;
-	MineComponent[mobid][mine_maxhealth] = health;
-	MineComponent[mobid][mine_explode] = explode_radius;
-	MineComponent[mobid][mine_tickcount] = 0;
-	MineComponent[mobid][mine_type] = type;
-	MineComponent[mobid][mine_respawntime] = respawntime;
-	MineComponent[mobid][mine_teamid] = teamid;
-	MineComponent[mobid][mine_dtype] = detect_type;
+	
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
 	Streamer_SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
 	MineComponent[mobid][mine_status] = MINE_STATUS_ACTIVE;
@@ -400,7 +345,7 @@ stock CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:he
 	return mobid;
 }
 
-stock CreateDynamicMineEx(objectid,type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid,interiorid,playerid,Float:streamdistance,teamid = ANY_TEAM,detect_type = MINE_DETECT_TYPE_ALL){
+stock CreateDynamicMineEx(objectid,type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid,interiorid,playerid,Float:streamdistance,teamid=ANY_TEAM,detect_type=MINE_DETECT_TYPE_ALL,byplayerid=INVALID_PLAYER_ID){
 	new mobid = FindFreeMineID();
 	if(mobid == INVALID_MINE_ID){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -408,10 +353,6 @@ stock CreateDynamicMineEx(objectid,type,Float:detection_range,Float:explode_radi
 		}
 		return INVALID_MINE_ID;
 	}
-	
-	MineComponent[mobid][mine_objectid] = CreateDynamicObject(objectid,x,y,z,rx,ry,rz,worldid,interiorid,playerid,streamdistance);
-	MineComponent[mobid][mine_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
-	AttachDynamicAreaToObject(MineComponent[mobid][mine_areaid],MineComponent[mobid][mine_objectid]);
 	MineComponent[mobid][mine_health] = health;
 	MineComponent[mobid][mine_maxhealth] = health;
 	MineComponent[mobid][mine_explode] = explode_radius;
@@ -420,6 +361,12 @@ stock CreateDynamicMineEx(objectid,type,Float:detection_range,Float:explode_radi
 	MineComponent[mobid][mine_respawntime] = respawntime;
 	MineComponent[mobid][mine_teamid] = teamid;
 	MineComponent[mobid][mine_dtype] = detect_type;
+	MineComponent[mobid][mine_playerid] = byplayerid;
+
+	MineComponent[mobid][mine_objectid] = CreateDynamicObject(objectid,x,y,z,rx,ry,rz,worldid,interiorid,playerid,streamdistance);
+	MineComponent[mobid][mine_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
+	AttachDynamicAreaToObject(MineComponent[mobid][mine_areaid],MineComponent[mobid][mine_objectid]);
+	
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
 	Streamer_SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
 	MineComponent[mobid][mine_status] = MINE_STATUS_ACTIVE;
@@ -451,25 +398,17 @@ public ExplodeDynamicMine(mobid,type,playerid){
 	if(mobid <= 0 || mobid >= MAX_MINES) return 0;
 	new Float:minex, Float:miney, Float:minez,
 		worldid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID),
-		interiorid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_INTERIOR_ID);
-		
-	GetDynamicObjectPos(MineComponent[mobid][mine_objectid],minex,miney,minez);
-	CreateExplosionForRangePoint(minex,miney,minez,worldid,interiorid,MineComponent[mobid][mine_type],GetMineExplodeVisibility(),MineComponent[mobid][mine_explode]);
+		interiorid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_INTERIOR_ID),
+		Float:radius;
 	
-	if(IsAnyPlayerInDynamicArea(MineComponent[mobid][mine_areaid])){
-		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-			if(IsPlayerConnected(i)){
-				if(IsPlayerInDynamicArea(i,MineComponent[mobid][mine_areaid])){
-					SetTimerEx("OnMineDetectPlayer",50,false,"dd",i,mobid);
-				}
-			}
-		}
-	}
+	Streamer_GetFloatData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_SIZE,radius);
+	GetDynamicObjectPos(MineComponent[mobid][mine_objectid],minex,miney,minez);
+	CreateDynamicExplosion(minex,miney,minez,MineComponent[mobid][mine_type],MineComponent[mobid][mine_explode],worldid,interiorid,-1,GetMineExplodeVisibility());
 	
 	MineComponent[mobid][mine_tickcount] = GetTickCount()+(MineComponent[mobid][mine_respawntime]*1000);
 	MineComponent[mobid][mine_status] = MINE_STATUS_DAMAGED;
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID,worldid+10000); //hide mine
-	CallLocalFunction("OnMineDestroy","dfffdd",mobid,minex,miney,minez,type,playerid);
+	CallLocalFunction("OnMineDestroy","dfffddfd",mobid,minex,miney,minez,type,playerid,radius,MineComponent[mobid][mine_playerid]);
 	return 1;
 }
 
@@ -488,15 +427,15 @@ public RespawnDynamicMine(mobid){
 public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z){
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mobid > 0 && mobid < MAX_MINES){
-		if(MineComponent[mobid][mine_status] == MINE_STATUS_ACTIVE && MineComponent[mobid][mine_objectid] == objectid){
+		if(MineComponent[mobid][mine_status] == MINE_STATUS_ACTIVE && MineComponent[mobid][mine_objectid] == objectid && MineComponent[mobid][mine_playerid] != playerid){
 			if((MineComponent[mobid][mine_teamid] != GetPlayerTeam(playerid)) || (MineComponent[mobid][mine_teamid] == ANY_TEAM)){
 				if(MineComponent[mobid][mine_health] != MINE_INFINITY_HEALTH){
-					MineComponent[mobid][mine_health] -= MDM_WeaponDamage[weaponid];
+					MineComponent[mobid][mine_health] -= Tryg3D_GetWeaponDamage(weaponid);
 					new buffer[128];
 					if(MineComponent[mobid][mine_health] > 0){
-						format(buffer,sizeof buffer,"Mine~n~~w~%.0f HP~n~~r~~h~~h~-%.0f HP",MineComponent[mobid][mine_health],MDM_WeaponDamage[weaponid]);
+						format(buffer,sizeof buffer,"Mine~n~~w~%.0f HP~n~~r~~h~~h~-%.0f HP",MineComponent[mobid][mine_health],Tryg3D_GetWeaponDamage(weaponid));
 					} else {
-						format(buffer,sizeof buffer,"Mine~n~~w~0 HP~n~~r~~h~~h~-%.0f HP",MDM_WeaponDamage[weaponid]);
+						format(buffer,sizeof buffer,"Mine~n~~w~0 HP~n~~r~~h~~h~-%.0f HP",Tryg3D_GetWeaponDamage(weaponid));
 					}
 					GameTextForPlayer(playerid,buffer,500,4);
 					if(MineComponent[mobid][mine_health] <= 0.0){
@@ -526,7 +465,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 public OnPlayerEnterDynamicArea(playerid, areaid){
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mobid > 0 && mobid < MAX_MINES){
-		if(MineComponent[mobid][mine_status] == MINE_STATUS_ACTIVE && MineComponent[mobid][mine_areaid] == areaid){
+		if(MineComponent[mobid][mine_status] == MINE_STATUS_ACTIVE && MineComponent[mobid][mine_areaid] == areaid && MineComponent[mobid][mine_playerid] != playerid){
 			new bool:tmp_det = false;
 			switch(MineComponent[mobid][mine_dtype]){
 				case MINE_DETECT_TYPE_ALL:		tmp_det = true;

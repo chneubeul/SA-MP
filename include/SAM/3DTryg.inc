@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer                                                                                   *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.8.2                                                                                                              *
+ * File Version: 2.8.3                                                                                                              *
  * SA:MP Version: 0.3.7                                                                                                             *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -155,6 +155,8 @@
  * bool:GetVehicleToPointVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                *
  * Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,tryg3d_eulermode:mode=tryg3d_euler_default);           *
  * Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&Float:y,&Float:z);                                     *
+ * Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true);                                          *
+ * Tryg3D_GetWeaponDamage(weaponid);                                                                                                *
  * ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,                              *
  *                   &Float:nX,&Float:nY,&Float:nZ);                                                                                *
  * ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,                        *
@@ -298,11 +300,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.8.2
+	#error [ADM] You need 3DTryg.inc v2.8.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.8.2
-#elseif (Tryg3D_Version < 20802)
-	#error [ADM] Update you 3DTryg.inc to v2.8.2
+	#error [ADM] Update you 3DTryg.inc to v2.8.3
+#elseif (Tryg3D_Version < 20803)
+	#error [ADM] Update you 3DTryg.inc to v2.8.3
 #endif
 */
 
@@ -311,7 +313,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20802) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20803) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -540,6 +542,8 @@
 
 #define GetVehicleFlags(%0)								GetVehicleFlagsByModel(GetVehicleModel(%0))
 #define IsVehicleFlag(%0,%1)							((%0) & (%1))
+#define Tryg3D_GetWeaponDamage(%0)								Tryg3D_WeaponDamage[(%0)]
+
 
 #define T3D:											v3D
 
@@ -578,6 +582,66 @@
  * Enum                                                                                             *
  *                                                                                                  *
  ****************************************************************************************************/
+
+new const Float:Tryg3D_WeaponDamage[] = {
+	1.0,	// 0 - Fist
+	1.0,	// 1 - Brass knuckles
+	1.0,	// 2 - Golf club
+	1.0,	// 3 - Nitestick
+	1.0,	// 4 - Knife
+	1.0,	// 5 - Bat
+	1.0,	// 6 - Shovel
+	1.0,	// 7 - Pool cue
+	1.0,	// 8 - Katana
+	1.0,	// 9 - Chainsaw
+	1.0,	// 10 - Dildo
+	1.0,	// 11 - Dildo 2
+	1.0,	// 12 - Vibrator
+	1.0,	// 13 - Vibrator 2
+	1.0,	// 14 - Flowers
+	1.0,	// 15 - Cane
+	82.5,	// 16 - Grenade
+	0.0,	// 17 - Teargas
+	1.0,	// 18 - Molotov
+	9.9,	// 19 - Vehicle M4 (custom)
+	46.2,	// 20 - Vehicle minigun (custom)
+	0.0,	// 21
+	8.25,	// 22 - Colt 45
+	13.2,	// 23 - Silenced
+	46.2,	// 24 - Deagle
+	3.3,	// 25 - Shotgun
+	3.3,	// 26 - Sawed-off
+	4.95,	// 27 - Spas
+	6.6,	// 28 - UZI
+	8.25,	// 29 - MP5
+	9.9,	// 30 - AK47
+	9.9,	// 31 - M4
+	6.6,	// 32 - Tec9
+	24.75,	// 33 - Cuntgun
+	41.25,	// 34 - Sniper
+	82.5,	// 35 - Rocket launcher
+	82.5,	// 36 - Heatseeker
+	1.0,	// 37 - Flamethrower
+	46.2,	// 38 - Minigun
+	82.5,	// 39 - Satchel
+	0.0,	// 40 - Detonator
+	0.33,	// 41 - Spraycan
+	0.33,	// 42 - Fire extinguisher
+	0.0,	// 43 - Camera
+	0.0,	// 44 - Night vision
+	0.0,	// 45 - Infrared
+	0.0,	// 46 - Parachute
+	0.0,	// 47 - Fake pistol
+	2.64,	// 48 - Pistol whip (custom)
+	9.9,	// 49 - Vehicle
+	330.0,	// 50 - Helicopter blades
+	82.5,	// 51 - Explosion
+	1.0,	// 52 - Car park (custom)
+	1.0,	// 53 - Drowning
+	165.0	// 54 - Splat
+};
+
+#pragma unused Tryg3D_WeaponDamage
 
 enum element_orientation {
 	o_left,
@@ -763,6 +827,39 @@ stock SetPlayerLookAtPlayer(playerid,targetid,cut = CAMERA_CUT){
 	new Float:x,Float:y,Float:z;
 	GetPlayerPos(targetid,x,y,z);
 	SetPlayerCameraLookAt(playerid,x,y,z,cut);
+}
+
+stock Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true){
+	new Float:thp,Float:tarm;
+	GetPlayerArmour(targetid,tarm);
+	GetPlayerHealth(targetid,thp);
+	if(tarm >= damage){
+		SetPlayerArmour(targetid,tarm-damage);
+	} else if(tarm < damage){
+		damage -= tarm;
+		SetPlayerArmour(targetid,0.0);
+		if(thp-damage <= 0.0){
+			if(force_spawn){
+				SpawnPlayer(targetid);
+			} else {
+				SetPlayerHealth(targetid,0.0);
+			}
+			SendDeathMessage(playerid,targetid,weaponid);
+		} else {
+			SetPlayerHealth(targetid,thp-damage);
+		}
+	} else {
+		if(thp-damage <= 0.0){
+			if(force_spawn){
+				SpawnPlayer(targetid);
+			} else {
+				SetPlayerHealth(targetid,0.0);
+			}
+			SendDeathMessage(playerid,targetid,weaponid);
+		} else {
+			SetPlayerHealth(targetid,thp-damage);
+		}
+	}
 }
 
 //Author: hesambia random.inc
