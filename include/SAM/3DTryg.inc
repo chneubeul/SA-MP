@@ -6,15 +6,16 @@
  *                                                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                           *
  *                                                                                                                                  *
- * Plugins: MapAndreas, ColAndreas, YSF, Streamer                                                                                   *
+ * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.8.3                                                                                                              *
+ * File Version: 2.9.0                                                                                                              *
  * SA:MP Version: 0.3.7                                                                                                             *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
  * YSF Version: 2.2.0 (IS4)                                                                                                         *
  * Streamer Version: 2.8.2                                                                                                          *
+ * FCNPC Version: 1.0.0                                                                                                             *
  *                                                                                                                                  *
  * 3DTryg FindZ Precision:                                                                                                          *
  * 1. ColAndreas   - The most accurate precision with ColAndreas plugin.                                                            *
@@ -122,8 +123,8 @@
  * bool:IsPlayerAiming(playerid);                                                                                                   *
  * GetVehicleFlags(vehicleid);                                                                                                      *
  * GetVehicleFlagsByModel(modelid);                                                                                                 *
- * bool:IsVehicleFlag(value,flag);                                                                                                  *
- * CountPlayers();                                                                                                                  *
+ * IsVehicleFlag(value,flag);                                                                                                       *
+ * CountPlayers(bool:isplayer=true,bool:isnpc=true);                                                                                *
  * CountActors();                                                                                                                   *
  * GetPlayerOrientationPos(playerid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz,isactor=false);    *
  * GetVehicleOrientationPos(vehicleid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);                *
@@ -142,9 +143,9 @@
  * GetVehicleUpPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z);                                                              *
  * GetVehicleDownPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z);                                                            *
  * GetObjectRotationQuat(objectid,&Float:qw,&Float:qx,&Float:qy,&Float:qz);                                                         *
- * GetObjectUpVector(Objectid,&Float:vx,&Float:vy,&Float:vz);                                                                       *
- * GetObjectUpPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                                *
- * GetObjectDownPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                              *
+ * GetObjectUpVector(objectid,&Float:vx,&Float:vy,&Float:vz);                                                                       *
+ * GetObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                                *
+ * GetObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                              *
  * GetQuatUpVector(Float:qw,Float:qx,Float:qy,Float:qz,&Float:vx,&Float:vy,&Float:vz);                                              *
  * GetQuatFromRot(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz);                                              *
  * Float:GetLineSize2D(Float:points[][],maxpoints=sizeof(points));                                                                  *
@@ -188,16 +189,18 @@
  *                                                                                                                                  *
  * Streamer Functions:                                                                                                              *
  * GetDynamicObjectOrientationPos(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);           *
- * GetDynamicObjectOrientPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);             *
  * Float:GetDistanceBetweenDynamicObject(objectid_a,objectid_b);                                                                    *
  * Float:GetPlayerDynamicObjectDistance(playerid,objectid);                                                                         *
  * GetDynamicObjectRotationQuat(objectid,&Float:qw,&Float:qx,&Float:qy,&Float:qz);                                                  *
- * GetDynamicObjectUpVector(Objectid,&Float:vx,&Float:vy,&Float:vz);                                                                *
- * GetDynamicObjectUpPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                         *
- * GetDynamicObjectDownPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                       *
+ * GetDynamicObjectUpVector(objectid,&Float:vx,&Float:vy,&Float:vz);                                                                *
+ * GetDynamicObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                         *
+ * GetDynamicObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                       *
  * bool:GetDynamicObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                           *
  * GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,         *
  *                               Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                           *
+ *                                                                                                                                  *
+ * Streamer Functions (ColAndreas):                                                                                                 *
+ * GetDynamicObjectOrientPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);             *
  *                                                                                                                                  *
  * MapAndreas Functions:                                                                                                            *
  * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0);                                                                             *
@@ -212,8 +215,8 @@
  *                                                                                                                                  *
  * ColAndreas Functions:                                                                                                            *
  * MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z);                *
- * bool:MovePointColCutLine(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0);   *
- * bool:MovePointColCutLineEx(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0); *
+ * bool:MovePointColCutLine(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0);   *
+ * bool:MovePointColCutLineEx(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0); *
  * GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                      *
  * Float:GetPointInFrontOfPlayerCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                     *
  * Float:GetPointInFrontOfCamera2DCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                   *
@@ -223,7 +226,7 @@
  * GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry);                                                               *
  * GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance);             *
  * GetPlayerCollisionFlags(playerid);                                                                                               *
- * bool:IsCollisionFlag(value,flag);                                                                                                *
+ * IsCollisionFlag(value,flag);                                                                                                     *
  * Float:UndergroundFindZ(Float:x,Float:y,&Float:z=0.0);                                                                            *
  * Float:InteriorFindZ(Float:px,Float:py,Float:pz=1000.0,Float:size=2.0,&Float:z=0.0);                                              *
  * bool:IsPointInWater(Float:x,Float:y,Float:z=0.0);                                                                                *
@@ -255,6 +258,9 @@
  * Float:GetPlayerHydraReactorRX(playerid);                                                                                         *
  * bool:IsPlayerHydraReactorBoost(playerid);                                                                                        *
  * GetPlayerRotation(playerid,&Float:rx,&Float:ry,&Float:rz);                                                                       *
+ *                                                                                                                                  *
+ * YSF Functions (TimeLine):                                                                                                        *
+ * UpdatePlayerTimeline(playerid);                                                                                                  *
  * GetPlayerTimeline(playerid);                                                                                                     *
  * SetPlayerTimeline(playerid,timeline);                                                                                            *
  * GetPlayerPos4D(playerid,&Float:x,&Float:y,&Float:z,&timeline);                                                                   *
@@ -262,8 +268,43 @@
  * CreateDynamicExplosion4D(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,timeline = -1,playerid = -1,     *
  *                          Float:distance = 200.0);                                                                                *
  *                                                                                                                                  *
- * YSF Extended Functions:                                                                                                          *
- * UpdatePlayerTimeline(playerid);                                                                                                  *
+ * FCNPC Functions:                                                                                                                 *
+ * bool:IsNPCInCircle(npcid,Float:x,Float:y,Float:radius);                                                                          *
+ * bool:IsNPCInCylinder(npcid,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius);                                  *
+ * bool:IsNPCInCylinderEx(npcid,Float:x,Float:y,Float:minz,Float:maxz,Float:radius);                                                *
+ * bool:IsNPCInSphere(npcid,Float:x,Float:y,Float:z,Float:radius);                                                                  *
+ * bool:IsNPCInRectangle(npcid,Float:minx,Float:miny,Float:maxx,Float:maxy);                                                        *
+ * bool:IsNPCInCube(npcid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                                       *
+ * bool:IsNPCInPolygon(npcid,Float:points[],maxpoints = sizeof(points));                                                            *
+ * Float:GetPointInFrontOfNPC(npcid,&Float:tx,&Float:ty,Float:radius);                                                              *
+ * GetNPCOrientationPos(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);                        *
+ * Float:GetNPCDistanceFromPoint(npcid,Float:x,Float:y,Float:z);                                                                    *
+ * bool:IsNPCInRangeOfPoint(npcid,Float:range,Float:x,Float:y,Float:z);                                                             *
+ * Float:GetDistanceBetweenNPCs(npcid_a,npcid_b);                                                                                   *
+ * Float:GetNPCSpeed(npcid);                                                                                                        *
+ * Float:GetNPCTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0);                                                                    *
+ * Float:SetNPCTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0);                                                                    *
+ * Float:GetNPCTargetNPCAngle(npcid,targetid,&Float:rz=0.0);                                                                        *
+ * Float:SetNPCTargetNPCAngle(npcid,targetid,&Float:rz=0.0);                                                                        *
+ * Float:GetNPCActorDistance(npcid,actorid);                                                                                        *
+ * Float:GetNPCVehicleDistance(npcid,vehicleid);                                                                                    *
+ * Float:GetNPCObjectDistance(npcid,objectid);                                                                                      *
+ * bool:GetNPCToPointVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                        *
+ * GetNPCRotatedVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,                      *
+ *                     Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                                     *
+ *                                                                                                                                  *
+ * FCNPC Functions (ColAndreas):                                                                                                    *
+ * Float:GetPointInFrontOfNPCCol(npcid,&Float:tx,&Float:ty,Float:radius);                                                           *
+ * GetNPCCollisionFlags(npcid);                                                                                                     *
+ * bool:IsBetweenNPCsIsWall(npcid,targetid);                                                                                        *
+ * bool:IsBetweenNPCToPointIsWall(npcid,Float:x,Float:y,Float:z);                                                                   *
+ * GetNPCOrientationPosCol(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);                     *
+ *                                                                                                                                  *
+ * FCNPC Functions (ColAndreas OR MapAndreas):                                                                                      *
+ * bool:IsPointInWaterFrontOfNPC(npcid,Float:radius);                                                                               *
+ *                                                                                                                                  *
+ * FCNPC Functions (Streamer):                                                                                                      *
+ * Float:GetNPCDynamicObjectDistance(npcid,objectid);                                                                               *
  *                                                                                                                                  *
  * Deprecated functions:                                                                                                            *
  * GetXYZInFrontOfVehicle(vehicleid,Float:distance,&Float:x,&Float:y,&Float:z); //New -> GetPointInFrontOfVehicle3D                 *
@@ -294,17 +335,20 @@
  * GetVehiclesDistance        -> GetDistanceBetweenVehicles                                                                         *
  * GetObjectsDistance         -> GetDistanceBetweenObjects                                                                          *
  * GetDynamicObjectsDistance  -> GetDistanceBetweenDynamicObject                                                                    *
+ * GetXYInFrontOfNPC          -> GetPointInFrontOfNPC                                                                               *
+ * GetXYInFrontOfNPCCol       -> GetPointInFrontOfNPCCol                                                                            *
+ * GetNPCsDistance            -> GetDistanceBetweenNPCs                                                                             *
  *                                                                                                                                  *
  ************************************************************************************************************************************/
 
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.8.3
+	#error [ADM] You need 3DTryg.inc v2.9.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.8.3
-#elseif (Tryg3D_Version < 20803)
-	#error [ADM] Update you 3DTryg.inc to v2.8.3
+	#error [ADM] Update you 3DTryg.inc to v2.9.0
+#elseif (Tryg3D_Version < 20900)
+	#error [ADM] Update you 3DTryg.inc to v2.9.0
 #endif
 */
 
@@ -313,7 +357,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20803) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20900) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -323,6 +367,8 @@
 #define TRYG3D_MODULEID_STREAMER						(Tryg3DModule:4)
 #define TRYG3D_MODULEID_FOXFOREACH						(Tryg3DModule:5)
 #define TRYG3D_MODULEID_YSIFOREACH						(Tryg3DModule:6)
+#define TRYG3D_MODULEID_FCNPC							(Tryg3DModule:7)
+
 
 //Detect ColAndreas
 #if defined COLANDREAS
@@ -363,6 +409,15 @@
 	#define Tryg3D_Module_MapAndreas					(false)
 #endif
 
+//Detect FCNPC
+#if ((defined _FCNPC_included) && (defined FCNPC_INCLUDE_VERSION))
+	#define Tryg3D_FCNPC
+	#define Tryg3D_FCNPCVersion							(120) //a.b.c 100*a+10*b+c
+	#define Tryg3D_Module_FCNPC							(true)
+#else
+	#define Tryg3D_Module_FCNPC							(false)
+#endif
+
 //Detect MapAndreasEx
 #if defined _Map_Andreas_Ex
 	#define Tryg3D_MapAndreasEx
@@ -389,23 +444,7 @@
 #endif
 
 //Auto Create MapAndreasEx
-#if (!defined Tryg3D_MapAndreasEx && defined Tryg3D_MapAndreas)
-
-	#define IsMapAndreasInit							Tryg3D_IsMapAndreasInit
-	#define SafeMapAndreasInit							Tryg3D_SafeMapAndreasInit
-	
-	stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
-		if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
-			z = 0.0;
-		} else {
-			MapAndreas_FindZ_For2DCoord(x,y,z);
-		}
-		return z;
-	}
-	
-	#define Tryg3D_MapAndreasEx
-	
-#elseif (!defined Tryg3D_MapAndreasEx && defined Tryg3D_ColAndreas)
+#if (!defined Tryg3D_MapAndreasEx && defined Tryg3D_ColAndreas)
 	
 	#define IsMapAndreasInit							Tryg3D_IsColAndreasInit
 	#define SafeMapAndreasInit							Tryg3D_SafeColAndreasInit
@@ -420,6 +459,22 @@
 	}
 	
 	#define ColAndreasFindZ 							MapAndreasFindZ
+	
+	#define Tryg3D_MapAndreasEx
+	
+#elseif (!defined Tryg3D_MapAndreasEx && defined Tryg3D_MapAndreas)
+
+	#define IsMapAndreasInit							Tryg3D_IsMapAndreasInit
+	#define SafeMapAndreasInit							Tryg3D_SafeMapAndreasInit
+	
+	stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
+		if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
+			z = 0.0;
+		} else {
+			MapAndreas_FindZ_For2DCoord(x,y,z);
+		}
+		return z;
+	}
 	
 	#define Tryg3D_MapAndreasEx
 	
@@ -542,7 +597,7 @@
 
 #define GetVehicleFlags(%0)								GetVehicleFlagsByModel(GetVehicleModel(%0))
 #define IsVehicleFlag(%0,%1)							((%0) & (%1))
-#define Tryg3D_GetWeaponDamage(%0)								Tryg3D_WeaponDamage[(%0)]
+#define Tryg3D_GetWeaponDamage(%0)						Tryg3D_WeaponDamage[(%0)]
 
 
 #define T3D:											v3D
@@ -579,7 +634,7 @@
 
 /****************************************************************************************************
  *                                                                                                  *
- * Enum                                                                                             *
+ * Variables                                                                                        *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -643,6 +698,12 @@ new const Float:Tryg3D_WeaponDamage[] = {
 
 #pragma unused Tryg3D_WeaponDamage
 
+/****************************************************************************************************
+ *                                                                                                  *
+ * Enum                                                                                             *
+ *                                                                                                  *
+ ****************************************************************************************************/
+ 
 enum element_orientation {
 	o_left,
 	o_right,
@@ -743,6 +804,11 @@ stock Get3DTrygModules(&modules_count=0){
 		modules_count++;
 	#endif
 	
+	#if defined Tryg3D_FCNPC
+		format(tryg_str,sizeof(tryg_str),"%s:FCNPC",tryg_str);
+		modules_count++;
+	#endif
+	
 	return tryg_str;
 }
 
@@ -752,6 +818,9 @@ stock bool:IsTryg3DModuleLoaded(Tryg3DModule:moduleid){
 		case TRYG3D_MODULEID_COLANDREAS:	return Tryg3D_Module_ColAndreas;
 		case TRYG3D_MODULEID_YSF:			return Tryg3D_Module_YSF;
 		case TRYG3D_MODULEID_STREAMER:		return Tryg3D_Module_Streamer;
+		case TRYG3D_MODULEID_FOXFOREACH:	return Tryg3D_Module_FoxForeach;
+		case TRYG3D_MODULEID_YSIFOREACH:	return Tryg3D_Module_YSIForeach;
+		case TRYG3D_MODULEID_FCNPC:			return Tryg3D_Module_FCNPC;
 	}
 	return false;
 }
@@ -945,10 +1014,14 @@ stock GetVehicleFlagsByModel(modelid){
 	return flag_value;
 }
 
-stock CountPlayers(){
+stock CountPlayers(bool:isplayer=true,bool:isnpc=true){
 	new cnt = 0;
 	Tryg3DForeach(i){
-		cnt++;
+		if(IsPlayerNPC(i)){
+			if(isnpc) cnt++;
+		} else {
+			if(isplayer) cnt++;
+		}
 	}
 	return cnt;
 }
@@ -1392,7 +1465,7 @@ stock bool:IsPlayerInCube(playerid,Float:minx,Float:miny,Float:minz,Float:maxx,F
 stock bool:IsPlayerInPolygon(playerid,Float:points[],maxpoints = sizeof(points)){
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
-	IsPointInPolygon(px,py,points,maxpoints);
+	return IsPointInPolygon(px,py,points,maxpoints);
 }
 
 stock bool:IsProbable(chance){
@@ -1440,25 +1513,25 @@ stock GetObjectRotationQuat(objectid,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
 	GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
 }
 
-stock GetObjectUpVector(Objectid,&Float:vx,&Float:vy,&Float:vz){
+stock GetObjectUpVector(objectid,&Float:vx,&Float:vy,&Float:vz){
 	new Float:qw,Float:qx,Float:qy,Float:qz;
-	GetObjectRotationQuat(Objectid,qw,qx,qy,qz);
+	GetObjectRotationQuat(objectid,qw,qx,qy,qz);
 	GetQuatUpVector(qw,qx,qy,qz,vx,vy,vz);
 }
 
-stock GetObjectUpPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z){
+stock GetObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 	new Float:rx,Float:rz;
-	GetObjectUpVector(Objectid,x,y,z);
+	GetObjectUpVector(objectid,x,y,z);
 	ShiftVectorToRotation(x,y,z,rx,rz);
-	GetObjectPos(Objectid,x,y,z);
+	GetObjectPos(objectid,x,y,z);
 	GetPointInFront3D(x,y,z,rx,rz,radius,x,y,z);
 }
 
-stock GetObjectDownPos(Objectid,Float:radius,&Float:x,&Float:y,&Float:z){
+stock GetObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 	new Float:rx,Float:rz;
-	GetObjectUpVector(Objectid,x,y,z);
+	GetObjectUpVector(objectid,x,y,z);
 	ShiftVectorToRotation(x,y,z,rx,rz);
-	GetObjectPos(Objectid,x,y,z);
+	GetObjectPos(objectid,x,y,z);
 	GetPointInFront3D(x,y,z,CompRotationFloat(rx-180.0),rz,radius,x,y,z);
 }
 
@@ -2062,35 +2135,35 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		if(z == 0.0) z = EndZ;
 	}
 	
-	stock bool:MovePointColCutLine(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
+	stock bool:MovePointColCutLine(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
-		CA_RayCastLine(SX,SY,SZ,EX,EY,EZ,x,y,z);
-		if(x == 0.0) x = EX;
-		if(y == 0.0) y = EY;
-		if(z == 0.0) z = EZ;
-		if((radius = GetDistanceBetweenPoints3D(SX,SY,SZ,x,y,z)) <= 0.0) return false;
-		CompRotationFloat(-(acos((z-SZ)/radius)-90.0),rx);
-		CompRotationFloat((atan2(y-SY,x-SX)-90.0),rz);
+		CA_RayCastLine(sX,sY,sZ,eX,eY,eZ,x,y,z);
+		if(x == 0.0) x = eX;
+		if(y == 0.0) y = eY;
+		if(z == 0.0) z = eZ;
+		if((radius = GetDistanceBetweenPoints3D(sX,sY,sZ,x,y,z)) <= 0.0) return false;
+		CompRotationFloat(-(acos((z-sZ)/radius)-90.0),rx);
+		CompRotationFloat((atan2(y-sY,x-sX)-90.0),rz);
 		if(radius-cut_size > 0.0) radius -= cut_size;
-		GetPointInFront3D(SX,SY,SZ,rx,rz,radius,x,y,z);
+		GetPointInFront3D(sX,sY,sZ,rx,rz,radius,x,y,z);
 		return true;
 	}
 
-	stock bool:MovePointColCutLineEx(Float:SX,Float:SY,Float:SZ,Float:EX,Float:EY,Float:EZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
+	stock bool:MovePointColCutLineEx(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
-		CA_RayCastLine(SX,SY,SZ,EX,EY,EZ,x,y,z);
-		if(x == 0.0) x = EX;
-		if(y == 0.0) y = EY;
-		if(z == 0.0) z = EZ;
-		if((radius = GetDistanceBetweenPoints3D(SX,SY,SZ,x,y,z)) <= 0.0) return false;
-		CompRotationFloat(-(acos((z-SZ)/radius)-90.0),rx);
-		CompRotationFloat((atan2(y-SY,x-SX)-90.0),rz);
+		CA_RayCastLine(sX,sY,sZ,eX,eY,eZ,x,y,z);
+		if(x == 0.0) x = eX;
+		if(y == 0.0) y = eY;
+		if(z == 0.0) z = eZ;
+		if((radius = GetDistanceBetweenPoints3D(sX,sY,sZ,x,y,z)) <= 0.0) return false;
+		CompRotationFloat(-(acos((z-sZ)/radius)-90.0),rx);
+		CompRotationFloat((atan2(y-sY,x-sX)-90.0),rz);
 		if((radius-cut_size > cut_size) && (radius-cut_size > 0.0)){
 			radius -= cut_size;
 		} else {
 			radius = 0.0001;
 		}
-		GetPointInFront3D(SX,SY,SZ,rx,rz,radius,x,y,z);
+		GetPointInFront3D(sX,sY,sZ,rx,rz,radius,x,y,z);
 		return true;
 	}
 	
@@ -2593,6 +2666,299 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	}
 #endif
 
+#if defined Tryg3D_FCNPC
+	
+	stock Float:GetNPCSpeed(npcid){
+		new Float:x,Float:y,Float:z;
+		FCNPC_GetVelocity(npcid,x,y,z);
+		return VectorSize(x,y,z);
+	}
+
+	stock Float:GetPointInFrontOfNPC(npcid,&Float:tx,&Float:ty,Float:radius){
+		new Float:rz;
+		FCNPC_GetPosition(npcid,tx,ty,rz);
+		rz = FCNPC_GetAngle(npcid);
+		if(IsPlayerInAnyVehicle(npcid)){
+			GetVehicleZAngle(FCNPC_GetVehicleID(npcid),rz);
+		}
+		GetPointInFront2D(tx,ty,rz,radius,tx,ty);
+		return rz;
+	}
+
+	stock bool:IsNPCInCircle(npcid,Float:x,Float:y,Float:radius){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return IsPointInCircle(px,py,x,y,radius);
+	}
+
+	stock bool:IsNPCInCylinder(npcid,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return IsPointInCylinder(px,py,pz,xA,yA,zA,xB,yB,zB,radius);
+	}
+
+	stock bool:IsNPCInCylinderEx(npcid,Float:x,Float:y,Float:minz,Float:maxz,Float:radius){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return IsPointInCylinderEx(px,py,pz,x,y,minz,maxz,radius);
+	}
+
+	stock bool:IsNPCInSphere(npcid,Float:x,Float:y,Float:z,Float:radius){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return IsPointInSphere(px,py,pz,x,y,z,radius);
+	}
+
+	stock bool:IsNPCInRectangle(npcid,Float:minx,Float:miny,Float:maxx,Float:maxy){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return IsPointInRectangle(px,py,minx,miny,maxx,maxy);
+	}
+
+	stock bool:IsNPCInCube(npcid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return IsPointInCube(px,py,pz,minx,miny,minz,maxx,maxy,maxz);
+	}
+
+	stock bool:IsNPCInPolygon(npcid,Float:points[],maxpoints = sizeof(points)){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return IsPointInPolygon(px,py,points,maxpoints);
+	}
+
+	stock Float:GetNPCDistanceFromPoint(npcid,Float:x,Float:y,Float:z){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
+	}
+
+	stock Float:GetDistanceBetweenNPCs(npcid_a,npcid_b){
+		new Float:x,Float:y,Float:z;
+		FCNPC_GetPosition(npcid_b,x,y,z);
+		return GetNPCDistanceFromPoint(npcid_a,x,y,z);
+	}
+
+	stock GetNPCOrientationPos(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+		new Float:x,Float:y,Float:z,Float:rz;
+
+		FCNPC_GetPosition(npcid,x,y,z);
+		rz = FCNPC_GetAngle(npcid);
+		
+		switch(orientation){
+			case o_left: {
+				GetPointInFront3D(x,y,z,0.0,CompRotationFloat(rz+90.0),distance,tx,ty,tz);
+			}
+			case o_right: {
+				GetPointInFront3D(x,y,z,0.0,CompRotationFloat(rz-90.0),distance,tx,ty,tz);
+			}
+			case o_up: {
+				tx = x, ty = y, tz = z+distance;
+			}
+			case o_down: {
+				tx = x, ty = y, tz = z-distance;
+			}
+			case o_front: {
+				GetPointInFront3D(x,y,z,0.0,rz,distance,tx,ty,tz);
+			}
+			case o_back: {
+				GetPointInFront3D(x,y,z,0.0,CompRotationFloat(rz+180.0),distance,tx,ty,tz);
+			}
+		}
+	}
+	
+	stock Float:GetNPCTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0){
+		new Float:mx,Float:my;
+		FCNPC_GetPosition(npcid,mx,my,rz);
+		GetRotationFor2Point2D(mx,my,x,y,rz);
+		return rz;
+	}
+
+	stock Float:SetNPCTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0){
+		new Float:mx,Float:my;
+		FCNPC_GetPosition(npcid,mx,my,rz);
+		GetRotationFor2Point2D(mx,my,x,y,rz);
+		FCNPC_SetAngle(npcid,rz);
+		return rz;
+	}
+
+	stock Float:GetNPCTargetNPCAngle(npcid,targetid,&Float:rz=0.0){
+		new Float:mx,Float:my,Float:x,Float:y;
+		FCNPC_GetPosition(npcid,mx,my,rz);
+		FCNPC_GetPosition(targetid,x,y,rz);
+		GetRotationFor2Point2D(mx,my,x,y,rz);
+		return rz;
+	}
+
+	stock Float:SetNPCTargetNPCAngle(npcid,targetid,&Float:rz=0.0){
+		new Float:mx,Float:my,Float:x,Float:y;
+		FCNPC_GetPosition(npcid,mx,my,rz);
+		FCNPC_GetPosition(targetid,x,y,rz);
+		GetRotationFor2Point2D(mx,my,x,y,rz);
+		FCNPC_SetAngle(npcid,rz);
+		return rz;
+	}
+		
+	stock Float:GetNPCActorDistance(npcid,actorid){
+		new Float:x,Float:y,Float:z;
+		GetActorPos(actorid,x,y,z);
+		return GetNPCDistanceFromPoint(npcid,x,y,z);
+	}
+
+	stock Float:GetNPCVehicleDistance(npcid,vehicleid){
+		new Float:x,Float:y,Float:z;
+		GetVehiclePos(vehicleid,x,y,z);
+		return GetNPCDistanceFromPoint(npcid,x,y,z);
+	}
+
+	stock Float:GetNPCObjectDistance(npcid,objectid){
+		new Float:x,Float:y,Float:z;
+		GetObjectPos(objectid,x,y,z);
+		return GetNPCDistanceFromPoint(npcid,x,y,z);
+	}
+
+	stock bool:GetNPCToPointVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+		new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
+			ShiftRotationToVector(rx,rz,vx,vy,vz);
+			return true;
+		} else {
+			vx = 0.0, vy = 0.0, vz = 0.0;
+			return false;
+		}
+	}
+
+	stock GetNPCRotatedVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		if(return_vector){
+			ShiftLineRotationVector(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
+		} else {
+			ShiftLineRotation(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
+		}
+	}
+
+	stock bool:IsNPCInRangeOfPoint(npcid,Float:range,Float:x,Float:y,Float:z){
+		if(GetNPCDistanceFromPoint(npcid,x,y,z) <= range) return true;
+		return false;
+	}
+	
+	#define GetXYInFrontOfNPC 							GetPointInFrontOfNPC
+	#define GetNPCsDistance								GetDistanceBetweenNPCs
+	
+#endif
+
+#if ((defined Tryg3D_MapAndreas || defined Tryg3D_ColAndreas) && (defined Tryg3D_FCNPC))
+	stock bool:IsPointInWaterFrontOfNPC(npcid,Float:radius){
+		new Float:x, Float:y, Float:z;
+		FCNPC_GetPosition(npcid,x,y,z);
+		GetPointInFrontOfNPC(npcid,x,y,radius);
+		#if defined Tryg3D_ColAndreas
+			return IsPointInWater(x,y,0.0);
+		#else
+			new Float:tmpz;
+			Tryg3DMapAndreasFindZ(x,y,tmpz);
+			if(tmpz <= 0.0) return true;
+			return false;
+		#endif
+	}
+#endif
+
+#if ((defined Tryg3D_Streamer) && (defined Tryg3D_FCNPC))
+	stock Float:GetNPCDynamicObjectDistance(playerid,objectid){
+		new Float:x,Float:y,Float:z;
+		GetDynamicObjectPos(objectid,x,y,z);
+		return GetNPCDistanceFromPoint(playerid,x,y,z);
+	}
+#endif
+
+#if (defined Tryg3D_FCNPC) && (defined Tryg3D_ColAndreas)
+
+	stock Float:GetPointInFrontOfNPCCol(npcid,&Float:tx,&Float:ty,Float:radius){
+		new Float:rz,Float:z;
+		FCNPC_GetPosition(npcid,tx,ty,z);
+		rz = FCNPC_GetAngle(npcid);
+		if(IsPlayerInAnyVehicle(npcid)){
+			GetVehicleZAngle(FCNPC_GetVehicleID(npcid),rz);
+		}
+		GetPointInFront3DCol(tx,ty,z,0.0,rz,radius,tx,ty,z);
+		return rz;
+	}
+
+	stock GetNPCCollisionFlags(npcid){
+		new Float:x, Float:y, Float:z, bool:isinterior = false, flag_value;
+		FCNPC_GetPosition(npcid,x,y,z);
+		if(FCNPC_GetInterior(npcid) != 0){
+			flag_value |= POSITION_FLAG_INTERIOR;
+			isinterior = true;
+		} else {
+			flag_value |= POSITION_FLAG_WORLD;
+		}
+		if(IsPointInUnderwater(x,y,z)){
+			flag_value |= POSITION_FLAG_WATER;
+			flag_value |= POSITION_FLAG_UNDERWATER;
+		} else if(IsPointInWater(x,y,z)){
+			flag_value |= POSITION_FLAG_WATER;
+		} else if(IsPointInAir(x,y,z,isinterior,2.2)){
+			flag_value |= POSITION_FLAG_AIR;
+		} else if(IsPointInUnderground(x,y,z)){
+			flag_value |= POSITION_FLAG_UNDERGROUND;
+		} else {
+			flag_value |= POSITION_FLAG_GROUND;
+		}
+		return flag_value;
+	}
+
+	stock bool:IsBetweenNPCsIsWall(npcid,targetid){
+		new Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:xC,Float:yC,Float:zC;
+		FCNPC_GetPosition(npcid,xA,yA,zA);
+		FCNPC_GetPosition(targetid,xB,yB,zB);
+		CA_RayCastLine(xA,yA,zA,xB,yB,zB,xC,yC,zC);
+		if(xC == 0.0 || yC == 0.0 || zC == 0.0) return false;
+		return true;
+	}
+
+	stock bool:IsBetweenNPCToPointIsWall(npcid,Float:x,Float:y,Float:z){
+		new Float:xA,Float:yA,Float:zA,Float:xC,Float:yC,Float:zC;
+		FCNPC_GetPosition(npcid,xA,yA,zA);
+		CA_RayCastLine(xA,yA,zA,x,y,z,xC,yC,zC);
+		if(xC == 0.0 || yC == 0.0 || zC == 0.0) return false;
+		return true;
+	}
+	
+	stock GetNPCOrientationPosCol(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+		new Float:x,Float:y,Float:z,Float:rz;
+
+		FCNPC_GetPosition(npcid,x,y,z);
+		rz = FCNPC_GetAngle(npcid);
+
+		switch(orientation){
+			case o_left: {
+				GetPointInFront3DCol(x,y,z,0.0,CompRotationFloat(rz+90.0),distance,tx,ty,tz);
+			}
+			case o_right: {
+				GetPointInFront3DCol(x,y,z,0.0,CompRotationFloat(rz-90.0),distance,tx,ty,tz);
+			}
+			case o_up: {
+				GetPointInFront3DCol(x,y,z,90.0,0.0,distance,tx,ty,tz);
+			}
+			case o_down: {
+				GetPointInFront3DCol(x,y,z,270.0,0.0,distance,tx,ty,tz);
+			}
+			case o_front: {
+				GetPointInFront3DCol(x,y,z,0.0,rz,distance,tx,ty,tz);
+			}
+			case o_back: {
+				GetPointInFront3DCol(x,y,z,0.0,CompRotationFloat(rz+180.0),distance,tx,ty,tz);
+			}
+		}
+	}
+	
+	#define GetXYInFrontOfNPCCol						GetPointInFrontOfNPCCol
+	
+#endif
+
 /****************************************************************************************************
  *                                                                                                  *
  * Benchmark                                                                                        *
@@ -2811,6 +3177,22 @@ stock Tryg3DInit(){
 				}
 			}
 		}
+	#endif
+	#if defined Tryg3D_FCNPC
+		#if	(FCNPC_INCLUDE_VERSION < Tryg3D_FCNPCVersion)
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				new str1[16],str2[16];
+				format(str1,sizeof(str1),"%d",FCNPC_INCLUDE_VERSION);
+				format(str2,sizeof(str2),"%d",Tryg3D_FCNPCVersion);
+				printf("[ADM] Error: Your FCNPC %c.%c.%c It is not compatible with this version 3DTryg, update your FCNPC to %c.%c.%c",str1[0],str1[1],str1[2],str2[0],str2[1],str2[2]);
+				Update3DTrygErrorCount();
+			}
+		#else
+			if(GetSVarInt("ADM:3DTryg:FCNPC") == 0){
+				SetSVarInt("ADM:3DTryg:FCNPC",1);
+				print("[ADM] Info: FCNPC successfully init.");
+			}
+		#endif
 	#endif
 }
 
