@@ -9,13 +9,13 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.9.0                                                                                                              *
+ * File Version: 2.9.1                                                                                                              *
  * SA:MP Version: 0.3.7                                                                                                             *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
  * YSF Version: 2.2.0 (IS4)                                                                                                         *
  * Streamer Version: 2.8.2                                                                                                          *
- * FCNPC Version: 1.0.0                                                                                                             *
+ * FCNPC Version: 1.3.0                                                                                                             *
  *                                                                                                                                  *
  * 3DTryg FindZ Precision:                                                                                                          *
  * 1. ColAndreas   - The most accurate precision with ColAndreas plugin.                                                            *
@@ -131,6 +131,7 @@
  * GetObjectOrientationPos(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);                  *
  * GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz);                                                                *
  * Float:GetActorDistanceFromPoint(actorid,Float:x,Float:y,Float:z);                                                                *
+ * Float:GetObjectDistanceFromPoint(objectid,Float:x,Float:y,Float:z);                                                              *
  * Float:GetDistanceBetweenPlayers(playerid_a,playerid_b);                                                                          *
  * Float:GetDistanceBetweenVehicles(vehicleid_a,vehicleid_b);                                                                       *
  * Float:GetDistanceBetweenObjects(objectid_a,objectid_b);                                                                          *
@@ -158,6 +159,9 @@
  * Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&Float:y,&Float:z);                                     *
  * Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true);                                          *
  * Tryg3D_GetWeaponDamage(weaponid);                                                                                                *
+ * bool:IsVehicleInRangeOfPoint(vehicleid,Float:range,Float:x,Float:y,Float:z);                                                     *
+ * bool:IsActorInRangeOfPoint(actorid,Float:range,Float:x,Float:y,Float:z);                                                         *
+ * bool:IsObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Float:z);                                                       *
  * ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,                              *
  *                   &Float:nX,&Float:nY,&Float:nZ);                                                                                *
  * ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,                        *
@@ -196,6 +200,8 @@
  * GetDynamicObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                         *
  * GetDynamicObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                       *
  * bool:GetDynamicObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                           *
+ * Float:GetDynamicObjectDistFromPoint(objectid,Float:x,Float:y,Float:z);                                                           *
+ * bool:IsDynamicObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Float:z);                                                *
  * GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,         *
  *                               Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                           *
  *                                                                                                                                  *
@@ -290,6 +296,8 @@
  * Float:GetNPCVehicleDistance(npcid,vehicleid);                                                                                    *
  * Float:GetNPCObjectDistance(npcid,objectid);                                                                                      *
  * bool:GetNPCToPointVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                        *
+ * FCNPC_SetVehicleRotation(npcid,Float:rx,Float:ry,Float:rz);                                                                      *
+ * bool:FCNPC_SetVehicleTargetRotation(npcid,Float:tx,Float:ty,Float:tz,Float:ry=0.0);                                              *
  * GetNPCRotatedVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,                      *
  *                     Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                                     *
  *                                                                                                                                  *
@@ -299,6 +307,10 @@
  * bool:IsBetweenNPCsIsWall(npcid,targetid);                                                                                        *
  * bool:IsBetweenNPCToPointIsWall(npcid,Float:x,Float:y,Float:z);                                                                   *
  * GetNPCOrientationPosCol(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);                     *
+ * FCNPC_GoToCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,      *
+ *               Float:cut_size = 0.0,bool:setangle = true);                                                                        *
+ * FCNPC_GoToPlayerCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,               *
+ *                     Float:cut_size = 0.0,bool:setangle = true);                                                                  *
  *                                                                                                                                  *
  * FCNPC Functions (ColAndreas OR MapAndreas):                                                                                      *
  * bool:IsPointInWaterFrontOfNPC(npcid,Float:radius);                                                                               *
@@ -344,11 +356,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.9.0
+	#error [ADM] You need 3DTryg.inc v2.9.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.9.0
-#elseif (Tryg3D_Version < 20900)
-	#error [ADM] Update you 3DTryg.inc to v2.9.0
+	#error [ADM] Update you 3DTryg.inc to v2.9.1
+#elseif (Tryg3D_Version < 20901)
+	#error [ADM] Update you 3DTryg.inc to v2.9.1
 #endif
 */
 
@@ -357,7 +369,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20900) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20901) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -412,7 +424,7 @@
 //Detect FCNPC
 #if ((defined _FCNPC_included) && (defined FCNPC_INCLUDE_VERSION))
 	#define Tryg3D_FCNPC
-	#define Tryg3D_FCNPCVersion							(120) //a.b.c 100*a+10*b+c
+	#define Tryg3D_FCNPCVersion							(130) //a.b.c 100*a+10*b+c
 	#define Tryg3D_Module_FCNPC							(true)
 #else
 	#define Tryg3D_Module_FCNPC							(false)
@@ -852,6 +864,12 @@ stock RecoilVector(&Float:vx,&Float:vy,&Float:vz,Float:sx,Float:sy,Float:sz){
 stock Float:GetActorDistanceFromPoint(actorid,Float:x,Float:y,Float:z){
 	new Float:px,Float:py,Float:pz;
 	GetActorPos(actorid,px,py,pz);
+	return GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
+}
+
+stock Float:GetObjectDistanceFromPoint(objectid,Float:x,Float:y,Float:z){
+	new Float:px,Float:py,Float:pz;
+	GetObjectPos(objectid,px,py,pz);
 	return GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
 }
 
@@ -1704,6 +1722,20 @@ stock bool:GetPointToPointVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float
 	}
 }
 
+stock bool:IsVehicleInRangeOfPoint(vehicleid,Float:range,Float:x,Float:y,Float:z){
+	if(GetVehicleDistanceFromPoint(vehicleid,x,y,z) <= range) return true;
+	return false;
+}
+
+stock bool:IsActorInRangeOfPoint(actorid,Float:range,Float:x,Float:y,Float:z){
+	if(GetActorDistanceFromPoint(actorid,x,y,z) <= range) return true;
+	return false;
+}
+
+stock bool:IsObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Float:z){
+	if(GetObjectDistanceFromPoint(objectid,x,y,z) <= range) return true;
+	return false;
+}
 
 //Module: rotation.inc by Nero_3D
 //Code anti-collision: YES
@@ -2070,6 +2102,17 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		} else {
 			ShiftLineRotation(px,py,pz,tx,ty,tz,rx,ry,rz,vx,vy,vz);
 		}
+	}
+	
+	stock Float:GetDynamicObjectDistFromPoint(objectid,Float:x,Float:y,Float:z){
+		new Float:px,Float:py,Float:pz;
+		GetDynamicObjectPos(objectid,px,py,pz);
+		return GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
+	}
+
+	stock bool:IsDynamicObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Float:z){
+		if(GetDynamicObjectDistFromPoint(objectid,x,y,z) <= range) return true;
+		return false;
 	}
 	
 	#define GetDynamicObjectsDistance					GetDistanceBetweenDynamicObject
@@ -2844,6 +2887,24 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return false;
 	}
 	
+	stock FCNPC_SetVehicleRotation(npcid,Float:rx,Float:ry,Float:rz){
+		new Float:qw,Float:qx,Float:qy,Float:qz;
+		GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
+		FCNPC_SetQuaternion(npcid,-qw,qx,qy,qz);
+	}
+	
+	stock bool:FCNPC_SetVehicleTargetRotation(npcid,Float:tx,Float:ty,Float:tz,Float:ry=0.0){
+		new Float:x,Float:y,Float:z,Float:rx,Float:rz;
+		GetVehiclePos(FCNPC_GetVehicleID(npcid),x,y,z);
+		if(GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz)){
+			new Float:qw,Float:qx,Float:qy,Float:qz;
+			GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
+			FCNPC_SetQuaternion(npcid,-qw,qx,qy,qz);
+			return true;
+		}
+		return false;
+	}
+	
 	#define GetXYInFrontOfNPC 							GetPointInFrontOfNPC
 	#define GetNPCsDistance								GetDistanceBetweenNPCs
 	
@@ -2953,6 +3014,21 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 				GetPointInFront3DCol(x,y,z,0.0,CompRotationFloat(rz+180.0),distance,tx,ty,tz);
 			}
 		}
+	}
+	
+	stock FCNPC_GoToCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		MovePointColCutLineEx(px,py,pz,x,y,z,x,y,z,cut_size);
+		FCNPC_GoTo(npcid,x,y,z,type,speed,UseMapAndreas,0.0,setangle);
+	}
+
+	stock FCNPC_GoToPlayerCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
+		new Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z;
+		GetPlayerPos(playerid,x,y,z);
+		FCNPC_GetPosition(npcid,px,py,pz);
+		MovePointColCutLineEx(px,py,pz,x,y,z,x,y,z,cut_size);
+		FCNPC_GoTo(npcid,x,y,z,type,speed,UseMapAndreas,0.0,setangle);
 	}
 	
 	#define GetXYInFrontOfNPCCol						GetPointInFrontOfNPCCol
@@ -3148,12 +3224,18 @@ stock Tryg3DInit_MapPrecision(){
 }
 
 stock Tryg3DInit(){
+	
+	//Init ColAndreas
 	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
 		CheckColAndreasVersion();
 	#endif
+	
+	//Init Map Precision
 	#if !defined DISABLE_3D_TRYG_INIT
 		Tryg3DInit_MapPrecision();
 	#endif
+	
+	//Init YSF Timeline Sync
 	#if ((defined Tryg3D_YSF) && (defined ENABLE_3D_TRYG_TIMELINE_SYNC))
 		if(GetSVarInt("ADM:3DTryg:YSF:TIMELINE") == 0){
 			SetSVarInt("ADM:3DTryg:YSF:TIMELINE",1);
@@ -3162,6 +3244,8 @@ stock Tryg3DInit(){
 			}
 		}
 	#endif
+	
+	//Init Streamer
 	#if (!defined DISABLE_3D_TRYG_CHECK && defined Tryg3D_Streamer)
 		Tryg3D_CheckStreamerVersion();
 	#endif
@@ -3178,7 +3262,9 @@ stock Tryg3DInit(){
 			}
 		}
 	#endif
-	#if defined Tryg3D_FCNPC
+	
+	//Init FCNPC
+	#if (!defined DISABLE_3D_TRYG_CHECK && defined Tryg3D_FCNPC)
 		#if	(FCNPC_INCLUDE_VERSION < Tryg3D_FCNPCVersion)
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
 				new str1[16],str2[16];
