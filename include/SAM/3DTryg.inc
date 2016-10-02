@@ -995,7 +995,7 @@ stock bool:IsPlayerUsingParachute(playerid){
 
 stock bool:IsPlayerAiming(playerid){
 	switch(GetPlayerAnimationIndex(playerid)){
-		case 1167,1365,1643,1453,220: return true;
+		case 1160..1163,1167,1365,1643,1453,220: return true;
 	}
 	return false;
 }
