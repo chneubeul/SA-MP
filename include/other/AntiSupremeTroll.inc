@@ -10,7 +10,7 @@
  * Modules: None                                                                                    *
  *                                                                                                  *
  * File Version: 1.2.2                                                                              *
- * SA:MP Version: 0.3.7                                                                             *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  *                                                                                                  *
  * Cheat Info:                                                                                      *
  * http://www.mpgh.net/forum/showthread.php?t=883161                                                *
@@ -34,6 +34,10 @@
 	#endinput
 #endif
 #define _anti_supreme_troll
+
+#if (!defined GetPlayerPoolSize)
+	#error [ADM] This include requires SA:MP version 0.3.7
+#endif
 
 //Get Compress Adress
 #define GetPlayerObjAddress(%0)			(floatround((%0)/32))

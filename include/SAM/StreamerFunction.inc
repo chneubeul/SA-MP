@@ -10,7 +10,7 @@
  * Modules: None                                                                                                                           *
  *                                                                                                                                         *
  * File Version: 2.5.4                                                                                                                     *
- * SA:MP Version: 0.3.7                                                                                                                    *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
@@ -305,6 +305,10 @@
 	#endinput
 #endif
 #define _streamer_spec
+
+#if (!defined GetPlayerPoolSize)
+	#error [ADM] This include requires SA:MP version 0.3.7
+#endif
 
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
 	#error [ADM] Unknown Streamer Version

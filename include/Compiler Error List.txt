@@ -3,7 +3,7 @@ Plugin Include:
 [ADM] Unknown MapAndreas Version
 [ADM] Unknown SScanf Version
 [ADM] Unknown ColAndreas Version
-
+[ADM] This include requires SA:MP version 0.3.7
 
 
 Global Include:

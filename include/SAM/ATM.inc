@@ -10,7 +10,7 @@
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
  * File Version: 1.4.2                                                                                                            *
- * SA:MP Version: 0.3.7                                                                                                           *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d                                                                            *
@@ -47,6 +47,10 @@
 	#endinput
 #endif
 #define _ATM_Core
+
+#if (!defined GetPlayerPoolSize)
+	#error [ADM] This include requires SA:MP version 0.3.7
+#endif
 
 #define ATM_Version											(10402) //a.b.c 10000*a+100*b+c
 

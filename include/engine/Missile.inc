@@ -10,7 +10,7 @@
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
  * File Version: 1.6.6                                                                                                            *
- * SA:MP Version: 0.3.7                                                                                                           *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.8.2                                                                                                        *
  * 3DTryg Version: 2.7.3                                                                                                          *
  *                                                                                                                                *
@@ -40,6 +40,15 @@
 #endif
 */
 
+#if defined _missile_launcher
+	#endinput
+#endif
+#define _missile_launcher
+
+#if (!defined GetPlayerPoolSize)
+	#error [ADM] This include requires SA:MP version 0.3.7
+#endif
+
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
 	#error [ADM] Unknown Streamer Version
 #endif
@@ -52,11 +61,6 @@
 #elseif (Tryg3D_Version < 20703)
 	#error [ADM] Update you 3DTryg.inc to v2.7.3
 #endif
-
-#if defined _missile_launcher
-	#endinput
-#endif
-#define _missile_launcher
 
 #define Missile_Version						(10606)
 

@@ -10,7 +10,7 @@
  * Modules: None                                                                                    *
  *                                                                                                  *
  * File Version: 1.2.1                                                                              *
- * SA:MP Version: 0.3.7                                                                             *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  *                                                                                                  *
  * Functions:                                                                                       *
  * FoxForeach(variable,tag); //Tags: Player, Bot, Character                                         *
@@ -53,6 +53,10 @@
 	#endinput
 #endif
 #define _FoX_Foreach
+
+#if (!defined GetPlayerPoolSize)
+	#error [ADM] This include requires SA:MP version 0.3.7
+#endif
 
 #define FoxForeach(%0,%1)				for(new %0 = Fox%1[0], i_%0 = 0; i_%0 <= Fox%1Upp; i_%0++, %0 = Fox%1[i_%0])
 #define CountFoxPlayer()				(FoxPlayerUpp+1)

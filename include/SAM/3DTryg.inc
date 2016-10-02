@@ -9,8 +9,8 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.9.1                                                                                                              *
- * SA:MP Version: 0.3.7                                                                                                             *
+ * File Version: 2.9.2                                                                                                              *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
  * YSF Version: 2.2.0 (IS4)                                                                                                         *
@@ -356,11 +356,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.9.1
+	#error [ADM] You need 3DTryg.inc v2.9.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.9.1
-#elseif (Tryg3D_Version < 20901)
-	#error [ADM] Update you 3DTryg.inc to v2.9.1
+	#error [ADM] Update you 3DTryg.inc to v2.9.2
+#elseif (Tryg3D_Version < 20902)
+	#error [ADM] Update you 3DTryg.inc to v2.9.2
 #endif
 */
 
@@ -369,7 +369,11 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(20901) //a.b.c 10000*a+100*b+c
+#if (!defined GetPlayerPoolSize)
+	#error [ADM] This include requires SA:MP version 0.3.7
+#endif
+
+#define Tryg3D_Version									(20902) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -3187,27 +3191,54 @@ new bool:CRC_3DTryg = true;
 		return true;
 	}
 
-	stock Tryg3D_SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(name)){
-		//check MapAndreas Init
-		new bool:MapAndreasLastStat = false;
-		if(!Tryg3D_IsMapAndreasInit()){
-			MapAndreas_Init(mode,name,len);
-			MapAndreasLastStat = true;
-		}
-		if(!Tryg3D_IsMapAndreasInit()){
-			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				print("[ADM] Error: MapAndreas failed to initiated.");
-				print("[ADM] Error: Cannot load /scriptfiles/SAfull.hmap");
-				Update3DTrygErrorCount();
+	//Switch MapAndreas Version
+	#if defined MAP_ANDREAS_ERROR_SUCCESS
+		//MapAndreas 1.2.1
+		stock Tryg3D_SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(name)){
+			//check MapAndreas Init
+			new bool:MapAndreasLastStat = false;
+			if(!Tryg3D_IsMapAndreasInit()){
+				MapAndreas_Init(mode,name,len);
+				MapAndreasLastStat = true;
 			}
-		} else {
-			if(MapAndreasLastStat){
+			if(!Tryg3D_IsMapAndreasInit()){
 				if(GetSVarInt("ADM:Logging:Disable") == 0){
-					print("[ADM] Info: MapAndreas successfully init.");
+					print("[ADM] Error: MapAndreas failed to initiated.");
+					print("[ADM] Error: Cannot load /scriptfiles/SAfull.hmap");
+					Update3DTrygErrorCount();
+				}
+			} else {
+				if(MapAndreasLastStat){
+					if(GetSVarInt("ADM:Logging:Disable") == 0){
+						print("[ADM] Info: MapAndreas successfully init.");
+					}
 				}
 			}
 		}
-	}
+	#else
+		//MapAndreas 1.1.0
+		stock Tryg3D_SafeMapAndreasInit(mode){
+			//check MapAndreas Init
+			new bool:MapAndreasLastStat = false;
+			if(!Tryg3D_IsMapAndreasInit()){
+				MapAndreas_Init(mode);
+				MapAndreasLastStat = true;
+			}
+			if(!Tryg3D_IsMapAndreasInit()){
+				if(GetSVarInt("ADM:Logging:Disable") == 0){
+					print("[ADM] Error: MapAndreas failed to initiated.");
+					print("[ADM] Error: Cannot load /scriptfiles/SAfull.hmap");
+					Update3DTrygErrorCount();
+				}
+			} else {
+				if(MapAndreasLastStat){
+					if(GetSVarInt("ADM:Logging:Disable") == 0){
+						print("[ADM] Info: MapAndreas successfully init.");
+					}
+				}
+			}
+		}
+	#endif
 	
 #endif
 

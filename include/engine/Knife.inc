@@ -10,7 +10,7 @@
  * Modules: 3DTryg                                                                                  *
  *                                                                                                  *
  * File Version: 2.3.2                                                                              *
- * SA:MP Version: 0.3.7                                                                             *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.8.2                                                                          *
  * 3DTryg Version: 2.8.3                                                                            *
  *                                                                                                  *
@@ -23,6 +23,15 @@
  * bool:IsToggleKnifeShootForPlayer(playerid);                                                      *
  *                                                                                                  *
  ****************************************************************************************************/
+
+#if defined _knife_shot
+	#endinput
+#endif
+#define _knife_shot
+
+#if (!defined GetPlayerPoolSize)
+	#error [ADM] This include requires SA:MP version 0.3.7
+#endif
 
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
 	#error [ADM] Unknown Streamer Version
