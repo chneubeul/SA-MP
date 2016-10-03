@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.9.2                                                                                                              *
+ * File Version: 2.9.3                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -247,6 +247,7 @@
  * GetObjectOrientationPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);               *
  * bool:IsBetweenPlayersIsWall(playerid,targetid);                                                                                  *
  * bool:IsBetweenPlayerToPointIsWall(playerid,Float:x,Float:y,Float:z);                                                             *
+ * bool:IsPlayerOnPlayerScreen(playerid,targetid);                                                                                  *
  *                                                                                                                                  *
  * ColAndreas Extended Functions:                                                                                                   *
  * bool:IsColAndreasInit();                                                                                                         *
@@ -356,11 +357,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.9.2
+	#error [ADM] You need 3DTryg.inc v2.9.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.9.2
-#elseif (Tryg3D_Version < 20902)
-	#error [ADM] Update you 3DTryg.inc to v2.9.2
+	#error [ADM] Update you 3DTryg.inc to v2.9.3
+#elseif (Tryg3D_Version < 20903)
+	#error [ADM] Update you 3DTryg.inc to v2.9.3
 #endif
 */
 
@@ -373,7 +374,7 @@
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
 
-#define Tryg3D_Version									(20902) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20903) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -2485,6 +2486,18 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		CA_RayCastLine(xA,yA,zA,x,y,z,xC,yC,zC);
 		if(xC == 0.0 || yC == 0.0 || zC == 0.0) return false;
 		return true;
+	}
+	
+	stock bool:IsPlayerOnPlayerScreen(playerid,targetid){
+		if(GetDistanceBetweenPlayers(playerid,targetid) > 300.0) return false;
+		if(IsBetweenPlayersIsWall(playerid,targetid)) return false;
+		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:rx,Float:rz,Float:trx,Float:trz;
+		GetPlayerCameraPos(playerid,x,y,z);
+		GetPlayerCameraRotation(playerid,rx,rz); 
+		GetPlayerPos(targetid,tx,ty,tz);
+		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
+		if((rz-35.0 <= trz <= rz+35.0) && (rx-27.5 <= trx <= rx+27.5)) return true;
+		return false;
 	}
 	
 	#define GetXYInFrontOfPlayerCol						GetPointInFrontOfPlayerCol
