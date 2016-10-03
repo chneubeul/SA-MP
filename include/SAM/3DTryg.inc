@@ -2490,11 +2490,19 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	
 	stock bool:IsPlayerOnPlayerScreen(playerid,targetid){
 		if(GetDistanceBetweenPlayers(playerid,targetid) > 300.0) return false;
-		if(IsBetweenPlayersIsWall(playerid,targetid)) return false;
-		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:rx,Float:rz,Float:trx,Float:trz;
+		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:rx,Float:rz,Float:trx,Float:trz,
+			Float:xC,Float:yC,Float:zC;
 		GetPlayerCameraPos(playerid,x,y,z);
 		GetPlayerCameraRotation(playerid,rx,rz); 
 		GetPlayerPos(targetid,tx,ty,tz);
+		
+		CA_RayCastLine(x,y,z,tx,ty,tz,xC,yC,zC);
+		if(xC == 0.0 || yC == 0.0 || zC == 0.0){
+
+		} else {
+			return false;
+		}
+		
 		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
 		if((rz-35.0 <= trz <= rz+35.0) && (rx-27.5 <= trx <= rx+27.5)) return true;
 		return false;
