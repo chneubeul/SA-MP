@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.9.3                                                                                                              *
+ * File Version: 2.9.4                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -247,7 +247,10 @@
  * GetObjectOrientationPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);               *
  * bool:IsBetweenPlayersIsWall(playerid,targetid);                                                                                  *
  * bool:IsBetweenPlayerToPointIsWall(playerid,Float:x,Float:y,Float:z);                                                             *
- * bool:IsPlayerOnPlayerScreen(playerid,targetid);                                                                                  *
+ * bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,                               *
+ *                             Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS);                    *
+ * bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,                                                    *
+ *                           Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS);                      *
  *                                                                                                                                  *
  * ColAndreas Extended Functions:                                                                                                   *
  * bool:IsColAndreasInit();                                                                                                         *
@@ -357,11 +360,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.9.3
+	#error [ADM] You need 3DTryg.inc v2.9.4
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.9.3
-#elseif (Tryg3D_Version < 20903)
-	#error [ADM] Update you 3DTryg.inc to v2.9.3
+	#error [ADM] Update you 3DTryg.inc to v2.9.4
+#elseif (Tryg3D_Version < 20904)
+	#error [ADM] Update you 3DTryg.inc to v2.9.4
 #endif
 */
 
@@ -374,7 +377,7 @@
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
 
-#define Tryg3D_Version									(20903) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20904) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -385,7 +388,6 @@
 #define TRYG3D_MODULEID_FOXFOREACH						(Tryg3DModule:5)
 #define TRYG3D_MODULEID_YSIFOREACH						(Tryg3DModule:6)
 #define TRYG3D_MODULEID_FCNPC							(Tryg3DModule:7)
-
 
 //Detect ColAndreas
 #if defined COLANDREAS
@@ -460,13 +462,15 @@
 	#define Tryg3D_Module_YSIForeach					(false)
 #endif
 
+#define Tryg3DProt::									stock
+
 //Auto Create MapAndreasEx
 #if (!defined Tryg3D_MapAndreasEx && defined Tryg3D_ColAndreas)
 	
 	#define IsMapAndreasInit							Tryg3D_IsColAndreasInit
 	#define SafeMapAndreasInit							Tryg3D_SafeColAndreasInit
 	
-	stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
+	Tryg3DProt:: Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
 		if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
 			z = 0.0;
 		} else {
@@ -484,7 +488,7 @@
 	#define IsMapAndreasInit							Tryg3D_IsMapAndreasInit
 	#define SafeMapAndreasInit							Tryg3D_SafeMapAndreasInit
 	
-	stock Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
+	Tryg3DProt:: Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0){
 		if(x <= -3000.0 || x >= 3000.0 || y <= -3000.0 || y >= 3000.0){
 			z = 0.0;
 		} else {
@@ -554,6 +558,9 @@
 	#define POSITION_FLAG_WATER							(0b00010000)
 	#define POSITION_FLAG_UNDERWATER					(0b00100000)
 	#define POSITION_FLAG_UNDERGROUND					(0b01000000)
+	
+	#define VERTICAL_CAMERA_RADIUS 						(55.0) // 27.5 * 2
+	#define HORIZONTAL_CAMERA_RADIUS					(70.0) // 35.0 * 2
 #endif
 
 #define VF_STREET										(1)
@@ -615,7 +622,6 @@
 #define GetVehicleFlags(%0)								GetVehicleFlagsByModel(GetVehicleModel(%0))
 #define IsVehicleFlag(%0,%1)							((%0) & (%1))
 #define Tryg3D_GetWeaponDamage(%0)						Tryg3D_WeaponDamage[(%0)]
-
 
 #define T3D:											v3D
 
@@ -782,7 +788,7 @@ enum LongFloat4D {
  *                                                                                                  *
  ****************************************************************************************************/
 
-stock Get3DTrygModules(&modules_count=0){
+Tryg3DProt:: Get3DTrygModules(&modules_count=0){
 	modules_count = 0;
 	new tryg_str[128];
 	#if (defined Tryg3D_YSF && defined ENABLE_3D_TRYG_TIMELINE_SYNC)
@@ -829,7 +835,7 @@ stock Get3DTrygModules(&modules_count=0){
 	return tryg_str;
 }
 
-stock bool:IsTryg3DModuleLoaded(Tryg3DModule:moduleid){
+Tryg3DProt:: bool:IsTryg3DModuleLoaded(Tryg3DModule:moduleid){
 	switch(moduleid){
 		case TRYG3D_MODULEID_MAPANDREAS:	return Tryg3D_Module_MapAndreas;
 		case TRYG3D_MODULEID_COLANDREAS:	return Tryg3D_Module_ColAndreas;
@@ -842,7 +848,7 @@ stock bool:IsTryg3DModuleLoaded(Tryg3DModule:moduleid){
 	return false;
 }
 
-stock Float:GetLineSize2D(Float:points[][],maxpoints=sizeof(points)){
+Tryg3DProt:: Float:GetLineSize2D(Float:points[][],maxpoints=sizeof(points)){
 	if(maxpoints < 2) return 0.0;
 	new Float:distance = 0.0;
 	for(new i = 1; i < maxpoints; i++){
@@ -851,7 +857,7 @@ stock Float:GetLineSize2D(Float:points[][],maxpoints=sizeof(points)){
 	return distance;
 }
 
-stock Float:GetLineSize3D(Float:points[][],maxpoints=sizeof(points)){
+Tryg3DProt:: Float:GetLineSize3D(Float:points[][],maxpoints=sizeof(points)){
 	if(maxpoints < 2) return 0.0;
 	new Float:distance = 0.0;
 	for(new i = 1; i < maxpoints; i++){
@@ -860,68 +866,68 @@ stock Float:GetLineSize3D(Float:points[][],maxpoints=sizeof(points)){
 	return distance;
 }
 
-stock RecoilVector(&Float:vx,&Float:vy,&Float:vz,Float:sx,Float:sy,Float:sz){
+Tryg3DProt:: RecoilVector(&Float:vx,&Float:vy,&Float:vz,Float:sx,Float:sy,Float:sz){
 	vx = RecoilFloat(vx,sx);
 	vy = RecoilFloat(vy,sy);
 	vz = RecoilFloat(vz,sz);
 }
 
-stock Float:GetActorDistanceFromPoint(actorid,Float:x,Float:y,Float:z){
+Tryg3DProt:: Float:GetActorDistanceFromPoint(actorid,Float:x,Float:y,Float:z){
 	new Float:px,Float:py,Float:pz;
 	GetActorPos(actorid,px,py,pz);
 	return GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
 }
 
-stock Float:GetObjectDistanceFromPoint(objectid,Float:x,Float:y,Float:z){
+Tryg3DProt:: Float:GetObjectDistanceFromPoint(objectid,Float:x,Float:y,Float:z){
 	new Float:px,Float:py,Float:pz;
 	GetObjectPos(objectid,px,py,pz);
 	return GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
 }
 
-stock Float:GetDistanceBetweenPlayers(playerid_a,playerid_b){
+Tryg3DProt:: Float:GetDistanceBetweenPlayers(playerid_a,playerid_b){
 	new Float:x,Float:y,Float:z;
 	GetPlayerPos(playerid_b,x,y,z);
 	return GetPlayerDistanceFromPoint(playerid_a,x,y,z);
 }
 
-stock Float:GetDistanceBetweenVehicles(vehicleid_a,vehicleid_b){
+Tryg3DProt:: Float:GetDistanceBetweenVehicles(vehicleid_a,vehicleid_b){
 	new Float:x,Float:y,Float:z;
 	GetVehiclePos(vehicleid_b,x,y,z);
 	return GetVehicleDistanceFromPoint(vehicleid_a,x,y,z);
 }
 
-stock Float:GetDistanceBetweenObjects(objectid_a,objectid_b){
+Tryg3DProt:: Float:GetDistanceBetweenObjects(objectid_a,objectid_b){
 	new Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB;
 	GetObjectPos(objectid_a,xA,yA,zA);
 	GetObjectPos(objectid_b,xB,yB,zB);
 	return GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
 }
 
-stock Float:GetPlayerActorDistance(playerid,actorid){
+Tryg3DProt:: Float:GetPlayerActorDistance(playerid,actorid){
 	new Float:x,Float:y,Float:z;
 	GetActorPos(actorid,x,y,z);
 	return GetPlayerDistanceFromPoint(playerid,x,y,z);
 }
 
-stock Float:GetPlayerVehicleDistance(playerid,vehicleid){
+Tryg3DProt:: Float:GetPlayerVehicleDistance(playerid,vehicleid){
 	new Float:x,Float:y,Float:z;
 	GetVehiclePos(vehicleid,x,y,z);
 	return GetPlayerDistanceFromPoint(playerid,x,y,z);
 }
 
-stock Float:GetPlayerObjectDistance(playerid,objectid){
+Tryg3DProt:: Float:GetPlayerObjectDistance(playerid,objectid){
 	new Float:x,Float:y,Float:z;
 	GetObjectPos(objectid,x,y,z);
 	return GetPlayerDistanceFromPoint(playerid,x,y,z);
 }
 
-stock SetPlayerLookAtPlayer(playerid,targetid,cut = CAMERA_CUT){
+Tryg3DProt:: SetPlayerLookAtPlayer(playerid,targetid,cut = CAMERA_CUT){
 	new Float:x,Float:y,Float:z;
 	GetPlayerPos(targetid,x,y,z);
 	SetPlayerCameraLookAt(playerid,x,y,z,cut);
 }
 
-stock Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true){
+Tryg3DProt:: Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true){
 	new Float:thp,Float:tarm;
 	GetPlayerArmour(targetid,tarm);
 	GetPlayerHealth(targetid,thp);
@@ -955,7 +961,7 @@ stock Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force
 }
 
 //Author: hesambia random.inc
-stock Float:RandomFloat(Float:min,Float:max,accuracy = 4){
+Tryg3DProt:: Float:RandomFloat(Float:min,Float:max,accuracy = 4){
 	if(min >= max) return 0.0;
 	if(min < 0.0 || max < 0.0) return 0.0;
 	if(accuracy < 1 || accuracy > 6) return 0.0;
@@ -971,37 +977,37 @@ stock Float:RandomFloat(Float:min,Float:max,accuracy = 4){
 	return random(floatround(max)-floatround(min))+min+(random(divValue)/divValue);
 }
 
-stock Float:GetVehicleSpeed(vehicleid){
+Tryg3DProt:: Float:GetVehicleSpeed(vehicleid){
 	new Float:x,Float:y,Float:z;
 	GetVehicleVelocity(vehicleid,x,y,z);
 	return floatmul(VectorSize(x,y,z),VEHICLE_SPEED_MULTIPLIER);
 }
 
 //Prototype function
-stock Float:GetPlayerSpeed(playerid){
+Tryg3DProt:: Float:GetPlayerSpeed(playerid){
 	new Float:x,Float:y,Float:z;
 	GetPlayerVelocity(playerid,x,y,z);
 	return VectorSize(x,y,z);
 }
 
-stock bool:IsPlayerSkydiving(playerid){
+Tryg3DProt:: bool:IsPlayerSkydiving(playerid){
 	new index = GetPlayerAnimationIndex(playerid);
 	return bool:(index >= 958 && index <= 962);
 }
 
-stock bool:IsPlayerUsingParachute(playerid){
+Tryg3DProt:: bool:IsPlayerUsingParachute(playerid){
 	new index = GetPlayerAnimationIndex(playerid);
 	return bool:(index >= 963 && index <= 979);
 }
 
-stock bool:IsPlayerAiming(playerid){
+Tryg3DProt:: bool:IsPlayerAiming(playerid){
 	switch(GetPlayerAnimationIndex(playerid)){
 		case 1160..1163,1167,1365,1643,1453,220: return true;
 	}
 	return false;
 }
 
-stock GetVehicleFlagsByModel(modelid){
+Tryg3DProt:: GetVehicleFlagsByModel(modelid){
 	new flag_value = 0;
 	switch(modelid){
 		case 425,548,417,487,497,563,469,447,488: flag_value += VF_AIRBORNE + VF_HELICOPTER;
@@ -1037,7 +1043,7 @@ stock GetVehicleFlagsByModel(modelid){
 	return flag_value;
 }
 
-stock CountPlayers(bool:isplayer=true,bool:isnpc=true){
+Tryg3DProt:: CountPlayers(bool:isplayer=true,bool:isnpc=true){
 	new cnt = 0;
 	Tryg3DForeach(i){
 		if(IsPlayerNPC(i)){
@@ -1049,7 +1055,7 @@ stock CountPlayers(bool:isplayer=true,bool:isnpc=true){
 	return cnt;
 }
 
-stock CountActors(){
+Tryg3DProt:: CountActors(){
 	new cnt = 0;
 	for(new i = 0, j = GetActorPoolSize(); i <= j; i++){
 		if(IsValidActor(i)){
@@ -1059,34 +1065,34 @@ stock CountActors(){
 	return cnt;
 }
 
-stock GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetRandomHit(Float:x,Float:y,Float:z,range,&Float:tx,&Float:ty,&Float:tz){
 	tx = x + (random(range * 2 + 1)-range);
 	ty = y + (random(range * 2 + 1)-range);
 	tz = z + (random(range * 2 + 1)-range);
 }
 
-stock CompRotation(rotation,&crotation=0){
+Tryg3DProt:: CompRotation(rotation,&crotation=0){
 	crotation = rotation;
 	while(crotation < 0) crotation += 360;
 	while(crotation >= 360) crotation -= 360;
 	return crotation;
 }
 
-stock Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0){
+Tryg3DProt:: Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0){
 	crotation = rotation;
 	while(crotation < 0.0) crotation += 360.0;
 	while(crotation >= 360.0) crotation -= 360.0;
 	return crotation;
 }
 
-stock DeCompRotation(rotation,&crotation=0){
+Tryg3DProt:: DeCompRotation(rotation,&crotation=0){
 	crotation = rotation;
 	while(crotation >= 180) crotation -= 360;
 	while(crotation < -180) crotation += 360;
 	return crotation;
 }
 
-stock Float:DeCompRotationFloat(Float:rotation,&Float:crotation=0.0){
+Tryg3DProt:: Float:DeCompRotationFloat(Float:rotation,&Float:crotation=0.0){
 	crotation = rotation;
 	while(crotation >= 180.0) crotation -= 360.0;
 	while(crotation < -180.0) crotation += 360.0;
@@ -1094,20 +1100,20 @@ stock Float:DeCompRotationFloat(Float:rotation,&Float:crotation=0.0){
 }
 
 //Old code version, Updated by Nero_3D
-stock GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty){
+Tryg3DProt:: GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty){
 	tx = x - (radius*floatsin(rz,degrees));
 	ty = y + (radius*floatcos(rz,degrees));
 }
 
 //new code version support 3D made by Abyss Morgan, Update by Nero_3D
-stock GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 	tx = x - (radius * floatcos(rx,degrees) * floatsin(rz,degrees));
 	ty = y + (radius * floatcos(rx,degrees) * floatcos(rz,degrees));
 	tz = z + (radius * floatsin(rx,degrees));
 }
 
 //GetXYInFrontOfPlayer
-stock Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius){
+Tryg3DProt:: Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius){
 	new Float:rz;
 	GetPlayerPos(playerid,tx,ty,rz);
 	GetPlayerFacingAngle(playerid,rz);
@@ -1118,14 +1124,14 @@ stock Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius){
 	return rz;
 }
 
-stock Float:GetPlayerCameraZAngle(playerid,&Float:rz=0.0){
+Tryg3DProt:: Float:GetPlayerCameraZAngle(playerid,&Float:rz=0.0){
 	new Float:mx,Float:my,Float:mz;
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
 	CompRotationFloat((atan2(my,mx)-90.0),rz);
 	return rz;
 }
 
-stock Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius){
+Tryg3DProt:: Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius){
 	new Float:x,Float:y,Float:rz;
 	GetPlayerCameraPos(playerid,x,y,rz);
 	GetPlayerCameraZAngle(playerid,rz);
@@ -1134,7 +1140,7 @@ stock Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius)
 }
 
 //new code version support 3D made by Abyss Morgan
-stock bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz){
+Tryg3DProt:: bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz){
 	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 	if(radius <= 0.0) return false;
 	CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
@@ -1143,7 +1149,7 @@ stock bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Floa
 }
 
 //random clock pos
-stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = INVALID_ROTATION){
+Tryg3DProt:: GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = INVALID_ROTATION){
 	new rand = random(360);
 	if(rz == INVALID_ROTATION) rz = rand;
 	GetPointInFront3D(x,y,z,0.0,rz,radius,tx,ty,tz);
@@ -1151,7 +1157,7 @@ stock GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty
 }
 
 //GetRandomPointInCircle by Crayder
-stock GetRandomPointInCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty){
+Tryg3DProt:: GetRandomPointInCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty){
 	//"float(random(1000001)) / 1000000.0" is RandomFloat for 0.0 - 1.0.
 	new Float:alfa = float(random(1000001))/1000000.0,
 		Float:beta = float(random(1000001))/1000000.0;
@@ -1163,17 +1169,17 @@ stock GetRandomPointInCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty){
 }
 
 //GetRandomPointInCylinderEx by Crayder
-stock GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 	GetRandomPointInCircle(x,y,radius,tx,ty);
 	tz = RandomFloat(0.0,floatsqroot(floatpower(minz-maxz,2)))+minz;
 }
 
-stock GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 	GetPointInFront3D(x,y,z,RandomFloat(0.0,360.0),RandomFloat(0.0,360.0),RandomFloat(0.0,radius),tx,ty,tz);
 }
 
 //GetRandomPointOnSphere by Neil Lamoureux
-stock GetRandomPointOnSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetRandomPointOnSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 	new Float:alfa = float(random(1000001))/1000000.0,
 		Float:beta = float(random(1000001))/1000000.0,
 		Float:theta = 2 * FLOAT_PI * alfa,
@@ -1183,30 +1189,30 @@ stock GetRandomPointOnSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Flo
 	tz = z + (radius * floatcos(phi,degrees));
 }
 
-stock GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty){
+Tryg3DProt:: GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty){
 	tx = random(floatround(floatsqroot(floatpower(minx-maxx,2)))+1)+minx;
 	ty = random(floatround(floatsqroot(floatpower(miny-maxy,2)))+1)+miny;
 }
 
-stock GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:tx,&Float:ty,&Float:tz){
 	tx = random(floatround(floatsqroot(floatpower(minx-maxx,2)))+1)+minx;
 	ty = random(floatround(floatsqroot(floatpower(miny-maxy,2)))+1)+miny;
 	tz = random(floatround(floatsqroot(floatpower(minz-maxz,2)))+1)+minz;
 }
 
-stock ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz){
+Tryg3DProt:: ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz){
 	rx = ShiftRadianToDegreeEx(rotation3);
 	ry = ShiftRadianToDegreeEx(rotation2);
 	rz = ShiftRadianToDegreeEx(rotation1);
 }
 
-stock ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3){
+Tryg3DProt:: ConvertToMTARaceRotation(Float:rx,Float:ry,Float:rz,&Float:rotation1,&Float:rotation2,&Float:rotation3){
 	rotation3 = ShiftDegreeToRadianEx(rx);
 	rotation2 = ShiftDegreeToRadianEx(ry);
 	rotation1 = ShiftDegreeToRadianEx(rz);
 }
 
-stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime=0){
+Tryg3DProt:: GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed,&rtime=0){
 	if(speed <= 0.0){
 		rtime = INVALID_MOVE_TIME;
 	} else {
@@ -1215,7 +1221,7 @@ stock GetMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:speed
 	return rtime;
 }
 
-stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
+Tryg3DProt:: GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:speed,rtime){
 	if(rtime/1000.0 <= 0.0){
 		speed = INVALID_MOVE_SPEED;
 	} else {
@@ -1224,14 +1230,14 @@ stock GetSpeedForMoveTime(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Fl
 }
 
 //QuatUpVector by Nero_3D
-stock GetQuatUpVector(Float:qw,Float:qx,Float:qy,Float:qz,&Float:vx,&Float:vy,&Float:vz){
+Tryg3DProt:: GetQuatUpVector(Float:qw,Float:qx,Float:qy,Float:qz,&Float:vx,&Float:vy,&Float:vz){
 	vx = 2.0*(qy*qw+qz*qx);
 	vy = 2.0*(qz*qy-qx*qw);
 	vz = 1.0-(2.0*(qx*qx+qy*qy));
 }
 
 //GetQuatFromRot by Nero_3D
-stock GetQuatFromRot(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
+Tryg3DProt:: GetQuatFromRot(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
 	rx /= 2.0;
 	ry /= 2.0;
 	rz /= 2.0;
@@ -1250,7 +1256,7 @@ stock GetQuatFromRot(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&F
 }
 
 //GetVehicleRotation Created by IllidanS4
-stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
+Tryg3DProt:: GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 	new Float:qw,Float:qx,Float:qy,Float:qz;
 	GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
 	CompRotationFloat(asin(2*qy*qz-2*qx*qw),rx);
@@ -1259,13 +1265,13 @@ stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
 }
 
 //GetVehicleUpVector by Nero_3D
-stock GetVehicleUpVector(vehicleid,&Float:vx,&Float:vy,&Float:vz){
+Tryg3DProt:: GetVehicleUpVector(vehicleid,&Float:vx,&Float:vy,&Float:vz){
 	new Float:qw,Float:qx,Float:qy,Float:qz;
 	GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
 	GetQuatUpVector(qw,-qx,-qy,-qz,vx,vy,vz);
 }
 
-stock GetVehicleUpPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z){
+Tryg3DProt:: GetVehicleUpPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z){
 	new Float:rx,Float:rz;
 	GetVehicleUpVector(vehicleid,x,y,z);
 	ShiftVectorToRotation(x,y,z,rx,rz);
@@ -1273,7 +1279,7 @@ stock GetVehicleUpPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z){
 	GetPointInFront3D(x,y,z,rx,rz,radius,x,y,z);
 }
 
-stock GetVehicleDownPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z){
+Tryg3DProt:: GetVehicleDownPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z){
 	new Float:rx,Float:rz;
 	GetVehicleUpVector(vehicleid,x,y,z);
 	ShiftVectorToRotation(x,y,z,rx,rz);
@@ -1281,7 +1287,7 @@ stock GetVehicleDownPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z){
 	GetPointInFront3D(x,y,z,CompRotationFloat(rx-180.0),rz,radius,x,y,z);
 }
 
-stock Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius){
+Tryg3DProt:: Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius){
 	new Float:rx,Float:ry,Float:rz,Float:x,Float:y;
 	GetVehiclePos(vehicleid,x,y,rz);
 	GetVehicleRotation(vehicleid,rx,ry,rz);
@@ -1289,40 +1295,40 @@ stock Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radiu
 	return rz;
 }
 
-stock GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
+Tryg3DProt:: GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
 	new Float:ry,Float:x,Float:y,Float:z;
 	GetVehiclePos(vehicleid,x,y,z);
 	GetVehicleRotation(vehicleid,rx,ry,rz);
 	GetPointInFront3D(x,y,z,rx,rz,radius,tx,ty,tz);
 }
 
-stock ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz){
+Tryg3DProt:: ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz){
 	CompRotationFloat(-(acos(vz)-90.0),rx);
 	CompRotationFloat((atan2(vy,vx)-90.0),rz);
 }
 
-stock GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
+Tryg3DProt:: GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
 	new Float:mx,Float:my,Float:mz;
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
 	CompRotationFloat(-(acos(mz)-90.0),rx);
 	CompRotationFloat((atan2(my,mx)-90.0),rz);
 }
 
-stock GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
+Tryg3DProt:: GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
 	new Float:x,Float:y,Float:z;
 	GetPlayerCameraPos(playerid,x,y,z);
 	GetPlayerCameraRotation(playerid,rx,rz);
 	GetPointInFront3D(x,y,z,rx,rz,radius,tx,ty,tz);
 }
 
-stock bool:IsPlayerLookAtSky(playerid){
+Tryg3DProt:: bool:IsPlayerLookAtSky(playerid){
 	new Float:rx,Float:rz;
 	GetPlayerCameraRotation(playerid,rx,rz);
 	if(rx > 0.0 && rx <= 90.0) return true;
 	return false;
 }
 
-stock GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty){
+Tryg3DProt:: GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty){
 	new Float:dist,Float:dest_dist,Float:rz;
 	dist = GetDistanceBetweenPoints2D(x1,y1,x2,y2);
 	dest_dist = (dist*(percent_size/100.0));
@@ -1330,7 +1336,7 @@ stock GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size
 	GetPointInFront2D(x1,y1,rz,dest_dist,tx,ty);
 }
 
-stock GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz){
 	new Float:dist,Float:dest_dist,Float:rx,Float:rz;
 	dist = GetDistanceBetweenPoints3D(x1,y1,z1,x2,y2,z2);
 	dest_dist = (dist*(percent_size/100.0));
@@ -1338,19 +1344,19 @@ stock GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,
 	GetPointInFront3D(x1,y1,z1,rx,rz,dest_dist,tx,ty,tz);
 }
 
-stock GetPointFor2Point2DEx(Float:x1,Float:y1,Float:x2,Float:y2,Float:distance,&Float:tx,&Float:ty){
+Tryg3DProt:: GetPointFor2Point2DEx(Float:x1,Float:y1,Float:x2,Float:y2,Float:distance,&Float:tx,&Float:ty){
 	new Float:rz;
 	GetRotationFor2Point2D(x1,y1,x2,y2,rz);
 	GetPointInFront2D(x1,y1,rz,distance,tx,ty);
 }
 
-stock GetPointFor2Point3DEx(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetPointFor2Point3DEx(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:distance,&Float:tx,&Float:ty,&Float:tz){
 	new Float:rx,Float:rz;
 	GetRotationFor2Point3D(x1,y1,z1,x2,y2,z2,rx,rz);
 	GetPointInFront3D(x1,y1,z1,rx,rz,distance,tx,ty,tz);
 }
 
-stock bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB){
+Tryg3DProt:: bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB){
 	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
 		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
 		Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
@@ -1358,7 +1364,7 @@ stock bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,
 	return false;
 }
 
-stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB){
+Tryg3DProt:: bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB){
 	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
 		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
 		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
@@ -1367,7 +1373,7 @@ stock bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,
 }
 
 //Orig: Greg James - gjames@NVIDIA.com SRC:http://www.flipcode.com/archives/Fast_Point-In-Cylinder_Test.shtml
-stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius){
+Tryg3DProt:: bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius){
 	if(radius <= 0.0) return false;
 	new Float:pdx,Float:pdy,Float:pdz,Float:dot,Float:dsq,Float:lengthsq;
 	
@@ -1390,18 +1396,18 @@ stock bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:
 	return false;
 }
 
-stock bool:IsPointInCube(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
+Tryg3DProt:: bool:IsPointInCube(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
 	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz)) return true;
 	return false;
 }
 
-stock bool:IsPointInRectangle(Float:x,Float:y,Float:minx,Float:miny,Float:maxx,Float:maxy){
+Tryg3DProt:: bool:IsPointInRectangle(Float:x,Float:y,Float:minx,Float:miny,Float:maxx,Float:maxy){
 	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy)) return true;
 	return false;
 }
 
 //Polygon Test by RyDeR SRC:http://forum.sa-mp.com/showpost.php?p=1154971&postcount=1871 (Updated)
-stock bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoints = sizeof(points)){
+Tryg3DProt:: bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoints = sizeof(points)){
 	new polygon_Sides = ((maxpoints - 2) / 2);
 	if((maxpoints - 2) & 0b1 || polygon_Sides < 3) return false;
 	
@@ -1421,18 +1427,18 @@ stock bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoints = sizeof(po
 	return bool:(cross_Total & 0x1);
 }
 
-stock bool:IsPointInCircle(Float:px,Float:py,Float:x,Float:y,Float:radius){
+Tryg3DProt:: bool:IsPointInCircle(Float:px,Float:py,Float:x,Float:y,Float:radius){
 	if(GetDistanceBetweenPoints2D(x,y,px,py) <= radius) return true;
 	return false;
 }
 
-stock bool:IsPointInSphere(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:radius){
+Tryg3DProt:: bool:IsPointInSphere(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:radius){
 	if(GetDistanceBetweenPoints3D(x,y,z,px,py,pz) <= radius) return true;
 	return false;
 }
 
 //Abyss Morgan Algorithm (False Ellipse Test 2D)
-stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
+Tryg3DProt:: bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
 	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
 		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
 		Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
@@ -1441,7 +1447,7 @@ stock bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,F
 }
 
 //Abyss Morgan Algorithm (False Ellipse Test 3D)
-stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+Tryg3DProt:: bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
 	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
 		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
 		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
@@ -1449,63 +1455,63 @@ stock bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,F
 	return false;
 }
 
-stock bool:IsPlayerInCircle(playerid,Float:x,Float:y,Float:radius){
+Tryg3DProt:: bool:IsPlayerInCircle(playerid,Float:x,Float:y,Float:radius){
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
 	return IsPointInCircle(px,py,x,y,radius);
 }
 
-stock bool:IsPlayerInCylinder(playerid,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius){
+Tryg3DProt:: bool:IsPlayerInCylinder(playerid,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius){
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
 	return IsPointInCylinder(px,py,pz,xA,yA,zA,xB,yB,zB,radius);
 }
 
-stock bool:IsPlayerInCylinderEx(playerid,Float:x,Float:y,Float:minz,Float:maxz,Float:radius){
+Tryg3DProt:: bool:IsPlayerInCylinderEx(playerid,Float:x,Float:y,Float:minz,Float:maxz,Float:radius){
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
 	return IsPointInCylinderEx(px,py,pz,x,y,minz,maxz,radius);
 }
 
-stock bool:IsPlayerInSphere(playerid,Float:x,Float:y,Float:z,Float:radius){
+Tryg3DProt:: bool:IsPlayerInSphere(playerid,Float:x,Float:y,Float:z,Float:radius){
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
 	return IsPointInSphere(px,py,pz,x,y,z,radius);
 }
 
-stock bool:IsPlayerInRectangle(playerid,Float:minx,Float:miny,Float:maxx,Float:maxy){
+Tryg3DProt:: bool:IsPlayerInRectangle(playerid,Float:minx,Float:miny,Float:maxx,Float:maxy){
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
 	return IsPointInRectangle(px,py,minx,miny,maxx,maxy);
 }
 
-stock bool:IsPlayerInCube(playerid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
+Tryg3DProt:: bool:IsPlayerInCube(playerid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
 	return IsPointInCube(px,py,pz,minx,miny,minz,maxx,maxy,maxz);
 }
 
-stock bool:IsPlayerInPolygon(playerid,Float:points[],maxpoints = sizeof(points)){
+Tryg3DProt:: bool:IsPlayerInPolygon(playerid,Float:points[],maxpoints = sizeof(points)){
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
 	return IsPointInPolygon(px,py,points,maxpoints);
 }
 
-stock bool:IsProbable(chance){
+Tryg3DProt:: bool:IsProbable(chance){
 	if(chance <= 0) return false;
 	if(chance >= 100) return true;
 	if((random(100)+1) <= chance) return true;
 	return false;
 }
 
-stock Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
+Tryg3DProt:: Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	new Float:mx,Float:my;
 	GetPlayerPos(playerid,mx,my,rz);
 	GetRotationFor2Point2D(mx,my,x,y,rz);
 	return rz;
 }
 
-stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
+Tryg3DProt:: Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	new Float:mx,Float:my;
 	GetPlayerPos(playerid,mx,my,rz);
 	GetRotationFor2Point2D(mx,my,x,y,rz);
@@ -1513,7 +1519,7 @@ stock Float:SetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	return rz;
 }
 
-stock Float:GetPlayerTargetPlayerAngle(playerid,targetid,&Float:rz=0.0){
+Tryg3DProt:: Float:GetPlayerTargetPlayerAngle(playerid,targetid,&Float:rz=0.0){
 	new Float:mx,Float:my,Float:x,Float:y;
 	GetPlayerPos(playerid,mx,my,rz);
 	GetPlayerPos(targetid,x,y,rz);
@@ -1521,7 +1527,7 @@ stock Float:GetPlayerTargetPlayerAngle(playerid,targetid,&Float:rz=0.0){
 	return rz;
 }
 
-stock Float:SetPlayerTargetPlayerAngle(playerid,targetid,&Float:rz=0.0){
+Tryg3DProt:: Float:SetPlayerTargetPlayerAngle(playerid,targetid,&Float:rz=0.0){
 	new Float:mx,Float:my,Float:x,Float:y;
 	GetPlayerPos(playerid,mx,my,rz);
 	GetPlayerPos(targetid,x,y,rz);
@@ -1530,19 +1536,19 @@ stock Float:SetPlayerTargetPlayerAngle(playerid,targetid,&Float:rz=0.0){
 	return rz;
 }
 
-stock GetObjectRotationQuat(objectid,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
+Tryg3DProt:: GetObjectRotationQuat(objectid,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
 	new Float:rx,Float:ry,Float:rz;
 	GetObjectRot(objectid,rx,ry,rz);
 	GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
 }
 
-stock GetObjectUpVector(objectid,&Float:vx,&Float:vy,&Float:vz){
+Tryg3DProt:: GetObjectUpVector(objectid,&Float:vx,&Float:vy,&Float:vz){
 	new Float:qw,Float:qx,Float:qy,Float:qz;
 	GetObjectRotationQuat(objectid,qw,qx,qy,qz);
 	GetQuatUpVector(qw,qx,qy,qz,vx,vy,vz);
 }
 
-stock GetObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
+Tryg3DProt:: GetObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 	new Float:rx,Float:rz;
 	GetObjectUpVector(objectid,x,y,z);
 	ShiftVectorToRotation(x,y,z,rx,rz);
@@ -1550,7 +1556,7 @@ stock GetObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 	GetPointInFront3D(x,y,z,rx,rz,radius,x,y,z);
 }
 
-stock GetObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
+Tryg3DProt:: GetObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 	new Float:rx,Float:rz;
 	GetObjectUpVector(objectid,x,y,z);
 	ShiftVectorToRotation(x,y,z,rx,rz);
@@ -1558,7 +1564,7 @@ stock GetObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 	GetPointInFront3D(x,y,z,CompRotationFloat(rx-180.0),rz,radius,x,y,z);
 }
 
-stock CreateDynamicExplosion(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,playerid = -1,Float:distance = 200.0){
+Tryg3DProt:: CreateDynamicExplosion(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,playerid = -1,Float:distance = 200.0){
 	if(playerid == -1){
 		Tryg3DForeach(i){
 			new Float:px, Float:py, Float:pz;
@@ -1586,7 +1592,7 @@ stock CreateDynamicExplosion(Float:x,Float:y,Float:z,type,Float:radius,worldid =
 	}
 }
 
-stock GetPlayerOrientationPos(playerid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz,isactor=false){
+Tryg3DProt:: GetPlayerOrientationPos(playerid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz,isactor=false){
 	new Float:x, Float:y, Float:z, Float:rz;
 	if(!isactor){
 		GetPlayerPos(playerid,x,y,z);
@@ -1617,7 +1623,7 @@ stock GetPlayerOrientationPos(playerid,element_orientation:orientation,Float:dis
 	}
 }
 
-stock GetVehicleOrientationPos(vehicleid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetVehicleOrientationPos(vehicleid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
 	new Float:x, Float:y, Float:z,
 		Float:rx, Float:ry, Float:rz;
 	GetVehiclePos(vehicleid,x,y,z);
@@ -1644,7 +1650,7 @@ stock GetVehicleOrientationPos(vehicleid,element_orientation:orientation,Float:d
 	}
 }
 
-stock GetObjectOrientationPos(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+Tryg3DProt:: GetObjectOrientationPos(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
 	new Float:x, Float:y, Float:z,
 		Float:rx, Float:ry, Float:rz;
 	GetObjectPos(objectid,x,y,z);
@@ -1671,7 +1677,7 @@ stock GetObjectOrientationPos(objectid,element_orientation:orientation,Float:dis
 	}
 }
 
-stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
+Tryg3DProt:: GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 	new Float:ox,Float:oy,Float:oz;
 	switch(hittype){
 		case BULLET_HIT_TYPE_VEHICLE, BULLET_HIT_TYPE_OBJECT, BULLET_HIT_TYPE_PLAYER_OBJECT, BULLET_HIT_TYPE_PLAYER: {
@@ -1680,7 +1686,7 @@ stock GetWeaponShotPos(playerid,hittype,&Float:fx,&Float:fy,&Float:fz){
 	}
 }
 
-stock bool:GetPlayerToPointVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+Tryg3DProt:: bool:GetPlayerToPointVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
 	new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
 	GetPlayerPos(playerid,px,py,pz);
 	if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
@@ -1692,7 +1698,7 @@ stock bool:GetPlayerToPointVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,
 	}
 }
 
-stock bool:GetObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+Tryg3DProt:: bool:GetObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
 	new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
 	GetObjectPos(objectid,px,py,pz);
 	if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
@@ -1704,7 +1710,7 @@ stock bool:GetObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,
 	}
 }
 
-stock bool:GetVehicleToPointVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+Tryg3DProt:: bool:GetVehicleToPointVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
 	new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
 	GetVehiclePos(vehicleid,px,py,pz);
 	if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
@@ -1716,7 +1722,7 @@ stock bool:GetVehicleToPointVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:v
 	}
 }
 
-stock bool:GetPointToPointVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+Tryg3DProt:: bool:GetPointToPointVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
 	new Float:rx,Float:rz;
 	if(GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz)){
 		ShiftRotationToVector(rx,rz,vx,vy,vz);
@@ -1727,17 +1733,17 @@ stock bool:GetPointToPointVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float
 	}
 }
 
-stock bool:IsVehicleInRangeOfPoint(vehicleid,Float:range,Float:x,Float:y,Float:z){
+Tryg3DProt:: bool:IsVehicleInRangeOfPoint(vehicleid,Float:range,Float:x,Float:y,Float:z){
 	if(GetVehicleDistanceFromPoint(vehicleid,x,y,z) <= range) return true;
 	return false;
 }
 
-stock bool:IsActorInRangeOfPoint(actorid,Float:range,Float:x,Float:y,Float:z){
+Tryg3DProt:: bool:IsActorInRangeOfPoint(actorid,Float:range,Float:x,Float:y,Float:z){
 	if(GetActorDistanceFromPoint(actorid,x,y,z) <= range) return true;
 	return false;
 }
 
-stock bool:IsObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Float:z){
+Tryg3DProt:: bool:IsObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Float:z){
 	if(GetObjectDistanceFromPoint(objectid,x,y,z) <= range) return true;
 	return false;
 }
@@ -1764,7 +1770,7 @@ enum tryg3d_eulermode {
 const tryg3d_eulermode: tryg3d_euler_default = euler_zxy;
 
 //GetRotationMatrixFromEuler by Nero_3D
-stock Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,tryg3d_eulermode:mode=tryg3d_euler_default){
+Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,tryg3d_eulermode:mode=tryg3d_euler_default){
 	new // could be done with matrix multiplication but would be slower
 		Float:cosX = floatcos(rx,degrees),
 		Float:cosY = floatcos(ry,degrees),
@@ -1912,7 +1918,7 @@ stock Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,
 }
 
 //MatrixRotate by Nero_3D
-stock Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&Float:y,&Float:z){
+Tryg3DProt:: Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&Float:y,&Float:z){
 	x += oX * matrix[0][0] + oY * matrix[0][1] + oZ * matrix[0][2]; // M * v | v = [oX, oY, oZ]
 	y += oX * matrix[1][0] + oY * matrix[1][1] + oZ * matrix[1][2];
 	z += oX * matrix[2][0] + oY * matrix[2][1] + oZ * matrix[2][2];
@@ -1921,7 +1927,7 @@ stock Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&
 
 
 //Original code by Crayder
-stock ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
+Tryg3DProt:: ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
 	//Get difference
 	eX -= sX;
 	eY -= sY;
@@ -1933,7 +1939,7 @@ stock ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Fl
 }
 
 //Original code by Crayder
-stock ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
+Tryg3DProt:: ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
 	//Get difference
 	eX -= sX;
 	eY -= sY;
@@ -1951,7 +1957,7 @@ stock ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float
 	Tryg3D_MatrixRotate(matrix,eX,eY,eZ,nX,nY,nZ);
 }
 
-stock GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+Tryg3DProt:: GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
 	if(return_vector){
@@ -1961,7 +1967,7 @@ stock GetPlayerRotatedVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Floa
 	}
 }
 
-stock GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+Tryg3DProt:: GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
 	new Float:px,Float:py,Float:pz;
 	GetObjectPos(objectid,px,py,pz);
 	if(return_vector){
@@ -1971,7 +1977,7 @@ stock GetObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Floa
 	}
 }
 
-stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
 	new Float:px,Float:py,Float:pz;
 	GetVehiclePos(vehicleid,px,py,pz);
 	if(return_vector){
@@ -1992,19 +1998,19 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	#define Tryg3D_GetStreamerVersion()					(Streamer_IncludeFileVersion)
 	#define Tryg3D_GetValidStreamerVersion()			(Tryg3D_StreamerVersion)
 	
-	stock bool:Tryg3D_IsValidStreamer(version){
+	Tryg3DProt:: bool:Tryg3D_IsValidStreamer(version){
 		if(Tryg3D_GetStreamerVersion() < version) return false;
 		return true;
 	}
 
-	stock Tryg3D_GetStreamerVersionName(name[], value = TRYG3D_GET_STREAMER_VERSION, maxdest = sizeof name){
+	Tryg3DProt:: Tryg3D_GetStreamerVersionName(name[], value = TRYG3D_GET_STREAMER_VERSION, maxdest = sizeof name){
 		if(value == TRYG3D_GET_STREAMER_VERSION) value = Tryg3D_GetStreamerVersion();
 		new ver_str[10];
 		format(ver_str,sizeof(ver_str),"%06x",value);
 		format(name,maxdest,"%d.%d.%dr%d",(ver_str[0]-48),(ver_str[1]-48),(ver_str[2]-48),(((ver_str[3]-48)*100) + ((ver_str[4]-48)*10) + (ver_str[5]-48)));
 	}
 
-	stock Tryg3D_CheckStreamerVersion(){
+	Tryg3DProt:: Tryg3D_CheckStreamerVersion(){
 		if(!Tryg3D_IsValidStreamer(Tryg3D_GetValidStreamerVersion())){
 			T3D:Tryg3DStreamerExam = false;
 			new str1[32], str2[32];
@@ -2019,19 +2025,19 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 	
-	stock GetDynamicObjectRotationQuat(objectid,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
+	Tryg3DProt:: GetDynamicObjectRotationQuat(objectid,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
 		new Float:rx,Float:ry,Float:rz;
 		GetDynamicObjectRot(objectid,rx,ry,rz);
 		GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
 	}
 
-	stock GetDynamicObjectUpVector(objectid,&Float:vx,&Float:vy,&Float:vz){
+	Tryg3DProt:: GetDynamicObjectUpVector(objectid,&Float:vx,&Float:vy,&Float:vz){
 		new Float:qw,Float:qx,Float:qy,Float:qz;
 		GetDynamicObjectRotationQuat(objectid,qw,qx,qy,qz);
 		GetQuatUpVector(qw,qx,qy,qz,vx,vy,vz);
 	}
 
-	stock GetDynamicObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
+	Tryg3DProt:: GetDynamicObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 		new Float:rx,Float:rz;
 		GetDynamicObjectUpVector(objectid,x,y,z);
 		ShiftVectorToRotation(x,y,z,rx,rz);
@@ -2039,7 +2045,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		GetPointInFront3D(x,y,z,rx,rz,radius,x,y,z);
 	}
 
-	stock GetDynamicObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
+	Tryg3DProt:: GetDynamicObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 		new Float:rx,Float:rz;
 		GetDynamicObjectUpVector(objectid,x,y,z);
 		ShiftVectorToRotation(x,y,z,rx,rz);
@@ -2047,7 +2053,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		GetPointInFront3D(x,y,z,CompRotationFloat(rx-180.0),rz,radius,x,y,z);
 	}
 
-	stock GetDynamicObjectOrientationPos(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+	Tryg3DProt:: GetDynamicObjectOrientationPos(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
 		new Float:x, Float:y, Float:z,
 			Float:rx, Float:ry, Float:rz;
 		GetDynamicObjectPos(objectid,x,y,z);
@@ -2074,20 +2080,20 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 	
-	stock Float:GetDistanceBetweenDynamicObject(objectid_a,objectid_b){
+	Tryg3DProt:: Float:GetDistanceBetweenDynamicObject(objectid_a,objectid_b){
 		new Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB;
 		GetDynamicObjectPos(objectid_a,xA,yA,zA);
 		GetDynamicObjectPos(objectid_b,xB,yB,zB);
 		return GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
 	}
 	
-	stock Float:GetPlayerDynamicObjectDistance(playerid,objectid){
+	Tryg3DProt:: Float:GetPlayerDynamicObjectDistance(playerid,objectid){
 		new Float:x,Float:y,Float:z;
 		GetDynamicObjectPos(objectid,x,y,z);
 		return GetPlayerDistanceFromPoint(playerid,x,y,z);
 	}
 	
-	stock bool:GetDynamicObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	Tryg3DProt:: bool:GetDynamicObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
 		new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
 		GetDynamicObjectPos(objectid,px,py,pz);
 		if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
@@ -2099,7 +2105,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 	
-	stock GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+	Tryg3DProt:: GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
 		new Float:px,Float:py,Float:pz;
 		GetDynamicObjectPos(objectid,px,py,pz);
 		if(return_vector){
@@ -2109,13 +2115,13 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 	
-	stock Float:GetDynamicObjectDistFromPoint(objectid,Float:x,Float:y,Float:z){
+	Tryg3DProt:: Float:GetDynamicObjectDistFromPoint(objectid,Float:x,Float:y,Float:z){
 		new Float:px,Float:py,Float:pz;
 		GetDynamicObjectPos(objectid,px,py,pz);
 		return GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
 	}
 
-	stock bool:IsDynamicObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Float:z){
+	Tryg3DProt:: bool:IsDynamicObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Float:z){
 		if(GetDynamicObjectDistFromPoint(objectid,x,y,z) <= range) return true;
 		return false;
 	}
@@ -2126,7 +2132,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 
 //MapAndreas Functions
 #if (defined Tryg3D_MapAndreas || defined Tryg3D_ColAndreas)
-	stock GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry){
+	Tryg3DProt:: GetGroundRotation(Float:x,Float:y,Float:size,&Float:rx,&Float:ry){
 		new Float:tpx1,Float:tpy1,Float:tpz1,
 			Float:tpx2,Float:tpy2,Float:tpz2,
 			Float:tmp;
@@ -2154,17 +2160,17 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	
 	#define IsCollisionFlag(%0,%1)						((%0) & (%1))
 
-	stock bool:IsValidColAndreas(version){
+	Tryg3DProt:: bool:IsValidColAndreas(version){
 		if(GetColAndreasVersion() < version) return false;
 		return true;
 	}
 
-	stock GetColAndreasVersionName(name[], value = GET_COLANDREAS_VERSION, maxdest = sizeof name){
+	Tryg3DProt:: GetColAndreasVersionName(name[], value = GET_COLANDREAS_VERSION, maxdest = sizeof name){
 		if(value == GET_COLANDREAS_VERSION) value = GetColAndreasVersion();
 		format(name,maxdest,"%d.%d.%d",(value / 10000),((value % 10000) / 100),((value % 10000) % 100));
 	}
 
-	stock CheckColAndreasVersion(){
+	Tryg3DProt:: CheckColAndreasVersion(){
 		if(!IsValidColAndreas(GetValidColAndreasVersion())){
 			new str1[32], str2[32];
 			GetColAndreasVersionName(str1,GetColAndreasVersion());
@@ -2176,14 +2182,14 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 	
-	stock MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
+	Tryg3DProt:: MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
 		CA_RayCastLine(StartX,StartY,StartZ,EndX,EndY,EndZ,x,y,z);
 		if(x == 0.0) x = EndX;
 		if(y == 0.0) y = EndY;
 		if(z == 0.0) z = EndZ;
 	}
 	
-	stock bool:MovePointColCutLine(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
+	Tryg3DProt:: bool:MovePointColCutLine(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
 		CA_RayCastLine(sX,sY,sZ,eX,eY,eZ,x,y,z);
 		if(x == 0.0) x = eX;
@@ -2197,7 +2203,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return true;
 	}
 
-	stock bool:MovePointColCutLineEx(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
+	Tryg3DProt:: bool:MovePointColCutLineEx(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
 		CA_RayCastLine(sX,sY,sZ,eX,eY,eZ,x,y,z);
 		if(x == 0.0) x = eX;
@@ -2216,7 +2222,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	}
 	
 	//GetPointInFront3D (ColAndreas)
-	stock GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+	Tryg3DProt:: GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 		tx = x - (radius * floatcos(rx,degrees) * floatsin(rz,degrees));
 		ty = y + (radius * floatcos(rx,degrees) * floatcos(rz,degrees));
 		tz = z + (radius * floatsin(rx,degrees));
@@ -2224,7 +2230,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	}
 	
 	//GetPointInFrontOfPlayer (ColAndreas)
-	stock Float:GetPointInFrontOfPlayerCol(playerid,&Float:tx,&Float:ty,Float:radius){
+	Tryg3DProt:: Float:GetPointInFrontOfPlayerCol(playerid,&Float:tx,&Float:ty,Float:radius){
 		new Float:rz,Float:z;
 		GetPlayerPos(playerid,tx,ty,z);
 		GetPlayerFacingAngle(playerid,rz);
@@ -2236,7 +2242,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	}
 
 	//GetPointInFrontOfCamera2D (ColAndreas)
-	stock Float:GetPointInFrontOfCamera2DCol(playerid,&Float:tx,&Float:ty,Float:radius){
+	Tryg3DProt:: Float:GetPointInFrontOfCamera2DCol(playerid,&Float:tx,&Float:ty,Float:radius){
 		new Float:x,Float:y,Float:z,Float:rz;
 		GetPlayerCameraPos(playerid,x,y,z);
 		GetPlayerCameraZAngle(playerid,rz);
@@ -2245,7 +2251,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	}
 
 	//GetPointInFrontOfCamera3D (ColAndreas)
-	stock GetPointInFrontOfCamera3DCol(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
+	Tryg3DProt:: GetPointInFrontOfCamera3DCol(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
 		new Float:x,Float:y,Float:z;
 		GetPlayerCameraPos(playerid,x,y,z);
 		GetPlayerCameraRotation(playerid,rx,rz);
@@ -2254,7 +2260,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	
 	
 	//GetPointInFrontOfVehicle2D (ColAndreas)
-	stock Float:GetPointInFrontOfVehicle2DCol(vehicleid,&Float:tx,&Float:ty,Float:radius){
+	Tryg3DProt:: Float:GetPointInFrontOfVehicle2DCol(vehicleid,&Float:tx,&Float:ty,Float:radius){
 		new Float:rx,Float:ry,Float:rz,Float:x,Float:y,Float:z;
 		GetVehiclePos(vehicleid,x,y,z);
 		GetVehicleRotation(vehicleid,rx,ry,rz);
@@ -2263,26 +2269,26 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	}
 
 	//GetPointInFrontOfVehicle3D (ColAndreas)
-	stock GetPointInFrontOfVehicle3DCol(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
+	Tryg3DProt:: GetPointInFrontOfVehicle3DCol(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
 		new Float:ry,Float:x,Float:y,Float:z;
 		GetVehiclePos(vehicleid,x,y,z);
 		GetVehicleRotation(vehicleid,rx,ry,rz);
 		GetPointInFront3DCol(x,y,z,rx,rz,radius,tx,ty,tz);
 	}
 
-	stock Float:UndergroundFindZ(Float:x,Float:y,&Float:z=0.0){
+	Tryg3DProt:: Float:UndergroundFindZ(Float:x,Float:y,&Float:z=0.0){
 		z = 0.0;
 		CA_RayCastLine(x,y,-0.002,x,y,-100.0,x,y,z);
 		return z;
 	}
 
-	stock Float:InteriorFindZ(Float:px,Float:py,Float:pz=1000.0,Float:size=2.0,&Float:z=0.0){
+	Tryg3DProt:: Float:InteriorFindZ(Float:px,Float:py,Float:pz=1000.0,Float:size=2.0,&Float:z=0.0){
 		z = 0.0;
 		CA_RayCastLine(px,py,pz+size,px,py,pz-100.0,px,py,z);
 		return z;
 	}
 
-	stock bool:IsPointInWater(Float:x,Float:y,Float:z=0.0){
+	Tryg3DProt:: bool:IsPointInWater(Float:x,Float:y,Float:z=0.0){
 		if(z > 0.0) return false;
 		new Float:tmpzA, Float:tmpzB;
 		Tryg3DMapAndreasFindZ(x,y,tmpzA);
@@ -2291,19 +2297,19 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return false;
 	}
 
-	stock bool:IsPointInUnderwater(Float:x,Float:y,Float:z){
+	Tryg3DProt:: bool:IsPointInUnderwater(Float:x,Float:y,Float:z){
 		if(IsPointInWater(x,y,z) && (z < -1.0)) return true;
 		return false;
 	}
 	
-	stock bool:IsPointInUnderground(Float:x,Float:y,Float:z){
+	Tryg3DProt:: bool:IsPointInUnderground(Float:x,Float:y,Float:z){
 		new Float:tmpzA;
 		Tryg3DMapAndreasFindZ(x,y,tmpzA);
 		if(z < tmpzA && !IsPointInWater(x,y,z)) return true;
 		return false;
 	}
 
-	stock bool:IsPointInAir(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2){
+	Tryg3DProt:: bool:IsPointInAir(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2){
 		new Float:tmpzA;
 		if(interior){
 			InteriorFindZ(x,y,z,2.0,tmpzA);
@@ -2314,7 +2320,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return false;
 	}
 
-	stock bool:IsPointInGround(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2){
+	Tryg3DProt:: bool:IsPointInGround(Float:x,Float:y,Float:z,bool:interior=false,Float:max_distance=2.2){
 		if(z <= 0.0) return false;
 		new Float:tmpzA;
 		if(interior){
@@ -2326,7 +2332,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return false;
 	}
 	
-	stock GetPlayerOrientationPosCol(playerid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz,isactor=false){
+	Tryg3DProt:: GetPlayerOrientationPosCol(playerid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz,isactor=false){
 		new Float:x, Float:y, Float:z, Float:rz;
 		if(!isactor){
 			GetPlayerPos(playerid,x,y,z);
@@ -2357,7 +2363,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 
-	stock GetVehicleOrientationPosCol(vehicleid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+	Tryg3DProt:: GetVehicleOrientationPosCol(vehicleid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
 		new Float:x, Float:y, Float:z,
 			Float:rx, Float:ry, Float:rz;
 		GetVehiclePos(vehicleid,x,y,z);
@@ -2386,7 +2392,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 	
-	stock GetObjectOrientationPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+	Tryg3DProt:: GetObjectOrientationPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
 		new Float:x, Float:y, Float:z,
 			Float:rx, Float:ry, Float:rz;
 		GetObjectPos(objectid,x,y,z);
@@ -2417,7 +2423,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 
 	//Streamer + Colandreas Functions
 	#if defined Tryg3D_Streamer
-		stock GetDynamicObjectOrientPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+		Tryg3DProt:: GetDynamicObjectOrientPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
 			new Float:x, Float:y, Float:z,
 				Float:rx, Float:ry, Float:rz;
 			GetDynamicObjectPos(objectid,x,y,z);
@@ -2447,7 +2453,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	#endif
 	
-	stock GetPlayerCollisionFlags(playerid){
+	Tryg3DProt:: GetPlayerCollisionFlags(playerid){
 		new Float:x, Float:y, Float:z, bool:isinterior = false, flag_value;
 		GetPlayerPos(playerid,x,y,z);
 		if(GetPlayerInterior(playerid) != 0){
@@ -2471,7 +2477,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return flag_value;
 	}
 	
-	stock bool:IsBetweenPlayersIsWall(playerid,targetid){
+	Tryg3DProt:: bool:IsBetweenPlayersIsWall(playerid,targetid){
 		new Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:xC,Float:yC,Float:zC;
 		GetPlayerPos(playerid,xA,yA,zA);
 		GetPlayerPos(targetid,xB,yB,zB);
@@ -2480,7 +2486,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return true;
 	}
 	
-	stock bool:IsBetweenPlayerToPointIsWall(playerid,Float:x,Float:y,Float:z){
+	Tryg3DProt:: bool:IsBetweenPlayerToPointIsWall(playerid,Float:x,Float:y,Float:z){
 		new Float:xA,Float:yA,Float:zA,Float:xC,Float:yC,Float:zC;
 		GetPlayerPos(playerid,xA,yA,zA);
 		CA_RayCastLine(xA,yA,zA,x,y,z,xC,yC,zC);
@@ -2488,23 +2494,43 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return true;
 	}
 	
-	stock bool:IsPlayerOnPlayerScreen(playerid,targetid){
+	Tryg3DProt:: bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS){
 		if(GetDistanceBetweenPlayers(playerid,targetid) > 300.0) return false;
-		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:rx,Float:rz,Float:trx,Float:trz,
+		
+		vertical /= 2.0;
+		horizontal /= 2.0;
+		
+		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:prx,Float:prz,Float:trx,Float:trz,
 			Float:xC,Float:yC,Float:zC;
 		GetPlayerCameraPos(playerid,x,y,z);
-		GetPlayerCameraRotation(playerid,rx,rz); 
+		GetPlayerCameraRotation(playerid,prx,prz);
+		if(rx != INVALID_ROTATION) prx = rx;
+		if(rz != INVALID_ROTATION) prz = rz;
 		GetPlayerPos(targetid,tx,ty,tz);
 		
 		CA_RayCastLine(x,y,z,tx,ty,tz,xC,yC,zC);
-		if(xC == 0.0 || yC == 0.0 || zC == 0.0){
-
-		} else {
-			return false;
-		}
+		if(!(xC == 0.0 || yC == 0.0 || zC == 0.0)) return false;
 		
 		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
-		if((rz-35.0 <= trz <= rz+35.0) && (rx-27.5 <= trx <= rx+27.5)) return true;
+		if((prz-horizontal <= trz <= prz+horizontal) && (prx-vertical <= trx <= prx+vertical)) return true;
+		return false;
+	}
+	
+	Tryg3DProt:: bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS){
+		if(GetPlayerDistanceFromPoint(targetid,x,y,z) > 300.0) return false;
+		
+		vertical /= 2.0;
+		horizontal /= 2.0;
+		
+		new Float:tx,Float:ty,Float:tz,Float:trx,Float:trz,
+			Float:xC,Float:yC,Float:zC;
+		GetPlayerPos(targetid,tx,ty,tz);
+		
+		CA_RayCastLine(x,y,z,tx,ty,tz,xC,yC,zC);
+		if(!(xC == 0.0 || yC == 0.0 || zC == 0.0)) return false;
+		
+		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
+		if((rz-horizontal <= trz <= rz+horizontal) && (rx-vertical <= trx <= rx+vertical)) return true;
 		return false;
 	}
 	
@@ -2515,7 +2541,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	#define GetPointInFrontOnGround(%0,%1,%2,%3,%4,%5,%6,%7,%8) GetPointInFront3DCol((%0),(%1),(%2),(%3),(%4),(%8),(%5),(%6),(%7))
 
 #elseif defined Tryg3D_MapAndreas
-	stock GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance){
+	Tryg3DProt:: GetPointInFrontOnGround(Float:x,Float:y,Float:z,Float:rx,Float:rz,&Float:tx,&Float:ty,&Float:tz,Float:max_distance){
 		new Float:tmpz;
 		Tryg3DMapAndreasFindZ(x,y,tmpz);
 		new Float:radius = GetDistanceBetweenPoints3D(x,y,z,x,y,tmpz),
@@ -2530,14 +2556,12 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 			dist = max_distance;
 		}
 		GetPointInFront3D(x,y,z,rx,rz,dist,tx,ty,tz);
-		if((dist > max_distance) || (rx >= 0.0 && rx <= 180.0)){
-
-		} else {
+		if(!((dist > max_distance) || (rx >= 0.0 && rx <= 180.0))){
 			Tryg3DMapAndreasFindZ(tx,ty,tz);
 		}
 	}
 	
-	stock bool:IsPointInWater(Float:x,Float:y,Float:z=0.0){
+	Tryg3DProt:: bool:IsPointInWater(Float:x,Float:y,Float:z=0.0){
 		if(z > 0.0) return false;
 		new Float:tmpz;
 		Tryg3DMapAndreasFindZ(x,y,tmpz);
@@ -2552,12 +2576,12 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 
 	#define GetPlayerHydraReactorRX(%0) 				CompRotationFloat((GetPlayerHydraReactorAngle(%0)/55.5555555))
 	
-	stock bool:IsPlayerHydraReactorBoost(playerid){
+	Tryg3DProt:: bool:IsPlayerHydraReactorBoost(playerid){
 		if(GetPlayerHydraReactorAngle(playerid) == 0) return true;
 		return false;
 	}
 	
-	stock GetPlayerRotation(playerid,&Float:rx,&Float:ry,&Float:rz){
+	Tryg3DProt:: GetPlayerRotation(playerid,&Float:rx,&Float:ry,&Float:rz){
 		new Float:qw,Float:qx,Float:qy,Float:qz;
 		GetPlayerRotationQuat(playerid,qw,qx,qy,qz);
 		CompRotationFloat(asin(2*qy*qz-2*qx*qw),rx);
@@ -2569,7 +2593,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 	#if defined ENABLE_3D_TRYG_TIMELINE_SYNC
 		#define GetPlayerTimeline(%0)					GetPVarInt((%0),"PlayerTimeline")
 
-		stock UpdatePlayerTimeline(playerid){
+		Tryg3DProt:: UpdatePlayerTimeline(playerid){
 			new tline = GetPlayerTimeline(playerid), pskin = GetPlayerSkin(playerid), pcolor = GetPlayerColor(playerid),
 				Float:px, Float:py, Float:pz;
 			GetPlayerPos(playerid,px,py,pz);
@@ -2597,22 +2621,22 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 			}
 		}
 
-		stock SetPlayerTimeline(playerid,timeline){
+		Tryg3DProt:: SetPlayerTimeline(playerid,timeline){
 			SetPVarInt(playerid,"PlayerTimeline",timeline);
 			UpdatePlayerTimeline(playerid);
 		}
 
-		stock GetPlayerPos4D(playerid,&Float:x,&Float:y,&Float:z,&timeline){
+		Tryg3DProt:: GetPlayerPos4D(playerid,&Float:x,&Float:y,&Float:z,&timeline){
 			GetPlayerPos(playerid,x,y,z);
 			timeline = GetPlayerTimeline(playerid);
 		}
 
-		stock SetPlayerPos4D(playerid,Float:x,Float:y,Float:z,timeline=0){
+		Tryg3DProt:: SetPlayerPos4D(playerid,Float:x,Float:y,Float:z,timeline=0){
 			SetPlayerPos(playerid,x,y,z);
 			if(GetPlayerTimeline(playerid) != timeline) SetPlayerTimeline(playerid,timeline);
 		}
 		
-		stock CreateDynamicExplosion4D(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,timeline = -1,playerid = -1,Float:distance = 200.0){
+		Tryg3DProt:: CreateDynamicExplosion4D(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,timeline = -1,playerid = -1,Float:distance = 200.0){
 			if(playerid == -1){
 				Tryg3DForeach(i){
 					new Float:px, Float:py, Float:pz;
@@ -2719,7 +2743,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 #endif
 
 #if (defined Tryg3D_MapAndreas || defined Tryg3D_ColAndreas)
-	stock bool:IsPointInWaterFrontOfPlayer(playerid,Float:radius){
+	Tryg3DProt:: bool:IsPointInWaterFrontOfPlayer(playerid,Float:radius){
 		new Float:x, Float:y, Float:z;
 		GetPlayerPos(playerid,x,y,z);
 		GetPointInFrontOfPlayer(playerid,x,y,radius);
@@ -2736,13 +2760,13 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 
 #if defined Tryg3D_FCNPC
 	
-	stock Float:GetNPCSpeed(npcid){
+	Tryg3DProt:: Float:GetNPCSpeed(npcid){
 		new Float:x,Float:y,Float:z;
 		FCNPC_GetVelocity(npcid,x,y,z);
 		return VectorSize(x,y,z);
 	}
 
-	stock Float:GetPointInFrontOfNPC(npcid,&Float:tx,&Float:ty,Float:radius){
+	Tryg3DProt:: Float:GetPointInFrontOfNPC(npcid,&Float:tx,&Float:ty,Float:radius){
 		new Float:rz;
 		FCNPC_GetPosition(npcid,tx,ty,rz);
 		rz = FCNPC_GetAngle(npcid);
@@ -2753,61 +2777,61 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return rz;
 	}
 
-	stock bool:IsNPCInCircle(npcid,Float:x,Float:y,Float:radius){
+	Tryg3DProt:: bool:IsNPCInCircle(npcid,Float:x,Float:y,Float:radius){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		return IsPointInCircle(px,py,x,y,radius);
 	}
 
-	stock bool:IsNPCInCylinder(npcid,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius){
+	Tryg3DProt:: bool:IsNPCInCylinder(npcid,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		return IsPointInCylinder(px,py,pz,xA,yA,zA,xB,yB,zB,radius);
 	}
 
-	stock bool:IsNPCInCylinderEx(npcid,Float:x,Float:y,Float:minz,Float:maxz,Float:radius){
+	Tryg3DProt:: bool:IsNPCInCylinderEx(npcid,Float:x,Float:y,Float:minz,Float:maxz,Float:radius){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		return IsPointInCylinderEx(px,py,pz,x,y,minz,maxz,radius);
 	}
 
-	stock bool:IsNPCInSphere(npcid,Float:x,Float:y,Float:z,Float:radius){
+	Tryg3DProt:: bool:IsNPCInSphere(npcid,Float:x,Float:y,Float:z,Float:radius){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		return IsPointInSphere(px,py,pz,x,y,z,radius);
 	}
 
-	stock bool:IsNPCInRectangle(npcid,Float:minx,Float:miny,Float:maxx,Float:maxy){
+	Tryg3DProt:: bool:IsNPCInRectangle(npcid,Float:minx,Float:miny,Float:maxx,Float:maxy){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		return IsPointInRectangle(px,py,minx,miny,maxx,maxy);
 	}
 
-	stock bool:IsNPCInCube(npcid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
+	Tryg3DProt:: bool:IsNPCInCube(npcid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		return IsPointInCube(px,py,pz,minx,miny,minz,maxx,maxy,maxz);
 	}
 
-	stock bool:IsNPCInPolygon(npcid,Float:points[],maxpoints = sizeof(points)){
+	Tryg3DProt:: bool:IsNPCInPolygon(npcid,Float:points[],maxpoints = sizeof(points)){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		return IsPointInPolygon(px,py,points,maxpoints);
 	}
 
-	stock Float:GetNPCDistanceFromPoint(npcid,Float:x,Float:y,Float:z){
+	Tryg3DProt:: Float:GetNPCDistanceFromPoint(npcid,Float:x,Float:y,Float:z){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		return GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
 	}
 
-	stock Float:GetDistanceBetweenNPCs(npcid_a,npcid_b){
+	Tryg3DProt:: Float:GetDistanceBetweenNPCs(npcid_a,npcid_b){
 		new Float:x,Float:y,Float:z;
 		FCNPC_GetPosition(npcid_b,x,y,z);
 		return GetNPCDistanceFromPoint(npcid_a,x,y,z);
 	}
 
-	stock GetNPCOrientationPos(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+	Tryg3DProt:: GetNPCOrientationPos(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
 		new Float:x,Float:y,Float:z,Float:rz;
 
 		FCNPC_GetPosition(npcid,x,y,z);
@@ -2835,14 +2859,14 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 	
-	stock Float:GetNPCTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0){
+	Tryg3DProt:: Float:GetNPCTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0){
 		new Float:mx,Float:my;
 		FCNPC_GetPosition(npcid,mx,my,rz);
 		GetRotationFor2Point2D(mx,my,x,y,rz);
 		return rz;
 	}
 
-	stock Float:SetNPCTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0){
+	Tryg3DProt:: Float:SetNPCTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0){
 		new Float:mx,Float:my;
 		FCNPC_GetPosition(npcid,mx,my,rz);
 		GetRotationFor2Point2D(mx,my,x,y,rz);
@@ -2850,7 +2874,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return rz;
 	}
 
-	stock Float:GetNPCTargetNPCAngle(npcid,targetid,&Float:rz=0.0){
+	Tryg3DProt:: Float:GetNPCTargetNPCAngle(npcid,targetid,&Float:rz=0.0){
 		new Float:mx,Float:my,Float:x,Float:y;
 		FCNPC_GetPosition(npcid,mx,my,rz);
 		FCNPC_GetPosition(targetid,x,y,rz);
@@ -2858,7 +2882,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return rz;
 	}
 
-	stock Float:SetNPCTargetNPCAngle(npcid,targetid,&Float:rz=0.0){
+	Tryg3DProt:: Float:SetNPCTargetNPCAngle(npcid,targetid,&Float:rz=0.0){
 		new Float:mx,Float:my,Float:x,Float:y;
 		FCNPC_GetPosition(npcid,mx,my,rz);
 		FCNPC_GetPosition(targetid,x,y,rz);
@@ -2867,25 +2891,25 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return rz;
 	}
 		
-	stock Float:GetNPCActorDistance(npcid,actorid){
+	Tryg3DProt:: Float:GetNPCActorDistance(npcid,actorid){
 		new Float:x,Float:y,Float:z;
 		GetActorPos(actorid,x,y,z);
 		return GetNPCDistanceFromPoint(npcid,x,y,z);
 	}
 
-	stock Float:GetNPCVehicleDistance(npcid,vehicleid){
+	Tryg3DProt:: Float:GetNPCVehicleDistance(npcid,vehicleid){
 		new Float:x,Float:y,Float:z;
 		GetVehiclePos(vehicleid,x,y,z);
 		return GetNPCDistanceFromPoint(npcid,x,y,z);
 	}
 
-	stock Float:GetNPCObjectDistance(npcid,objectid){
+	Tryg3DProt:: Float:GetNPCObjectDistance(npcid,objectid){
 		new Float:x,Float:y,Float:z;
 		GetObjectPos(objectid,x,y,z);
 		return GetNPCDistanceFromPoint(npcid,x,y,z);
 	}
 
-	stock bool:GetNPCToPointVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
+	Tryg3DProt:: bool:GetNPCToPointVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
 		new Float:px,Float:py,Float:pz,Float:rx,Float:rz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		if(GetRotationFor2Point3D(px,py,pz,tx,ty,tz,rx,rz)){
@@ -2897,7 +2921,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 
-	stock GetNPCRotatedVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
+	Tryg3DProt:: GetNPCRotatedVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		if(return_vector){
@@ -2907,18 +2931,18 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 
-	stock bool:IsNPCInRangeOfPoint(npcid,Float:range,Float:x,Float:y,Float:z){
+	Tryg3DProt:: bool:IsNPCInRangeOfPoint(npcid,Float:range,Float:x,Float:y,Float:z){
 		if(GetNPCDistanceFromPoint(npcid,x,y,z) <= range) return true;
 		return false;
 	}
 	
-	stock FCNPC_SetVehicleRotation(npcid,Float:rx,Float:ry,Float:rz){
+	Tryg3DProt:: FCNPC_SetVehicleRotation(npcid,Float:rx,Float:ry,Float:rz){
 		new Float:qw,Float:qx,Float:qy,Float:qz;
 		GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
 		FCNPC_SetQuaternion(npcid,-qw,qx,qy,qz);
 	}
 	
-	stock bool:FCNPC_SetVehicleTargetRotation(npcid,Float:tx,Float:ty,Float:tz,Float:ry=0.0){
+	Tryg3DProt:: bool:FCNPC_SetVehicleTargetRotation(npcid,Float:tx,Float:ty,Float:tz,Float:ry=0.0){
 		new Float:x,Float:y,Float:z,Float:rx,Float:rz;
 		GetVehiclePos(FCNPC_GetVehicleID(npcid),x,y,z);
 		if(GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz)){
@@ -2936,7 +2960,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 #endif
 
 #if ((defined Tryg3D_MapAndreas || defined Tryg3D_ColAndreas) && (defined Tryg3D_FCNPC))
-	stock bool:IsPointInWaterFrontOfNPC(npcid,Float:radius){
+	Tryg3DProt:: bool:IsPointInWaterFrontOfNPC(npcid,Float:radius){
 		new Float:x, Float:y, Float:z;
 		FCNPC_GetPosition(npcid,x,y,z);
 		GetPointInFrontOfNPC(npcid,x,y,radius);
@@ -2952,7 +2976,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 #endif
 
 #if ((defined Tryg3D_Streamer) && (defined Tryg3D_FCNPC))
-	stock Float:GetNPCDynamicObjectDistance(playerid,objectid){
+	Tryg3DProt:: Float:GetNPCDynamicObjectDistance(playerid,objectid){
 		new Float:x,Float:y,Float:z;
 		GetDynamicObjectPos(objectid,x,y,z);
 		return GetNPCDistanceFromPoint(playerid,x,y,z);
@@ -2961,7 +2985,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 
 #if (defined Tryg3D_FCNPC) && (defined Tryg3D_ColAndreas)
 
-	stock Float:GetPointInFrontOfNPCCol(npcid,&Float:tx,&Float:ty,Float:radius){
+	Tryg3DProt:: Float:GetPointInFrontOfNPCCol(npcid,&Float:tx,&Float:ty,Float:radius){
 		new Float:rz,Float:z;
 		FCNPC_GetPosition(npcid,tx,ty,z);
 		rz = FCNPC_GetAngle(npcid);
@@ -2972,7 +2996,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return rz;
 	}
 
-	stock GetNPCCollisionFlags(npcid){
+	Tryg3DProt:: GetNPCCollisionFlags(npcid){
 		new Float:x, Float:y, Float:z, bool:isinterior = false, flag_value;
 		FCNPC_GetPosition(npcid,x,y,z);
 		if(FCNPC_GetInterior(npcid) != 0){
@@ -2996,7 +3020,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return flag_value;
 	}
 
-	stock bool:IsBetweenNPCsIsWall(npcid,targetid){
+	Tryg3DProt:: bool:IsBetweenNPCsIsWall(npcid,targetid){
 		new Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:xC,Float:yC,Float:zC;
 		FCNPC_GetPosition(npcid,xA,yA,zA);
 		FCNPC_GetPosition(targetid,xB,yB,zB);
@@ -3005,7 +3029,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return true;
 	}
 
-	stock bool:IsBetweenNPCToPointIsWall(npcid,Float:x,Float:y,Float:z){
+	Tryg3DProt:: bool:IsBetweenNPCToPointIsWall(npcid,Float:x,Float:y,Float:z){
 		new Float:xA,Float:yA,Float:zA,Float:xC,Float:yC,Float:zC;
 		FCNPC_GetPosition(npcid,xA,yA,zA);
 		CA_RayCastLine(xA,yA,zA,x,y,z,xC,yC,zC);
@@ -3013,7 +3037,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		return true;
 	}
 	
-	stock GetNPCOrientationPosCol(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
+	Tryg3DProt:: GetNPCOrientationPosCol(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz){
 		new Float:x,Float:y,Float:z,Float:rz;
 
 		FCNPC_GetPosition(npcid,x,y,z);
@@ -3041,14 +3065,14 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
 		}
 	}
 	
-	stock FCNPC_GoToCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
+	Tryg3DProt:: FCNPC_GoToCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		MovePointColCutLineEx(px,py,pz,x,y,z,x,y,z,cut_size);
 		FCNPC_GoTo(npcid,x,y,z,type,speed,UseMapAndreas,0.0,setangle);
 	}
 
-	stock FCNPC_GoToPlayerCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
+	Tryg3DProt:: FCNPC_GoToPlayerCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
 		new Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z;
 		GetPlayerPos(playerid,x,y,z);
 		FCNPC_GetPosition(npcid,px,py,pz);
@@ -3066,7 +3090,7 @@ stock GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Fl
  *                                                                                                  *
  ****************************************************************************************************/
 
-stock Get3DTrygEfficiency(bool:use_colandreas=false){
+Tryg3DProt:: Get3DTrygEfficiency(bool:use_colandreas=false){
 	new test_time = GetTickCount();
 	#if defined Tryg3D_ColAndreas
 	if(use_colandreas){
@@ -3112,7 +3136,7 @@ stock Get3DTrygEfficiency(bool:use_colandreas=false){
  ****************************************************************************************************/
 
 //These functions has been created in order to hinder thieves life.
-stock ShiftPositionToOrion(Float:x,Float:y,Float:z,&Float:orion,&Float:lon,&Float:lat){
+Tryg3DProt:: ShiftPositionToOrion(Float:x,Float:y,Float:z,&Float:orion,&Float:lon,&Float:lat){
 	orion = VectorSize(x,y,z);
 	if(orion == 0.0){
 		lon = 0.0;
@@ -3125,7 +3149,7 @@ stock ShiftPositionToOrion(Float:x,Float:y,Float:z,&Float:orion,&Float:lon,&Floa
 	}
 }
 
-stock ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,&Float:y,&Float:z){
+Tryg3DProt:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,&Float:y,&Float:z){
 	if(orion == 0.0){
 		x = 0.0;
 		y = 0.0;
@@ -3168,14 +3192,14 @@ new bool:CRC_3DTryg = true;
 
 	forward OnColAndreasRemoveBuilding();
 
-	stock bool:Tryg3D_IsColAndreasInit(){
+	Tryg3DProt:: bool:Tryg3D_IsColAndreasInit(){
 		new Float:mapunit;
 		CA_FindZ_For2DCoord(0.0,0.0,mapunit);
 		if(mapunit <= 0.0) return false;
 		return true;
 	}
 
-	stock Tryg3D_SafeColAndreasInit(){
+	Tryg3DProt:: Tryg3D_SafeColAndreasInit(){
 		//check ColAndreas Init
 		new bool:ColAndreasLastStat = false;
 		if(!Tryg3D_IsColAndreasInit()){
@@ -3205,7 +3229,7 @@ new bool:CRC_3DTryg = true;
 
 #if defined Tryg3D_MapAndreas
 
-	stock bool:Tryg3D_IsMapAndreasInit(){
+	Tryg3DProt:: bool:Tryg3D_IsMapAndreasInit(){
 		new Float:mapunit;
 		MapAndreas_FindZ_For2DCoord(0.0,0.0,mapunit);
 		if(mapunit <= 0.0) return false;
@@ -3215,7 +3239,7 @@ new bool:CRC_3DTryg = true;
 	//Switch MapAndreas Version
 	#if defined MAP_ANDREAS_ERROR_SUCCESS
 		//MapAndreas 1.2.1
-		stock Tryg3D_SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(name)){
+		Tryg3DProt:: Tryg3D_SafeMapAndreasInit(mode = MAP_ANDREAS_MODE_FULL, name[]="", len=sizeof(name)){
 			//check MapAndreas Init
 			new bool:MapAndreasLastStat = false;
 			if(!Tryg3D_IsMapAndreasInit()){
@@ -3238,7 +3262,7 @@ new bool:CRC_3DTryg = true;
 		}
 	#else
 		//MapAndreas 1.1.0
-		stock Tryg3D_SafeMapAndreasInit(mode){
+		Tryg3DProt:: Tryg3D_SafeMapAndreasInit(mode){
 			//check MapAndreas Init
 			new bool:MapAndreasLastStat = false;
 			if(!Tryg3D_IsMapAndreasInit()){
@@ -3263,7 +3287,7 @@ new bool:CRC_3DTryg = true;
 	
 #endif
 
-stock Tryg3DInit_MapPrecision(){
+Tryg3DProt:: Tryg3DInit_MapPrecision(){
 	#if defined Tryg3D_ColAndreas
 		Tryg3D_SafeColAndreasInit();
 	#elseif defined Tryg3D_MapAndreasEx
@@ -3275,7 +3299,7 @@ stock Tryg3DInit_MapPrecision(){
 	#endif
 }
 
-stock Tryg3DInit(){
+Tryg3DProt:: Tryg3DInit(){
 	
 	//Init ColAndreas
 	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))
