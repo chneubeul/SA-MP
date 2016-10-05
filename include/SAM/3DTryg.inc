@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.9.4                                                                                                              *
+ * File Version: 2.9.5                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -248,9 +248,9 @@
  * bool:IsBetweenPlayersIsWall(playerid,targetid);                                                                                  *
  * bool:IsBetweenPlayerToPointIsWall(playerid,Float:x,Float:y,Float:z);                                                             *
  * bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,                               *
- *                             Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS);                    *
+ *                             Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);  *
  * bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,                                                    *
- *                           Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS);                      *
+ *                           Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);    *
  *                                                                                                                                  *
  * ColAndreas Extended Functions:                                                                                                   *
  * bool:IsColAndreasInit();                                                                                                         *
@@ -360,11 +360,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.9.4
+	#error [ADM] You need 3DTryg.inc v2.9.5
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.9.4
-#elseif (Tryg3D_Version < 20904)
-	#error [ADM] Update you 3DTryg.inc to v2.9.4
+	#error [ADM] Update you 3DTryg.inc to v2.9.5
+#elseif (Tryg3D_Version < 20905)
+	#error [ADM] Update you 3DTryg.inc to v2.9.5
 #endif
 */
 
@@ -377,7 +377,7 @@
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
 
-#define Tryg3D_Version									(20904) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20905) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -2494,40 +2494,42 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		return true;
 	}
 	
-	Tryg3DProt:: bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS){
+	Tryg3DProt:: bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
 		if(GetDistanceBetweenPlayers(playerid,targetid) > 300.0) return false;
 		
 		vertical /= 2.0;
 		horizontal /= 2.0;
 		
-		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:prx,Float:prz,Float:trx,Float:trz,
-			Float:xC,Float:yC,Float:zC;
+		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:prx,Float:prz,Float:trx,Float:trz,Float:xC,Float:yC,Float:zC;
 		GetPlayerCameraPos(playerid,x,y,z);
 		GetPlayerCameraRotation(playerid,prx,prz);
 		if(rx != INVALID_ROTATION) prx = rx;
 		if(rz != INVALID_ROTATION) prz = rz;
 		GetPlayerPos(targetid,tx,ty,tz);
 		
-		CA_RayCastLine(x,y,z,tx,ty,tz,xC,yC,zC);
-		if(!(xC == 0.0 || yC == 0.0 || zC == 0.0)) return false;
+		if(testLOS){
+			CA_RayCastLine(x,y,z,tx,ty,tz,xC,yC,zC);
+			if(!(xC == 0.0 || yC == 0.0 || zC == 0.0)) return false;
+		}
 		
 		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
 		if((prz-horizontal <= trz <= prz+horizontal) && (prx-vertical <= trx <= prx+vertical)) return true;
 		return false;
 	}
 	
-	Tryg3DProt:: bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS){
+	Tryg3DProt:: bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
 		if(GetPlayerDistanceFromPoint(targetid,x,y,z) > 300.0) return false;
 		
 		vertical /= 2.0;
 		horizontal /= 2.0;
 		
-		new Float:tx,Float:ty,Float:tz,Float:trx,Float:trz,
-			Float:xC,Float:yC,Float:zC;
+		new Float:tx,Float:ty,Float:tz,Float:trx,Float:trz,Float:xC,Float:yC,Float:zC;
 		GetPlayerPos(targetid,tx,ty,tz);
 		
-		CA_RayCastLine(x,y,z,tx,ty,tz,xC,yC,zC);
-		if(!(xC == 0.0 || yC == 0.0 || zC == 0.0)) return false;
+		if(testLOS){
+			CA_RayCastLine(x,y,z,tx,ty,tz,xC,yC,zC);
+			if(!(xC == 0.0 || yC == 0.0 || zC == 0.0)) return false;
+		}
 		
 		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
 		if((rz-horizontal <= trz <= rz+horizontal) && (rx-vertical <= trx <= rx+vertical)) return true;
