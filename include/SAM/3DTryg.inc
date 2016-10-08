@@ -9,7 +9,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.9.5                                                                                                              *
+ * File Version: 2.9.6                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -61,13 +61,6 @@
  * GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                      *
  * GetRotationFor2Point2D(Float:x,Float:y,Float:tx,Float:ty,&Float:rz);                                                             *
  * bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz);                             *
- * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = INVALID_ROTATION);    *
- * GetRandomPointInCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty);                                                        *
- * GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                    *
- * GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz);                                      *
- * GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty);                                      *
- * GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:tx,&Float:ty,&Float:tz);           *
- * GetRandomPointOnSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz);                                      *
  * Float:ShiftDegreeToRadian(Float:deg);                                                                                            *
  * Float:ShiftDegreeToRadianEx(Float:deg);                                                                                          *
  * Float:ShiftDegreeToGrades(Float:deg);                                                                                            *
@@ -84,13 +77,24 @@
  * Float:GetPointInFrontOfVehicle2D(vehicleid,&Float:tx,&Float:ty,Float:radius);                                                    *
  * GetPointInFrontOfVehicle3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                    *
  * GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz);                                                                           *
+ * SetPlayerCameraRotation(playerid,Float:rx,Float:rz);                                                                             *
  * Float:GetPlayerCameraZAngle(playerid,&Float:rz=0.0);                                                                             *
+ * SetPlayerCameraZAngle(playerid,Float:rz);                                                                                        *
  * GetPointFor2Point2D(Float:x1,Float:y1,Float:x2,Float:y2,Float:percent_size,&Float:tx,&Float:ty);                                 *
  * GetPointFor2Point3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:percent_size,&Float:tx,&Float:ty,&Float:tz);     *
  * GetPointFor2Point2DEx(Float:x1,Float:y1,Float:x2,Float:y2,Float:distance,&Float:tx,&Float:ty);                                   *
  * GetPointFor2Point3DEx(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2,Float:distance,&Float:tx,&Float:ty,&Float:tz);       *
  * ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:rz);                                                           *
  * ShiftRotationToVector(Float:rx,Float:rz,&Float:vx,&Float:vy,&Float:vz);                                                          *
+ * GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = INVALID_ROTATION);    *
+ * Float:GetRandomPointOnClock(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty,&Float:trz,Float:rz = INVALID_ROTATION);            *
+ * GetRandomPointInCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty);                                                        *
+ * GetRandomPointInCylinderEx(Float:x,Float:y,Float:minz,Float:maxz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                    *
+ * GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz);                                      *
+ * GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty);                                      *
+ * GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:tx,&Float:ty,&Float:tz);           *
+ * GetRandomPointOnCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty);                                                        *
+ * GetRandomPointOnSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz);                                      *
  * bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB);                                             *
  * bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB);                  *
  * bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist);                                *
@@ -102,6 +106,9 @@
  * bool:IsPointInRectangle(Float:x,Float:y,Float:minx,Float:miny,Float:maxx,Float:maxy);                                            *
  * bool:IsPointInCube(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                   *
  * bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoints = sizeof(points));                                                *
+ * bool:IsPointInCircularSector(Float:px,Float:py,Float:x,Float:y,Float:rz,Float:radius,Float:view_angle);                          *
+ * bool:IsPointInSphericalSector(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,                 *
+ *                               Float:vrx,Float:vrz);                                                                              *
  * bool:IsPlayerInCircle(playerid,Float:x,Float:y,Float:radius);                                                                    *
  * bool:IsPlayerInCylinder(playerid,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius);                            *
  * bool:IsPlayerInCylinderEx(playerid,Float:x,Float:y,Float:minz,Float:maxz,Float:radius);                                          *
@@ -109,6 +116,8 @@
  * bool:IsPlayerInRectangle(playerid,Float:minx,Float:miny,Float:maxx,Float:maxy);                                                  *
  * bool:IsPlayerInCube(playerid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                                 *
  * bool:IsPlayerInPolygon(playerid,Float:points[],maxpoints = sizeof(points));                                                      *
+ * bool:IsPlayerInCircularSector(playerid,Float:x,Float:y,Float:rz,Float:radius,Float:view_angle);                                  *
+ * bool:IsPlayerInSphericalSector(playerid,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz);             *
  * bool:IsProbable(chance);                                                                                                         *
  * Float:CalculatePercent(Float:value,Float:maxvalue);                                                                              *
  * Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0);                                                              *
@@ -286,6 +295,8 @@
  * bool:IsNPCInRectangle(npcid,Float:minx,Float:miny,Float:maxx,Float:maxy);                                                        *
  * bool:IsNPCInCube(npcid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                                       *
  * bool:IsNPCInPolygon(npcid,Float:points[],maxpoints = sizeof(points));                                                            *
+ * bool:IsNPCInCircularSector(npcid,Float:x,Float:y,Float:rz,Float:radius,Float:view_angle);                                        *
+ * bool:IsNPCInSphericalSector(npcid,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz);                   *
  * Float:GetPointInFrontOfNPC(npcid,&Float:tx,&Float:ty,Float:radius);                                                              *
  * GetNPCOrientationPos(npcid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);                        *
  * Float:GetNPCDistanceFromPoint(npcid,Float:x,Float:y,Float:z);                                                                    *
@@ -326,11 +337,12 @@
  * GetXYZInFrontOfVehicle(vehicleid,Float:distance,&Float:x,&Float:y,&Float:z); //New -> GetPointInFrontOfVehicle3D                 *
  *                                                                                                                                  *
  * Symbols:                                                                                                                         *
- * FLOAT_PI     - pi constant value                                                                                                 *
- * FLOAT_EULER  - Euler number                                                                                                      *
- * FLOAT_NAN    - Float NaN                                                                                                         *
- * FLOAT_DEFECT - Float defect (Arc Test)                                                                                           *
- * VBTP         - Value Bigger Than Possible                                                                                        *
+ * FLOAT_PI       - pi constant value                                                                                               *
+ * FLOAT_EULER    - Euler number                                                                                                    *
+ * FLOAT_NAN      - Float NaN                                                                                                       *
+ * FLOAT_DEFECT   - Float defect (Arc Test)                                                                                         *
+ * FLOAT_INFINITY - Float Infinity                                                                                                  *
+ * VBTP           - Value Bigger Than Possible                                                                                      *
  *                                                                                                                                  *
  * Functions extra names:                                                                                                           *
  * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                            *
@@ -360,11 +372,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.9.5
+	#error [ADM] You need 3DTryg.inc v2.9.6
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.9.5
-#elseif (Tryg3D_Version < 20905)
-	#error [ADM] Update you 3DTryg.inc to v2.9.5
+	#error [ADM] Update you 3DTryg.inc to v2.9.6
+#elseif (Tryg3D_Version < 20906)
+	#error [ADM] Update you 3DTryg.inc to v2.9.6
 #endif
 */
 
@@ -377,7 +389,7 @@
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
 
-#define Tryg3D_Version									(20905) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(20906) //a.b.c 10000*a+100*b+c
 
 
 //Tryg3D Plugin Module List
@@ -534,6 +546,10 @@
 	#define VBTP 										(0x7FFFFFFF)
 #endif
 
+#if !defined FLOAT_INFINITY
+    #define FLOAT_INFINITY 								(Float:0x7F800000)
+#endif
+
 #if !defined MAX_POLYGON_POINTS
 	#define MAX_POLYGON_POINTS 							(256)
 #endif
@@ -558,10 +574,10 @@
 	#define POSITION_FLAG_WATER							(0b00010000)
 	#define POSITION_FLAG_UNDERWATER					(0b00100000)
 	#define POSITION_FLAG_UNDERGROUND					(0b01000000)
-	
-	#define VERTICAL_CAMERA_RADIUS 						(55.0) // 27.5 * 2
-	#define HORIZONTAL_CAMERA_RADIUS					(70.0) // 35.0 * 2
 #endif
+
+#define VERTICAL_CAMERA_RADIUS 							(55.0) // 27.5 * 2
+#define HORIZONTAL_CAMERA_RADIUS						(70.0) // 35.0 * 2
 
 #define VF_STREET										(1)
 #define VF_AIRBORNE										(2)
@@ -618,6 +634,7 @@
 //old code version made by Zoutdaxv (modified version)
 #define GetRotationFor2Point2D(%0,%1,%2,%3,%4)			(CompRotationFloat((atan2((%3)-(%1),(%2)-(%0))-90.0),(%4)))
 #define IsPointInCylinderEx(%0,%1,%2,%3,%4,%5,%6,%7)	IsPointInCylinder((%0),(%1),(%2),(%3),(%4),(%5),(%3),(%4),(%6),(%7))
+#define GetRandomPointOnCircle(%0,%1,%2,%3,%4)			GetPointInFront2D(%0,%1,RandomFloat(0.0,360.0),%2,%3,%4)
 
 #define GetVehicleFlags(%0)								GetVehicleFlagsByModel(GetVehicleModel(%0))
 #define IsVehicleFlag(%0,%1)							((%0) & (%1))
@@ -1124,11 +1141,33 @@ Tryg3DProt:: Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:ra
 	return rz;
 }
 
+Tryg3DProt:: GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
+	new Float:mx,Float:my,Float:mz;
+	GetPlayerCameraFrontVector(playerid,mx,my,mz);
+	CompRotationFloat(-(acos(mz)-90.0),rx);
+	CompRotationFloat((atan2(my,mx)-90.0),rz);
+}
+
+Tryg3DProt:: SetPlayerCameraRotation(playerid,Float:rx,Float:rz){
+	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz;
+	GetPlayerCameraPos(playerid,x,y,z);
+	GetPointInFront3D(x,y,z,rx,rz,1.0,tx,ty,tz);
+	SetPlayerCameraLookAt(playerid,tx,ty,tz);
+}
+
 Tryg3DProt:: Float:GetPlayerCameraZAngle(playerid,&Float:rz=0.0){
 	new Float:mx,Float:my,Float:mz;
 	GetPlayerCameraFrontVector(playerid,mx,my,mz);
 	CompRotationFloat((atan2(my,mx)-90.0),rz);
 	return rz;
+}
+
+Tryg3DProt:: SetPlayerCameraZAngle(playerid,Float:rz){
+	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:rx,Float:tmp;
+	GetPlayerCameraPos(playerid,x,y,z);
+	GetPlayerCameraRotation(playerid,rx,tmp);
+	GetPointInFront3D(x,y,z,rx,rz,1.0,tx,ty,tz);
+	SetPlayerCameraLookAt(playerid,tx,ty,tz);
 }
 
 Tryg3DProt:: Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius){
@@ -1150,10 +1189,16 @@ Tryg3DProt:: bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:
 
 //random clock pos
 Tryg3DProt:: GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = INVALID_ROTATION){
-	new rand = random(360);
-	if(rz == INVALID_ROTATION) rz = rand;
-	GetPointInFront3D(x,y,z,0.0,rz,radius,tx,ty,tz);
+	#pragma unused z,tz
+	if(rz == INVALID_ROTATION) rz = RandomFloat(0.0,360.0);
+	GetPointInFront2D(x,y,rz,radius,tx,ty);
 	CompRotationFloat(rz-180.0,trz);
+}
+
+Tryg3DProt:: Float:GetRandomPointOnClock(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty,&Float:trz,Float:rz = INVALID_ROTATION){
+	if(rz == INVALID_ROTATION) rz = RandomFloat(0.0,360.0);
+	GetPointInFront2D(x,y,rz,radius,tx,ty);
+	return CompRotationFloat(rz-180.0,trz);
 }
 
 //GetRandomPointInCircle by Crayder
@@ -1307,13 +1352,6 @@ Tryg3DProt:: ShiftVectorToRotation(Float:vx,Float:vy,Float:vz,&Float:rx,&Float:r
 	CompRotationFloat((atan2(vy,vx)-90.0),rz);
 }
 
-Tryg3DProt:: GetPlayerCameraRotation(playerid,&Float:rx,&Float:rz){
-	new Float:mx,Float:my,Float:mz;
-	GetPlayerCameraFrontVector(playerid,mx,my,mz);
-	CompRotationFloat(-(acos(mz)-90.0),rx);
-	CompRotationFloat((atan2(my,mx)-90.0),rz);
-}
-
 Tryg3DProt:: GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
 	new Float:x,Float:y,Float:z;
 	GetPlayerCameraPos(playerid,x,y,z);
@@ -1372,6 +1410,29 @@ Tryg3DProt:: bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Fl
 	return false;
 }
 
+//Abyss Morgan Algorithm (False Ellipse Test 2D)
+Tryg3DProt:: bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
+	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
+		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
+		Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
+	if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
+	return false;
+}
+
+//Abyss Morgan Algorithm (False Ellipse Test 3D)
+Tryg3DProt:: bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
+	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
+		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
+		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
+	if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
+	return false;
+}
+
+Tryg3DProt:: bool:IsPointInCircle(Float:px,Float:py,Float:x,Float:y,Float:radius){
+	if(GetDistanceBetweenPoints2D(x,y,px,py) <= radius) return true;
+	return false;
+}
+
 //Orig: Greg James - gjames@NVIDIA.com SRC:http://www.flipcode.com/archives/Fast_Point-In-Cylinder_Test.shtml
 Tryg3DProt:: bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius){
 	if(radius <= 0.0) return false;
@@ -1396,13 +1457,18 @@ Tryg3DProt:: bool:IsPointInCylinder(Float:px,Float:py,Float:pz,Float:xA,Float:yA
 	return false;
 }
 
-Tryg3DProt:: bool:IsPointInCube(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
-	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz)) return true;
+Tryg3DProt:: bool:IsPointInSphere(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:radius){
+	if(GetDistanceBetweenPoints3D(x,y,z,px,py,pz) <= radius) return true;
 	return false;
 }
 
 Tryg3DProt:: bool:IsPointInRectangle(Float:x,Float:y,Float:minx,Float:miny,Float:maxx,Float:maxy){
 	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy)) return true;
+	return false;
+}
+
+Tryg3DProt:: bool:IsPointInCube(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
+	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz)) return true;
 	return false;
 }
 
@@ -1427,31 +1493,25 @@ Tryg3DProt:: bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoints = si
 	return bool:(cross_Total & 0x1);
 }
 
-Tryg3DProt:: bool:IsPointInCircle(Float:px,Float:py,Float:x,Float:y,Float:radius){
-	if(GetDistanceBetweenPoints2D(x,y,px,py) <= radius) return true;
+//Abyss Morgan Algorithm Circular Sector
+Tryg3DProt:: bool:IsPointInCircularSector(Float:px,Float:py,Float:x,Float:y,Float:rz,Float:radius,Float:view_angle){
+	if(GetDistanceBetweenPoints2D(px,py,x,y) > radius) return false;
+	new Float:trz;
+	view_angle /= 2.0;
+	GetRotationFor2Point2D(x,y,px,py,trz);
+	if((rz-view_angle <= trz <= rz+view_angle)) return true;
 	return false;
 }
 
-Tryg3DProt:: bool:IsPointInSphere(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:radius){
-	if(GetDistanceBetweenPoints3D(x,y,z,px,py,pz) <= radius) return true;
-	return false;
-}
-
-//Abyss Morgan Algorithm (False Ellipse Test 2D)
-Tryg3DProt:: bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist){
-	new Float:dAP = GetDistanceBetweenPoints2D(xA,yA,px,py),
-		Float:dBP = GetDistanceBetweenPoints2D(xB,yB,px,py),
-		Float:dAB = GetDistanceBetweenPoints2D(xA,yA,xB,yB);
-	if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
-	return false;
-}
-
-//Abyss Morgan Algorithm (False Ellipse Test 3D)
-Tryg3DProt:: bool:IsPointNearly2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:maxdist){
-	new Float:dAP = GetDistanceBetweenPoints3D(xA,yA,zA,px,py,pz),
-		Float:dBP = GetDistanceBetweenPoints3D(xB,yB,zB,px,py,pz),
-		Float:dAB = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB);
-	if(dAB <= (dAP + dBP) <= (dAB+(maxdist))) return true;
+//Abyss Morgan Algorithm Spherical Sector
+Tryg3DProt:: bool:IsPointInSphericalSector(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz){
+	if(GetDistanceBetweenPoints3D(px,py,pz,x,y,z) > radius) return false;
+	new Float:trx,Float:trz;
+	vrx /= 2.0;
+	vrz /= 2.0;
+	if(!GetRotationFor2Point3D(x,y,z,px,py,pz,trx,trz)) return false;
+	if((rx-vrx <= trx <= rx+vrx) && (rz-vrz <= trz <= rz+vrz)) return true;
+	//printf("%f <= %f <= %f && %f <= %f <= %f",rx-vrx,trx,rx+vrx,rz-vrz,trz,rz+vrz);
 	return false;
 }
 
@@ -1495,6 +1555,18 @@ Tryg3DProt:: bool:IsPlayerInPolygon(playerid,Float:points[],maxpoints = sizeof(p
 	new Float:px,Float:py,Float:pz;
 	GetPlayerPos(playerid,px,py,pz);
 	return IsPointInPolygon(px,py,points,maxpoints);
+}
+
+Tryg3DProt:: bool:IsPlayerInCircularSector(playerid,Float:x,Float:y,Float:rz,Float:radius,Float:view_angle){
+	new Float:px,Float:py,Float:pz;
+	GetPlayerPos(playerid,px,py,pz);
+	return IsPointInCircularSector(px,py,x,y,rz,radius,view_angle);
+}
+
+Tryg3DProt:: bool:IsPlayerInSphericalSector(playerid,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz){
+	new Float:px,Float:py,Float:pz;
+	GetPlayerPos(playerid,px,py,pz);
+	return IsPointInSphericalSector(px,py,pz,x,y,z,rx,rz,radius,vrx,vrz);
 }
 
 Tryg3DProt:: bool:IsProbable(chance){
@@ -2819,6 +2891,18 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		new Float:px,Float:py,Float:pz;
 		FCNPC_GetPosition(npcid,px,py,pz);
 		return IsPointInPolygon(px,py,points,maxpoints);
+	}
+	
+	Tryg3DProt:: bool:IsNPCInCircularSector(npcid,Float:x,Float:y,Float:rz,Float:radius,Float:view_angle){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return IsPointInCircularSector(px,py,x,y,rz,radius,view_angle);
+	}
+
+	Tryg3DProt:: bool:IsNPCInSphericalSector(npcid,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz){
+		new Float:px,Float:py,Float:pz;
+		FCNPC_GetPosition(npcid,px,py,pz);
+		return IsPointInSphericalSector(px,py,pz,x,y,z,rx,rz,radius,vrx,vrz);
 	}
 
 	Tryg3DProt:: Float:GetNPCDistanceFromPoint(npcid,Float:x,Float:y,Float:z){

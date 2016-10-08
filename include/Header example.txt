@@ -18,7 +18,7 @@
 #include <regex>
 #include <crashdetect>              //http://forum.sa-mp.com/showthread.php?t=262796
 #include <YSF>                      //http://forum.sa-mp.com/showthread.php?t=609499
-#include <SAOI>                     //Beta Version: https://github.com/AbyssMorgan/SAOI
+#include <SAOI>                     //http://forum.sa-mp.com/showthread.php?t=618429
 #include <profiler>                 //http://forum.sa-mp.com/showthread.php?t=271129
 
 
@@ -63,6 +63,7 @@
 
 //Knife.inc Config
 //#define DISABLE_KNIFE_SOUND
+//#define USE_OLD_KNIFE_DATIVE 
 //#define DISABLE_KNIFE_CALL_DAMAGE
 
 
