@@ -1,15 +1,17 @@
 /************************************************************************************************************************************
  *                                                                                                                                  *
- *                                                       3D Tryg Functions                                                          *
+ *                                                         3DTryg Functions                                                         *
  *                                                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                              *
+ * Contributors: Crayder, IllidanS4, Nero_3D, RyDeR, Zoutdaxv, hesambia, Neil Lamoureux, Greg James                                 *
  *                                                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                           *
+ * Publication: http://forum.sa-mp.com/showthread.php?t=591010                                                                      *
  *                                                                                                                                  *
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 2.9.6                                                                                                              *
+ * File Version: 3.0.0                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -52,6 +54,7 @@
  * DeCompRotation(rotation,&crotation=0); //DeCompressRotation                                                                      *
  * Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0);   //CompressRotationFloat                                          *
  * Float:DeCompRotationFloat(Float:rotation,&Float:crotation=0.0); //DeCompressRotationFloat                                        *
+ * bool:IsRotationTest(Float:rotation,Float:r_min,Float:r_max);                                                                     *
  * RecoilFloat(Float:value,Float:recoil);                                                                                           *
  * RecoilVector(&Float:vx,&Float:vy,&Float:vz,Float:sx,Float:sy,Float:sz);                                                          *
  * GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty);                                                    *
@@ -93,8 +96,10 @@
  * GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz);                                      *
  * GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty);                                      *
  * GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:tx,&Float:ty,&Float:tz);           *
+ * GetRandomPointInCircularSector(Float:x,Float:y,Float:rz,Float:radius,Float:view_angle,&Float:tx,&Float:ty);                      *
  * GetRandomPointOnCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty);                                                        *
  * GetRandomPointOnSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz);                                      *
+ * GetRandomPointOnCircularSector(Float:x,Float:y,Float:rz,Float:radius,Float:view_angle,&Float:tx,&Float:ty);                      *
  * bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB);                                             *
  * bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB);                  *
  * bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist);                                *
@@ -164,7 +169,7 @@
  * bool:GetPlayerToPointVector(playerid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                  *
  * bool:GetObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                  *
  * bool:GetVehicleToPointVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                                *
- * Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,tryg3d_eulermode:mode=tryg3d_euler_default);           *
+ * Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,T3D:eulermode:mode=T3D:euler_default);                 *
  * Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&Float:y,&Float:z);                                     *
  * Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true);                                          *
  * Tryg3D_GetWeaponDamage(weaponid);                                                                                                *
@@ -315,6 +320,7 @@
  * bool:FCNPC_SetVehicleTargetRotation(npcid,Float:tx,Float:ty,Float:tz,Float:ry=0.0);                                              *
  * GetNPCRotatedVector(npcid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,                      *
  *                     Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                                     *
+ * FCNPC_GoToAir(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO);                                *
  *                                                                                                                                  *
  * FCNPC Functions (ColAndreas):                                                                                                    *
  * Float:GetPointInFrontOfNPCCol(npcid,&Float:tx,&Float:ty,Float:radius);                                                           *
@@ -326,6 +332,9 @@
  *               Float:cut_size = 0.0,bool:setangle = true);                                                                        *
  * FCNPC_GoToPlayerCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,               *
  *                     Float:cut_size = 0.0,bool:setangle = true);                                                                  *
+ * FCNPC_GoToPlayerOnGroundCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,       *
+ *                             Float:cut_size = 1.0,Float:climbing = 2.0,bool:setangle = true);                                     *
+ * FCNPC_GoToAirCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,Float:cut_size = 0.0);        *
  *                                                                                                                                  *
  * FCNPC Functions (ColAndreas OR MapAndreas):                                                                                      *
  * bool:IsPointInWaterFrontOfNPC(npcid,Float:radius);                                                                               *
@@ -372,11 +381,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.9.6
+	#error [ADM] You need 3DTryg.inc v3.0.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.9.6
-#elseif (Tryg3D_Version < 20906)
-	#error [ADM] Update you 3DTryg.inc to v2.9.6
+	#error [ADM] Update you 3DTryg.inc to v3.0.0
+#elseif (Tryg3D_Version < 30000)
+	#error [ADM] Update you 3DTryg.inc to v3.0.0
 #endif
 */
 
@@ -389,8 +398,8 @@
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
 
-#define Tryg3D_Version									(20906) //a.b.c 10000*a+100*b+c
-
+#define Tryg3D_Version									(30000) //a.b.c 10000*a+100*b+c
+#define Tryg3D_SAMP_Version								"0.3.7"
 
 //Tryg3D Plugin Module List
 #define TRYG3D_MODULEID_MAPANDREAS						(Tryg3DModule:1)
@@ -472,6 +481,11 @@
 	
 	#define Tryg3D_Module_FoxForeach					(false)
 	#define Tryg3D_Module_YSIForeach					(false)
+#endif
+
+//Detect i_quat by IllidanS4
+#if (defined GetVehicleRotation && defined VectorRelToAbsQuat)
+	#define Tryg3D_i_quat
 #endif
 
 #define Tryg3DProt::									stock
@@ -556,6 +570,10 @@
 
 #if !defined VEHICLE_SPEED_MULTIPLIER
 	#define VEHICLE_SPEED_MULTIPLIER 					(170.00)
+#endif
+
+#if !defined PLAYER_SPEED_MULTIPLIER
+	#define PLAYER_SPEED_MULTIPLIER						(1.0)
 #endif
 
 #if !defined INVALID_MOVE_TIME
@@ -1004,7 +1022,7 @@ Tryg3DProt:: Float:GetVehicleSpeed(vehicleid){
 Tryg3DProt:: Float:GetPlayerSpeed(playerid){
 	new Float:x,Float:y,Float:z;
 	GetPlayerVelocity(playerid,x,y,z);
-	return VectorSize(x,y,z);
+	return floatmul(VectorSize(x,y,z),PLAYER_SPEED_MULTIPLIER);
 }
 
 Tryg3DProt:: bool:IsPlayerSkydiving(playerid){
@@ -1114,6 +1132,18 @@ Tryg3DProt:: Float:DeCompRotationFloat(Float:rotation,&Float:crotation=0.0){
 	while(crotation >= 180.0) crotation -= 360.0;
 	while(crotation < -180.0) crotation += 360.0;
 	return crotation;
+}
+
+Tryg3DProt:: bool:IsRotationTest(Float:rotation,Float:r_min,Float:r_max){
+	rotation = CompRotationFloat(rotation);
+	r_min = CompRotationFloat(r_min);
+	r_max = CompRotationFloat(r_max);
+	if(r_min > r_max){
+		if(((-100.0*FLOAT_DEFECT) <= rotation <= r_max+(100*FLOAT_DEFECT)) || (r_min-(100*FLOAT_DEFECT) <= rotation <= 360.0+(100*FLOAT_DEFECT))) return true;
+	} else {
+		if(r_min-(100.0*FLOAT_DEFECT) <= rotation <= r_max+(100.0*FLOAT_DEFECT)) return true;
+	}
+	return false;
 }
 
 //Old code version, Updated by Nero_3D
@@ -1245,6 +1275,25 @@ Tryg3DProt:: GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Fl
 	tz = random(floatround(floatsqroot(floatpower(minz-maxz,2)))+1)+minz;
 }
 
+Tryg3DProt:: GetRandomPointInCircularSector(Float:x,Float:y,Float:rz,Float:radius,Float:view_angle,&Float:tx,&Float:ty){
+	view_angle /= 2.0;
+	new Float:rand_rz = CompRotationFloat(RandomFloat(rz-view_angle+360.0,rz+view_angle+360.0,6)),
+		Float:rand_rad = RandomFloat(FLOAT_DEFECT*100.0,radius,6);
+	if(rand_rad > radius) rand_rad = radius;
+	if(rand_rz > rz+view_angle) rand_rz = rz+view_angle;
+	if(rand_rz < rz-view_angle) rand_rz = rz-view_angle;
+	GetPointInFront2D(x,y,rand_rz,rand_rad,tx,ty);
+}
+
+Tryg3DProt:: GetRandomPointOnCircularSector(Float:x,Float:y,Float:rz,Float:radius,Float:view_angle,&Float:tx,&Float:ty){
+	view_angle /= 2.0;
+	new Float:rand_rz = CompRotationFloat(RandomFloat(rz-view_angle+360.0,rz+view_angle+360.0,6));
+	if(rand_rz > rz+view_angle) rand_rz = rz+view_angle;
+	if(rand_rz < rz-view_angle) rand_rz = rz-view_angle;
+	GetPointInFront2D(x,y,rand_rz,radius,tx,ty);
+}
+
+
 Tryg3DProt:: ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz){
 	rx = ShiftRadianToDegreeEx(rotation3);
 	ry = ShiftRadianToDegreeEx(rotation2);
@@ -1300,14 +1349,16 @@ Tryg3DProt:: GetQuatFromRot(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Floa
 	qz = cosY*sinZ*cosX + cosZ*sinX*sinY; 
 }
 
-//GetVehicleRotation Created by IllidanS4
-Tryg3DProt:: GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
-	new Float:qw,Float:qx,Float:qy,Float:qz;
-	GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
-	CompRotationFloat(asin(2*qy*qz-2*qx*qw),rx);
-	CompRotationFloat(-atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy),ry);
-	CompRotationFloat(-atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz),rz);
-}
+#if !defined Tryg3D_i_quat
+	//GetVehicleRotation Created by IllidanS4
+	Tryg3DProt:: GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
+		new Float:qw,Float:qx,Float:qy,Float:qz;
+		GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
+		CompRotationFloat(asin(2*qy*qz-2*qx*qw),rx);
+		CompRotationFloat(-atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy),ry);
+		CompRotationFloat(-atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz),rz);
+	}
+#endif
 
 //GetVehicleUpVector by Nero_3D
 Tryg3DProt:: GetVehicleUpVector(vehicleid,&Float:vx,&Float:vy,&Float:vz){
@@ -1495,23 +1546,22 @@ Tryg3DProt:: bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoints = si
 
 //Abyss Morgan Algorithm Circular Sector
 Tryg3DProt:: bool:IsPointInCircularSector(Float:px,Float:py,Float:x,Float:y,Float:rz,Float:radius,Float:view_angle){
-	if(GetDistanceBetweenPoints2D(px,py,x,y) > radius) return false;
+	if(GetDistanceBetweenPoints2D(px,py,x,y)-radius > (FLOAT_DEFECT*100)) return false;
 	new Float:trz;
 	view_angle /= 2.0;
 	GetRotationFor2Point2D(x,y,px,py,trz);
-	if((rz-view_angle <= trz <= rz+view_angle)) return true;
+	if(IsRotationTest(trz,rz-view_angle,rz+view_angle)) return true;
 	return false;
 }
 
 //Abyss Morgan Algorithm Spherical Sector
 Tryg3DProt:: bool:IsPointInSphericalSector(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz){
-	if(GetDistanceBetweenPoints3D(px,py,pz,x,y,z) > radius) return false;
+	if(GetDistanceBetweenPoints3D(px,py,pz,x,y,z)-radius > (FLOAT_DEFECT*100)) return false;
 	new Float:trx,Float:trz;
 	vrx /= 2.0;
 	vrz /= 2.0;
 	if(!GetRotationFor2Point3D(x,y,z,px,py,pz,trx,trz)) return false;
-	if((rx-vrx <= trx <= rx+vrx) && (rz-vrz <= trz <= rz+vrz)) return true;
-	//printf("%f <= %f <= %f && %f <= %f <= %f",rx-vrx,trx,rx+vrx,rz-vrz,trz,rz+vrz);
+	if(IsRotationTest(trx,rx-vrx,rx+vrx) && IsRotationTest(trz,rz-vrz,rz+vrz)) return true;
 	return false;
 }
 
@@ -1822,27 +1872,27 @@ Tryg3DProt:: bool:IsObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Fl
 
 //Module: rotation.inc by Nero_3D
 //Code anti-collision: YES
-enum tryg3d_eulermode {
+enum T3D:eulermode {
 	// Proper / Classic Euler angles
-	euler_xzx,
-	euler_xyx,
-	euler_yxy,
-	euler_yzy,
-	euler_zyz,
-	euler_zxz,
+	T3D:euler_xzx,
+	T3D:euler_xyx,
+	T3D:euler_yxy,
+	T3D:euler_yzy,
+	T3D:euler_zyz,
+	T3D:euler_zxz,
 	// Tait-Bryan angles
-	euler_xzy,
-	euler_xyz,
-	euler_yxz,
-	euler_yzx,
-	euler_zyx, // pitch roll yaw
-	euler_zxy // sa-mp
+	T3D:euler_xzy,
+	T3D:euler_xyz,
+	T3D:euler_yxz,
+	T3D:euler_yzx,
+	T3D:euler_zyx, // pitch roll yaw
+	T3D:euler_zxy // sa-mp
 }
 
-const tryg3d_eulermode: tryg3d_euler_default = euler_zxy;
+const T3D:eulermode: T3D:euler_default = T3D:euler_zxy;
 
 //GetRotationMatrixFromEuler by Nero_3D
-Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,tryg3d_eulermode:mode=tryg3d_euler_default){
+Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,T3D:eulermode:mode=T3D:euler_default){
 	new // could be done with matrix multiplication but would be slower
 		Float:cosX = floatcos(rx,degrees),
 		Float:cosY = floatcos(ry,degrees),
@@ -1853,7 +1903,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 
 	switch(mode){
 		//Proper Euler angles - 1(rx), 2(ry), 3(rz)
-		case euler_xzx: {
+		case T3D:euler_xzx: {
 			matrix[0][0] = cosY;
 			matrix[0][1] = -cosZ * sinY;
 			matrix[0][2] = sinY * sinZ;
@@ -1864,7 +1914,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = cosX * sinZ + cosY * cosZ * sinX;
 			matrix[2][2] = cosX * cosZ - cosY * sinX * sinZ;
 		}
-		case euler_xyx: {
+		case T3D:euler_xyx: {
 			matrix[0][0] = cosY;
 			matrix[0][1] = sinY * sinZ;
 			matrix[0][2] = cosZ * sinY;
@@ -1875,7 +1925,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = cosZ * sinX + cosX * cosY * sinZ;
 			matrix[2][2] = cosX * cosY * cosZ - sinX * sinZ;
 		}
-		case euler_yxy: {
+		case T3D:euler_yxy: {
 			matrix[0][0] = cosX * cosZ - cosY * sinX * sinZ;
 			matrix[0][1] = sinX * sinY;
 			matrix[0][2] = cosX * sinZ + cosY * cosZ * sinX;
@@ -1886,7 +1936,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = cosX * sinY;
 			matrix[2][2] = cosX * cosY * cosZ - sinX * sinZ;
 		}
-		case euler_yzy: {
+		case T3D:euler_yzy: {
 			matrix[0][0] = cosX * cosY * cosZ - sinX * sinZ;
 			matrix[0][1] = -cosX * sinY;
 			matrix[0][2] = cosZ * sinX + cosX * cosY * sinZ;
@@ -1897,7 +1947,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = sinX * sinY;
 			matrix[2][2] = cosX * cosZ - cosY * sinX * sinZ;
 		}
-		case euler_zyz: {
+		case T3D:euler_zyz: {
 			matrix[0][0] = cosX * cosY * cosZ - sinX * sinZ;
 			matrix[0][1] = -cosZ * sinX - cosX * cosY * sinZ;
 			matrix[0][2] = cosX * sinY;
@@ -1908,7 +1958,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = sinY * sinZ;
 			matrix[2][2] = cosY;
 		}
-		case euler_zxz: {
+		case T3D:euler_zxz: {
 			matrix[0][0] = cosX * cosZ - cosY * sinX * sinZ;
 			matrix[0][1] = -cosX * sinZ - cosY * cosZ * sinX;
 			matrix[0][2] = sinX * sinY;
@@ -1920,7 +1970,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][2] = cosY;
 		}
 		//Tait-Bryan angles - X(rx), Y(ry), Z(rz)
-		case euler_xzy: {
+		case T3D:euler_xzy: {
 			matrix[0][0] = cosZ * cosY;
 			matrix[0][1] = -sinZ;
 			matrix[0][2] = cosZ * sinY;
@@ -1931,7 +1981,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = cosZ * sinX;
 			matrix[2][2] = cosX * cosY + sinX * sinZ * sinY;
 		}
-		case euler_xyz: {
+		case T3D:euler_xyz: {
 			matrix[0][0] = cosY * cosZ;
 			matrix[0][1] = -cosY * sinZ;
 			matrix[0][2] = sinY;
@@ -1942,7 +1992,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = cosZ * sinX + cosX * sinY * sinZ;
 			matrix[2][2] = cosX * cosY;
 		}
-		case euler_yxz: {
+		case T3D:euler_yxz: {
 			matrix[0][0] = cosY * cosZ + sinY * sinX * sinZ;
 			matrix[0][1] = cosZ * sinY * sinX - cosY * sinZ;
 			matrix[0][2] = cosX * sinY;
@@ -1953,7 +2003,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = cosY * cosZ * sinX + sinY * sinZ;
 			matrix[2][2] = cosY * cosX;
 		}
-		case euler_yzx: {
+		case T3D:euler_yzx: {
 			matrix[0][0] = cosY * cosZ;
 			matrix[0][1] = sinY * sinX - cosY * cosX * sinZ;
 			matrix[0][2] = cosX * sinY + cosY * sinZ * sinX;
@@ -1964,7 +2014,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = cosY * sinX + cosX * sinY * sinZ;
 			matrix[2][2] = cosY * cosX - sinY * sinZ * sinX;
 		}
-		case euler_zyx: { // pitch roll yaw
+		case T3D:euler_zyx: { // pitch roll yaw
 			matrix[0][0] = cosZ * cosY;
 			matrix[0][1] = cosZ * sinY * sinX - cosX * sinZ;
 			matrix[0][2] = sinZ * sinX + cosZ * cosX * sinY;
@@ -1975,7 +2025,7 @@ Tryg3DProt:: Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Fl
 			matrix[2][1] = cosY * sinX;
 			matrix[2][2] = cosY * cosX;
 		}
-		case euler_zxy: { // sa-mp
+		case T3D:euler_zxy: { // sa-mp
 			matrix[0][0] = cosZ * cosY - sinZ * sinX * sinY;
 			matrix[0][1] = -sinZ * cosX;
 			matrix[0][2] = cosZ * sinY + sinZ * sinX * cosY;
@@ -2585,7 +2635,8 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		}
 		
 		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
-		if((prz-horizontal <= trz <= prz+horizontal) && (prx-vertical <= trx <= prx+vertical)) return true;
+		
+		if(IsRotationTest(trz,prz-horizontal,prz+horizontal) && IsRotationTest(trx,prx-vertical,prx+vertical)) return true;
 		return false;
 	}
 	
@@ -2604,7 +2655,7 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		}
 		
 		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
-		if((rz-horizontal <= trz <= rz+horizontal) && (rx-vertical <= trx <= rx+vertical)) return true;
+		if(IsRotationTest(trz,rz-horizontal,rz+horizontal) && IsRotationTest(trx,rx-vertical,rx+vertical)) return true;
 		return false;
 	}
 	
@@ -3040,6 +3091,11 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		return false;
 	}
 	
+	Tryg3DProt:: FCNPC_GoToAir(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO){
+		FCNPC_SetVehicleTargetRotation(npcid,x,y,z);
+		FCNPC_GoTo(npcid,x,y,z,type,speed,false,0.0,false);
+	}
+	
 	#define GetXYInFrontOfNPC 							GetPointInFrontOfNPC
 	#define GetNPCsDistance								GetDistanceBetweenNPCs
 	
@@ -3152,20 +3208,43 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 	}
 	
 	Tryg3DProt:: FCNPC_GoToCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
-		new Float:px,Float:py,Float:pz;
+		new Float:px,Float:py,Float:pz,Float:tx,Float:ty,Float:tz;
 		FCNPC_GetPosition(npcid,px,py,pz);
-		MovePointColCutLineEx(px,py,pz,x,y,z,x,y,z,cut_size);
-		FCNPC_GoTo(npcid,x,y,z,type,speed,UseMapAndreas,0.0,setangle);
+		if(MovePointColCutLineEx(px,py,pz,x,y,z,tx,ty,tz,cut_size)){
+			FCNPC_GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle);
+		}
 	}
 
 	Tryg3DProt:: FCNPC_GoToPlayerCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
-		new Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z;
+		new Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz;
 		GetPlayerPos(playerid,x,y,z);
 		FCNPC_GetPosition(npcid,px,py,pz);
-		MovePointColCutLineEx(px,py,pz,x,y,z,x,y,z,cut_size);
-		FCNPC_GoTo(npcid,x,y,z,type,speed,UseMapAndreas,0.0,setangle);
+		if(MovePointColCutLineEx(px,py,pz,x,y,z,tx,ty,tz,cut_size)){
+			FCNPC_GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle);
+		}
 	}
 	
+	Tryg3DProt:: FCNPC_GoToPlayerOnGroundCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 1.0,Float:climbing = 2.0,bool:setangle = true){
+		new Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz;
+		GetPlayerPos(playerid,x,y,z);
+		FCNPC_GetPosition(npcid,px,py,pz);
+		if(GetDistanceBetweenPoints1D(pz,z) > climbing){
+			z = pz;
+		}
+		if(MovePointColCutLineEx(px,py,pz,x,y,z,tx,ty,tz,cut_size)){
+			FCNPC_GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle);
+		}
+	}
+
+	Tryg3DProt:: FCNPC_GoToAirCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,Float:cut_size = 0.0){
+		new Float:px,Float:py,Float:pz,Float:tx,Float:ty,Float:tz;
+		GetVehiclePos(FCNPC_GetVehicleID(npcid),px,py,pz);
+		if(MovePointColCutLineEx(px,py,pz,x,y,z,tx,ty,tz,cut_size)){
+			FCNPC_SetVehicleTargetRotation(npcid,tx,ty,tz);
+			FCNPC_GoTo(npcid,tx,ty,tz,type,speed,false,0.0,false);
+		}
+	}
+
 	#define GetXYInFrontOfNPCCol						GetPointInFrontOfNPCCol
 	
 #endif
@@ -3386,6 +3465,18 @@ Tryg3DProt:: Tryg3DInit_MapPrecision(){
 }
 
 Tryg3DProt:: Tryg3DInit(){
+	
+	//Welcome to 3DTryg
+	new ver_name[16];
+	format(ver_name,sizeof(ver_name),"%d.%d.%d",(Tryg3D_Version / 10000),((Tryg3D_Version % 10000) / 100),((Tryg3D_Version % 10000) % 100));
+	if(GetSVarInt("ADM:3DTryg:INIT") == 0){
+		SetSVarInt("ADM:3DTryg:INIT",1);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf(" ");
+			printf("[ADM] Info: Load 3DTryg v%s for SA:MP %s by Abyss Morgan",ver_name,Tryg3D_SAMP_Version);
+			printf(" ");
+		}
+	}
 	
 	//Init ColAndreas
 	#if ((!defined DISABLE_3D_TRYG_CHECK) && (defined Tryg3D_ColAndreas) && (COLANDREAS_VERSION != 0))

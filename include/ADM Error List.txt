@@ -6,6 +6,7 @@ This option is available in ATM.inc
 [ADM] Error: Your Streamer ... It is not compatible with this version Streamer Functions, update your Streamer to ...
 
 //3DTryg.inc
+[ADM] Info: Load 3DTryg v... by Abyss Morgan
 [ADM] Info: MapAndreas successfully init.
 [ADM] Info: ColAndreas successfully init.
 [ADM] Info: YSF Timeline Sync successfully init.
