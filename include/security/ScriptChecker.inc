@@ -5,6 +5,7 @@
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                                                    *
+ * Publication: None                                                                                                              *
  *                                                                                                                                *
  * Plugins: None                                                                                                                  *
  * Modules: None                                                                                                                  *

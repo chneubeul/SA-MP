@@ -5,6 +5,7 @@
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
+ * Publication: http://forum.sa-mp.com/showthread.php?t=609788                                                                    *
  *                                                                                                                                *
  * Plugins: Streamer, MapAndreas                                                                                                  *
  * Modules: 3DTryg, Missile                                                                                                       *
