@@ -8,7 +8,7 @@
  * Publication: http://forum.sa-mp.com/showthread.php?t=595203                                                                    *
  *                                                                                                                                *
  * Plugins: SScanf                                                                                                                *
- * Modules: ProtVar                                                                                                               *
+ * Modules: MD5, ProtVar                                                                                                          *
  *                                                                                                                                *
  * File Version: 2.2.1                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *

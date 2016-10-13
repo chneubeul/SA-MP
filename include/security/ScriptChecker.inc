@@ -504,7 +504,7 @@ public OnThisScriptCheck(playerid,errorlevel){
 	return 1;
 }
 
-bool:CRC_ScriptChecker = true;
+new bool:CRC_ScriptChecker = true;
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
