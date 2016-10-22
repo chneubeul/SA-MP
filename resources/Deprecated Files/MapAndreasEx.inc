@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                    MapAndreas Extended Functions (Deprecated use 3DTryg.inc)                     *
+ *                    MapAndreas Extended Functions (Deprecated, use 3DTryg.inc)                    *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *

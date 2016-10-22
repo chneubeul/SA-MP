@@ -64,11 +64,8 @@
 │   ├───FoxForeach
 │   ├───GangZoneEx
 │   │   └───Streamer
-│   ├───HTMLColor
 │   ├───Logs
 │   ├───LY
-│   ├───MapAndreasEx
-│   │   └───MapAndreas
 │   ├───RGB
 │   ├───StreamerFunction
 │   │   └───Streamer

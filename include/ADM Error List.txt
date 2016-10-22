@@ -5,6 +5,7 @@ This option is available in ATM.inc
 //StreamerFunction.inc
 [ADM] Error: Your Streamer ... It is not compatible with this version Streamer Functions, update your Streamer to ...
 
+
 //3DTryg.inc
 [ADM] Info: Load 3DTryg v... by Abyss Morgan
 [ADM] Info: MapAndreas successfully init.
@@ -21,14 +22,11 @@ This option is available in ATM.inc
 [ADM] Error: Cannot load /scriptfiles/SAfull.hmap
 [ADM] Error: Cannot load /scriptfiles/colandreas/ColAndreas.cadb
 
-//MapAndreasEx.inc
-[ADM] Info: MapAndreas successfully init.
-[ADM] Error: MapAndreas failed to initiated.
-[ADM] Error: Cannot load /scriptfiles/SAfull.hmap
 
 //GangZoneEx.inc
 [ADM] Error: Invalid zoneid, range 0 - 1023
 [ADM] Error: GangZoneCreate returned INVALID_GANG_ZONE
+
 
 //ScriptSecure.inc & MultiScriptSecure.inc
 [ADM] Info: Local server detect.
@@ -39,19 +37,30 @@ This option is available in ATM.inc
 [ADM] Error: Invalid server config, check your language.
 [ADM] Error: The script did not get permission to activation
 
+
 //Mines.inc
 [ADM] Error: Failed to CreateDynamicMine limit ... exceeded, edit Mines.inc and change MAX_MINES
+
 
 //Missile.inc
 [ADM] Error: Failed to MissileLaunch limit ... exceeded, edit Missile.inc and change MAX_MISSILE
 
+
 //EngineX.inc
-[ADM] Info: NGCM Mob Move Engine System ... loaded
-[ADM] Info: NGCM Mob Move Engine System ... unloaded
+[ADM] Info: NGCM Mob Move Engine System ... loaded.
+[ADM] Info: NGCM Mob Move Engine System ... unloaded.
 [ADM] Error: NGCM Mob Move Engine System ... not loaded.
+
+
+//EngineV6.inc
+[ADM] Error: NGCM Mob Move Engine System %s not loaded.
+[ADM] Info: NGCM Mob Move Engine System %s loaded.
+[ADM] Info: NGCM Mob Move Engine System %s unloaded.
+
 
 //SAOI.inc
 [ADM] Error: This SAOI file is protected.
+
 
 //Global
 [ADM] Error: Invalid MapAndreas Memory.

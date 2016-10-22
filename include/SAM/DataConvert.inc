@@ -80,7 +80,7 @@
 #define swap_int(%0,%1)				(((%0) ^= (%1)), ((%1) ^= (%0)), ((%0) ^= (%1)))
 
 #define BoolToInt(%0)				((%0)?1:0)
-#define IntToBool(%0)				((%0 == 1)?true:false)
+#define IntToBool(%0)				(((%0) == 1)?true:false)
 
 #define FloatToInt(%0)				(_:%0)
 #define IntToFloat(%0)				(Float:%0)

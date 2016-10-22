@@ -14,7 +14,7 @@
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
- * 3DTryg Version: 2.7.3                                                                                                          *
+ * 3DTryg Version: 3.0.1                                                                                                          *
  * Missile Version: 1.6.6                                                                                                         *
  *                                                                                                                                *
  * Vehicle Weapons:                                                                                                               *
@@ -133,11 +133,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.7.3
+	#error [ADM] You need 3DTryg.inc v3.0.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.7.3
-#elseif (Tryg3D_Version < 20703)
-	#error [ADM] Update you 3DTryg.inc to v2.7.3
+	#error [ADM] Update you 3DTryg.inc to v3.0.1
+#elseif (Tryg3D_Version < 30001)
+	#error [ADM] Update you 3DTryg.inc to v3.0.1
 #endif
 
 #if defined _veh_missile_launcher
@@ -512,32 +512,32 @@ public OnVehicleMissileInit(){
 public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 	if(IsPlayerInAnyVehicle(playerid) && GetPlayerVehicleSeat(playerid) == 0){
 		new vid = GetPlayerVehicleID(playerid);
-		if(Tryg3DKeyPressed(GetVehicleMiniMissileKey(vid))){
+		if(Tryg3D_KeyPressed(GetVehicleMiniMissileKey(vid))){
 			if(IsToggleVehicleMiniMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_MINI);
 			}
 		}
-		if(Tryg3DKeyPressed(GetVehicleHeavyMissileKey(vid))){
+		if(Tryg3D_KeyPressed(GetVehicleHeavyMissileKey(vid))){
 			if(IsToggleVehicleHeavyMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_HEAVY);
 			}
 		}
-		if(Tryg3DKeyPressed(GetVehicleBomberMissileKey(vid))){
+		if(Tryg3D_KeyPressed(GetVehicleBomberMissileKey(vid))){
 			if(IsToggleVehicleBomberMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_BOMBER);
 			}
 		}
-		if(Tryg3DKeyPressed(GetVehicleRhinoMissileKey(vid))){
+		if(Tryg3D_KeyPressed(GetVehicleRhinoMissileKey(vid))){
 			if(IsToggleVehicleRhinoMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_RHINO);
 			}
 		}
-		if(Tryg3DKeyPressed(GetVehicleMortarMissileKey(vid))){
+		if(Tryg3D_KeyPressed(GetVehicleMortarMissileKey(vid))){
 			if(IsToggleVehicleMortarMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_MORTAR);
 			}
 		}
-		if(Tryg3DKeyPressed(GetVehicleMegaMissileKey(vid))){
+		if(Tryg3D_KeyPressed(GetVehicleMegaMissileKey(vid))){
 			if(IsToggleVehicleMegaMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_MEGA);
 			}

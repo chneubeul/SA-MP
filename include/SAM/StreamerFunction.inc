@@ -14,6 +14,10 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
+ * Compiler Options:                                                                                                                       *
+ * DISABLE_STREAMER_SPEC_CHECK  //Turn off check streamer version                                                                          *
+ * ENABLE_BULLET_DYNAMIC_OBJECT //Turn on call OnPlayerWeaponShot when we shoot in a dynamic object                                        *
+ *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
  * GetDynamicObjectModel(objectid);                                                                                                        *
  * SetDynamicObjectModel(objectid,modelid);                                                                                                *

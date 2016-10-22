@@ -1,7 +1,7 @@
 Plugin Include:
+[ADM] Unknown SScanf Version
 [ADM] Unknown Streamer Version
 [ADM] Unknown MapAndreas Version
-[ADM] Unknown SScanf Version
 [ADM] Unknown ColAndreas Version
 [ADM] This include requires SA:MP version 0.3.7
 
@@ -10,21 +10,18 @@ Global Include:
 Detected another command system
 
 
-
 All Include:
 [ADM] You need <include name> <include version>
 [ADM] Update you <include name> to <include version>
 
 
-
 SAM Include:
 [ADM] Error please include FoxForeach before 3DTryg, for increase loop speed.
- 
 [ADM] Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
+
 
 Engine Include:
 [ADM] Fatal error incompatible NOX
-
 
 
 Security Include:

@@ -81,7 +81,7 @@ stock GZ_GangZoneDestroy(zoneid){
 	stock bool:IsPlayerInGangZone(playerid,zoneid){
 		if(zoneid < 0 || zoneid > MAX_GANG_ZONES){
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+				printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES-1);
 			}
 			return false;
 		}
@@ -92,7 +92,7 @@ stock GZ_GangZoneDestroy(zoneid){
 	stock bool:IsValidGangZone(zoneid){
 		if(zoneid < 0 || zoneid > MAX_GANG_ZONES){
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES);
+				printf("[ADM] Warring: Invalid zoneid, range 0 - %d",MAX_GANG_ZONES-1);
 				return false;
 			}
 		}

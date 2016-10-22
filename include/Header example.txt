@@ -32,7 +32,6 @@
 #include <Dini>
 #include <SHA256>
 #include <pointers>
-#include <y_timers>
 
 
 //ProtVar Config
@@ -41,17 +40,23 @@
 
 
 //3DTryg.inc Config
-//#define DISABLE_3D_TRYG_CHECK
-//#define DISABLE_3D_TRYG_INIT
-//#define ENABLE_3D_TRYG_TIMELINE_SYNC
-
+//#define DISABLE_3D_TRYG_CHECK        //Use before 3DTryg.inc for disable Check Plugin Version
+//#define DISABLE_3D_TRYG_INIT         //Use before 3DTryg.inc for disable MapAndreas/ColAndreas Auto Init
+//#define ENABLE_3D_TRYG_TIMELINE_SYNC //Use before 3DTryg.inc for enable Timeline Sync
+//#define DISABLE_3D_TRYG_MAPANDREAS   //Use before 3DTryg.inc for disable MapAndreas Module
+//#define DISABLE_3D_TRYG_COLANDREAS   //Use before 3DTryg.inc for disable ColAndreas Module
+//#define DISABLE_3D_TRYG_YSF          //Use before 3DTryg.inc for disable YSF Module
+//#define DISABLE_3D_TRYG_STREAMER     //Use before 3DTryg.inc for disable Streamer Module
+//#define DISABLE_3D_TRYG_FOXFOREACH   //Use before 3DTryg.inc for disable FoxForeach Module
+//#define DISABLE_3D_TRYG_YSIFOREACH   //Use before 3DTryg.inc for disable Foreach Module
+//#define DISABLE_3D_TRYG_FCNPC        //Use before 3DTryg.inc for disable FCNPC Module
 
 //StreamerFunction.inc Config
 //#define DISABLE_STREAMER_SPEC_CHECK  //Turn off check streamer version
 //#define ENABLE_BULLET_DYNAMIC_OBJECT //Turn on call OnPlayerWeaponShot when we shoot in a dynamic object
 
 
-//ADM.inc Config
+//ATM.inc Config
 //#define DISABLE_ATM_FUNCTION
 //#define DISABLE_ATM_EXEC
 //#define DISABLE_ATM_PUB_VAR
@@ -77,7 +82,6 @@
 #include <SAM/StreamerFunction>     //http://forum.sa-mp.com/showthread.php?t=590918
 #include <SAM/BitFunctions>         //http://forum.sa-mp.com/showthread.php?t=591223
 #include <SAM/RGB>                  //http://forum.sa-mp.com/showthread.php?t=590770
-#include <SAM/MapAndreasEx>         //This include is deprecated, 3DTryg contain all of its functions
 #include <SAM/FoxForeach>           //http://forum.sa-mp.com/showthread.php?t=611175 (Incompatible with foreach.inc !)
 #include <SAM/3DTryg>               //http://forum.sa-mp.com/showthread.php?t=591010
 #include <SAM/BINLDR>               //http://forum.sa-mp.com/showthread.php?p=3653547
@@ -85,7 +89,6 @@
 #include <SAM/ADM>                  //http://forum.sa-mp.com/showthread.php?t=595203
 #include <SAM/DoT>                  //not published
 #include <SAM/GangZoneEx>           //not published
-#include <SAM/HTMLColor>            //not published
 #include <SAM/DataConvert>          //http://forum.sa-mp.com/showthread.php?p=3719467
 #include <SAM/TextDrawEx>           //not published
 #include <SAM/VehicleEx>            //http://forum.sa-mp.com/showthread.php?p=3727224

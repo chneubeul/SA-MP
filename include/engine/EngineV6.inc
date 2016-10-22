@@ -14,7 +14,7 @@
  * SA:MP Version: 0.3.7                                                                                                            *
  * Streamer Version: 2.8.2                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                       *
- * 3DTryg Version: 2.6.6                                                                                                           *
+ * 3DTryg Version: 3.0.1                                                                                                           *
  *                                                                                                                                 *
  * Include created for the project Next Generation City Mod http://ngc.porobieni.com                                               *
  *                                                                                                                                 *
@@ -71,11 +71,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.6
+	#error [ADM] You need 3DTryg.inc v3.0.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.6
-#elseif (Tryg3D_Version < 20606)
-	#error [ADM] Update you 3DTryg.inc to v2.6.6
+	#error [ADM] Update you 3DTryg.inc to v3.0.1
+#elseif (Tryg3D_Version < 30001)
+	#error [ADM] Update you 3DTryg.inc to v3.0.1
 #endif
 
 #if defined _NOX_ENGINE_X
@@ -149,7 +149,7 @@ public OnEngineXInit(){
 		return 0;
 	}
 	if(GetSVarInt("ADM:Logging:Disable") == 0){
-		printf("[ADM] Info: NGCM Mob Move Engine System %s loaded",NOX_VERSION);
+		printf("[ADM] Info: NGCM Mob Move Engine System %s loaded.",NOX_VERSION);
 	}
 	EngineXLoaded = true;
 	return 1;
