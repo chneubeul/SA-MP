@@ -145,7 +145,7 @@ stock strcopy(input[],output[]){
 
 stock fstrcopy(input[],output[],maxdest = sizeof(output)){
 	output[0] = EOS;
-	strcat(output,input);
+	strcat(output,input,maxdest);
 	output[strlen(input)] = EOS;
 }
 
