@@ -11,7 +11,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 3.0.1                                                                                                              *
+ * File Version: 3.0.2                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -280,6 +280,7 @@
  * GetObjectOrientationPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);               *
  * bool:IsBetweenPlayersIsWall(playerid,targetid);                                                                                  *
  * bool:IsBetweenPlayerToPointIsWall(playerid,Float:x,Float:y,Float:z);                                                             *
+ * bool:GetPointInWallForPoint(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,Float:sector=90.0);               *
  * bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,                               *
  *                             Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);  *
  * bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,                                                    *
@@ -400,11 +401,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.0.1
+	#error [ADM] You need 3DTryg.inc v3.0.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.0.1
-#elseif (Tryg3D_Version < 30001)
-	#error [ADM] Update you 3DTryg.inc to v3.0.1
+	#error [ADM] Update you 3DTryg.inc to v3.0.2
+#elseif (Tryg3D_Version < 30002)
+	#error [ADM] Update you 3DTryg.inc to v3.0.2
 #endif
 */
 
@@ -417,7 +418,7 @@
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
 
-#define Tryg3D_Version									(30001) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(30002) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 //Tryg3D Plugin Module List
@@ -2713,6 +2714,24 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		return false;
 	}
 	
+	Tryg3DProt:: bool:GetPointInWallForPoint(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,Float:sector=90.0){
+		if(sector <= 0.0 || sector > 360.0) return false;
+		new Float:px,Float:py,Float:pz,Float:tmp_dist,Float:near_dist = 20000.0,sec_cnt = floatround(360.0/sector);
+		if(sec_cnt > 360) sec_cnt = 360;
+		
+		for(new i = 0; i < sec_cnt; i++){
+			GetPointInFront3DCol(x,y,z,0.0,CompRotationFloat(sector*i),radius,px,py,pz); 
+			tmp_dist = GetDistanceBetweenPoints3D(x,y,z,px,py,pz);
+			if(tmp_dist < near_dist){
+				near_dist = tmp_dist;
+				tx = px;
+				ty = py;
+				tz = pz;
+			}
+		}
+		return true;
+	}
+
 	#define GetXYInFrontOfPlayerCol						GetPointInFrontOfPlayerCol
 	#define GetPointInFrontCol							GetPointInFront3DCol
 	#define GetPointInFrontOfCameraCol					GetPointInFrontOfCamera3DCol

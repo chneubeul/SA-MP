@@ -602,7 +602,7 @@ stock DestroyObjects(){
 
 stock CountVehicles(){
 	new count = 0;
-	for(new i = 0; i <= MAX_VEHICLES; i++){
+	for(new i = 0, j = GetVehiclePoolSize(); i <= j; i++){
 		if(IsValidVehicle(i)) count++;
 	}
 	return count;
@@ -610,7 +610,7 @@ stock CountVehicles(){
 
 stock DestroyVehicles(){
 	new count = 0;
-	for(new i = 0; i <= MAX_VEHICLES; i++){
+	for(new i = 0, j = GetVehiclePoolSize(); i <= j; i++){
 		if(IsValidVehicle(i)){
 			DestroyVehicle(i);
 			count++;
