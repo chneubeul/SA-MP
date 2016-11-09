@@ -1492,9 +1492,7 @@ StreamerSpecProt:: StreamerSpecInit(){
 	if(GetSVarInt("ADM:StreamerSpec:INIT") == 0){
 		SetSVarInt("ADM:StreamerSpec:INIT",1);
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf(" ");
 			printf("[ADM] Info: Load Streamer Functions v%s for SA:MP %s by Abyss Morgan",ver_name,Streamer_Spec_SAMP_Version);
-			printf(" ");
 		}
 	}
 	#if !defined DISABLE_STREAMER_SPEC_CHECK

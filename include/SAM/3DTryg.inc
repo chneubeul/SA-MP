@@ -4106,10 +4106,10 @@ Tryg3DProt:: Tryg3DInit_MapPrecision(){
 			T3D:ver = strval(T3D:version);
 			format(T3D:f_version,sizeof(T3D:f_version),"%d",Tryg3D_Version);
 			if(strcmp(T3D:version,T3D:f_version) != 0){
-				print("\n");
+				print(" ");
 				printf("[ADM] Info: Please update your 3DTryg include to %d.%d.%d from here:",(T3D:ver / 10000),((T3D:ver % 10000) / 100),((T3D:ver % 10000) % 100));
 				print("https://github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc");
-				print("\n");
+				print(" ");
 			}
 		}
 		return 1;
@@ -4124,9 +4124,7 @@ Tryg3DProt:: Tryg3DInit(){
 	if(GetSVarInt("ADM:3DTryg:INIT") == 0){
 		SetSVarInt("ADM:3DTryg:INIT",1);
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf(" ");
 			printf("[ADM] Info: Load 3DTryg v%s for SA:MP %s by Abyss Morgan",ver_name,Tryg3D_SAMP_Version);
-			printf(" ");
 		}
 	}
 	
