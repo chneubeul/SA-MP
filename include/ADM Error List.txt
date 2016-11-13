@@ -5,7 +5,7 @@ This option is available in ATM.inc
 //StreamerFunction.inc
 [ADM] Error: Your Streamer ... It is not compatible with this version Streamer Functions, update your Streamer to ...
 [ADM] Info: Load Streamer Functions v... for SA:MP ... by Abyss Morgan
-
+[ADM] Info: Unload Streamer Functions v... for SA:MP ... by Abyss Morgan
 
 //3DTryg.inc
 [ADM] Info: Please update your 3DTryg include to ... from here:

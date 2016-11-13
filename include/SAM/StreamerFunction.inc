@@ -10,7 +10,7 @@
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
  *                                                                                                                                         *
- * File Version: 2.5.5                                                                                                                     *
+ * File Version: 2.5.6                                                                                                                     *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
@@ -277,6 +277,7 @@
  * SetStreamDatagram(type,id,data[]);                                                                                                      *
  * RemoveStreamDatagram(type,id);                                                                                                          *
  * bool:IsSetStreamDatagram(type,id);                                                                                                      *
+ * GetStreamerSpecActiveCount();                                                                                                           *
  *                                                                                                                                         *
  * Definitions:                                                                                                                            *
  * INVALID_DYNAMIC_OBJECT_ID                                                                                                               *
@@ -304,18 +305,17 @@
  * Delete3DTextLabel            -> Resets the variable after the destruction of the 3DTextLabel.                                           *
  * DeletePlayer3DTextLabel      -> Resets the variable after the destruction of the Player3DTextLabel.                                     *
  * AttachDynamicObjectToObject  -> Changes the priority of the parent to be greater than the priority of sub-objects.                      *
- * IsValidVehicle               -> Original method not working                                                                             *
  *                                                                                                                                         *
  *******************************************************************************************************************************************/
 
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.5.5
+	#error [ADM] You need StreamerFunction.inc v2.5.6
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.5.5
-#elseif (Streamer_Spec_Version < 20505)
-	#error [ADM] Update you StreamerFunction.inc to v2.5.5
+	#error [ADM] Update you StreamerFunction.inc to v2.5.6
+#elseif (Streamer_Spec_Version < 20506)
+	#error [ADM] Update you StreamerFunction.inc to v2.5.6
 #endif
 */
 
@@ -332,7 +332,7 @@
 	#error [ADM] Unknown Streamer Version
 #endif
 
-#define Streamer_Spec_Version 					(20505) //a.b.c 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20506) //a.b.c 10000*a+100*b+c
 #define Streamer_Spec_SAMP_Version				"0.3.7"
 #define Valid_Streamer_Version 					(0x282001)
 
@@ -367,25 +367,6 @@
 #endif
 
 #define StreamerSpecProt::						stock
-
-#if !defined IsValidVehicle
-	native IsValidVehicle(vehicleid);
-#endif
-
-//Hook: IsValidVehicle
-StreamerSpecProt:: SSpec_IsValidVehicle(vehicleid){
-	new Float:x,Float:y,Float:z;
-	GetVehiclePos(vehicleid,x,y,z);
-	if(x == 0.0 && y == 0.0 && z == 0.0) return 0;
-	return 1;
-}
-
-#if defined _ALS_IsValidVehicle
-	#undef IsValidVehicle
-#else
-	#define _ALS_IsValidVehicle
-#endif
-#define IsValidVehicle SSpec_IsValidVehicle
 
 #if !defined isnull
 	#define isnull(%1) 							((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
@@ -579,6 +560,8 @@ StreamerSpecProt:: SSpec_IsValidVehicle(vehicleid){
 #define GetNearestVisibleMapIcon(%0)			GetNearestVisibleItem((%0),STREAMER_TYPE_MAP_ICON)
 #define GetNearestVisible3DText(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_3D_TEXT_LABEL)
 #define GetNearestVisibleArea(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_AREA)
+
+#define GetStreamerSpecActiveCount() 			GetSVarInt("ADM:StreamerSpec:ACTIVE")
 
 StreamerSpecProt:: bool:IsValidStreamer(version){
 	if(GetStreamerVersion() < version) return false;
@@ -1483,9 +1466,12 @@ public OnPlayerLeaveDynamicArea(playerid,areaid){
  *                                                                                                  *
  ****************************************************************************************************/
 
-new bool:CRC_StreamerFunction = true;
+new bool:CRC_StreamerFunctionInit = true,
+	bool:CRC_StreamerFunctionExit = true;
 
 StreamerSpecProt:: StreamerSpecInit(){
+	SetSVarInt("ADM:StreamerSpec:ACTIVE",GetStreamerSpecActiveCount()+1);
+	
 	//Welcome to StreamerFunction
 	new ver_name[16];
 	format(ver_name,sizeof(ver_name),"%d.%d.%d",(Streamer_Spec_Version / 10000),((Streamer_Spec_Version % 10000) / 100),((Streamer_Spec_Version % 10000) % 100));
@@ -1500,9 +1486,23 @@ StreamerSpecProt:: StreamerSpecInit(){
 	#endif
 }
 
+StreamerSpecProt:: StreamerSpecExit(){
+	SetSVarInt("ADM:StreamerSpec:ACTIVE",GetStreamerSpecActiveCount()-1);
+	
+	//Goodbye StreamerSpec
+	new ver_name[16];
+	format(ver_name,sizeof(ver_name),"%d.%d.%d",(Streamer_Spec_Version / 10000),((Streamer_Spec_Version % 10000) / 100),((Streamer_Spec_Version % 10000) % 100));
+	if(GetStreamerSpecActiveCount() == 0){
+		SetSVarInt("ADM:StreamerSpec:INIT",0);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Info: Unload Streamer Functions v%s for SA:MP %s by Abyss Morgan",ver_name,Streamer_Spec_SAMP_Version);
+		}
+	}
+}
+
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_StreamerFunction){ CRC_StreamerFunction = false; } else return 1; //Init Engine
+	if(CRC_StreamerFunctionInit){ CRC_StreamerFunctionInit = false; } else return 1; //Init Engine
 	StreamerSpecInit();
 	#if defined SSpec_OnFilterScriptInit
 		SSpec_OnFilterScriptInit();
@@ -1522,7 +1522,7 @@ public OnFilterScriptInit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
-	if(CRC_StreamerFunction){ CRC_StreamerFunction = false; } else return 1; //Init Engine
+	if(CRC_StreamerFunctionInit){ CRC_StreamerFunctionInit = false; } else return 1; //Init Engine
 	StreamerSpecInit();
 	#if defined SSpec_OnGameModeInit
 		SSpec_OnGameModeInit();
@@ -1538,6 +1538,46 @@ public OnGameModeInit(){
 #define OnGameModeInit SSpec_OnGameModeInit
 #if defined SSpec_OnGameModeInit
 	forward SSpec_OnGameModeInit();
+#endif
+
+//Hook: OnFilterScriptExit
+public OnFilterScriptExit(){
+	if(CRC_StreamerFunctionExit){ CRC_StreamerFunctionExit = false; } else return 1; //Exit Engine
+	StreamerSpecExit();
+	#if defined SSpec_OnFilterScriptExit
+		SSpec_OnFilterScriptExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit SSpec_OnFilterScriptExit
+#if defined SSpec_OnFilterScriptExit
+	forward SSpec_OnFilterScriptExit();
+#endif
+
+//Hook: OnGameModeExit
+public OnGameModeExit(){
+	if(CRC_StreamerFunctionExit){ CRC_StreamerFunctionExit = false; } else return 1; //Exit Engine
+	StreamerSpecExit();
+	#if defined SSpec_OnGameModeExit
+		SSpec_OnGameModeExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeExit
+	#undef OnGameModeExit
+#else
+	#define _ALS_OnGameModeExit
+#endif
+#define OnGameModeExit SSpec_OnGameModeExit
+#if defined SSpec_OnGameModeExit
+	forward SSpec_OnGameModeExit();
 #endif
 
 //EOF
