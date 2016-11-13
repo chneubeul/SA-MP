@@ -39,22 +39,8 @@
 //#define ENABLE_PROTECTION_VARIABLES
 
 
-//3DTryg.inc Config
-//#define DISABLE_3D_TRYG_CHECK        //Use before 3DTryg.inc for disable Check Plugin Version
-//#define DISABLE_3D_TRYG_INIT         //Use before 3DTryg.inc for disable MapAndreas/ColAndreas Auto Init
-//#define ENABLE_3D_TRYG_TIMELINE_SYNC //Use before 3DTryg.inc for enable Timeline Sync
-//#define DISABLE_3D_TRYG_MAPANDREAS   //Use before 3DTryg.inc for disable MapAndreas Module
-//#define DISABLE_3D_TRYG_COLANDREAS   //Use before 3DTryg.inc for disable ColAndreas Module
-//#define DISABLE_3D_TRYG_YSF          //Use before 3DTryg.inc for disable YSF Module
-//#define DISABLE_3D_TRYG_STREAMER     //Use before 3DTryg.inc for disable Streamer Module
-//#define DISABLE_3D_TRYG_FOXFOREACH   //Use before 3DTryg.inc for disable FoxForeach Module
-//#define DISABLE_3D_TRYG_YSIFOREACH   //Use before 3DTryg.inc for disable Foreach Module
-//#define DISABLE_3D_TRYG_FCNPC        //Use before 3DTryg.inc for disable FCNPC Module
-
-//StreamerFunction.inc Config
-//#define DISABLE_STREAMER_SPEC_CHECK  //Turn off check streamer version
-//#define ENABLE_BULLET_DYNAMIC_OBJECT //Turn on call OnPlayerWeaponShot when we shoot in a dynamic object
-
+//3DTryg.inc Config (Please 3DTryg.inc header)
+//StreamerFunction.inc Config  (Please StreamerFunction.inc header)
 
 //ATM.inc Config
 //#define DISABLE_ATM_FUNCTION

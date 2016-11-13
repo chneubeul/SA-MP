@@ -11,7 +11,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  *                                                                                                                                  *
- * File Version: 3.0.4                                                                                                              *
+ * File Version: 3.0.5                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -33,8 +33,7 @@
  * DISABLE_3D_TRYG_CHECK        //Use before 3DTryg.inc for disable Check Plugin Version                                            *
  * DISABLE_3D_TRYG_INIT         //Use before 3DTryg.inc for disable MapAndreas/ColAndreas Auto Init                                 *
  * DISABLE_3D_TRYG_ANNOUNCE     //Use before 3DTryg.inc for disable 3DTryg Announce                                                 *
- * ENABLE_3D_TRYG_TIMELINE_SYNC //Use before 3DTryg.inc for enable Timeline Sync                                                    *
- * ENABLE_3D_TRYG_STREAM3D      //Use before 3DTryg.inc for enable Stream3D Module                                                  *
+ * DISABLE_3D_TRYG_ACTOR        //Use before 3DTryg.inc for disable Actors Module                                                   *
  * DISABLE_3D_TRYG_MAPANDREAS   //Use before 3DTryg.inc for disable MapAndreas Module                                               *
  * DISABLE_3D_TRYG_COLANDREAS   //Use before 3DTryg.inc for disable ColAndreas Module                                               *
  * DISABLE_3D_TRYG_YSF          //Use before 3DTryg.inc for disable YSF Module                                                      *
@@ -42,6 +41,8 @@
  * DISABLE_3D_TRYG_FOXFOREACH   //Use before 3DTryg.inc for disable FoxForeach Module                                               *
  * DISABLE_3D_TRYG_YSIFOREACH   //Use before 3DTryg.inc for disable Foreach Module                                                  *
  * DISABLE_3D_TRYG_FCNPC        //Use before 3DTryg.inc for disable FCNPC Module                                                    *
+ * ENABLE_3D_TRYG_TIMELINE_SYNC //Use before 3DTryg.inc for enable Timeline Sync                                                    *
+ * ENABLE_3D_TRYG_STREAM3D      //Use before 3DTryg.inc for enable Stream3D Module                                                  *
  *                                                                                                                                  *
  * Complementary Functions:                                                                                                         *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                         *
@@ -58,10 +59,14 @@
  * single_clock(max,id); //For GetRandomClockPos parameter rz                                                                       *
  * even_clock(max,id);   //For GetRandomClockPos parameter rz                                                                       *
  * uneven_clock(max,id); //For GetRandomClockPos parameter rz                                                                       *
- * NLTZ(value);              //NotLessThanZero                                                                                      *
- * NMTZ(value);              //NotMoreThanZero                                                                                      *
- * Float:NLTZF(Float:value); //NotLessThanZeroFloat                                                                                 *
- * Float:NMTZF(Float:value); //NotMoreThanZeroFloat                                                                                 *
+ * NLTZ(value);                           //NotLessThanZero                                                                         *
+ * NMTZ(value);                           //NotMoreThanZero                                                                         *
+ * Float:NLTZF(Float:value);              //NotLessThanZeroFloat                                                                    *
+ * Float:NMTZF(Float:value);              //NotMoreThanZeroFloat                                                                    *
+ * NLTV(value,min);                       //NotLessThanValue                                                                        *
+ * NMTV(value,max);                       //NotMoreThanValue                                                                        *
+ * Float:NLTVF(Float:value,Float:min);    //NotLessThanValueFloat                                                                   *
+ * Float:NMTVF(Float:value,Float:max);    //NotMoreThanValueFloat                                                                   *
  * CompRotation(rotation,&crotation=0);   //CompressRotation                                                                        *
  * DeCompRotation(rotation,&crotation=0); //DeCompressRotation                                                                      *
  * Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0);   //CompressRotationFloat                                          *
@@ -172,6 +177,7 @@
  * Float:GetPlayerVehicleDistance(playerid,vehicleid);                                                                              *
  * Float:GetPlayerObjectDistance(playerid,objectid);                                                                                *
  * SetPlayerLookAtPlayer(playerid,targetid,cut = CAMERA_CUT);                                                                       *
+ * GetPlayerCameraLookAt(playerid,&Float:x,&Float:y,&Float:z);                                                                      *
  * bool:IsPlayerLookAtSky(playerid);                                                                                                *
  * GetVehicleUpVector(vehicleid,&Float:vx,&Float:vy,&Float:vz);                                                                     *
  * GetVehicleUpPos(vehicleid,Float:radius,&Float:x,&Float:y,&Float:z);                                                              *
@@ -205,6 +211,24 @@
  * bool:GetArcPointsCellar2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));    *
  * bool:GetArcPointsStarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points)); *
  * bool:GetArcPointsLarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));  *
+ * bool:IsPointInSphericalSectorEx(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,               *
+ *                                 Float:vrx,Float:vrz,bool:testLOS=true);                                                          *
+ * bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,                               *
+ *                             Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);              *
+ * bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,                                                    *
+ *                           Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);                *
+ * bool:IsVehicleOnPlayerScreen(playerid,vehicleid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,                             *
+ *                              Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);             *
+ * bool:IsVehicleOnFakeScreen(Float:x,Float:y,Float:z,vehicleid,Float:rx,Float:rz,                                                  *
+ *                            Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);               *
+ * bool:IsObjectOnPlayerScreen(playerid,objectid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,                               *
+ *                             Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);              *
+ * bool:IsObjectOnFakeScreen(Float:x,Float:y,Float:z,objectid,Float:rx,Float:rz,                                                    *
+ *                           Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);                *
+ * bool:IsActorOnPlayerScreen(playerid,actorid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,                                 *
+ *                            Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);               *
+ * bool:IsActorOnFakeScreen(Float:x,Float:y,Float:z,actorid,Float:rx,Float:rz,                                                      *
+ *                          Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);                 *
  *                                                                                                                                  *
  * Animation Functions:                                                                                                             *
  * bool:IsPlayerSkydiving(playerid);      //Animation Test                                                                          *
@@ -226,6 +250,7 @@
  * Reset3DTrygErrorCount();                                                                                                         *
  * Tryg3D_SetStreamDistance(Float:streamdistance); //default 300.0                                                                  *
  * Float:Tryg3D_GetStreamDistance();                                                                                                *
+ * GetTryg3DActiveCount();                                                                                                          *
  *                                                                                                                                  *
  * Useless functions:                                                                                                               *
  * ShiftPositionToOrion(Float:x,Float:y,Float:z,&Float:orion,&Float:lon,&Float:lat);                                                *
@@ -249,12 +274,21 @@
  * bool:GetDynamicObjectToPointVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                           *
  * Float:GetDynamicObjectDistFromPoint(objectid,Float:x,Float:y,Float:z);                                                           *
  * bool:IsDynamicObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Float:z);                                                *
+ * SetPlayerAbsolutePosition(playerid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1,compensatedtime = -1);       *
+ * SetPlayerAbsolutePositionVeh(playerid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1,compensatedtime = -1);    *
  * GetDynamicObjectRotatedVector(objectid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,         *
  *                               Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                           *
+ * bool:IsDynamicObjectOnPlayerScreen(playerid,objectid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,                        *
+ *                                    Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);       *
+ * bool:IsDynamicObjectOnFakeScreen(Float:x,Float:y,Float:z,objectid,Float:rx,Float:rz,                                             *
+ *                                  Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);         *
  *                                                                                                                                  *
  * Streamer Functions (ColAndreas):                                                                                                 *
  * GetDynamicObjectOrientPosCol(objectid,element_orientation:orientation,Float:distance,&Float:tx,&Float:ty,&Float:tz);             *
  * GetDynamicObjectCollisionFlags(objectid);                                                                                        *
+ *                                                                                                                                  *
+ * Streamer Functions (FCNPC):                                                                                                      *
+ * SetNPCAbsolutePosition(npcid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1,compensatedtime = -1);             *
  *                                                                                                                                  *
  * MapAndreas Functions:                                                                                                            *
  * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0);                                                                             *
@@ -299,10 +333,6 @@
  * bool:IsBetweenPlayersIsWall(playerid,targetid);                                                                                  *
  * bool:IsBetweenPlayerToPointIsWall(playerid,Float:x,Float:y,Float:z);                                                             *
  * bool:GetPointInWallForPoint(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,Float:sector=90.0);               *
- * bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,                               *
- *                             Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);  *
- * bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,                                                    *
- *                           Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true);    *
  *                                                                                                                                  *
  * ColAndreas Extended Functions:                                                                                                   *
  * bool:IsColAndreasInit();                                                                                                         *
@@ -310,7 +340,7 @@
  * GetColAndreasVersion();                                                                                                          *
  * GetValidColAndreasVersion();                                                                                                     *
  * bool:IsValidColAndreas(version);                                                                                                 *
- * GetColAndreasVersionName(name[], value = GET_COLANDREAS_VERSION, maxdest = sizeof name);                                         *
+ * GetColAndreasVersionName(name[],value = GET_COLANDREAS_VERSION,maxdest = sizeof(name));                                          *
  * CheckColAndreasVersion();                                                                                                        *
  *                                                                                                                                  *
  * ColAndreas Callbacks:                                                                                                            *
@@ -522,17 +552,18 @@
  * GetXYInFrontOfNPC          -> GetPointInFrontOfNPC                                                                               *
  * GetXYInFrontOfNPCCol       -> GetPointInFrontOfNPCCol                                                                            *
  * GetNPCsDistance            -> GetDistanceBetweenNPCs                                                                             *
+ * Get3DTrygPrecision         -> Get3DTrygModules                                                                                   *
  *                                                                                                                                  *
  ************************************************************************************************************************************/
 
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.0.4
+	#error [ADM] You need 3DTryg.inc v3.0.5
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.0.4
-#elseif (Tryg3D_Version < 30004)
-	#error [ADM] Update you 3DTryg.inc to v3.0.4
+	#error [ADM] Update you 3DTryg.inc to v3.0.5
+#elseif (Tryg3D_Version < 30005)
+	#error [ADM] Update you 3DTryg.inc to v3.0.5
 #endif
 */
 
@@ -554,7 +585,7 @@
 	#tryinclude "a_http"
 #endif
 
-#define Tryg3D_Version									(30004) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(30005) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 //Tryg3D Plugin Module List
@@ -652,22 +683,22 @@
 #endif
 
 //Detect i_quat by IllidanS4
-#if (defined GetVehicleRotation && defined VectorRelToAbsQuat)
+#if ((defined GetVehicleRotation) && (defined VectorRelToAbsQuat))
 	#define Tryg3D_i_quat
 #endif
 
-#if defined _actor_included
+#if ((defined _actor_included) && (!defined DISABLE_3D_TRYG_ACTOR))
 	#define Tryg3D_Actor
 #endif
 
-#if (defined HTTP && !defined DISABLE_3D_TRYG_ANNOUNCE)
+#if ((defined HTTP) && (!defined DISABLE_3D_TRYG_ANNOUNCE))
 	#define Tryg3D_Announce
 #endif
 
 #define Tryg3DProt::									stock
 
 //Auto Create MapAndreasEx
-#if (!defined Tryg3D_MapAndreasEx && defined Tryg3D_ColAndreas)
+#if ((!defined Tryg3D_MapAndreasEx) && (defined Tryg3D_ColAndreas))
 	
 	#define IsMapAndreasInit							Tryg3D_IsColAndreasInit
 	#define SafeMapAndreasInit							Tryg3D_SafeColAndreasInit
@@ -682,10 +713,9 @@
 	}
 	
 	#define ColAndreasFindZ 							MapAndreasFindZ
-	
 	#define Tryg3D_MapAndreasEx
 	
-#elseif (!defined Tryg3D_MapAndreasEx && defined Tryg3D_MapAndreas)
+#elseif ((!defined Tryg3D_MapAndreasEx) && (defined Tryg3D_MapAndreas))
 
 	#define IsMapAndreasInit							Tryg3D_IsMapAndreasInit
 	#define SafeMapAndreasInit							Tryg3D_SafeMapAndreasInit
@@ -810,6 +840,11 @@
 #define NLTZF(%0)										(((%0) < 0.0)?(0.0):(%0))
 #define NMTZF(%0)										(((%0) > 0.0)?(0.0):(%0))
 
+#define NLTV(%0,%1)										(((%0) < (%1))?(%1):(%0))
+#define NMTV(%0,%1)										(((%0) > (%1))?(%1):(%0))
+#define NLTVF(%0,%1)									(((%0) < (%1))?(%1):(%0))
+#define NMTVF(%0,%1)									(((%0) > (%1))?(%1):(%0))
+
 #define IsEven(%0)										((((%0) % 2) == 0)?(true):(false))
 #define power(%0,%1)									(floatround(floatpower((%0),(%1))))
 #define CalculatePercent(%0,%1)							(((%0)/(%1))*100.0)
@@ -835,6 +870,8 @@
 #define GetVehicleFlags(%0)								GetVehicleFlagsByModel(GetVehicleModel(%0))
 #define IsVehicleFlag(%0,%1)							((%0) & (%1))
 #define Tryg3D_GetWeaponDamage(%0)						Tryg3D_WeaponDamage[(%0)]
+
+#define GetTryg3DActiveCount() 							GetSVarInt("ADM:3DTryg:ACTIVE")
 
 #define T3D:											v3D
 
@@ -943,6 +980,7 @@ new const Float:Tryg3D_WeaponDamage[] = {
 
 #pragma unused Tryg3D_WeaponDamage
 #pragma unused Tryg3D_StreamDistance
+
 /****************************************************************************************************
  *                                                                                                  *
  * Enum                                                                                             *
@@ -1665,7 +1703,6 @@ Tryg3DProt:: bool:GetArcPointsCellar2D(Float:x,Float:y,Float:z,Float:tx,Float:ty
 	return true;
 }
 
-
 Tryg3DProt:: bool:GetArcPointsLarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points = sizeof(points)){
 	if(max_points < 3) return false;
 	
@@ -2235,6 +2272,10 @@ Tryg3DProt:: GetObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z){
 	GetPointInFront3D(x,y,z,CompRotationFloat(rx-180.0),rz,radius,x,y,z);
 }
 
+Tryg3DProt:: GetPlayerCameraLookAt(playerid,&Float:x,&Float:y,&Float:z){
+	GetPointInFrontOfCamera3D(playerid,x,y,z,5.0);
+}
+
 Tryg3DProt:: CreateDynamicExplosion(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,playerid = -1,Float:distance = 200.0){
 	if(playerid == -1){
 		Tryg3DForeach(i){
@@ -2420,6 +2461,78 @@ Tryg3DProt:: bool:IsObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Fl
 	return false;
 }
 
+//Abyss Morgan Algorithm Spherical Sector
+Tryg3DProt:: bool:IsPointInSphericalSectorEx(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz,bool:testLOS=true){
+	if(GetDistanceBetweenPoints3D(px,py,pz,x,y,z) > radius) return false;
+	
+	vrx /= 2.0;
+	vrz /= 2.0;
+	
+	new Float:trx,Float:trz;
+	
+	#if defined Tryg3D_ColAndreas
+		if(testLOS){
+			new Float:xC,Float:yC,Float:zC;
+			CA_RayCastLine(x,y,z,px,py,pz,xC,yC,zC);
+			if(!(xC == 0.0 || yC == 0.0 || zC == 0.0)) return false;
+		}
+	#else
+		#pragma unused testLOS
+	#endif
+	
+	if(!GetRotationFor2Point3D(x,y,z,px,py,pz,trx,trz)) return false;
+	if(IsRotationTest(trx,rx-vrx,rx+vrx) && IsRotationTest(trz,rz-vrz,rz+vrz)) return true;
+	return false;
+}
+
+Tryg3DProt:: bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:prx,Float:prz;
+	GetPlayerCameraPos(playerid,x,y,z);
+	GetPlayerCameraRotation(playerid,prx,prz);
+	if(rx != INVALID_ROTATION) prx = rx;
+	if(rz != INVALID_ROTATION) prz = rz;
+	GetPlayerPos(targetid,tx,ty,tz);
+	return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,prx,prz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+}
+
+Tryg3DProt:: bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+	new Float:tx,Float:ty,Float:tz;
+	GetPlayerPos(targetid,tx,ty,tz);
+	return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,rx,rz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+}
+
+Tryg3DProt:: bool:IsVehicleOnPlayerScreen(playerid,vehicleid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:prx,Float:prz;
+	GetPlayerCameraPos(playerid,x,y,z);
+	GetPlayerCameraRotation(playerid,prx,prz);
+	if(rx != INVALID_ROTATION) prx = rx;
+	if(rz != INVALID_ROTATION) prz = rz;
+	GetVehiclePos(vehicleid,tx,ty,tz);
+	return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,prx,prz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+}
+
+Tryg3DProt:: bool:IsVehicleOnFakeScreen(Float:x,Float:y,Float:z,vehicleid,Float:rx,Float:rz,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+	new Float:tx,Float:ty,Float:tz;
+	GetVehiclePos(vehicleid,tx,ty,tz);
+	return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,rx,rz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+}
+
+Tryg3DProt:: bool:IsObjectOnPlayerScreen(playerid,objectid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:prx,Float:prz;
+	GetPlayerCameraPos(playerid,x,y,z);
+	GetPlayerCameraRotation(playerid,prx,prz);
+	if(rx != INVALID_ROTATION) prx = rx;
+	if(rz != INVALID_ROTATION) prz = rz;
+	GetObjectPos(objectid,tx,ty,tz);
+	return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,prx,prz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+}
+
+Tryg3DProt:: bool:IsObjectOnFakeScreen(Float:x,Float:y,Float:z,objectid,Float:rx,Float:rz,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+	new Float:tx,Float:ty,Float:tz;
+	GetObjectPos(objectid,tx,ty,tz);
+	return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,rx,rz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+}
+
 #if defined Tryg3D_Actor
 	Tryg3DProt:: Float:GetActorDistanceFromPoint(actorid,Float:x,Float:y,Float:z){
 		new Float:px,Float:py,Float:pz;
@@ -2447,6 +2560,23 @@ Tryg3DProt:: bool:IsObjectInRangeOfPoint(objectid,Float:range,Float:x,Float:y,Fl
 		if(GetActorDistanceFromPoint(actorid,x,y,z) <= range) return true;
 		return false;
 	}
+	
+	Tryg3DProt:: bool:IsActorOnPlayerScreen(playerid,actorid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:prx,Float:prz;
+		GetPlayerCameraPos(playerid,x,y,z);
+		GetPlayerCameraRotation(playerid,prx,prz);
+		if(rx != INVALID_ROTATION) prx = rx;
+		if(rz != INVALID_ROTATION) prz = rz;
+		GetActorPos(actorid,tx,ty,tz);
+		return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,prx,prz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+	}
+
+	Tryg3DProt:: bool:IsActorOnFakeScreen(Float:x,Float:y,Float:z,actorid,Float:rx,Float:rz,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+		new Float:tx,Float:ty,Float:tz;
+		GetActorPos(actorid,tx,ty,tz);
+		return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,rx,rz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+	}
+
 #endif
 
 //Module: rotation.inc by Nero_3D
@@ -2626,7 +2756,6 @@ Tryg3DProt:: Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Fl
 }
 //End Module: rotation.inc
 
-
 //Original code by Crayder
 Tryg3DProt:: ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
 	//Get difference
@@ -2688,7 +2817,6 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 	}
 }
 
-
 //Streamer Functions
 #if defined Tryg3D_Streamer
 
@@ -2704,7 +2832,7 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		return true;
 	}
 
-	Tryg3DProt:: Tryg3D_GetStreamerVersionName(name[], value = TRYG3D_GET_STREAMER_VERSION, maxdest = sizeof name){
+	Tryg3DProt:: Tryg3D_GetStreamerVersionName(name[],value = TRYG3D_GET_STREAMER_VERSION,maxdest = sizeof(name)){
 		if(value == TRYG3D_GET_STREAMER_VERSION) value = Tryg3D_GetStreamerVersion();
 		new ver_str[10];
 		format(ver_str,sizeof(ver_str),"%06x",value);
@@ -2827,6 +2955,64 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		return false;
 	}
 	
+	Tryg3DProt:: bool:IsDynamicObjectOnPlayerScreen(playerid,objectid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:prx,Float:prz;
+		GetPlayerCameraPos(playerid,x,y,z);
+		GetPlayerCameraRotation(playerid,prx,prz);
+		if(rx != INVALID_ROTATION) prx = rx;
+		if(rz != INVALID_ROTATION) prz = rz;
+		GetDynamicObjectPos(objectid,tx,ty,tz);
+		return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,prx,prz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+	}
+
+	Tryg3DProt:: bool:IsDynamicObjectOnFakeScreen(Float:x,Float:y,Float:z,objectid,Float:rx,Float:rz,Float:vrx=VERTICAL_CAMERA_RADIUS,Float:vrz=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
+		new Float:tx,Float:ty,Float:tz;
+		GetDynamicObjectPos(objectid,tx,ty,tz);
+		return IsPointInSphericalSectorEx(tx,ty,tz,x,y,z,rx,rz,Tryg3D_StreamDistance,vrx,vrz,testLOS);
+	}
+
+	Tryg3DProt:: SetPlayerAbsolutePosition(playerid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1,compensatedtime = -1){
+		Streamer_UpdateEx(playerid,x,y,z,worldid,interiorid,-1,compensatedtime);
+		if(worldid != -1) SetPlayerVirtualWorld(playerid,worldid);
+		if(interiorid != -1) SetPlayerInterior(playerid,interiorid);
+		SetPlayerPos(playerid,x,y,z);
+		SetPlayerFacingAngle(playerid,angle);
+		SetCameraBehindPlayer(playerid);
+	}
+	
+	#if defined Tryg3D_FCNPC
+		Tryg3DProt:: SetNPCAbsolutePosition(npcid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1,compensatedtime = -1){
+			Streamer_UpdateEx(npcid,x,y,z,worldid,interiorid,-1,compensatedtime);
+			if(worldid != -1) FCNPC_SetVirtualWorld(npcid,worldid);
+			if(interiorid != -1) FCNPC_SetInterior(npcid,interiorid);
+			FCNPC_SetPosition(npcid,x,y,z);
+			FCNPC_SetAngle(npcid,angle);
+		}
+	#endif
+	
+	Tryg3DProt:: SetPlayerAbsolutePositionVeh(playerid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1,compensatedtime = -1){
+		new T3D:vehicleid = GetPlayerVehicleID(playerid), seatid;
+		if(T3D:vehicleid == 0){
+			SetPlayerAbsolutePosition(playerid,x,y,z,angle,worldid,interiorid,compensatedtime);
+		} else {
+			SetPlayerAbsolutePosition(playerid,x,y,z,angle,worldid,interiorid,compensatedtime);
+			if(worldid != -1) SetVehicleVirtualWorld(T3D:vehicleid,worldid);
+			if(interiorid != -1) LinkVehicleToInterior(T3D:vehicleid,interiorid);
+			SetVehiclePos(T3D:vehicleid,x,y,z);
+			SetVehicleZAngle(T3D:vehicleid,angle);
+			PutPlayerInVehicle(playerid,T3D:vehicleid,0);
+			if(worldid != -1 || interiorid != -1){
+				Tryg3DForeach(i){
+					if(GetPlayerVehicleID(i) == T3D:vehicleid && (seatid = GetPlayerVehicleSeat(i)) != 0){
+						if(worldid != -1) SetPlayerVirtualWorld(i,worldid);
+						if(interiorid != -1) SetPlayerInterior(i,interiorid);
+						PutPlayerInVehicle(i,T3D:vehicleid,seatid);
+					}
+				}
+			}
+		}
+	}
+	
 	#if defined Tryg3D_Stream3D
 		Tryg3DProt:: bool:IsDynamicObjectInStream(objectid,Stream:StreamData[Stream3D]){
 			new Float:px,Float:py,Float:pz;
@@ -2874,7 +3060,7 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		return true;
 	}
 
-	Tryg3DProt:: GetColAndreasVersionName(name[], value = GET_COLANDREAS_VERSION, maxdest = sizeof name){
+	Tryg3DProt:: GetColAndreasVersionName(name[],value = GET_COLANDREAS_VERSION,maxdest = sizeof(name)){
 		if(value == GET_COLANDREAS_VERSION) value = GetColAndreasVersion();
 		format(name,maxdest,"%d.%d.%d",(value / 10000),((value % 10000) / 100),((value % 10000) % 100));
 	}
@@ -3195,49 +3381,6 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		return true;
 	}
 	
-	Tryg3DProt:: bool:IsPlayerOnPlayerScreen(playerid,targetid,Float:rx=INVALID_ROTATION,Float:rz=INVALID_ROTATION,Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
-		if(GetDistanceBetweenPlayers(playerid,targetid) > Tryg3D_StreamDistance) return false;
-		
-		vertical /= 2.0;
-		horizontal /= 2.0;
-		
-		new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:prx,Float:prz,Float:trx,Float:trz,Float:xC,Float:yC,Float:zC;
-		GetPlayerCameraPos(playerid,x,y,z);
-		GetPlayerCameraRotation(playerid,prx,prz);
-		if(rx != INVALID_ROTATION) prx = rx;
-		if(rz != INVALID_ROTATION) prz = rz;
-		GetPlayerPos(targetid,tx,ty,tz);
-		
-		if(testLOS){
-			CA_RayCastLine(x,y,z,tx,ty,tz,xC,yC,zC);
-			if(!(xC == 0.0 || yC == 0.0 || zC == 0.0)) return false;
-		}
-		
-		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
-		
-		if(IsRotationTest(trz,prz-horizontal,prz+horizontal) && IsRotationTest(trx,prx-vertical,prx+vertical)) return true;
-		return false;
-	}
-	
-	Tryg3DProt:: bool:IsPlayerOnFakeScreen(Float:x,Float:y,Float:z,targetid,Float:rx,Float:rz,Float:vertical=VERTICAL_CAMERA_RADIUS,Float:horizontal=HORIZONTAL_CAMERA_RADIUS,bool:testLOS=true){
-		if(GetPlayerDistanceFromPoint(targetid,x,y,z) > Tryg3D_StreamDistance) return false;
-		
-		vertical /= 2.0;
-		horizontal /= 2.0;
-		
-		new Float:tx,Float:ty,Float:tz,Float:trx,Float:trz,Float:xC,Float:yC,Float:zC;
-		GetPlayerPos(targetid,tx,ty,tz);
-		
-		if(testLOS){
-			CA_RayCastLine(x,y,z,tx,ty,tz,xC,yC,zC);
-			if(!(xC == 0.0 || yC == 0.0 || zC == 0.0)) return false;
-		}
-		
-		if(!GetRotationFor2Point3D(x,y,z,tx,ty,tz,trx,trz)) return false;
-		if(IsRotationTest(trz,rz-horizontal,rz+horizontal) && IsRotationTest(trx,rx-vertical,rx+vertical)) return true;
-		return false;
-	}
-	
 	Tryg3DProt:: bool:GetPointInWallForPoint(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,Float:sector=90.0){
 		if(sector <= 0.0 || sector > 360.0) return false;
 		new Float:px,Float:py,Float:pz,Float:tmp_dist,Float:near_dist = 20000.0,sec_cnt = floatround(360.0/sector);
@@ -3459,7 +3602,6 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
 		#if defined _3DTryg_OnPlayerStreamIn
 			forward _3DTryg_OnPlayerStreamIn(playerid,forplayerid);
 		#endif
-
 
 		//Hook: OnPlayerConnect
 		public OnPlayerConnect(playerid){
@@ -3983,7 +4125,8 @@ Tryg3DProt:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,&Floa
  *                                                                                                  *
  ****************************************************************************************************/
 
-new bool:CRC_3DTryg = true;
+new bool:CRC_3DTrygInit = true,
+	bool:CRC_3DTrygExit = true;
 
 #if defined Tryg3D_ColAndreas
 
@@ -4118,6 +4261,8 @@ Tryg3DProt:: Tryg3DInit_MapPrecision(){
 
 Tryg3DProt:: Tryg3DInit(){
 	
+	SetSVarInt("ADM:3DTryg:ACTIVE",GetTryg3DActiveCount()+1);
+	
 	//Welcome to 3DTryg
 	new ver_name[16];
 	format(ver_name,sizeof(ver_name),"%d.%d.%d",(Tryg3D_Version / 10000),((Tryg3D_Version % 10000) / 100),((Tryg3D_Version % 10000) % 100));
@@ -4199,11 +4344,35 @@ Tryg3DProt:: Tryg3DInit(){
 			}
 		#endif
 	#endif
+	
+	#if ((defined Tryg3D_MapAndreas) && (defined Tryg3D_FCNPC))
+		new T3D:MapAddress = MapAndreas_GetAddress();
+		if(T3D:MapAddress != 0){
+			FCNPC_InitMapAndreas(T3D:MapAddress);
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				print("[ADM] Info: MapAndreas successfully attached to FCNPC.");
+			}
+		}
+	#endif
+}
+
+Tryg3DProt:: Tryg3DExit(){
+	SetSVarInt("ADM:3DTryg:ACTIVE",GetTryg3DActiveCount()-1);
+	
+	//Goodbye 3DTryg
+	new ver_name[16];
+	format(ver_name,sizeof(ver_name),"%d.%d.%d",(Tryg3D_Version / 10000),((Tryg3D_Version % 10000) / 100),((Tryg3D_Version % 10000) % 100));
+	if(GetTryg3DActiveCount() == 0){
+		SetSVarInt("ADM:3DTryg:INIT",0);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Info: Unload 3DTryg v%s for SA:MP %s by Abyss Morgan",ver_name,Tryg3D_SAMP_Version);
+		}
+	}
 }
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_3DTryg){ CRC_3DTryg = false; } else return 1; //Init Engine
+	if(CRC_3DTrygInit){ CRC_3DTrygInit = false; } else return 1; //Init Engine
 	Tryg3DInit();
 	#if defined _3DTryg_OnFilterScriptInit
 		_3DTryg_OnFilterScriptInit();
@@ -4223,7 +4392,7 @@ public OnFilterScriptInit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
-	if(CRC_3DTryg){ CRC_3DTryg = false; } else return 1; //Init Engine
+	if(CRC_3DTrygInit){ CRC_3DTrygInit = false; } else return 1; //Init Engine
 	Tryg3DInit();
 	#if defined _3DTryg_OnGameModeInit
 		_3DTryg_OnGameModeInit();
@@ -4241,6 +4410,45 @@ public OnGameModeInit(){
 	forward _3DTryg_OnGameModeInit();
 #endif
 
+//Hook: OnFilterScriptExit
+public OnFilterScriptExit(){
+	if(CRC_3DTrygExit){ CRC_3DTrygExit = false; } else return 1; //Exit Engine
+	Tryg3DExit();
+	#if defined _3DTryg_OnFilterScriptExit
+		_3DTryg_OnFilterScriptExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit _3DTryg_OnFilterScriptExit
+#if defined _3DTryg_OnFilterScriptExit
+	forward _3DTryg_OnFilterScriptExit();
+#endif
+
+//Hook: OnGameModeExit
+public OnGameModeExit(){
+	if(CRC_3DTrygExit){ CRC_3DTrygExit = false; } else return 1; //Exit Engine
+	Tryg3DExit();
+	#if defined _3DTryg_OnGameModeExit
+		_3DTryg_OnGameModeExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeExit
+	#undef OnGameModeExit
+#else
+	#define _ALS_OnGameModeExit
+#endif
+#define OnGameModeExit _3DTryg_OnGameModeExit
+#if defined _3DTryg_OnGameModeExit
+	forward _3DTryg_OnGameModeExit();
+#endif
 
 #undef Update3DTrygErrorCount
 

@@ -4,15 +4,19 @@ This option is available in ATM.inc
 
 //StreamerFunction.inc
 [ADM] Error: Your Streamer ... It is not compatible with this version Streamer Functions, update your Streamer to ...
+[ADM] Info: Load Streamer Functions v... for SA:MP ... by Abyss Morgan
 
 
 //3DTryg.inc
-[ADM] Info: Load 3DTryg v... by Abyss Morgan
+[ADM] Info: Please update your 3DTryg include to ... from here:
+[ADM] Info: Load 3DTryg v... for SA:MP ... by Abyss Morgan
+[ADM] Info: Unload 3DTryg v... for SA:MP ... by Abyss Morgan
 [ADM] Info: MapAndreas successfully init.
 [ADM] Info: ColAndreas successfully init.
 [ADM] Info: YSF Timeline Sync successfully init.
 [ADM] Info: Streamer successfully init.
 [ADM] Info: FCNPC successfully init.
+[ADM] Info: MapAndreas successfully attached to FCNPC.
 [ADM] Error: Your ColAndreas ... It is not compatible with this version 3DTryg, update your ColAndreas to ...
 [ADM] Error: Your Streamer ... It is not compatible with this version 3DTryg, update your Streamer to ...
 [ADM] Error: Your FCNPC ... It is not compatible with this version 3DTryg, update your FCNPC to ...
@@ -53,9 +57,9 @@ This option is available in ATM.inc
 
 
 //EngineV6.inc
-[ADM] Error: NGCM Mob Move Engine System %s not loaded.
-[ADM] Info: NGCM Mob Move Engine System %s loaded.
-[ADM] Info: NGCM Mob Move Engine System %s unloaded.
+[ADM] Error: NGCM Mob Move Engine System ... not loaded.
+[ADM] Info: NGCM Mob Move Engine System ... loaded.
+[ADM] Info: NGCM Mob Move Engine System ... unloaded.
 
 
 //SAOI.inc
