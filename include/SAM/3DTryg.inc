@@ -570,7 +570,7 @@
 	#error [ADM] You need 3DTryg.inc v3.1.0
 #elseif !defined Tryg3D_Version
 	#error [ADM] Update you 3DTryg.inc to v3.1.0
-#elseif (Tryg3D_Version < 30106)
+#elseif (Tryg3D_Version < 30100)
 	#error [ADM] Update you 3DTryg.inc to v3.1.0
 #endif
 */
@@ -593,7 +593,7 @@
 	#tryinclude "a_http"
 #endif
 
-#define Tryg3D_Version									(30106) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(30100) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 //Tryg3D Plugin Module List
