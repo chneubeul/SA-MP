@@ -17,7 +17,7 @@
  * ColAndreas Version: 1.4.0                                                                                                        *
  * YSF Version: R16 (kurta999)                                                                                                      *
  * Streamer Version: 2.8.2                                                                                                          *
- * FCNPC Version: 1.4.2                                                                                                             *
+ * FCNPC Version: 1.5.0                                                                                                             *
  *                                                                                                                                  *
  * 3DTryg FindZ Precision:                                                                                                          *
  * 1. ColAndreas   - The most accurate precision with ColAndreas plugin.                                                            *
