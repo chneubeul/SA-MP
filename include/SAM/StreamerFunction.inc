@@ -10,7 +10,7 @@
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
  *                                                                                                                                         *
- * File Version: 2.5.6                                                                                                                     *
+ * File Version: 2.5.7                                                                                                                     *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
@@ -311,11 +311,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.5.6
+	#error [ADM] You need StreamerFunction.inc v2.5.7
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.5.6
-#elseif (Streamer_Spec_Version < 20506)
-	#error [ADM] Update you StreamerFunction.inc to v2.5.6
+	#error [ADM] Update you StreamerFunction.inc to v2.5.7
+#elseif (Streamer_Spec_Version < 20507)
+	#error [ADM] Update you StreamerFunction.inc to v2.5.7
 #endif
 */
 
@@ -332,7 +332,7 @@
 	#error [ADM] Unknown Streamer Version
 #endif
 
-#define Streamer_Spec_Version 					(20506) //a.b.c 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20507) //a.b.c 10000*a+100*b+c
 #define Streamer_Spec_SAMP_Version				"0.3.7"
 #define Valid_Streamer_Version 					(0x282001)
 
@@ -1347,7 +1347,7 @@ StreamerSpecProt:: SF_DestroyPickup(&pickupid){
 //Hook: Delete3DTextLabel
 StreamerSpecProt:: SF_Delete3DTextLabel(&Text3D:id){
 	new dobj = Delete3DTextLabel(id);
-	id = INVALID_3DTEXT_ID;
+	id = Text3D:INVALID_3DTEXT_ID;
 	return dobj;
 }
 
@@ -1361,7 +1361,7 @@ StreamerSpecProt:: SF_Delete3DTextLabel(&Text3D:id){
 //Hook: DeletePlayer3DTextLabel
 StreamerSpecProt:: SF_DeletePlayer3DTextLabel(playerid,&PlayerText3D:id){
 	new dobj = DeletePlayer3DTextLabel(playerid,id);
-	id = INVALID_3DTEXT_ID;
+	id = PlayerText3D:INVALID_3DTEXT_ID;
 	return dobj;
 }
 
