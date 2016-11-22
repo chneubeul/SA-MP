@@ -77,7 +77,7 @@
 #include <SAM/GangZoneEx>           //not published
 #include <SAM/DataConvert>          //http://forum.sa-mp.com/showthread.php?p=3719467
 #include <SAM/TextDrawEx>           //not published
-#include <SAM/VehicleEx>            //http://forum.sa-mp.com/showthread.php?p=3727224
+#include <SAM/EVF>                  //http://forum.sa-mp.com/showthread.php?p=3727224
 #include <SAM/Logs>                 //not published
 #include <SAM/ATM>                  //not published
 

@@ -67,7 +67,7 @@
 #define foX(%1,%2,%3)					for(new %1 = %2; %1 <= %3; %1++)
 
 #if !defined PoolForeach
-	#define PoolForeach(%1)					for(new %1 = 0, p_%1 = GetPlayerPoolSize(); %1 <= p_%1; %1++)
+	#define PoolForeach(%1)				for(new %1 = 0, p_%1 = GetPlayerPoolSize(); %1 <= p_%1; %1++)
 #endif
 
 new FoxPlayer[MAX_PLAYERS],
