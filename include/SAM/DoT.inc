@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                                        DoT Object Loader                                         *
+ *                           DoT Object Loader (Deprecated, use SAOI.inc)                           *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *

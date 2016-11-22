@@ -40,9 +40,6 @@
 [submodule "resources/Profiler"]
 	path = resources/Profiler
 	url = https://github.com/Zeex/samp-plugin-profiler
-[submodule "include/samp/IZCMD"]
-	path = include/samp/IZCMD
-	url = https://github.com/YashasSamaga/I-ZCMD
 [submodule "resources/YSF - IS4"]
 	path = resources/YSF - IS4
 	url = https://github.com/IllidanS4/YSF

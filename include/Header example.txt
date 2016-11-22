@@ -39,8 +39,8 @@
 //#define ENABLE_PROTECTION_VARIABLES
 
 
-//3DTryg.inc Config (Please 3DTryg.inc header)
-//StreamerFunction.inc Config  (Please StreamerFunction.inc header)
+//3DTryg.inc Config (Please read 3DTryg.inc header)
+//StreamerFunction.inc Config (Please read StreamerFunction.inc header)
 
 //ATM.inc Config
 //#define DISABLE_ATM_FUNCTION
@@ -70,14 +70,14 @@
 #include <SAM/RGB>                  //http://forum.sa-mp.com/showthread.php?t=590770
 #include <SAM/FoxForeach>           //http://forum.sa-mp.com/showthread.php?t=611175 (Incompatible with foreach.inc !)
 #include <SAM/3DTryg>               //http://forum.sa-mp.com/showthread.php?t=591010
-#include <SAM/BINLDR>               //http://forum.sa-mp.com/showthread.php?p=3653547
 #include <SAM/LY>                   //http://forum.sa-mp.com/showthread.php?t=598933
 #include <SAM/ADM>                  //http://forum.sa-mp.com/showthread.php?t=595203
-#include <SAM/DoT>                  //not published
-#include <SAM/GangZoneEx>           //not published
 #include <SAM/DataConvert>          //http://forum.sa-mp.com/showthread.php?p=3719467
-#include <SAM/TextDrawEx>           //not published
 #include <SAM/EVF>                  //http://forum.sa-mp.com/showthread.php?p=3727224
+#include <SAM/BINLDR>               //http://forum.sa-mp.com/showthread.php?p=3653547 (Deprecated, use SAOI.inc)
+#include <SAM/DoT>                  //not published (Deprecated, use SAOI.inc)
+#include <SAM/GangZoneEx>           //not published
+#include <SAM/TextDrawEx>           //not published
 #include <SAM/Logs>                 //not published
 #include <SAM/ATM>                  //not published
 

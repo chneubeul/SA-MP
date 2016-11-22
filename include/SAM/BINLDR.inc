@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                                    Binary Object File Loader                                     *
+ *                       Binary Object File Loader (Deprecated, use SAOI.inc)                       *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *

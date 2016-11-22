@@ -1,6 +1,6 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- *                                                   Vehicle Extended Functions                                                   *
+ *                                      Vehicle Extended Functions (Deprecated, use EVF.inc)                                      *
  *                                                                                                                                *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
