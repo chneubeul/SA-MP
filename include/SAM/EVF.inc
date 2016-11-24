@@ -11,8 +11,26 @@
  * Plugins: None                                                                                                                  *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.0.0                                                                                                            *
+ * File Version: 2.0.1                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRED)                                                                                                *
+ *                                                                                                                                *
+ * VehicleEx Functions (Abyss Morgan):                                                                                            *
+ * GetVehiclePanels(vehicleid,&front_left,&front_right,&rear_left,&rear_right,&windshield,&front_bumper,&rear_bumper);            *
+ * SetVehiclePanels(vehicleid,front_left,front_right,rear_left,rear_right,windshield,front_bumper,rear_bumper);                   *
+ * GetVehicleLights(vehicleid,&front_left_light,&front_right_light,&back_lights);                                                 *
+ * SetVehicleLights(vehicleid,front_left_light,front_right_light,back_lights);                                                    *
+ * GetVehicleDoors(vehicleid,&bonnet,&boot,&driver_door,&passenger_door);                                                         *
+ * SetVehicleDoors(vehicleid,bonnet,boot,driver_door,passenger_door);                                                             *
+ * GetVehicleTires(vehicleid,&front_left,&front_right,&rear_left,&rear_right);                                                    *
+ * SetVehicleTires(vehicleid,front_left,front_right,rear_left,rear_right);                                                        *
+ * SwitchVehicleLight(vehicleid,bool:light);                                                                                      *
+ * GetVehicleWindowState(vehicleid,doorid);                                                                                       *
+ * SetVehicleWindowState(vehicleid,doorid,window_state);                                                                          *
+ * GetVehicleDoorState(vehicleid,doorid);                                                                                         *
+ * SetVehicleDoorState(vehicleid,doorid,door_state);                                                                              *
+ * bool:IsValidVehicleDoor(vehicleid,doorid);                                                                                     *
+ * GetVehicleDoorAmountByModelid(modelid);                                                                                        *
+ * GetVehicleDoorAmount(vehicleid);                                                                                               *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * GetVehicleParams(vehicleid,type);                                                                                              *
@@ -34,17 +52,6 @@
  * IsVehicleSeatOccupied(vehicleid,seatid);                                                                                       *
  * IsValidVehicle(vehicleid);                                                                                                     *
  *                                                                                                                                *
- * VehicleEx Functions (Abyss Morgan):                                                                                            *
- * GetVehiclePanels(vehicleid,&front_left,&front_right,&rear_left,&rear_right,&windshield,&front_bumper,&rear_bumper);            *
- * SetVehiclePanels(vehicleid,front_left,front_right,rear_left,rear_right,windshield,front_bumper,rear_bumper);                   *
- * GetVehicleLights(vehicleid,&front_left_light,&front_right_light,&back_lights);                                                 *
- * SetVehicleLights(vehicleid,front_left_light,front_right_light,back_lights);                                                    *
- * GetVehicleDoors(vehicleid,&bonnet,&boot,&driver_door,&passenger_door);                                                         *
- * SetVehicleDoors(vehicleid,bonnet,boot,driver_door,passenger_door);                                                             *
- * GetVehicleTires(vehicleid,&front_left,&front_right,&rear_left,&rear_right);                                                    *
- * SetVehicleTires(vehicleid,front_left,front_right,rear_left,rear_right);                                                        *
- * SwitchVehicleLight(vehicleid,bool:light);                                                                                      *
- *                                                                                                                                *
  * Callbacks:                                                                                                                     *
  * OnVehicleCreated(vehicleid);                       //Called when a vehicle is created.                                         *
  * OnVehicleDestroyed(vehicleid);                     //Called when a vehicle is deleted.                                         *
@@ -57,11 +64,11 @@
 /*
 //Check Version EVF.inc
 #if !defined _EVF_include
-	#error [ADM] You need EVF.inc v2.0.0
+	#error [ADM] You need EVF.inc v2.0.1
 #elseif !defined EVF_Version
-	#error [ADM] Update you EVF.inc to v2.0.0
-#elseif (EVF_Version < 20000)
-	#error [ADM] Update you EVF.inc to v2.0.0
+	#error [ADM] Update you EVF.inc to v2.0.1
+#elseif (EVF_Version < 20001)
+	#error [ADM] Update you EVF.inc to v2.0.1
 #endif
 */
 
@@ -78,7 +85,7 @@
 	#error [ADM] Please remove deprecated file VehicleEx.inc
 #endif
 
-#define EVF_Version											(20000) //a.b.c 10000*a+100*b+c
+#define EVF_Version											(20001) //a.b.c 10000*a+100*b+c
 
 #if !defined IsValidVehicle
 	native IsValidVehicle(vehicleid);
@@ -91,6 +98,8 @@
 #if !defined INVALID_PAINTJOB_ID
 	#define INVALID_PAINTJOB_ID		-1
 #endif
+
+#define MAX_VEHICLE_MODEL			212
 
 #define BONNET_HEALTHY_CLOSED		0
 #define BONNET_HEALTHY_OPENED		1
@@ -125,14 +134,17 @@
 #define TIRE_HEALTHY				0
 #define TIRE_DAMAGED				1
 
+#define DOOR_DRIVER					1
+#define DOOR_PASSENGER				2
+#define DOOR_BACKLEFF				3
+#define DOOR_BACKRIGHT				4
+
 enum e_VehicleProperties {
 	e_VEHICLE_PAINTJOB,
 	e_VEHICLE_INTERIOR,
 	e_VEHICLE_COLOR_1,
 	e_VEHICLE_COLOR_2
 };
-
-static s_VehicleTrailerID[MAX_VEHICLES];
 
 enum e_ParamTypes {
 	VEHICLE_TYPE_ENGINE,
@@ -150,18 +162,20 @@ enum e_OffsetTypes {
 	VEHICLE_OFFSET_ROOF
 };
 
-static const s_TopSpeed[212] = {
+static s_VehicleTrailerID[MAX_VEHICLES];
+
+static const s_TopSpeed[MAX_VEHICLE_MODEL] = {
 	157, 147, 186, 110, 133, 164, 110, 148, 100, 158, 129, 221, 168, 110, 105, 192, 154, 270,
-	115, 149, 145, 154, 140, 99, 135, 270, 173, 165, 157, 201, 190, 130, 94, 110, 167, 0, 149,
-	158, 142, 168, 136, 145, 139, 126, 110, 164, 270, 270, 111, 0, 0, 193, 270, 60, 135, 157,
-	106, 95, 157, 136, 270, 160, 111, 142, 145, 145, 147, 140, 144, 270, 157, 110, 190, 190,
-	149, 173, 270, 186, 117, 140, 184, 73, 156, 122, 190, 99, 64, 270, 270, 139, 157, 149, 140,
-	270, 214, 176, 162, 270, 108, 123, 140, 145, 216, 216, 173, 140, 179, 166, 108, 79, 101, 270,
+	115, 149, 145, 154, 140, 99,  135, 270, 173, 165, 157, 201, 190, 130, 94,  110, 167, 0,   149,
+	158, 142, 168, 136, 145, 139, 126, 110, 164, 270, 270, 111, 0,   0,   193, 270, 60,  135, 157,
+	106, 95,  157, 136, 270, 160, 111, 142, 145, 145, 147, 140, 144, 270, 157, 110, 190, 190,
+	149, 173, 270, 186, 117, 140, 184, 73,  156, 122, 190, 99,  64,  270, 270, 139, 157, 149, 140,
+	270, 214, 176, 162, 270, 108, 123, 140, 145, 216, 216, 173, 140, 179, 166, 108, 79,  101, 270,
 	270, 270, 120, 142, 157, 157, 164, 270, 270, 160, 176, 151, 130, 160, 158, 149, 176, 149, 60,
-	70, 110, 167, 168, 158, 173, 0, 0, 270, 149, 203, 164, 151, 150, 147, 149, 142, 270, 153, 145,
-	157, 121, 270, 144, 158, 113, 113, 156, 178, 169, 154, 178, 270, 145, 165, 160, 173, 146, 0, 0,
-	93, 60, 110, 60, 158, 158, 270, 130, 158, 153, 151, 136, 85, 0, 153, 142, 165, 108, 162, 0, 0,
-	270, 270, 130, 190, 175, 175, 175, 158, 151, 110, 169, 171, 148, 152, 0, 0, 0, 108, 0, 0
+	70,  110, 167, 168, 158, 173, 0,   0,   270, 149, 203, 164, 151, 150, 147, 149, 142, 270, 153, 145,
+	157, 121, 270, 144, 158, 113, 113, 156, 178, 169, 154, 178, 270, 145, 165, 160, 173, 146, 0,   0,
+	93,  60,  110, 60,  158, 158, 270, 130, 158, 153, 151, 136, 85,  0,   153, 142, 165, 108, 162, 0, 0,
+	270, 270, 130, 190, 175, 175, 175, 158, 151, 110, 169, 171, 148, 152, 0,   0,   0,   108, 0,   0
 };
 
 static const s_CarColors[][]={
@@ -379,11 +393,26 @@ static const s_CarColors[][]={
 	{0, 000, 000}
 };
 
+static const s_VehicleSeats[MAX_VEHICLE_MODEL] = {
+	4,2,2,2,4,4,1,2,2,4,2,2,2,4,2,2,4,2,4,2,4,4,2,2,2,1,4,4,4,2,1,7,1,2,2,0,2,7,4,2,4,1,2,2,2,4,1,2,1,0,0,2,1,1,1,2,2,2,4,4,
+	2,2,2,2,1,1,4,4,2,2,4,2,1,1,2,2,1,2,2,4,2,1,4,3,1,1,1,4,2,2,4,2,4,1,2,2,2,4,4,2,2,1,2,2,2,2,2,4,2,1,1,2,1,1,2,2,4,2,2,1,
+	1,2,2,2,2,2,2,2,2,4,1,1,1,2,2,2,2,7,7,1,4,2,2,2,2,2,4,4,2,2,4,4,2,1,2,2,2,2,2,2,4,4,2,2,1,2,4,4,1,0,0,1,1,2,1,2,2,1,2,4,
+	4,2,4,1,0,4,2,2,2,2,0,0,7,2,2,1,4,4,4,2,2,2,2,2,4,2,0,0,0,4,0,0
+};
+
+static const s_VehicleDoor[MAX_VEHICLE_MODEL] = {
+	4,2,2,2,4,4,2,2,2,4,2,2,2,2,2,2,2,2,4,2,4,4,2,2,0,1,4,2,2,0,0,0,0,2,2,0,2,0,4,0,2,0,2,2,2,4,0,2,0,0,0,2,0,0,0,2,2,0,4,2,
+	0,0,0,0,0,0,4,4,0,2,4,0,0,0,2,2,1,2,2,4,0,0,2,2,0,0,0,4,4,2,4,2,4,0,0,2,2,4,2,2,2,0,0,0,0,2,2,4,2,0,0,2,0,0,2,2,4,2,2,0,
+	1,0,0,0,2,2,2,2,2,4,0,0,0,0,2,2,0,0,0,0,4,2,2,2,2,2,4,4,0,2,4,4,2,0,2,0,2,2,2,2,4,4,2,2,0,2,4,0,0,0,0,0,0,2,2,0,2,0,2,4,
+	4,0,2,2,0,4,0,2,2,2,0,0,0,2,0,0,4,4,4,2,2,0,2,2,4,2,0,0,0,2,0,0
+};
+
 #define GetVehicleSeats(%0)				GetVehicleModelSeats(GetVehicleModel(%0))
 #define SetVehicleInterior(%0,%1)		LinkVehicleToInterior(%0,%1)
 #define GetVehicleBoot(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_BOOT,%1,%2,%3)
 #define GetVehicleHood(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_HOOD,%1,%2,%3)
 #define GetVehicleRoof(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_ROOF,%1,%2,%3)
+#define GetVehicleDoorAmount(%0)		GetVehicleDoorAmountByModelid(GetVehicleModel(%0))
 
 forward OnVehicleCreated(vehicleid);
 forward OnVehicleDestroyed(vehicleid);
@@ -419,6 +448,18 @@ forward OnPlayerShootVehicle(playerid,vehicleid,weaponid);
 		return 0;
 	}
 #endif
+
+stock GetVehicleDoorAmountByModelid(modelid){
+	if(!(400 <= modelid <= 611)) return 0;
+	return s_VehicleDoor[modelid-400];
+}
+
+stock bool:IsValidVehicleDoor(vehicleid,doorid){
+	new modelid = GetVehicleModel(vehicleid);
+	if(!(400 <= modelid <= 611)) return false;
+	if(doorid > s_VehicleDoor[modelid-400]) return false;
+	return true;
+}
 
 stock ResetVehicleProperties(vehicleid){
 	s_VehicleTrailerID[vehicleid] = INVALID_VEHICLE_ID;
@@ -582,16 +623,6 @@ stock GetVehicleNextSeat(vehicleid,passenger = 1){
 }
 
 stock GetVehicleModelSeats(modelid){
-	static const s_VehicleSeats[] = {
-		4,2,2,2,4,4,1,2,2,4,2,2,2,4,2,2,4,2,4,2,4,4,2,2,2,1,4,4,4,2,
-		1,7,1,2,2,0,2,7,4,2,4,1,2,2,2,4,1,2,1,0,0,2,1,1,1,2,2,2,4,
-		4,2,2,2,2,1,1,4,4,2,2,4,2,1,1,2,2,1,2,2,4,2,1,4,3,1,1,1,4,2,
-		2,4,2,4,1,2,2,2,4,4,2,2,1,2,2,2,2,2,4,2,1,1,2,1,1,2,2,4,2,2,
-		1,1,2,2,2,2,2,2,2,2,4,1,1,1,2,2,2,2,7,7,1,4,2,2,2,2,2,4,4,
-		2,2,4,4,2,1,2,2,2,2,2,2,4,4,2,2,1,2,4,4,1,0,0,1,1,2,1,2,2,1,2,
-		4,4,2,4,1,0,4,2,2,2,2,0,0,7,2,2,1,4,4,4,2,2,2,2,2,4,2,0,0,0,
-		4,0,0
-	};
 	return (modelid < 400 || modelid > 611) ? (0) : (s_VehicleSeats[(modelid - 400)]);
 }
 
@@ -688,6 +719,56 @@ stock SwitchVehicleLight(vehicleid,bool:light){
 		lights = 0xF;
 	}
 	UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
+}
+
+stock GetVehicleWindowState(vehicleid,doorid){
+	new driver,passenger,backleft,backright;
+	GetVehicleParamsCarWindows(vehicleid,driver,passenger,backleft,backright);
+	switch(doorid){
+		case DOOR_DRIVER:		return driver;
+		case DOOR_PASSENGER:	return passenger;
+		case DOOR_BACKLEFF:		return backleft;
+		case DOOR_BACKRIGHT:	return backright;
+	}
+	return 0;
+}
+
+stock SetVehicleWindowState(vehicleid,doorid,window_state){
+	if(!IsValidVehicleDoor(vehicleid,doorid)) return 0;
+	new driver,passenger,backleft,backright;
+	GetVehicleParamsCarWindows(vehicleid,driver,passenger,backleft,backright);
+	switch(doorid){
+		case DOOR_DRIVER:		SetVehicleParamsCarWindows(vehicleid,window_state,passenger,backleft,backright);
+		case DOOR_PASSENGER:	SetVehicleParamsCarWindows(vehicleid,driver,window_state,backleft,backright);
+		case DOOR_BACKLEFF:		SetVehicleParamsCarWindows(vehicleid,driver,passenger,window_state,backright);
+		case DOOR_BACKRIGHT:	SetVehicleParamsCarWindows(vehicleid,driver,passenger,backleft,window_state);
+	}
+	return 1;
+}
+
+stock GetVehicleDoorState(vehicleid,doorid){
+	new driver,passenger,backleft,backright;
+	GetVehicleParamsCarDoors(vehicleid,driver,passenger,backleft,backright);
+	switch(doorid){
+		case DOOR_DRIVER:		return driver;
+		case DOOR_PASSENGER:	return passenger;
+		case DOOR_BACKLEFF:		return backleft;
+		case DOOR_BACKRIGHT:	return backright;
+	}
+	return 0;
+}
+
+stock SetVehicleDoorState(vehicleid,doorid,door_state){
+	if(!IsValidVehicleDoor(vehicleid,doorid)) return 0;
+	new driver,passenger,backleft,backright;
+	GetVehicleParamsCarDoors(vehicleid,driver,passenger,backleft,backright);
+	switch(doorid){
+		case DOOR_DRIVER:		SetVehicleParamsCarDoors(vehicleid,door_state,passenger,backleft,backright);
+		case DOOR_PASSENGER:	SetVehicleParamsCarDoors(vehicleid,driver,door_state,backleft,backright);
+		case DOOR_BACKLEFF:		SetVehicleParamsCarDoors(vehicleid,driver,passenger,door_state,backright);
+		case DOOR_BACKRIGHT:	SetVehicleParamsCarDoors(vehicleid,driver,passenger,backleft,door_state);
+	}
+	return 1;
 }
 
 //Hook: LinkVehicleToInterior
