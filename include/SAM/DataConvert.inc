@@ -3,6 +3,7 @@
  *                                      )(   Data Convert   )(                                      *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
+ * Contributors: Crayder, Shiny                                                                     *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  * Publication: http://forum.sa-mp.com/showthread.php?p=3719467                                     *
@@ -10,9 +11,14 @@
  * Plugins: SScanf                                                                                  *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.7.3                                                                              *
+ * File Version: 1.8.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
  * SScanf Version: 2.8.2                                                                            *
+ *                                                                                                  *
+ * Definitions:                                                                                     *
+ * FIRST_FILE_ADDRESS                                                                               *
+ * INVALID_FILE_ID                                                                                  *
+ * INVALID_FILE_HANDLE                                                                              *
  *                                                                                                  *
  * Functions:                                                                                       *
  * GetFileHandleID(File:handle);                                                                    *
@@ -43,17 +49,21 @@
  * Float:IntToFloat(value); //Convert Integer binary data to Float binary data                      *
  * bool:ContainInSeries(value,...);                                                                 *
  * bool:ContainInSeriesFloat(Float:value,Float:...);                                                *
+ * StringEqual(string1[],string2[],ignorecase);                                                     *
+ * StringNotEqual(string1[],string2[],ignorecase);                                                  *
+ * base64_decode(input[],output[]); //d:base64                                                      *
+ * base64_encode(input[],output[]); //e:base64                                                      *
  *                                                                                                  *
  ****************************************************************************************************/
 
 /*
 //Check Version DataConvert.inc
 #if !defined _Data_Convert
-	#error [ADM] You need DataConvert.inc v1.7.3
+	#error [ADM] You need DataConvert.inc v1.8.0
 #elseif !defined Data_Convert_Version
-	#error [ADM] Update you DataConvert.inc to v1.7.3
-#elseif (Data_Convert_Version < 10703)
-	#error [ADM] Update you DataConvert.inc to v1.7.3
+	#error [ADM] Update you DataConvert.inc to v1.8.0
+#elseif (Data_Convert_Version < 10800)
+	#error [ADM] Update you DataConvert.inc to v1.8.0
 #endif
 */
 
@@ -62,11 +72,48 @@
 #endif
 #define _Data_Convert
 
+#if defined _base64_included
+	#error [ADM] Please remove deprecated file base64.inc
+#endif
+
 #if !defined sscanf
 	#error [ADM] Unknown SScanf Version
 #endif
 
-#define Data_Convert_Version		(10703) //a.b.c 10000*a+100*b+c
+#define Data_Convert_Version		(10800) //a.b.c 10000*a+100*b+c
+
+new const LettersTable[] = {
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+};
+	
+new const Decoder[] = {
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  62, 0,  0,  0,  63, 52, 53,
+	54, 55, 56, 57, 58, 59, 60, 61, 0,  0,
+	0,  0,  0,  0,  0,  0,  1,  2,  3,  4,
+	5,  6,  7,  8,  9,  10, 11, 12, 13, 14,
+	15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+	25, 0,  0,  0,  0,  0,  0,  26, 27, 28,
+	29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
+	39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
+	49, 50, 51, 0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	0,  0,  0,  0,  0,  0
+};
 
 #define FIRST_FILE_ADDRESS			(0x004E5A18)
 #define INVALID_FILE_ID				(0xFFB1A5E7)
@@ -84,6 +131,9 @@
 
 #define FloatToInt(%0)				(_:%0)
 #define IntToFloat(%0)				(Float:%0)
+
+#define StringEqual(%0,%1,%2) 		(!strcmp((%0),(%1),(%2)))
+#define StringNotEqual(%0,%1,%2)	(strcmp((%0),(%1),(%2)) != 0)
 
 stock bool:swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2)){
 	if(dest1 < strlen(string2) || dest2 < strlen(string1)) return false;
@@ -249,5 +299,72 @@ stock bool:ContainInSeriesFloat(Float:value,Float:...){
 	}
 	return false;
 }
+
+//base64 by Shiny
+stock base64_decode(input[],output[]){
+	new SpaceReplacer = '=', len = strlen(input), Position;
+	
+	for(new i = 0; i < len; i++){
+		new char_[2];
+		char_[0] = Decoder[input[i++]];
+		char_[1] = Decoder[input[i]];
+		char_[0] = (char_[0] << 2) | ((char_[1] >> 4) & 3);
+		Position += format(output[Position], len, "%c", char_[0]);
+		
+		if(++i < len){
+			char_[0] = input[i];
+			if(char_[0] == SpaceReplacer) break;
+			char_[0] = Decoder[input[i]];
+			char_[1] = ((char_[1] << 4) & 240) | ((char_[0] >> 2) & 15);
+			Position += format(output[Position], len, "%c", char_[1]);
+		}
+		
+		if(++i < len){
+			char_[1] = input[i];
+			if(char_[1] == SpaceReplacer) break;
+			char_[1] = Decoder[input[i]];
+			char_[0] = ((char_[0] << 6) & 192) | char_[1];
+			Position += format(output[Position], len, "%c", char_[0]);
+		}
+	}
+}
+
+stock base64_encode(input[],output[]){
+	new SpaceReplacer = '=', len = strlen(input), Position;
+	
+	for(new i = 0 ; i < len ; i++){
+		new Character;
+		Character = (input[i] >> 2) & 63;
+		Position += format(output[Position], len, "%c", LettersTable[Character]);
+		Character = (input[i] << 4) & 63;
+		
+		if(++i < len){
+			Character |= (input[i] >> 4) & 15;
+		}
+		Position += format(output[Position], len, "%c", LettersTable[Character]);
+
+		if(i < len){
+			Character = (input[i] << 2) & 63;
+			
+			if(++i < len){
+				Character |= (input[i] >> 6) & 3;
+			}
+			Position += format(output[Position], len, "%c", LettersTable[Character]);
+		} else {
+			i++;
+			Position += format(output[Position], len, "%c", SpaceReplacer);
+		}
+
+		if(i < len){
+			Character = input[i] & 63;
+			Position += format(output[Position], len, "%c", LettersTable[Character]);
+		} else {
+			Position += format(output[Position], len, "%c", SpaceReplacer);
+		}
+	}
+}
+
+#define e:base64 					base64_encode
+#define d:base64 					base64_decode
 
 //EOF

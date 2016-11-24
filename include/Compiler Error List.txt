@@ -20,6 +20,7 @@ SAM Include:
 [ADM] Error please include FoxForeach before 3DTryg, for increase loop speed.
 [ADM] Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
 [ADM] Please remove deprecated file VehicleEx.inc
+[ADM] Please remove deprecated file base64.inc
 
 Engine Include:
 [ADM] Fatal error incompatible NOX
