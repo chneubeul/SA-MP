@@ -4,7 +4,7 @@
  *                                                                                                  *
  * Copyright © 2013 Shiny. All rights reserved.                                                     *
  *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/samp                          *
  *                                                                                                  *
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *

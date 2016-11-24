@@ -1,6 +1,6 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- *                                                   Extended Vehicle Functions                                                   *
+ *                                              )(   Extended Vehicle Functions   )(                                              *
  *                                                                                                                                *
  * Copyright © 2016 Emmet_. All rights reserved.                                                                                  *
  * Contributors: [uL]Pottus, kvann, Hanger, Abyss Morgan, Freaksken                                                               *

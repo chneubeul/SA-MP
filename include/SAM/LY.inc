@@ -1,6 +1,6 @@
 /**********************************************************************************************************************************
  *                                                                                                                                *
- *                                                Unsigned Long 61 bit (Long Yoyo)                                                *
+ *                                           )(   Unsigned Long 61 Bit [Long Yoyo]   )(                                           *
  *                                                                                                                                *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *

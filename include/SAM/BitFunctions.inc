@@ -1,6 +1,6 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                                          Bit Functions                                           *
+ *                                     )(   Bit Functions   )(                                      *
  *                                                                                                  *
  * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
