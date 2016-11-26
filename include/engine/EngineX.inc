@@ -133,12 +133,15 @@ public OnEngineXExit(){
 	return 1;
 }
 
-new bool:CRC_EngineX = true;
+new bool:CRC_EngineXInit = true,
+	bool:CRC_EngineXExit = true;
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_EngineX){ CRC_EngineX = false; } else return 1; //Init Engine
-	OnEngineXInit();
+	if(CRC_EngineXInit){
+		CRC_EngineXInit = false; 
+		OnEngineXInit();
+	}
 	#if defined NOX_OnFilterScriptInit
 		NOX_OnFilterScriptInit();
 	#endif
@@ -155,29 +158,12 @@ public OnFilterScriptInit(){
 	forward NOX_OnFilterScriptInit();
 #endif
 
-//Hook: OnFilterScriptExit
-public OnFilterScriptExit(){
-	OnEngineXExit();
-	#if defined NOX_OnFilterScriptExit
-		NOX_OnFilterScriptExit();
-	#endif
-	return 1;
-}
-
-#if defined _ALS_OnFilterScriptExit
-	#undef OnFilterScriptExit
-#else
-	#define _ALS_OnFilterScriptExit
-#endif
-#define OnFilterScriptExit NOX_OnFilterScriptExit
-#if defined NOX_OnFilterScriptExit
-	forward NOX_OnFilterScriptExit();
-#endif
-
 //Hook: OnGameModeInit
 public OnGameModeInit(){
-	if(CRC_EngineX){ CRC_EngineX = false; } else return 1; //Init Engine
-	OnEngineXInit();
+	if(CRC_EngineXInit){
+		CRC_EngineXInit = false; 
+		OnEngineXInit();
+	}
 	#if defined NOX_OnGameModeInit
 		NOX_OnGameModeInit();
 	#endif
@@ -194,9 +180,34 @@ public OnGameModeInit(){
 	forward NOX_OnGameModeInit();
 #endif
 
+//Hook: OnFilterScriptExit
+public OnFilterScriptExit(){
+	if(CRC_EngineXExit){
+		CRC_EngineXExit = false; 
+		OnEngineXExit();
+	}
+	#if defined NOX_OnFilterScriptExit
+		NOX_OnFilterScriptExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit NOX_OnFilterScriptExit
+#if defined NOX_OnFilterScriptExit
+	forward NOX_OnFilterScriptExit();
+#endif
+
 //Hook: OnGameModeExit
 public OnGameModeExit(){
-	OnEngineXExit();
+	if(CRC_EngineXExit){
+		CRC_EngineXExit = false; 
+		OnEngineXExit();
+	}
 	#if defined NOX_OnGameModeExit
 		NOX_OnGameModeExit();
 	#endif

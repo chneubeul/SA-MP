@@ -25,8 +25,8 @@ new Lottery_Players[MAX_PLAYERS],
 	bool:Lottery_Status = false,
 	Lottery_Timer = -1;
 
-forward Lottery_OnGameModeInit(); 		//auto hook
-forward Lottery_OnGameModeExit(); 		//auto hook
+forward LotteryInit(); 		//auto hook
+forward LotteryExit(); 		//auto hook
 forward Lottery_LosRandom(important);	//auto hook
 
 stock LOT_GetPlayerNick(playerid){
@@ -85,12 +85,15 @@ stock bool:Lottery_RemovePlayer(playerid){
 	return true;
 }
 
-new bool:CRC_Lottery = true;
+new bool:CRC_LotteryInit = true,
+	bool:CRC_LotteryExit = true;
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_Lottery){ CRC_Lottery = false; } else return 1; //Init Engine
-	Lottery_OnGameModeInit();
+	if(CRC_LotteryInit){
+		CRC_LotteryInit = false;
+		LotteryInit();
+	}
 	#if defined LOT_OnFilterScriptInit
 		LOT_OnFilterScriptInit();
 	#endif
@@ -107,29 +110,12 @@ public OnFilterScriptInit(){
 	forward LOT_OnFilterScriptInit();
 #endif
 
-//Hook: OnFilterScriptExit
-public OnFilterScriptExit(){
-	Lottery_OnGameModeExit();
-	#if defined LOT_OnFilterScriptExit
-		LOT_OnFilterScriptExit();
-	#endif
-	return 1;
-}
-
-#if defined _ALS_OnFilterScriptExit
-	#undef OnFilterScriptExit
-#else
-	#define _ALS_OnFilterScriptExit
-#endif
-#define OnFilterScriptExit LOT_OnFilterScriptExit
-#if defined LOT_OnFilterScriptExit
-	forward LOT_OnFilterScriptExit();
-#endif
-
 //Hook: OnGameModeInit
 public OnGameModeInit(){
-	if(CRC_Lottery){ CRC_Lottery = false; } else return 1; //Init Engine
-	Lottery_OnGameModeInit();
+	if(CRC_LotteryInit){
+		CRC_LotteryInit = false;
+		LotteryInit();
+	}
 	#if defined LOT_OnGameModeInit
 		LOT_OnGameModeInit();
 	#endif
@@ -146,9 +132,34 @@ public OnGameModeInit(){
 	forward LOT_OnGameModeInit();
 #endif
 
+//Hook: OnFilterScriptExit
+public OnFilterScriptExit(){
+	if(CRC_LotteryExit){
+		CRC_LotteryExit = false;
+		LotteryExit();
+	}
+	#if defined LOT_OnFilterScriptExit
+		LOT_OnFilterScriptExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit LOT_OnFilterScriptExit
+#if defined LOT_OnFilterScriptExit
+	forward LOT_OnFilterScriptExit();
+#endif
+
 //Hook: OnGameModeExit
 public OnGameModeExit(){
-	Lottery_OnGameModeExit();
+	if(CRC_LotteryExit){
+		CRC_LotteryExit = false;
+		LotteryExit();
+	}
 	#if defined LOT_OnGameModeExit
 		LOT_OnGameModeExit();
 	#endif
@@ -184,14 +195,14 @@ public OnPlayerDisconnect(playerid,reason){
 	forward LOT_OnPlayerDisconnect(playerid,reason);
 #endif
 
-public Lottery_OnGameModeInit(){
+public LotteryInit(){
 	for(new i = 0, j = sizeof(Lottery_Players); i < j; i++){
 		Lottery_Players[i] = INVALID_PLAYER_ID;
 	}
 	return 1;
 }
 
-public Lottery_OnGameModeExit(){
+public LotteryExit(){
 	KillTimer(Lottery_Timer);
 	Lottery_Timer = -1;
 	return 1;

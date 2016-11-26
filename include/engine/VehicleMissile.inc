@@ -397,12 +397,14 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
 	forward VM_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
 #endif
 
-new bool:CRC_VehicleMissile = true;
+new bool:CRC_VehicleMissileInit = true;
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_VehicleMissile){ CRC_VehicleMissile = false; } else return 1; //Init Engine
-	OnVehicleMissileInit();
+	if(CRC_VehicleMissileInit){
+		CRC_VehicleMissileInit = false;
+		OnVehicleMissileInit();
+	}
 	#if defined VM_OnFilterScriptInit
 		VM_OnFilterScriptInit();
 	#endif
@@ -421,8 +423,10 @@ public OnFilterScriptInit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
-	if(CRC_VehicleMissile){ CRC_VehicleMissile = false; } else return 1; //Init Engine
-	OnVehicleMissileInit();
+	if(CRC_VehicleMissileInit){
+		CRC_VehicleMissileInit = false;
+		OnVehicleMissileInit();
+	}
 	#if defined VM_OnGameModeInit
 		VM_OnGameModeInit();
 	#endif

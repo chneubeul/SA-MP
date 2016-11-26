@@ -205,12 +205,15 @@ forward ExplodeDynamicMine(mobid,type,playerid);
 forward RespawnDynamicMine(mobid);
 forward OnMineDestroy(mobid,Float:x,Float:y,Float:z,type,killerid,Float:radius,damagerid);
 
-new bool:CRC_Mines = true;
+new bool:CRC_MinesInit = true,
+	bool:CRC_MinesExit = true;
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_Mines){ CRC_Mines = false; } else return 1; //Init Engine
-	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
+	if(CRC_MinesInit){
+		CRC_MinesInit = false;
+		MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
+	}
 	#if defined MDM_OnFilterScriptInit
 		MDM_OnFilterScriptInit();
 	#endif
@@ -227,29 +230,12 @@ public OnFilterScriptInit(){
 	forward MDM_OnFilterScriptInit();
 #endif
 
-//Hook: OnFilterScriptExit
-public OnFilterScriptExit(){
-	KillTimer(MineTimer);
-	#if defined MDM_OnFilterScriptExit
-		MDM_OnFilterScriptExit();
-	#endif
-	return 1;
-}
-
-#if defined _ALS_OnFilterScriptExit
-	#undef OnFilterScriptExit
-#else
-	#define _ALS_OnFilterScriptExit
-#endif
-#define OnFilterScriptExit MDM_OnFilterScriptExit
-#if defined MDM_OnFilterScriptExit
-	forward MDM_OnFilterScriptExit();
-#endif
-
 //Hook: OnGameModeInit
 public OnGameModeInit(){
-	if(CRC_Mines){ CRC_Mines = false; } else return 1; //Init Engine
-	MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
+	if(CRC_MinesInit){
+		CRC_MinesInit = false;
+		MineTimer = SetTimerEx("OnDynamicMineUpdate", 1000, true, "d", 1);
+	}
 	#if defined MDM_OnGameModeInit
 		MDM_OnGameModeInit();
 	#endif
@@ -266,9 +252,34 @@ public OnGameModeInit(){
 	forward MDM_OnGameModeInit();
 #endif
 
+//Hook: OnFilterScriptExit
+public OnFilterScriptExit(){
+	if(CRC_MinesExit){
+		CRC_MinesExit = false;
+		KillTimer(MineTimer);
+	}
+	#if defined MDM_OnFilterScriptExit
+		MDM_OnFilterScriptExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit MDM_OnFilterScriptExit
+#if defined MDM_OnFilterScriptExit
+	forward MDM_OnFilterScriptExit();
+#endif
+
 //Hook: OnGameModeExit
 public OnGameModeExit(){
-	KillTimer(MineTimer);
+	if(CRC_MinesExit){
+		CRC_MinesExit = false;
+		KillTimer(MineTimer);
+	}
 	#if defined MDM_OnGameModeExit
 		MDM_OnGameModeExit();
 	#endif

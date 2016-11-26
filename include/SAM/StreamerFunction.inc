@@ -1502,8 +1502,10 @@ StreamerSpecProt:: StreamerSpecExit(){
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_StreamerFunctionInit){ CRC_StreamerFunctionInit = false; } else return 1; //Init Engine
-	StreamerSpecInit();
+	if(CRC_StreamerFunctionInit){
+		CRC_StreamerFunctionInit = false;
+		StreamerSpecInit();
+	}
 	#if defined SSpec_OnFilterScriptInit
 		SSpec_OnFilterScriptInit();
 	#endif
@@ -1522,8 +1524,10 @@ public OnFilterScriptInit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
-	if(CRC_StreamerFunctionInit){ CRC_StreamerFunctionInit = false; } else return 1; //Init Engine
-	StreamerSpecInit();
+	if(CRC_StreamerFunctionInit){
+		CRC_StreamerFunctionInit = false;
+		StreamerSpecInit();
+	}
 	#if defined SSpec_OnGameModeInit
 		SSpec_OnGameModeInit();
 	#endif
@@ -1542,8 +1546,10 @@ public OnGameModeInit(){
 
 //Hook: OnFilterScriptExit
 public OnFilterScriptExit(){
-	if(CRC_StreamerFunctionExit){ CRC_StreamerFunctionExit = false; } else return 1; //Exit Engine
-	StreamerSpecExit();
+	if(CRC_StreamerFunctionExit){
+		CRC_StreamerFunctionExit = false;
+		StreamerSpecExit();
+	}
 	#if defined SSpec_OnFilterScriptExit
 		SSpec_OnFilterScriptExit();
 	#endif
@@ -1562,8 +1568,10 @@ public OnFilterScriptExit(){
 
 //Hook: OnGameModeExit
 public OnGameModeExit(){
-	if(CRC_StreamerFunctionExit){ CRC_StreamerFunctionExit = false; } else return 1; //Exit Engine
-	StreamerSpecExit();
+	if(CRC_StreamerFunctionExit){
+		CRC_StreamerFunctionExit = false;
+		StreamerSpecExit();
+	}
 	#if defined SSpec_OnGameModeExit
 		SSpec_OnGameModeExit();
 	#endif

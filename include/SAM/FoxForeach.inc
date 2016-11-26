@@ -217,12 +217,14 @@ stock FoxForeachInit(){
 	return 1;
 }
 
-new bool:CRC_FoxForeach = true;
+new bool:CRC_FoxForeachInit = true;
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_FoxForeach){ CRC_FoxForeach = false; } else return 1; //Init Engine
-	FoxForeachInit();
+	if(CRC_FoxForeachInit){
+		CRC_FoxForeachInit = false;
+		FoxForeachInit();
+	}
 	#if defined FoX_OnFilterScriptInit
 		FoX_OnFilterScriptInit();
 	#endif
@@ -241,8 +243,10 @@ public OnFilterScriptInit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
-	if(CRC_FoxForeach){ CRC_FoxForeach = false; } else return 1; //Init Engine
-	FoxForeachInit();
+	if(CRC_FoxForeachInit){
+		CRC_FoxForeachInit = false;
+		FoxForeachInit();
+	}
 	#if defined FoX_OnGameModeInit
 		FoX_OnGameModeInit();
 	#endif

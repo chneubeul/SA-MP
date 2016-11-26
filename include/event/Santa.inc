@@ -86,16 +86,7 @@ new SantaGift[MAX_SANTAGIFTS],
 	};
 #endif
 
-forward SantaPickUp(playerid,pickupid);
-forward SantaReset(tec);
-forward SantaGiftCreate(giftid);
-forward SantaGiftReset(giftid);
-
-new bool:CRC_Santa = true;
-
-//Hook: OnGameModeInit
-public OnGameModeInit(){
-	if(CRC_Santa){ CRC_Santa = false; } else return 1; //Init Engine
+stock SantaInit(){
 	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
@@ -106,6 +97,22 @@ public OnGameModeInit(){
 			SantaGiftCreate(i);
 		}
 		SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SANTAGIFTS,true,"d",1);
+	}
+}
+
+forward SantaPickUp(playerid,pickupid);
+forward SantaReset(tec);
+forward SantaGiftCreate(giftid);
+forward SantaGiftReset(giftid);
+
+new bool:CRC_SantaInit = true,
+	bool:CRC_SantaExit = true;
+
+//Hook: OnGameModeInit
+public OnGameModeInit(){
+	if(CRC_SantaInit){
+		CRC_SantaInit = false;
+		SantaInit();
 	}
 	#if defined SantaOnGameModeInit
 		SantaOnGameModeInit();
@@ -125,17 +132,9 @@ public OnGameModeInit(){
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_Santa){ CRC_Santa = false; } else return 1; //Init Engine
-	SafeMapAndreasInit();
-	if(!IsMapAndreasInit()){
-		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Error: Invalid MapAndreas Memory.");
-		}
-	} else {
-		for(new i = 0; i < MAX_SANTAGIFTS; i++){
-			SantaGiftCreate(i);
-		}
-		SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SANTAGIFTS,true,"d",1);
+	if(CRC_SantaInit){
+		CRC_SantaInit = false;
+		SantaInit();
 	}
 	#if defined SantaOnFilterScriptInit
 		SantaOnFilterScriptInit();
@@ -155,7 +154,10 @@ public OnFilterScriptInit(){
 
 //Hook: OnFilterScriptExit
 public OnFilterScriptExit(){
-	KillTimer(SantaTimer[0]);
+	if(CRC_SantaExit){
+		CRC_SantaExit = false;
+		KillTimer(SantaTimer[0]);
+	}
 	#if defined SantaOnFilterScriptExit
 		SantaOnFilterScriptExit();
 	#endif

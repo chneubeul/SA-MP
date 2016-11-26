@@ -4624,8 +4624,10 @@ Tryg3DProt:: Tryg3DExit(){
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
-	if(CRC_Tryg3DInit){ CRC_Tryg3DInit = false; } else return 1; //Init Engine
-	Tryg3DInit();
+	if(CRC_Tryg3DInit){
+		CRC_Tryg3DInit = false;
+		Tryg3DInit();
+	}
 	#if defined Tryg3D_OnFilterScriptInit
 		Tryg3D_OnFilterScriptInit();
 	#endif
@@ -4644,8 +4646,10 @@ public OnFilterScriptInit(){
 
 //Hook: OnGameModeInit
 public OnGameModeInit(){
-	if(CRC_Tryg3DInit){ CRC_Tryg3DInit = false; } else return 1; //Init Engine
-	Tryg3DInit();
+	if(CRC_Tryg3DInit){
+		CRC_Tryg3DInit = false;
+		Tryg3DInit();
+	}
 	#if defined Tryg3D_OnGameModeInit
 		Tryg3D_OnGameModeInit();
 	#endif
@@ -4664,8 +4668,10 @@ public OnGameModeInit(){
 
 //Hook: OnFilterScriptExit
 public OnFilterScriptExit(){
-	if(CRC_Tryg3DExit){ CRC_Tryg3DExit = false; } else return 1; //Exit Engine
-	Tryg3DExit();
+	if(CRC_Tryg3DExit){
+		CRC_Tryg3DExit = false;
+		Tryg3DExit();
+	}
 	#if defined Tryg3D_OnFilterScriptExit
 		Tryg3D_OnFilterScriptExit();
 	#endif
@@ -4684,8 +4690,10 @@ public OnFilterScriptExit(){
 
 //Hook: OnGameModeExit
 public OnGameModeExit(){
-	if(CRC_Tryg3DExit){ CRC_Tryg3DExit = false; } else return 1; //Exit Engine
-	Tryg3DExit();
+	if(CRC_Tryg3DExit){
+		CRC_Tryg3DExit = false;
+		Tryg3DExit();
+	}
 	#if defined Tryg3D_OnGameModeExit
 		Tryg3D_OnGameModeExit();
 	#endif
