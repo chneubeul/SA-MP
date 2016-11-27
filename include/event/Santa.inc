@@ -7,13 +7,14 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=595265                                      *
  *                                                                                                  *
- * Plugins: Streamer, MapAndreas                                                                    *
+ * Plugins: Streamer, ColAndreas/MapAndreas                                                         *
  * Modules: 3DTryg, StreamerFunction                                                                *
  *                                                                                                  *
- * File Version: 1.4.1                                                                              *
+ * File Version: 1.4.2                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
  * Streamer Version: 2.8.2                                                                          *
  * MapAndreas Version: 1.2.1                                                                        *
+ * ColAndreas Version: 1.4.0                                                                        *
  * 3DTryg Version: 3.0.5                                                                            *
  * StreamerFunction Version: 2.5.4                                                                  *
  *                                                                                                  *
@@ -26,8 +27,8 @@
 	#error [ADM] Unknown Streamer Version
 #endif
 
-#if !defined MapAndreas_FindZ_For2DCoord
-	#error [ADM] Unknown MapAndreas Version
+#if !defined Tryg3DMapAndreasFindZ
+	#error [ADM] Unknown ColAndreas/MapAndreas Version
 #endif
 
 //Check Version StreamerFunction.inc
@@ -87,7 +88,6 @@ new SantaGift[MAX_SANTAGIFTS],
 #endif
 
 stock SantaInit(){
-	SafeMapAndreasInit();
 	if(!IsMapAndreasInit()){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
 			print("[ADM] Error: Invalid MapAndreas Memory.");

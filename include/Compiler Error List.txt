@@ -3,6 +3,7 @@ Plugin Include:
 [ADM] Unknown Streamer Version
 [ADM] Unknown MapAndreas Version
 [ADM] Unknown ColAndreas Version
+[ADM] Unknown ColAndreas/MapAndreas Version
 [ADM] This include requires SA:MP version 0.3.7
 [ADM] You need MapAndreas or ColAndreas
 [ADM] You need update FCNPC Plugin
