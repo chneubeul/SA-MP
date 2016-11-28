@@ -3,7 +3,7 @@
  *                                              )(   Extended Vehicle Functions   )(                                              *
  *                                                                                                                                *
  * Copyright © 2016 Emmet_. All rights reserved.                                                                                  *
- * Contributors: [uL]Pottus, kvann, Hanger, Abyss Morgan, Freaksken                                                               *
+ * Contributors: Pottus, kvann, Hanger, Abyss Morgan, Freaksken                                                                   *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=486060                                                                    *
