@@ -10,13 +10,14 @@
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
  *                                                                                                                                         *
- * File Version: 2.5.7                                                                                                                     *
+ * File Version: 2.5.8                                                                                                                     *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *
  * Streamer Version: 2.8.2                                                                                                                 *
  *                                                                                                                                         *
  * Compiler Options:                                                                                                                       *
  * DISABLE_STREAMER_SPEC_CHECK  //Turn off check streamer version                                                                          *
  * ENABLE_BULLET_DYNAMIC_OBJECT //Turn on call OnPlayerWeaponShot when we shoot in a dynamic object                                        *
+ * DISABLE_STREAMER_SPEC_FIXES  //Turn off fixes (not recommended)                                                                         *
  *                                                                                                                                         *
  * Objects Functions:                                                                                                                      *
  * GetDynamicObjectModel(objectid);                                                                                                        *
@@ -311,11 +312,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.5.7
+	#error [ADM] You need StreamerFunction.inc v2.5.8
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.5.7
-#elseif (Streamer_Spec_Version < 20507)
-	#error [ADM] Update you StreamerFunction.inc to v2.5.7
+	#error [ADM] Update you StreamerFunction.inc to v2.5.8
+#elseif (Streamer_Spec_Version < 20508)
+	#error [ADM] Update you StreamerFunction.inc to v2.5.8
 #endif
 */
 
@@ -332,7 +333,7 @@
 	#error [ADM] Unknown Streamer Version
 #endif
 
-#define Streamer_Spec_Version 					(20507) //a.b.c 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20508) //a.b.c 10000*a+100*b+c
 #define Streamer_Spec_SAMP_Version				"0.3.7"
 #define Valid_Streamer_Version 					(0x282001)
 
@@ -1188,189 +1189,192 @@ StreamerSpecProt:: GetNearestVisibleItem(playerid,type){
  *                                                                                                  *
  ****************************************************************************************************/
 
-//Hook: DestroyDynamicObject
-StreamerSpecProt:: SF_DestroyDynamicObject(&objectid){
-	new dobj = DestroyDynamicObject(objectid);
-	objectid = INVALID_STREAMER_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyDynamicObject
-	#undef DestroyDynamicObject
-#else
-	#define _ALS_DestroyDynamicObject
-#endif
-#define DestroyDynamicObject SF_DestroyDynamicObject
-
-//Hook: DestroyDynamicPickup
-StreamerSpecProt:: SF_DestroyDynamicPickup(&pickupid){
-	new dobj = DestroyDynamicPickup(pickupid);
-	pickupid = INVALID_STREAMER_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyDynamicPickup
-	#undef DestroyDynamicPickup
-#else
-	#define _ALS_DestroyDynamicPickup
-#endif
-#define DestroyDynamicPickup SF_DestroyDynamicPickup
-
-//Hook: DestroyDynamicCP
-StreamerSpecProt:: SF_DestroyDynamicCP(&checkpointid){
-	new dobj = DestroyDynamicCP(checkpointid);
-	checkpointid = INVALID_STREAMER_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyDynamicCP
-	#undef DestroyDynamicCP
-#else
-	#define _ALS_DestroyDynamicCP
-#endif
-#define DestroyDynamicCP SF_DestroyDynamicCP
-
-//Hook: DestroyDynamicRaceCP
-StreamerSpecProt:: SF_DestroyDynamicRaceCP(&checkpointid){
-	new dobj = DestroyDynamicRaceCP(checkpointid);
-	checkpointid = INVALID_STREAMER_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyDynamicRaceCP
-	#undef DestroyDynamicRaceCP
-#else
-	#define _ALS_DestroyDynamicRaceCP
-#endif
-#define DestroyDynamicRaceCP SF_DestroyDynamicRaceCP
-
-//Hook: DestroyDynamicMapIcon
-StreamerSpecProt:: SF_DestroyDynamicMapIcon(&iconid){
-	new dobj = DestroyDynamicMapIcon(iconid);
-	iconid = INVALID_STREAMER_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyDynamicMapIcon
-	#undef DestroyDynamicMapIcon
-#else
-	#define _ALS_DestroyDynamicMapIcon
-#endif
-#define DestroyDynamicMapIcon SF_DestroyDynamicMapIcon
-
-//Hook: DestroyDynamic3DTextLabel
-StreamerSpecProt:: SF_DestroyDynamic3DTextLabel(&Text3D:id){
-	new dobj = DestroyDynamic3DTextLabel(id);
-	id = Text3D:INVALID_STREAMER_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyDynamic3DTextLabel
-	#undef DestroyDynamic3DTextLabel
-#else
-	#define _ALS_DestroyDynamic3DTextLabel
-#endif
-#define DestroyDynamic3DTextLabel SF_DestroyDynamic3DTextLabel
-
-//Hook: DestroyDynamicArea
-StreamerSpecProt:: SF_DestroyDynamicArea(&areaid){
-	new dobj = DestroyDynamicArea(areaid);
-	areaid = INVALID_STREAMER_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyDynamicArea
-	#undef DestroyDynamicArea
-#else
-	#define _ALS_DestroyDynamicArea
-#endif
-#define DestroyDynamicArea SF_DestroyDynamicArea
-
-//Hook: AttachDynamicObjectToObject
-StreamerSpecProt:: SF_AttachDynamicObjectToObject(objectid,attachtoid,Float:offsetx,Float:offsety,Float:offsetz,Float:rx,Float:ry,Float:rz,syncrotation = 1){
-	new dobj = AttachDynamicObjectToObject(objectid,attachtoid,offsetx,offsety,offsetz,rx,ry,rz,syncrotation);
-	if(GetDynamicObjectPriority(attachtoid) <= GetDynamicObjectPriority(objectid)){
-		SetDynamicObjectPriority(attachtoid,GetDynamicObjectPriority(objectid)+1);
+#if !defined DISABLE_STREAMER_SPEC_FIXES
+	//Hook: DestroyDynamicObject
+	StreamerSpecProt:: SF_DestroyDynamicObject(&objectid){
+		new dobj = DestroyDynamicObject(objectid);
+		objectid = INVALID_STREAMER_ID;
+		return dobj;
 	}
-	return dobj;
-}
 
-#if defined _LS_AttachDynamicObjectToObject
-	#undef AttachDynamicObjectToObject
-#else
-	#define _LS_AttachDynamicObjectToObject
+	#if defined _ALS_DestroyDynamicObject
+		#undef DestroyDynamicObject
+	#else
+		#define _ALS_DestroyDynamicObject
+	#endif
+	#define DestroyDynamicObject SF_DestroyDynamicObject
+
+	//Hook: DestroyDynamicPickup
+	StreamerSpecProt:: SF_DestroyDynamicPickup(&pickupid){
+		new dobj = DestroyDynamicPickup(pickupid);
+		pickupid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicPickup
+		#undef DestroyDynamicPickup
+	#else
+		#define _ALS_DestroyDynamicPickup
+	#endif
+	#define DestroyDynamicPickup SF_DestroyDynamicPickup
+
+	//Hook: DestroyDynamicCP
+	StreamerSpecProt:: SF_DestroyDynamicCP(&checkpointid){
+		new dobj = DestroyDynamicCP(checkpointid);
+		checkpointid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicCP
+		#undef DestroyDynamicCP
+	#else
+		#define _ALS_DestroyDynamicCP
+	#endif
+	#define DestroyDynamicCP SF_DestroyDynamicCP
+
+	//Hook: DestroyDynamicRaceCP
+	StreamerSpecProt:: SF_DestroyDynamicRaceCP(&checkpointid){
+		new dobj = DestroyDynamicRaceCP(checkpointid);
+		checkpointid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicRaceCP
+		#undef DestroyDynamicRaceCP
+	#else
+		#define _ALS_DestroyDynamicRaceCP
+	#endif
+	#define DestroyDynamicRaceCP SF_DestroyDynamicRaceCP
+
+	//Hook: DestroyDynamicMapIcon
+	StreamerSpecProt:: SF_DestroyDynamicMapIcon(&iconid){
+		new dobj = DestroyDynamicMapIcon(iconid);
+		iconid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicMapIcon
+		#undef DestroyDynamicMapIcon
+	#else
+		#define _ALS_DestroyDynamicMapIcon
+	#endif
+	#define DestroyDynamicMapIcon SF_DestroyDynamicMapIcon
+
+	//Hook: DestroyDynamic3DTextLabel
+	StreamerSpecProt:: SF_DestroyDynamic3DTextLabel(&Text3D:id){
+		new dobj = DestroyDynamic3DTextLabel(id);
+		id = Text3D:INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamic3DTextLabel
+		#undef DestroyDynamic3DTextLabel
+	#else
+		#define _ALS_DestroyDynamic3DTextLabel
+	#endif
+	#define DestroyDynamic3DTextLabel SF_DestroyDynamic3DTextLabel
+
+	//Hook: DestroyDynamicArea
+	StreamerSpecProt:: SF_DestroyDynamicArea(&areaid){
+		new dobj = DestroyDynamicArea(areaid);
+		areaid = INVALID_STREAMER_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyDynamicArea
+		#undef DestroyDynamicArea
+	#else
+		#define _ALS_DestroyDynamicArea
+	#endif
+	#define DestroyDynamicArea SF_DestroyDynamicArea
+
+	//Hook: AttachDynamicObjectToObject
+	StreamerSpecProt:: SF_AttachDynamicObjectToObject(objectid,attachtoid,Float:offsetx,Float:offsety,Float:offsetz,Float:rx,Float:ry,Float:rz,syncrotation = 1){
+		new dobj = AttachDynamicObjectToObject(objectid,attachtoid,offsetx,offsety,offsetz,rx,ry,rz,syncrotation);
+		if(GetDynamicObjectPriority(attachtoid) <= GetDynamicObjectPriority(objectid)){
+			SetDynamicObjectPriority(attachtoid,GetDynamicObjectPriority(objectid)+1);
+		}
+		return dobj;
+	}
+
+	#if defined _LS_AttachDynamicObjectToObject
+		#undef AttachDynamicObjectToObject
+	#else
+		#define _LS_AttachDynamicObjectToObject
+	#endif
+	#define AttachDynamicObjectToObject SF_AttachDynamicObjectToObject
+
+	//Hook: DestroyObject
+	StreamerSpecProt:: SF_DestroyObject(&objectid){
+		new dobj = DestroyObject(objectid);
+		objectid = INVALID_OBJECT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyObject
+		#undef DestroyObject
+	#else
+		#define _ALS_DestroyObject
+	#endif
+	#define DestroyObject SF_DestroyObject
+
+	//Hook: DestroyPlayerObject
+	StreamerSpecProt:: SF_DestroyPlayerObject(playerid,&objectid){
+		new dobj = DestroyPlayerObject(playerid,objectid);
+		objectid = INVALID_OBJECT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyPlayerObject
+		#undef DestroyPlayerObject
+	#else
+		#define _ALS_DestroyPlayerObject
+	#endif
+	#define DestroyPlayerObject SF_DestroyPlayerObject
+
+	//Hook: DestroyPickup
+	StreamerSpecProt:: SF_DestroyPickup(&pickupid){
+		new dobj = DestroyPickup(pickupid);
+		pickupid = INVALID_PICKUP_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DestroyPickup
+		#undef DestroyPickup
+	#else
+		#define _ALS_DestroyPickup
+	#endif
+	#define DestroyPickup SF_DestroyPickup
+
+	//Hook: Delete3DTextLabel
+	StreamerSpecProt:: SF_Delete3DTextLabel(&Text3D:id){
+		new dobj = Delete3DTextLabel(id);
+		id = Text3D:INVALID_3DTEXT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_Delete3DTextLabel
+		#undef Delete3DTextLabel
+	#else
+		#define _ALS_Delete3DTextLabel
+	#endif
+	#define Delete3DTextLabel SF_Delete3DTextLabel
+
+	//Hook: DeletePlayer3DTextLabel
+	StreamerSpecProt:: SF_DeletePlayer3DTextLabel(playerid,&PlayerText3D:id){
+		new dobj = DeletePlayer3DTextLabel(playerid,id);
+		id = PlayerText3D:INVALID_3DTEXT_ID;
+		return dobj;
+	}
+
+	#if defined _ALS_DeletePlayer3DTextLabel
+		#undef DeletePlayer3DTextLabel
+	#else
+		#define _ALS_DeletePlayer3DTextLabel
+	#endif
+	#define DeletePlayer3DTextLabel SF_DeletePlayer3DTextLabel
+	
 #endif
-#define AttachDynamicObjectToObject SF_AttachDynamicObjectToObject
-
-//Hook: DestroyObject
-StreamerSpecProt:: SF_DestroyObject(&objectid){
-	new dobj = DestroyObject(objectid);
-	objectid = INVALID_OBJECT_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyObject
-	#undef DestroyObject
-#else
-	#define _ALS_DestroyObject
-#endif
-#define DestroyObject SF_DestroyObject
-
-//Hook: DestroyPlayerObject
-StreamerSpecProt:: SF_DestroyPlayerObject(playerid,&objectid){
-	new dobj = DestroyPlayerObject(playerid,objectid);
-	objectid = INVALID_OBJECT_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyPlayerObject
-	#undef DestroyPlayerObject
-#else
-	#define _ALS_DestroyPlayerObject
-#endif
-#define DestroyPlayerObject SF_DestroyPlayerObject
-
-//Hook: DestroyPickup
-StreamerSpecProt:: SF_DestroyPickup(&pickupid){
-	new dobj = DestroyPickup(pickupid);
-	pickupid = INVALID_PICKUP_ID;
-	return dobj;
-}
-
-#if defined _ALS_DestroyPickup
-	#undef DestroyPickup
-#else
-	#define _ALS_DestroyPickup
-#endif
-#define DestroyPickup SF_DestroyPickup
-
-//Hook: Delete3DTextLabel
-StreamerSpecProt:: SF_Delete3DTextLabel(&Text3D:id){
-	new dobj = Delete3DTextLabel(id);
-	id = Text3D:INVALID_3DTEXT_ID;
-	return dobj;
-}
-
-#if defined _ALS_Delete3DTextLabel
-	#undef Delete3DTextLabel
-#else
-	#define _ALS_Delete3DTextLabel
-#endif
-#define Delete3DTextLabel SF_Delete3DTextLabel
-
-//Hook: DeletePlayer3DTextLabel
-StreamerSpecProt:: SF_DeletePlayer3DTextLabel(playerid,&PlayerText3D:id){
-	new dobj = DeletePlayer3DTextLabel(playerid,id);
-	id = PlayerText3D:INVALID_3DTEXT_ID;
-	return dobj;
-}
-
-#if defined _ALS_DeletePlayer3DTextLabel
-	#undef DeletePlayer3DTextLabel
-#else
-	#define _ALS_DeletePlayer3DTextLabel
-#endif
-#define DeletePlayer3DTextLabel SF_DeletePlayer3DTextLabel
 
 /****************************************************************************************************
  *                                                                                                  *
