@@ -270,4 +270,4 @@ native SelectTextDraw(playerid, hovercolor); // enables the mouse so the player 
 native CancelSelectTextDraw(playerid);	// cancel textdraw selection with the mouse
 
 // Explosion
-native CreateExplosionForPlayer(playerid, Float:X, Float:Y, Float:Z, type, Float:Radius);
+native CreateExplosionForPlayer(playerid, Float:x, Float:y, Float:z, type, Float:Radius);

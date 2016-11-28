@@ -29,6 +29,7 @@
 #include <a_objects>
 #include <a_actor>
 #include <a_sampdb>
+#include <a_http>
 
 // Limits and internal constants
 #define MAX_PLAYER_NAME							(24)

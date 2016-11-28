@@ -33,10 +33,6 @@
 #define VEHICLE_PARAMS_OFF		0
 #define VEHICLE_PARAMS_ON		1
 
-#if !defined IsValidVehicle
-	native IsValidVehicle(vehicleid);
-#endif
-
 // Vehicle
 native CreateVehicle(vehicletype, Float:x, Float:y, Float:z, Float:rotation, color1, color2, respawn_delay, addsiren=0);
 native DestroyVehicle(vehicleid);
@@ -78,6 +74,7 @@ native SetVehicleVelocity(vehicleid, Float:X, Float:Y, Float:Z);
 native SetVehicleAngularVelocity(vehicleid, Float:X, Float:Y, Float:Z);
 native GetVehicleDamageStatus(vehicleid, &panels, &doors, &lights, &tires);
 native UpdateVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
+native IsValidVehicle(vehicleid);
 
 #define VEHICLE_MODEL_INFO_SIZE				1
 #define VEHICLE_MODEL_INFO_FRONTSEAT		2
