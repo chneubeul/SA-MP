@@ -16,7 +16,7 @@ http://forum.sa-mp.com/member.php?u=255806
 Abyss Morgan
 
 
-### Special Thanks for:
+### Contributors:
 Crayder, Nero_3D, IllidanS4, eider, Witkacy, Zoutdaxv, RyDeR, Greg James, hesambia, tsynotnu, Neil Lamoureux, Freaksken, Shiny, Emmet_, Pottus, kvann, Hanger
 
 ### Beta Testers:
