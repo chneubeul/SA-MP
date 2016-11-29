@@ -1,8 +1,8 @@
-#include <samp/a_samp>
-#include <3rdparty/sscanf2>
-#include <3rdparty/streamer>
-#include <3rdparty/mapandreas>
-#include <3rdparty/izcmd>
+#include <a_samp>
+#include <sscanf2>
+#include <streamer>
+#include <mapandreas>
+#include <izcmd>
 
 #include <SAM/FoxForeach>
 #include <SAM/3DTryg>
