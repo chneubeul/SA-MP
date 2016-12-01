@@ -4496,13 +4496,12 @@ Tryg3DProt:: Tryg3DInit_MapPrecision(){
 	public Tryg3D_OnRequestResponse(index, response_code, data[]){
 		if(index == 0 && response_code == 200){
 			if(isnull(data)) return 0;
-			new T3D:version[16], T3D:f_version[16], T3D:ver;
+			new T3D:version[16], T3D:ver, T3D:file_ver = Tryg3D_Version;
 			strmid(T3D:version,data,0,strlen(data));
 			T3D:ver = strval(T3D:version);
-			format(T3D:f_version,sizeof(T3D:f_version),"%d",Tryg3D_Version);
-			if(strcmp(T3D:version,T3D:f_version) != 0){
+			if(T3D:ver != T3D:file_ver){
 				print(" ");
-				printf("[ADM] Info: Please update your 3DTryg include to %d.%d.%d from here:",(T3D:ver / 10000),((T3D:ver % 10000) / 100),((T3D:ver % 10000) % 100));
+				printf("[ADM] Info: Please update your 3DTryg include to v%d.%d.%d from here:",(T3D:ver / 10000),((T3D:ver % 10000) / 100),((T3D:ver % 10000) % 100));
 				print("https://github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc");
 				print(" ");
 			}
