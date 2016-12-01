@@ -9,7 +9,7 @@
  * Publication: http://forum.sa-mp.com/showthread.php?t=591010                                                                      *
  *                                                                                                                                  *
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
- * Modules: FoxForeach, Foreach                                                                                                     *
+ * Modules: FoxForeach, Foreach, Stream3D, Line3D                                                                                   *
  *                                                                                                                                  *
  * File Version: 3.1.1                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *

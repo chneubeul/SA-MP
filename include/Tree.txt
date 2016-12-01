@@ -1,4 +1,37 @@
 ﻿INCLUDE
+├───SAM
+│   ├───3DTryg
+│   │   ├───MapAndreas
+│   │   ├───ColAndreas
+│   │   ├───YSF
+│   │   ├───Streamer
+│   │   ├───FoxForeach
+│   │   ├───Foreach
+│   │   ├───FCNPC
+│   │   ├───Stream3D
+│   │   └───Line3D
+│   ├───ADM
+│   │   ├───MD5
+│   │   ├───ProtVar
+│   │   └───SScanf
+│   ├───ATM
+│   ├───BINLDR
+│   │   └───SScanf
+│   ├───BitFunctions
+│   ├───DataConvert
+│   │   └───SScanf
+│   ├───DoT
+│   │   └───ADM
+│   ├───FoxForeach
+│   ├───GangZoneEx
+│   │   └───Streamer
+│   ├───Logs
+│   ├───LY
+│   ├───RGB
+│   ├───StreamerFunction
+│   │   └───Streamer
+│   ├───TextDrawEx
+│   └───EVF
 ├───engine
 │   ├───EngineV6
 │   │   ├───3DTryg
@@ -27,6 +60,29 @@
 │       ├───ColAndreas
 │       ├───Missile
 │       └───Streamer
+├───security
+│   ├───MultiScriptSecure
+│   ├───ScriptChecker
+│   └───ScriptSecure
+├───SAOI
+│   ├───SAOI
+│   │   ├───Streamer
+│   │   └───SScanf
+│   ├───SAOI_FileManager
+│   │   ├───Streamer
+│   │   ├───SScanf
+│   │   ├───MapAndreas
+│   │   ├───ColAndreas
+│   │   ├───SAOI
+│   │   ├───3DTryg
+│   │   ├───StreamerFunction
+│   │   ├───IZCMD
+│   │   └───ZCMD
+│   └───SAOI_Generator
+│       ├───SAOI
+│       ├───Streamer
+│       ├───SScanf
+│       └───ObjectDist
 ├───event
 │   ├───Fireworks
 │   │   ├───3DTryg
@@ -38,41 +94,6 @@
 │       ├───ColAndreas
 │       ├───Streamer
 │       └───StreamerFunction
-├───other
-│   ├───AntiSupremeTroll
-│   └───Interiors
-├───SAM
-│   ├───3DTryg
-│   │   ├───ColAndreas
-│   │   ├───FCNPC
-│   │   ├───Foreach
-│   │   ├───FoxForeach
-│   │   ├───MapAndreas
-│   │   ├───Streamer
-│   │   └───YSF
-│   ├───ADM
-│   │   ├───MD5
-│   │   ├───ProtVar
-│   │   └───SScanf
-│   ├───ATM
-│   ├───BINLDR
-│   │   └───SScanf
-│   ├───BitFunctions
-│   ├───DataConvert
-│   │   └───SScanf
-│   ├───DoT
-│   │   └───ADM
-│   ├───FoxForeach
-│   ├───GangZoneEx
-│   │   └───Streamer
-│   ├───Logs
-│   ├───LY
-│   ├───RGB
-│   ├───StreamerFunction
-│   │   └───Streamer
-│   ├───TextDrawEx
-│   └───EVF
-└───security
-    ├───MultiScriptSecure
-    ├───ScriptChecker
-    └───ScriptSecure
+└───other
+    ├───AntiSupremeTroll
+    └───Interiors
