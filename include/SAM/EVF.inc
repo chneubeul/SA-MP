@@ -2,8 +2,8 @@
  *                                                                                                                                *
  *                                              )(   Extended Vehicle Functions   )(                                              *
  *                                                                                                                                *
- * Copyright © 2016 Emmet_. All rights reserved.                                                                                  *
- * Contributors: Pottus, kvann, Hanger, Abyss Morgan, Freaksken                                                                   *
+ * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                            *
+ * Contributors: Emmet_, Pottus, kvann, Hanger, , Freaksken                                                                       *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=486060                                                                    *
@@ -11,10 +11,11 @@
  * Plugins: None                                                                                                                  *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.0.1                                                                                                            *
+ * File Version: 2.1.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRED)                                                                                                *
  *                                                                                                                                *
  * VehicleEx Functions (Abyss Morgan):                                                                                            *
+ * bool:IsValidVehicleModelID(modelid);                                                                                           *
  * GetVehiclePanels(vehicleid,&front_left,&front_right,&rear_left,&rear_right,&windshield,&front_bumper,&rear_bumper);            *
  * SetVehiclePanels(vehicleid,front_left,front_right,rear_left,rear_right,windshield,front_bumper,rear_bumper);                   *
  * GetVehicleLights(vehicleid,&front_left_light,&front_right_light,&back_lights);                                                 *
@@ -23,7 +24,6 @@
  * SetVehicleDoors(vehicleid,bonnet,boot,driver_door,passenger_door);                                                             *
  * GetVehicleTires(vehicleid,&front_left,&front_right,&rear_left,&rear_right);                                                    *
  * SetVehicleTires(vehicleid,front_left,front_right,rear_left,rear_right);                                                        *
- * SwitchVehicleLight(vehicleid,bool:light);                                                                                      *
  * GetVehicleWindowState(vehicleid,doorid);                                                                                       *
  * SetVehicleWindowState(vehicleid,doorid,window_state);                                                                          *
  * GetVehicleDoorState(vehicleid,doorid);                                                                                         *
@@ -31,6 +31,13 @@
  * bool:IsValidVehicleDoor(vehicleid,doorid);                                                                                     *
  * GetVehicleDoorAmountByModelid(modelid);                                                                                        *
  * GetVehicleDoorAmount(vehicleid);                                                                                               *
+ * SwitchVehicleEngine(vehicleid,bool:engine_status);                                                                             *
+ * SwitchVehicleLight(vehicleid,bool:light_status);                                                                               *
+ * SwitchVehicleAlarm(vehicleid,bool:alarm_status);                                                                               *
+ * SwitchVehicleDoors(vehicleid,bool:doors_status);                                                                               *
+ * SwitchVehicleBonnet(vehicleid,bool:bonnet_status);                                                                             *
+ * SwitchVehicleBoot(vehicleid,bool:boot_status);                                                                                 *
+ * SwitchVehicleObjective(vehicleid,bool:objective_status);                                                                       *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * GetVehicleParams(vehicleid,type);                                                                                              *
@@ -64,11 +71,11 @@
 /*
 //Check Version EVF.inc
 #if !defined _EVF_include
-	#error [ADM] You need EVF.inc v2.0.1
+	#error [ADM] You need EVF.inc v2.1.0
 #elseif !defined EVF_Version
-	#error [ADM] Update you EVF.inc to v2.0.1
-#elseif (EVF_Version < 20001)
-	#error [ADM] Update you EVF.inc to v2.0.1
+	#error [ADM] Update you EVF.inc to v2.1.0
+#elseif (EVF_Version < 20100)
+	#error [ADM] Update you EVF.inc to v2.1.0
 #endif
 */
 
@@ -85,7 +92,7 @@
 	#error [ADM] Please remove deprecated file VehicleEx.inc
 #endif
 
-#define EVF_Version											(20001) //a.b.c 10000*a+100*b+c
+#define EVF_Version											(20100) //a.b.c 10000*a+100*b+c
 
 #if !defined IsValidVehicle
 	native IsValidVehicle(vehicleid);
@@ -407,6 +414,7 @@ new const s_VehicleDoor[MAX_VEHICLE_MODEL] = {
 	4,0,2,2,0,4,0,2,2,2,0,0,0,2,0,0,4,4,4,2,2,0,2,2,4,2,0,0,0,2,0,0
 };
 
+#define IsValidVehicleModelID(%0)		(400 <= (%0) <= 611)
 #define GetVehicleSeats(%0)				GetVehicleModelSeats(GetVehicleModel(%0))
 #define SetVehicleInterior(%0,%1)		LinkVehicleToInterior(%0,%1)
 #define GetVehicleBoot(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_BOOT,%1,%2,%3)
@@ -419,54 +427,6 @@ forward OnVehicleDestroyed(vehicleid);
 forward OnTrailerHooked(playerid,vehicleid,trailerid);
 forward OnTrailerUnhooked(playerid,vehicleid,trailerid);
 forward OnPlayerShootVehicle(playerid,vehicleid,weaponid);
-
-#if !defined _YSF_included
-	stock GetVehicleInterior(vehicleid){
-		if(IsValidVehicle(vehicleid)){
-			return GetVehiclePropertyValue(vehicleid,e_VEHICLE_INTERIOR);
-		}
-		return 0;
-	}
-
-	stock GetVehicleColor(vehicleid,&color1,&color2){
-		if(IsValidVehicle(vehicleid)){
-			color1 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1);
-			color2 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2);
-			return 1;
-		}
-		return 0;
-	}
-
-	stock GetVehiclePaintjob(vehicleid){
-		if(IsValidVehicle(vehicleid)){
-			if(IsVehiclePropertySet(vehicleid,e_VEHICLE_PAINTJOB)){
-				return GetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB);
-			} else {
-				return INVALID_PAINTJOB_ID;
-			}
-		}
-		return 0;
-	}
-#endif
-
-stock GetVehicleDoorAmountByModelid(modelid){
-	if(!(400 <= modelid <= 611)) return 0;
-	return s_VehicleDoor[modelid-400];
-}
-
-stock bool:IsValidVehicleDoor(vehicleid,doorid){
-	new modelid = GetVehicleModel(vehicleid);
-	if(!(400 <= modelid <= 611)) return false;
-	if(doorid > s_VehicleDoor[modelid-400]) return false;
-	return true;
-}
-
-stock ResetVehicleProperties(vehicleid){
-	s_VehicleTrailerID[vehicleid] = INVALID_VEHICLE_ID;
-	for(new i = 0; i < _:e_VehicleProperties; i++){
-		deleteproperty(4,!"",(vehicleid << 2) + i);
-	}
-}
 
 stock SetVehiclePropertyValue(vehicleid,type,value){
 	new evf_string[12];
@@ -484,23 +444,62 @@ stock IsVehiclePropertySet(vehicleid,type){
 	return existproperty(4,!"",(vehicleid << 2) + type);
 }
 
+#if !defined _YSF_included
+	stock GetVehicleInterior(vehicleid){
+		if(IsValidVehicle(vehicleid)) return GetVehiclePropertyValue(vehicleid,e_VEHICLE_INTERIOR);
+		return 0;
+	}
+
+	stock GetVehicleColor(vehicleid,&color1,&color2){
+		if(IsValidVehicle(vehicleid)){
+			color1 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1);
+			color2 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2);
+			return 1;
+		}
+		return 0;
+	}
+
+	stock GetVehiclePaintjob(vehicleid){
+		if(IsValidVehicle(vehicleid)){
+			if(IsVehiclePropertySet(vehicleid,e_VEHICLE_PAINTJOB)) return GetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB);
+		}
+		return INVALID_PAINTJOB_ID;
+	}
+#endif
+
+stock GetVehicleDoorAmountByModelid(modelid){
+	if(!IsValidVehicleModelID(modelid)) return 0;
+	return s_VehicleDoor[modelid-400];
+}
+
+stock bool:IsValidVehicleDoor(vehicleid,doorid){
+	new modelid = GetVehicleModel(vehicleid);
+	if(!IsValidVehicleModelID(modelid)) return false;
+	return !(doorid > s_VehicleDoor[modelid-400]);
+}
+
+stock ResetVehicleProperties(vehicleid){
+	s_VehicleTrailerID[vehicleid] = INVALID_VEHICLE_ID;
+	for(new i = 0; i < _:e_VehicleProperties; i++){
+		deleteproperty(4,!"",(vehicleid << 2) + i);
+	}
+}
+
 stock GetVehicleRandomColors(modelid,&color1,&color2){
+	if(!IsValidVehicleModelID(modelid)) return 0;
 	new index = 0;
 	
 	color1 = 0, color2 = 0;
-
-	if(!(400 <= modelid <= 611)) return 0;
 	
 	modelid -= 400;
 	
-	if(!s_CarColors[modelid][0]){
-		return 0;
-	} else if(s_CarColors[modelid][0] == 2){
+	if(!s_CarColors[modelid][0]) return 0;
+	
+	if(s_CarColors[modelid][0] == 2){
 		color1 = s_CarColors[modelid][1];
 		color2 = s_CarColors[modelid][2];
 	} else {
 		index = random(s_CarColors[modelid][0]) & -2;
-
 		color1 = s_CarColors[modelid][++index];
 		color2 = s_CarColors[modelid][++index];
 	}
@@ -532,10 +531,7 @@ stock GetVehicleOffset(vehicleid,type,&Float:x,&Float:y,&Float:z){
 	new Float:fPos[4],Float:fSize[3];
 
 	if(!IsValidVehicle(vehicleid)){
-		x = 0.0;
-		y = 0.0;
-		z = 0.0;
-
+		x = y =	z = 0.0;
 		return 0;
 	} else {
 		GetVehiclePos(vehicleid,fPos[0],fPos[1],fPos[2]);
@@ -595,14 +591,11 @@ stock GetVehicleDriver(vehicleid){
 }
 
 stock IsVehicleSeatOccupied(vehicleid,seatid){
-	if(!GetVehicleModel(vehicleid)){
-		return 0;
-	} else {
-		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-			if(IsPlayerConnected(i)){
-				if(IsPlayerInVehicle(i,vehicleid) && GetPlayerVehicleSeat(i) == seatid){
-					return 1;
-				}
+	if(!GetVehicleModel(vehicleid)) return 0;
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		if(IsPlayerConnected(i)){
+			if(IsPlayerInVehicle(i,vehicleid) && GetPlayerVehicleSeat(i) == seatid){
+				return 1;
 			}
 		}
 	}
@@ -611,7 +604,6 @@ stock IsVehicleSeatOccupied(vehicleid,seatid){
 
 stock GetVehicleNextSeat(vehicleid,passenger = 1){
 	new seats = GetVehicleSeats(vehicleid);
-
 	if(seats > 1){
 		for(new i = passenger; i < seats; i++){
 			if(!IsVehicleSeatOccupied(vehicleid,i)){
@@ -623,12 +615,12 @@ stock GetVehicleNextSeat(vehicleid,passenger = 1){
 }
 
 stock GetVehicleModelSeats(modelid){
-	return (modelid < 400 || modelid > 611) ? (0) : (s_VehicleSeats[(modelid - 400)]);
+	if(!IsValidVehicleModelID(modelid)) return 0;
+	return (s_VehicleSeats[(modelid - 400)]);
 }
 
 stock Float:GetVehicleTopSpeed(vehicleid){
 	new model = GetVehicleModel(vehicleid);
-
 	if(model) return float(s_TopSpeed[(model - 400)]);
  	return 0.0;
 }
@@ -710,15 +702,46 @@ stock SetVehicleTires(vehicleid,front_left,front_right,rear_left,rear_right){
 	UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 }
 
-stock SwitchVehicleLight(vehicleid,bool:light){
-	new panels,doors,lights,tires;
-	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
-	if(light){
-		lights = 0x0;
-	} else {
-		lights = 0xF;
-	}
-	UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
+stock SwitchVehicleEngine(vehicleid,bool:engine_status){
+	new engine,lights,alarm,doors,bonnet,boot,objective;
+	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	SetVehicleParamsEx(vehicleid,_:engine_status,lights,alarm,doors,bonnet,boot,objective);
+}
+
+stock SwitchVehicleLight(vehicleid,bool:light_status){
+	new engine,lights,alarm,doors,bonnet,boot,objective;
+	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	SetVehicleParamsEx(vehicleid,engine,_:light_status,alarm,doors,bonnet,boot,objective);
+}
+
+stock SwitchVehicleAlarm(vehicleid,bool:alarm_status){
+	new engine,lights,alarm,doors,bonnet,boot,objective;
+	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	SetVehicleParamsEx(vehicleid,engine,lights,_:alarm_status,doors,bonnet,boot,objective);
+}
+
+stock SwitchVehicleDoors(vehicleid,bool:doors_status){
+	new engine,lights,alarm,doors,bonnet,boot,objective;
+	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	SetVehicleParamsEx(vehicleid,engine,lights,alarm,_:doors_status,bonnet,boot,objective);
+}
+
+stock SwitchVehicleBonnet(vehicleid,bool:bonnet_status){
+	new engine,lights,alarm,doors,bonnet,boot,objective;
+	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,_:bonnet_status,boot,objective);
+}
+
+stock SwitchVehicleBoot(vehicleid,bool:boot_status){
+	new engine,lights,alarm,doors,bonnet,boot,objective;
+	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,_:boot_status,objective);
+}
+
+stock SwitchVehicleObjective(vehicleid,bool:objective_status){
+	new engine,lights,alarm,doors,bonnet,boot,objective;
+	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,_:objective_status);
 }
 
 stock GetVehicleWindowState(vehicleid,doorid){
@@ -789,16 +812,12 @@ stock EVF_LinkVehicleToInterior(vehicleid,interiorid){
 stock EVF_CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,respawn_delay,addsiren = 0){
 	new vehicleid = INVALID_VEHICLE_ID;
 
-	if(400 <= modelid <= 611){
+	if(IsValidVehicleModelID(modelid)){
 		new randcolor1, randcolor2;
 
 		if(GetVehicleRandomColors(modelid,randcolor1,randcolor2)){
-			if(color1 == -1){
-				color1 = randcolor1;
-			}
-			if(color2 == -1){
-				color2 = randcolor2;
-			}
+			if(color1 == -1) color1 = randcolor1;
+			if(color2 == -1) color2 = randcolor2;
 		}
 		vehicleid = CreateVehicle(modelid,x,y,z,angle,color1,color2,respawn_delay,addsiren);
 
@@ -843,16 +862,12 @@ stock EVF_DestroyVehicle(vehicleid){
 stock EVF_AddStaticVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2){
 	new vehicleid = INVALID_VEHICLE_ID;
 
-	if(400 <= modelid <= 611){
+	if(IsValidVehicleModelID(modelid)){
 		new randcolor1, randcolor2;
 
 		if(GetVehicleRandomColors(modelid,randcolor1,randcolor2)){
-			if(color1 == -1){
-				color1 = randcolor1;
-			}
-			if(color2 == -1){
-				color2 = randcolor2;
-			}
+			if(color1 == -1) color1 = randcolor1;
+			if(color2 == -1) color2 = randcolor2;
 		}
 		vehicleid = AddStaticVehicle(modelid,x,y,z,angle,color1,color2);
 
@@ -879,16 +894,12 @@ stock EVF_AddStaticVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,co
 stock EVF_AddStaticVehicleEx(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,respawn_delay,addsiren = 0){
 	new vehicleid = INVALID_VEHICLE_ID;
 
-	if(400 <= modelid <= 611){
+	if(IsValidVehicleModelID(modelid)){
 		new randcolor1, randcolor2;
 
 		if(GetVehicleRandomColors(modelid,randcolor1,randcolor2)){
-			if(color1 == -1){
-				color1 = randcolor1;
-			}
-			if(color2 == -1){
-				color2 = randcolor2;
-			}
+			if(color1 == -1) color1 = randcolor1;
+			if(color2 == -1) color2 = randcolor2;
 		}
 		vehicleid = AddStaticVehicleEx(modelid,x,y,z,angle,color1,color2,respawn_delay,addsiren);
 
