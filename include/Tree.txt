@@ -30,7 +30,6 @@
 │   ├───RGB
 │   ├───StreamerFunction
 │   │   └───Streamer
-│   ├───TextDrawEx
 │   └───EVF
 ├───engine
 │   ├───EngineV6

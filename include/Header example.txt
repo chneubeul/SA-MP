@@ -77,7 +77,6 @@
 #include <SAM/BINLDR>               //http://forum.sa-mp.com/showthread.php?p=3653547 (Deprecated, use SAOI.inc)
 #include <SAM/DoT>                  //not published (Deprecated, use SAOI.inc)
 #include <SAM/GangZoneEx>           //not published
-#include <SAM/TextDrawEx>           //not published
 #include <SAM/Logs>                 //not published
 #include <SAM/ATM>                  //not published
 

@@ -9,7 +9,6 @@ SAM/ADM.inc
 SAM/DoT.inc
 SAM/GangZoneEx.inc
 SAM/DataConvert.inc
-SAM/TextDrawEx.inc
 SAM/EVF.inc
 SAM/Logs.inc
 SAM/ATM.inc
