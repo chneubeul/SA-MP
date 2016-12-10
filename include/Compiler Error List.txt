@@ -22,6 +22,8 @@ SAM Include:
 [ADM] Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
 [ADM] Please remove deprecated file VehicleEx.inc
 [ADM] Please remove deprecated file base64.inc
+[ADM] Please remove deprecated file TextDrawEx.inc
+[ADM] Please remove deprecated file MapAndreasEx.inc
 
 Engine Include:
 [ADM] Fatal error incompatible NOX

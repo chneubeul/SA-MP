@@ -11,7 +11,7 @@
  * Plugins: SScanf                                                                                  *
  * Modules: None                                                                                    *
  *                                                                                                  *
- * File Version: 1.8.0                                                                              *
+ * File Version: 1.9.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
  * SScanf Version: 2.8.2                                                                            *
  *                                                                                                  *
@@ -45,25 +45,29 @@
  * code128(input[],output[]);                                                                       *
  * swap_int({Float,_}:int1,{Float,_}:int2);                                                         *
  * swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2));             *
- * FloatToInt(Float:value); //Convert Float binary data to Integer binary data                      *
- * Float:IntToFloat(value); //Convert Integer binary data to Float binary data                      *
+ * FloatToInt(Float:value); //Convert Float binary data to Integer binary data !                    *
+ * Float:IntToFloat(value); //Convert Integer binary data to Float binary data !                    *
  * bool:ContainInSeries(value,...);                                                                 *
  * bool:ContainInSeriesFloat(Float:value,Float:...);                                                *
  * StringEqual(string1[],string2[],ignorecase);                                                     *
  * StringNotEqual(string1[],string2[],ignorecase);                                                  *
  * base64_decode(input[],output[]); //d:base64                                                      *
  * base64_encode(input[],output[]); //e:base64                                                      *
+ * bool:IsDecimalNumber(string[]);                                                                  *
+ * bool:IsHexNumber(string[]);                                                                      *
+ * bool:IsBinaryNumber(string[]);                                                                   *
+ * bool:IsFloatNumber(string[]);                                                                    *
  *                                                                                                  *
  ****************************************************************************************************/
 
 /*
 //Check Version DataConvert.inc
 #if !defined _Data_Convert
-	#error [ADM] You need DataConvert.inc v1.8.0
+	#error [ADM] You need DataConvert.inc v1.9.0
 #elseif !defined Data_Convert_Version
-	#error [ADM] Update you DataConvert.inc to v1.8.0
-#elseif (Data_Convert_Version < 10800)
-	#error [ADM] Update you DataConvert.inc to v1.8.0
+	#error [ADM] Update you DataConvert.inc to v1.9.0
+#elseif (Data_Convert_Version < 10900)
+	#error [ADM] Update you DataConvert.inc to v1.9.0
 #endif
 */
 
@@ -80,7 +84,7 @@
 	#error [ADM] Unknown SScanf Version
 #endif
 
-#define Data_Convert_Version		(10800) //a.b.c 10000*a+100*b+c
+#define Data_Convert_Version		(10900) //a.b.c 10000*a+100*b+c
 
 new const LettersTable[] = {
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
@@ -115,6 +119,10 @@ new const Decoder[] = {
 	0,  0,  0,  0,  0,  0
 };
 
+#if !defined isnull
+	#define isnull(%1) 				((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+#endif
+
 #define FIRST_FILE_ADDRESS			(0x004E5A18)
 #define INVALID_FILE_ID				(0xFFB1A5E7)
 #define INVALID_FILE_HANDLE			(File:0)
@@ -134,6 +142,26 @@ new const Decoder[] = {
 
 #define StringEqual(%0,%1,%2) 		(!strcmp((%0),(%1),(%2)))
 #define StringNotEqual(%0,%1,%2)	(strcmp((%0),(%1),(%2)) != 0)
+
+stock bool:IsDecimalNumber(string[]){
+	new int = 0;
+	return !(sscanf(string,"d",int));
+}
+
+stock bool:IsHexNumber(string[]){
+	new int = 0;
+	return !(sscanf(string,"x",int));
+}
+
+stock bool:IsBinaryNumber(string[]){
+	new int = 0;
+	return !(sscanf(string,"b",int));
+}
+
+stock bool:IsFloatNumber(string[]){
+	new Float:int = 0;
+	return !(sscanf(string,"f",int));
+}
 
 stock bool:swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2)){
 	if(dest1 < strlen(string2) || dest2 < strlen(string1)) return false;
