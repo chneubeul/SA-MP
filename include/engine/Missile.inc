@@ -73,8 +73,14 @@
 #define MISSILE_OBJECT_BIG					(1)
 #define MISSILE_OBJECT_HYDRA				(2)
 
-#define MAX_MISSILE							(2048)
-#define MAX_MISSILE_REMOTE_TARGET			(32)
+#if !defined MAX_MISSILE
+	#define MAX_MISSILE						(2048)
+#endif
+
+#if !defined MAX_MISSILE_REMOTE_TARGET
+	#define MAX_MISSILE_REMOTE_TARGET		(32)
+#endif
+
 #define MISSILE_EXTRA_ID_OFFSET				(300001)
 #define MISSILE_REMOTE_PLAYER				(999)
 
