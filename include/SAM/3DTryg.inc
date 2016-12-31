@@ -2,14 +2,15 @@
  *                                                                                                                                  *
  *                                                    )(   3DTryg Functions   )(                                                    *
  *                                                                                                                                  *
- * Copyright © 2016 Abyss Morgan. All rights reserved.                                                                              *
+ * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                              *
  * Contributors: Crayder, IllidanS4, Nero_3D, RyDeR, Zoutdaxv, hesambia, Neil Lamoureux, Greg James                                 *
  *                                                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                           *
  * Publication: http://forum.sa-mp.com/showthread.php?t=591010                                                                      *
  *                                                                                                                                  *
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
- * Modules: FoxForeach, Foreach, Stream3D, Line3D, Actor, ATM, Anims                                                                *
+ * Modules: FoxForeach, Foreach                                                                                                     *
+ * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                            *
  *                                                                                                                                  *
  * File Version: 3.2.1                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *

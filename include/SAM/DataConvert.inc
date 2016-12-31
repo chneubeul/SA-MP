@@ -2,7 +2,7 @@
  *                                                                                                  *
  *                                      )(   Data Convert   )(                                      *
  *                                                                                                  *
- * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
+ * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
  * Contributors: Crayder, Shiny                                                                     *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *

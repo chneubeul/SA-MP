@@ -2,7 +2,7 @@
  *                                                                                                  *
  *                                             Lottery                                              *
  *                                                                                                  *
- * Copyright © 2016 Abyss Morgan. All rights reserved.                                              *
+ * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=604954                                      *
