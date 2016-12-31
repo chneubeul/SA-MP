@@ -9,7 +9,10 @@
 │   │   ├───Foreach
 │   │   ├───FCNPC
 │   │   ├───Stream3D
-│   │   └───Line3D
+│   │   ├───Line3D
+│   │   ├───Actor
+│   │   ├───ATM
+│   │   └───Anims
 │   ├───ADM
 │   │   ├───MD5
 │   │   ├───ProtVar
