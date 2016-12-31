@@ -9,15 +9,15 @@
  * Publication: http://forum.sa-mp.com/showthread.php?t=591010                                                                      *
  *                                                                                                                                  *
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
- * Modules: FoxForeach, Foreach, Stream3D, Line3D                                                                                   *
+ * Modules: FoxForeach, Foreach, Stream3D, Line3D, Actor, ATM, Anims                                                                *
  *                                                                                                                                  *
- * File Version: 3.2.0                                                                                                              *
+ * File Version: 3.2.1                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
- * YSF Version: R16 (kurta999)                                                                                                      *
+ * YSF Version: R18-2 (kurta999)                                                                                                    *
  * Streamer Version: 2.8.2                                                                                                          *
- * FCNPC Version: 1.5.0                                                                                                             *
+ * FCNPC Version: 1.6.1                                                                                                             *
  *                                                                                                                                  *
  * 3DTryg FindZ Precision:                                                                                                          *
  * 1. ColAndreas   - The most accurate precision with ColAndreas plugin.                                                            *
@@ -32,6 +32,7 @@
  * DISABLE_3D_TRYG_CHECK        //Use before 3DTryg.inc for disable Check Plugin Version                                            *
  * DISABLE_3D_TRYG_INIT         //Use before 3DTryg.inc for disable MapAndreas/ColAndreas Auto Init                                 *
  * DISABLE_3D_TRYG_ANNOUNCE     //Use before 3DTryg.inc for disable 3DTryg Announce                                                 *
+ * DISABLE_3D_TRYG_ATM          //Use before 3DTryg.inc for disable ATM Module                                                      *
  * DISABLE_3D_TRYG_ACTOR        //Use before 3DTryg.inc for disable Actors Module                                                   *
  * DISABLE_3D_TRYG_MAPANDREAS   //Use before 3DTryg.inc for disable MapAndreas Module                                               *
  * DISABLE_3D_TRYG_COLANDREAS   //Use before 3DTryg.inc for disable ColAndreas Module                                               *
@@ -43,6 +44,7 @@
  * ENABLE_3D_TRYG_TIMELINE_SYNC //Use before 3DTryg.inc for enable Timeline Sync                                                    *
  * ENABLE_3D_TRYG_STREAM3D      //Use before 3DTryg.inc for enable Stream3D Module                                                  *
  * ENABLE_3D_TRYG_LINE3D        //Use before 3DTryg.inc for enable Line3D Module                                                    *
+ * ENABLE_3D_TRYG_ANIMS         //Use before 3DTryg.inc for enable Anims Module                                                     *
  *                                                                                                                                  *
  * Complementary Functions:                                                                                                         *
  * Float:sqrtN(Float:value,Float:exponent);                                                                                         *
@@ -77,6 +79,7 @@
  * Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true,bool:deathmsg=true);                       *
  * Tryg3D_GetWeaponDamage(weaponid);                                                                                                *
  * Tryg3D_SwapInt(variable1,variable2);                                                                                             *
+ * bool:Tryg3D_IsPlayerSpawned(playerid);                                                                                           *
  *                                                                                                                                  *
  * General Functions:                                                                                                               *
  * CountPlayers(bool:isplayer=true,bool:isnpc=true);                                                                                *
@@ -390,6 +393,12 @@
  * SetPlayerPos4D(playerid,Float:x,Float:y,Float:z,timeline=0);                                                                     *
  * CreateDynamicExplosion4D(Float:x,Float:y,Float:z,type,Float:radius,worldid = -1,interiorid = -1,timeline = -1,playerid = -1,     *
  *                          Float:distance = 200.0);                                                                                *
+ * TogglePlayerVisibleOnServer(playerid,bool:toggle);                                                                               *
+ * bool:IsPlayerVisibleOnServer(playerid);                                                                                          *
+ *                                                                                                                                  *
+ * YSF Extended Functions (TimeLine):                                                                                               *
+ * UpdatePlayerOnServer(playerid); //Performed automatically                                                                        *
+ * CheckPlayersOnServer(playerid); //Performed automatically                                                                        *
  *                                                                                                                                  *
  * FCNPC Functions:                                                                                                                 *
  * bool:IsNPCInCircle(npcid,Float:x,Float:y,Float:radius);                                                                          *
@@ -590,7 +599,7 @@
  * # Float: T3D:rY            - Rotation Y                                                                                          *
  * # Float: T3D:rZ            - Rotation Z                                                                                          *
  *                                                                                                                                  *
- * Functions extra names:                                                                                                           * 
+ * Functions extra names:                                                                                                           *
  * GetXYInFrontOfPlayer       -> GetPointInFrontOfPlayer                                                                            *
  * GetPointInFront            -> GetPointInFront3D                                                                                  *
  * GetPointInFrontOfCamera    -> GetPointInFrontOfCamera3D                                                                          *
@@ -599,7 +608,7 @@
  * CompressRotationFloat      -> CompRotationFloat                                                                                  *
  * DeCompressRotation         -> DeCompRotation                                                                                     *
  * DeCompressRotationFloat    -> DeCompRotationFloat                                                                                *
- * GetXYZInFrontOfVehicle     -> GetPointInFrontOfVehicle3D (Attention, different syntax)                                           * 
+ * GetXYZInFrontOfVehicle     -> GetPointInFrontOfVehicle3D (Attention, different syntax)                                           *
  * GetVehicleAngle            -> GetVehicleRotation                                                                                 *
  * Get3DTrygPrecision         -> Get3DTrygModules                                                                                   *
  * GetXYInFrontOfPlayerCol    -> GetPointInFrontOfPlayerCol                                                                         *
@@ -622,11 +631,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.2.0
+	#error [ADM] You need 3DTryg.inc v3.2.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.2.0
-#elseif (Tryg3D_Version < 30200)
-	#error [ADM] Update you 3DTryg.inc to v3.2.0
+	#error [ADM] Update you 3DTryg.inc to v3.2.1
+#elseif (Tryg3D_Version < 30201)
+	#error [ADM] Update you 3DTryg.inc to v3.2.1
 #endif
 */
 
@@ -653,7 +662,7 @@
 	#error [ADM] Please remove deprecated file MapAndreasEx.inc
 #endif
 
-#define Tryg3D_Version									(30200) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(30201) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 //Update Checker
@@ -681,6 +690,9 @@
 #define TRYG3D_MODULEID_FCNPC							(Tryg3DModule:7)
 #define TRYG3D_MODULEID_STREAM3D						(Tryg3DModule:8)
 #define TRYG3D_MODULEID_LINE3D							(Tryg3DModule:9)
+#define TRYG3D_MODULEID_ACTOR 							(Tryg3DModule:10)
+#define TRYG3D_MODULEID_ATM   							(Tryg3DModule:11)
+#define TRYG3D_MODULEID_ANIMS 							(Tryg3DModule:12)
 
 //Detect MapAndreas Plugin [Slot: 1]
 #if ((defined MapAndreas_FindZ_For2DCoord) && (!defined DISABLE_3D_TRYG_MAPANDREAS))
@@ -745,7 +757,7 @@
 //Detect FCNPC Plugin [Slot: 7]
 #if ((defined _FCNPC_included) && (defined FCNPC_INCLUDE_VERSION) && (!defined DISABLE_3D_TRYG_FCNPC))
 	#define Tryg3D_FCNPC
-	#define Tryg3D_FCNPCVersion							(150) //a.b.c 100*a+10*b+c
+	#define Tryg3D_FCNPCVersion							(161) //a.b.c 100*a+10*b+c
 	#define Tryg3D_Module_FCNPC							(true)
 	#if (!defined MOVE_TYPE_AUTO || !defined MOVE_SPEED_AUTO)
 		#error [ADM] You need update FCNPC Plugin
@@ -770,14 +782,33 @@
 	#define Tryg3D_Module_Line3D						(false)
 #endif
 
+//Detect a_actor Include [Slot: 10]
+#if ((defined _actor_included) && (!defined DISABLE_3D_TRYG_ACTOR))
+	#define Tryg3D_Actor
+	#define Tryg3D_Module_Actor							(true)
+#else
+	#define Tryg3D_Module_Actor							(false)
+#endif
+
+//Detect ATM Module [Slot: 11]
+#if !defined DISABLE_3D_TRYG_ATM)
+	#define Tryg3D_ATM
+	#define Tryg3D_Module_ATM							(true)
+#else
+	#define Tryg3D_Module_ATM							(false)
+#endif
+
+//Detect Anims Module [Slot: 12]
+#if defined ENABLE_3D_TRYG_ANIMS)
+	#define Tryg3D_Anims
+	#define Tryg3D_Module_Anims							(true)
+#else
+	#define Tryg3D_Module_Anims							(false)
+#endif
+
 //Detect i_quat Include by IllidanS4 [Slot: 102]
 #if ((defined GetVehicleRotation) && (defined VectorRelToAbsQuat))
 	#define Tryg3D_i_quat
-#endif
-
-//Detect a_actor Include [Slot: 103]
-#if ((defined _actor_included) && (!defined DISABLE_3D_TRYG_ACTOR))
-	#define Tryg3D_Actor
 #endif
 
 //Detect a_http Include [Slot: 104]
@@ -1137,6 +1168,15 @@ Tryg3DProt:: bool:IsRotationTest(Float:rotation,Float:r_min,Float:r_max){
 		if(r_min-(100.0*FLOAT_DEFECT) <= rotation <= r_max+(100.0*FLOAT_DEFECT)) return true;
 	}
 	return false;
+}
+
+Tryg3DProt:: bool:Tryg3D_IsPlayerSpawned(playerid){
+	#if defined ENABLE_3D_TRYG_TIMELINE_SYNC
+		if(!GetPVarInt(playerid,"T3D:PlayerVisible")) return false;
+	#endif
+	new T3D:pstate = GetPlayerState(playerid);
+	if(T3D:pstate != 1 && T3D:pstate != 2 && T3D:pstate != 3) return false;
+	return true;
 }
 
 #define Tryg3D_GetWeaponDamage(%0)						Tryg3D_WeaponDamage[(%0)]
@@ -2475,56 +2515,58 @@ Tryg3DProt:: GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float
  *                                                                                                                                  *
  ************************************************************************************************************************************/
  
-Tryg3DProt:: bool:IsPlayerSkydiving(playerid){
-	new index = GetPlayerAnimationIndex(playerid);
-	return (index >= 958 && index <= 962);
-}
-
-Tryg3DProt:: bool:IsPlayerUsingParachute(playerid){
-	new index = GetPlayerAnimationIndex(playerid);
-	return (index >= 963 && index <= 979);
-}
-
-Tryg3DProt:: bool:IsPlayerAiming(playerid){
-	switch(GetPlayerAnimationIndex(playerid)){
-		case 1160..1163,1167,1365,1643,1453,220: return true;
+#if defined Tryg3D_Anims
+	Tryg3DProt:: bool:IsPlayerSkydiving(playerid){
+		new index = GetPlayerAnimationIndex(playerid);
+		return (index >= 958 && index <= 962);
 	}
-	return false;
-}
 
-Tryg3DProt:: bool:IsPlayerStay(playerid){
-	new index = GetPlayerAnimationIndex(playerid);
-	return (index == 1189 || index == 1133);
-}
+	Tryg3DProt:: bool:IsPlayerUsingParachute(playerid){
+		new index = GetPlayerAnimationIndex(playerid);
+		return (index >= 963 && index <= 979);
+	}
 
-Tryg3DProt:: bool:IsPlayerRunning(playerid){
-	new index = GetPlayerAnimationIndex(playerid);
-	return (index == 1231 || index == 1266 || index == 1196);
-}
+	Tryg3DProt:: bool:IsPlayerAiming(playerid){
+		switch(GetPlayerAnimationIndex(playerid)){
+			case 1160..1163,1167,1365,1643,1453,220: return true;
+		}
+		return false;
+	}
 
-Tryg3DProt:: bool:IsPlayerSwim(playerid){
-	new index = GetPlayerAnimationIndex(playerid);
-	return (index == 1538 || index == 1539 || index == 1541 || index == 1544);
-}
+	Tryg3DProt:: bool:IsPlayerStay(playerid){
+		new index = GetPlayerAnimationIndex(playerid);
+		return (index == 1189 || index == 1133);
+	}
 
-Tryg3DProt:: bool:IsPlayerJump(playerid){
-	new index = GetPlayerAnimationIndex(playerid);
-	return (index == 1195 || index == 1198);
-}
+	Tryg3DProt:: bool:IsPlayerRunning(playerid){
+		new index = GetPlayerAnimationIndex(playerid);
+		return (index == 1231 || index == 1266 || index == 1196);
+	}
 
-Tryg3DProt:: bool:IsPlayerParaFall(playerid){
-	new index = GetPlayerAnimationIndex(playerid);
-	return (index == 958 || index == 959 || index == 961 || index == 962 || index == 1134);
-}
+	Tryg3DProt:: bool:IsPlayerSwim(playerid){
+		new index = GetPlayerAnimationIndex(playerid);
+		return (index == 1538 || index == 1539 || index == 1541 || index == 1544);
+	}
 
-Tryg3DProt:: bool:IsPlayerParaGlide(playerid){
-	new index = GetPlayerAnimationIndex(playerid);
-	return (index == 963 || index == 965 || index == 971 || index == 976 || index == 978);
-}
+	Tryg3DProt:: bool:IsPlayerJump(playerid){
+		new index = GetPlayerAnimationIndex(playerid);
+		return (index == 1195 || index == 1198);
+	}
 
-Tryg3DProt:: bool:IsPlayerFall(playerid){
-	return (GetPlayerAnimationIndex(playerid) == 1130);
-}
+	Tryg3DProt:: bool:IsPlayerParaFall(playerid){
+		new index = GetPlayerAnimationIndex(playerid);
+		return (index == 958 || index == 959 || index == 961 || index == 962 || index == 1134);
+	}
+
+	Tryg3DProt:: bool:IsPlayerParaGlide(playerid){
+		new index = GetPlayerAnimationIndex(playerid);
+		return (index == 963 || index == 965 || index == 971 || index == 976 || index == 978);
+	}
+
+	Tryg3DProt:: bool:IsPlayerFall(playerid){
+		return (GetPlayerAnimationIndex(playerid) == 1130);
+	}
+#endif
 
 /************************************************************************************************************************************
  *                                                                                                                                  *
@@ -2594,6 +2636,21 @@ Tryg3DProt:: Get3DTrygModules(&modules_count=0){
 		modules_count++;
 	#endif
 	
+	#if defined Tryg3D_Actor
+		format(tryg_str,sizeof(tryg_str),"%s:Actor",tryg_str);
+		modules_count++;
+	#endif
+	
+	#if defined Tryg3D_ATM
+		format(tryg_str,sizeof(tryg_str),"%s:ATM",tryg_str);
+		modules_count++;
+	#endif
+	
+	#if defined Tryg3D_Anims
+		format(tryg_str,sizeof(tryg_str),"%s:Anims",tryg_str);
+		modules_count++;
+	#endif
+	
 	return tryg_str;
 }
 
@@ -2608,6 +2665,9 @@ Tryg3DProt:: bool:IsTryg3DModuleLoaded(Tryg3DModule:moduleid){
 		case TRYG3D_MODULEID_FCNPC:			return Tryg3D_Module_FCNPC;
 		case TRYG3D_MODULEID_STREAM3D:		return Tryg3D_Module_Stream3D;
 		case TRYG3D_MODULEID_LINE3D:		return Tryg3D_Module_Line3D;
+		case TRYG3D_MODULEID_ACTOR:			return Tryg3D_Module_Actor;
+		case TRYG3D_MODULEID_ATM:			return Tryg3D_Module_ATM;
+		case TRYG3D_MODULEID_ANIMS:			return Tryg3D_Module_Anims;
 	}
 	return false;
 }
@@ -2686,38 +2746,45 @@ Tryg3DProt:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,&Floa
  
 //Module: ATM.inc
 //Code anti-collision: YES
-#if !defined randomex
-	#define randomex(%0,%1) 							(random((%1)-(%0)+1)+(%0))
-#endif
 
-#define Tryg3D_KeyPressed(%0) 							(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
-#define Tryg3D_KeyReleased(%0)							(((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
-#define Tryg3D_KeyHolding(%0) 							((newkeys & (%0)) == (%0))
+#if defined Tryg3D_ATM
+	#if !defined randomex
+		#define randomex(%0,%1) 							(random((%1)-(%0)+1)+(%0))
+	#endif
 
-//%d:%02d:%02d:%02d
-#define v3DSecToTimeDay(%0)								((%0) / 86400),(((%0) % 86400) / 3600),((((%0) % 86400) % 3600) / 60),((((%0) % 86400) % 3600) % 60)
-#define v3DMSToTimeDay(%0)								v3DSecToTimeDay((%0)/1000)
-//%02d:%02d:%02d
-#define v3DSecToTime(%0)								((%0) / 3600),(((%0) % 3600) / 60),(((%0) % 3600) % 60)
-#define v3DMSToTime(%0)									v3DSecToTime((%0)/1000)
-//%02d:%02d
-#define v3DSecToTimeMini(%0)							((%0) / 60),((%0) % 60)
-#define v3DMSToTimeMini(%0)								v3DSecToTimeMini((%0)/1000)
+	#define Tryg3D_KeyPressed(%0) 							(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
+	#define Tryg3D_KeyReleased(%0)							(((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
+	#define Tryg3D_KeyHolding(%0) 							((newkeys & (%0)) == (%0))
 
-#define v3Dfunction%0(%1)								forward %0(%1); public %0(%1)
+	//%d:%02d:%02d:%02d
+	#define v3DSecToTimeDay(%0)								((%0) / 86400),(((%0) % 86400) / 3600),((((%0) % 86400) % 3600) / 60),((((%0) % 86400) % 3600) % 60)
+	#define v3DMSToTimeDay(%0)								v3DSecToTimeDay((%0)/1000)
+	//%02d:%02d:%02d
+	#define v3DSecToTime(%0)								((%0) / 3600),(((%0) % 3600) / 60),(((%0) % 3600) % 60)
+	#define v3DMSToTime(%0)									v3DSecToTime((%0)/1000)
+	//%02d:%02d
+	#define v3DSecToTimeMini(%0)							((%0) / 60),((%0) % 60)
+	#define v3DMSToTimeMini(%0)								v3DSecToTimeMini((%0)/1000)
 
-Tryg3DProt:: T3D:GetSAMIncludeVersion(value,name[],maxdest = sizeof(name)){
-	format(name,maxdest,"%d.%d.%d",(value / 10000),((value % 10000) / 100),((value % 10000) % 100));
-}
+	#define v3Dfunction%0(%1)								forward %0(%1); public %0(%1)
 
-Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
-	if(disable){
-		SetSVarInt("ADM:Logging:Disable",1);
-	} else {
-		SetSVarInt("ADM:Logging:Disable",0);
+	Tryg3DProt:: T3D:GetSAMIncludeVersion(value,name[],maxdest = sizeof(name)){
+		format(name,maxdest,"%d.%d.%d",(value / 10000),((value % 10000) / 100),((value % 10000) % 100));
 	}
-}
 
+	Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
+		if(disable){
+			SetSVarInt("ADM:Logging:Disable",1);
+		} else {
+			SetSVarInt("ADM:Logging:Disable",0);
+		}
+	}
+	
+	#define Tryg3DKeyPressed								Tryg3D_KeyPressed
+	#define Tryg3DKeyReleased								Tryg3D_KeyReleased
+	#define Tryg3DKeyHolding								Tryg3D_KeyHolding
+	
+#endif
 //End Module: ATM.inc
 
 /************************************************************************************************************************************
@@ -3810,6 +3877,9 @@ Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
 	
 	//YSF Timeline Sync (Beta Version)
 	#if defined ENABLE_3D_TRYG_TIMELINE_SYNC
+		
+		new T3D:PlayerFirstSpawn[MAX_PLAYERS];
+		
 		#define GetPlayerTimeline(%0)					GetPVarInt((%0),"T3D:PlayerTimeline")
 		#define IsPlayerVisibleOnServer(%0)				GetPVarInt((%0),"T3D:PlayerVisible")
 
@@ -3827,7 +3897,9 @@ Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
 							SetPlayerSkinForPlayer(i,playerid,pskin);
 							SetPlayerSkinForPlayer(playerid,i,GetPlayerSkin(i));
 							
-							SetPlayerMarkerForPlayer(i,playerid,pcolor);
+							if(Tryg3D_IsPlayerSpawned(playerid)){
+								SetPlayerMarkerForPlayer(i,playerid,pcolor);
+							}
 							SetPlayerMarkerForPlayer(playerid,i,GetPlayerColor(i));
 						}
 					} else if(tline == -1){
@@ -3894,7 +3966,39 @@ Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
 			}
 		}
 		
-		//Patch:YSF:R18:01
+		Tryg3DProt:: UpdatePlayerOnServer(playerid){
+			Tryg3DForeach(i){
+				if(playerid != i){
+					if(IsPlayerVisibleOnServer(playerid)){
+						RemovePlayerForPlayer(i,playerid);
+						AddPlayerForPlayer(i,playerid,0);
+					} else {
+						RemovePlayerForPlayer(i,playerid);
+					}
+				}
+			}
+		}
+
+		Tryg3DProt:: CheckPlayersOnServer(playerid){
+			Tryg3DForeach(i){
+				if(playerid != i){
+					if(!IsPlayerVisibleOnServer(i)){
+						RemovePlayerForPlayer(playerid,i);
+					}
+				}
+			}
+		}
+
+		Tryg3DProt:: TogglePlayerVisibleOnServer(playerid,bool:toggle){
+			TogglePlayerInServerQuery(playerid,toggle);
+			SetPVarInt(playerid,"T3D:PlayerVisible",toggle?1:0);
+			UpdatePlayerOnServer(playerid);
+			if(toggle){
+				SetPlayerTimeline(playerid,0);
+			} else {
+				SetPlayerTimeline(playerid,-1);
+			}
+		}
 	
 		//Hook: OnPlayerStreamIn
 		public OnPlayerStreamIn(playerid,forplayerid){
@@ -3905,7 +4009,9 @@ Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
 				SetPlayerSkinForPlayer(forplayerid,playerid,GetPlayerSkin(playerid));
 				SetPlayerSkinForPlayer(playerid,forplayerid,GetPlayerSkin(forplayerid));
 				
-				SetPlayerMarkerForPlayer(forplayerid,playerid,GetPlayerColor(playerid));
+				if(Tryg3D_IsPlayerSpawned(playerid)){
+					SetPlayerMarkerForPlayer(forplayerid,playerid,GetPlayerColor(playerid));
+				}
 				SetPlayerMarkerForPlayer(playerid,forplayerid,GetPlayerColor(forplayerid));
 			} else {
 				HidePlayerForPlayer(forplayerid,playerid);
@@ -3932,6 +4038,7 @@ Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
 
 		//Hook: OnPlayerConnect
 		public OnPlayerConnect(playerid){
+			T3D:PlayerFirstSpawn[playerid] = true;
 			SetPVarInt(playerid,"T3D:PlayerTimeline",0);
 			SetPVarInt(playerid,"T3D:PlayerVisible",1);
 			#if defined Tryg3D_OnPlayerConnect
@@ -3952,6 +4059,10 @@ Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
 
 		//Hook: OnPlayerSpawn
 		public OnPlayerSpawn(playerid){
+			if(T3D:PlayerFirstSpawn[playerid]){
+				T3D:PlayerFirstSpawn[playerid] = false;
+				CheckPlayersOnServer(playerid);
+			}
 			UpdatePlayerTimeline(playerid);
 			#if defined Tryg3D_OnPlayerSpawn
 				Tryg3D_OnPlayerSpawn(playerid);
@@ -3968,9 +4079,7 @@ Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
 		#if defined Tryg3D_OnPlayerSpawn
 			forward Tryg3D_OnPlayerSpawn(playerid);
 		#endif
-		
-		//Patch:YSF:R18:02
-		
+
 	#endif
 #endif
 
@@ -4337,9 +4446,6 @@ Tryg3DProt:: T3D:DisableADMLogging(bool:disable){
 #define GetPlayersDistance								GetDistanceBetweenPlayers
 #define GetVehiclesDistance								GetDistanceBetweenVehicles
 #define GetObjectsDistance								GetDistanceBetweenObjects
-#define Tryg3DKeyPressed								Tryg3D_KeyPressed
-#define Tryg3DKeyReleased								Tryg3D_KeyReleased
-#define Tryg3DKeyHolding								Tryg3D_KeyHolding
 
 /************************************************************************************************************************************
  *                                                                                                                                  *
