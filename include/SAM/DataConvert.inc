@@ -10,6 +10,7 @@
  *                                                                                                  *
  * Plugins: SScanf                                                                                  *
  * Modules: None                                                                                    *
+ * Attributes: Overload resistance.                                                                 *
  *                                                                                                  *
  * File Version: 2.0.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *

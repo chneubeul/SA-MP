@@ -9,6 +9,7 @@
  *                                                                                                                                *
  * Plugins: SScanf                                                                                                                *
  * Modules: MD5, ProtVar                                                                                                          *
+ * Attributes: Overload resistance.                                                                                               *
  *                                                                                                                                *
  * File Version: 2.2.1                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *

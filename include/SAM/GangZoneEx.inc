@@ -8,6 +8,7 @@
  *                                                                                                  *
  * Plugins: Streamer                                                                                *
  * Modules: None                                                                                    *
+ * Attributes: None                                                                                 *
  *                                                                                                  *
  * File Version: 1.2.1                                                                              *
  * SA:MP Version: 0.3.7                                                                             *

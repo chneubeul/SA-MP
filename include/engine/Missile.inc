@@ -9,6 +9,7 @@
  *                                                                                                                                *
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg                                                                                                                *
+ * Attributes: Overload resistance.                                                                                               *
  *                                                                                                                                *
  * File Version: 1.7.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *

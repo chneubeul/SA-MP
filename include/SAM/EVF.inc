@@ -10,6 +10,7 @@
  *                                                                                                                                *
  * Plugins: None                                                                                                                  *
  * Modules: None                                                                                                                  *
+ * Attributes: None                                                                                                               *
  *                                                                                                                                *
  * File Version: 2.1.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRED)                                                                                                *

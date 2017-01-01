@@ -9,6 +9,7 @@
  *                                                                                                                                 *
  * Plugins: Streamer, MapAndreas                                                                                                   *
  * Modules: 3DTryg                                                                                                                 *
+ * Attributes: Overload resistance.                                                                                                *
  *                                                                                                                                 *
  * File Version: 5.1.24                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                            *

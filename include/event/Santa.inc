@@ -9,6 +9,7 @@
  *                                                                                                  *
  * Plugins: Streamer, ColAndreas/MapAndreas                                                         *
  * Modules: 3DTryg, StreamerFunction                                                                *
+ * Attributes: None                                                                                 *
  *                                                                                                  *
  * File Version: 1.4.2                                                                              *
  * SA:MP Version: 0.3.7                                                                             *

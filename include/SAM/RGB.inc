@@ -9,6 +9,7 @@
  *                                                                                                  *
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
+ * Attributes: Overload resistance.                                                                 *
  *                                                                                                  *
  * File Version: 2.4.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *

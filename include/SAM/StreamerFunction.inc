@@ -9,6 +9,7 @@
  *                                                                                                                                         *
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
+ * Attributes: Overload resistance.                                                                                                        *
  *                                                                                                                                         *
  * File Version: 2.5.8                                                                                                                     *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *

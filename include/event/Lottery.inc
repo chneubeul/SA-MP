@@ -9,6 +9,7 @@
  *                                                                                                  *
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
+ * Attributes: None                                                                                 *
  *                                                                                                  *
  * File Version: 1.0.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *

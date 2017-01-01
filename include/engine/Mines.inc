@@ -9,6 +9,7 @@
  *                                                                                                                                *
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg                                                                                                                *
+ * Attributes: None                                                                                                               *
  *                                                                                                                                *
  * File Version: 2.0.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *

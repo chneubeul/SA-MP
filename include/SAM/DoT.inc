@@ -8,6 +8,7 @@
  *                                                                                                  *
  * Plugins: None                                                                                    *
  * Modules: ADM                                                                                     *
+ * Attributes: None                                                                                 *
  *                                                                                                  *
  * File Version: 1.3.2                                                                              *
  * SA:MP Version: 0.3.7                                                                             *

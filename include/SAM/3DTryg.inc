@@ -11,6 +11,7 @@
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                            *
  * Modules: FoxForeach, Foreach                                                                                                     *
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                            *
+ * Attributes: Overload resistance.                                                                                                 *
  *                                                                                                                                  *
  * File Version: 3.2.1                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
