@@ -390,9 +390,9 @@ stock DarkNGCKeyUpdate(playerid,newkeys,oldkeys){
 	new k = FindDarkNGCSlot(playerid);
 	if(k == -1) return 0;
 	
-	if(Tryg3DKeyPressed(KEY_SECONDARY_ATTACK)){
+	if(Tryg3D_KeyPressed(KEY_SECONDARY_ATTACK)){
 		ExitPlayerDarkNGC(playerid);
-	} else if(Tryg3DKeyPressed(KEY_FIRE)){
+	} else if(Tryg3D_KeyPressed(KEY_FIRE)){
 		if(GetTickCount()-DarkNGCLaunchA[playerid] < 200){
 			
 		} else {
@@ -412,7 +412,7 @@ stock DarkNGCKeyUpdate(playerid,newkeys,oldkeys){
 	}
 
 	if(DarkNGCDrive[0] == playerid){
-		if(Tryg3DKeyPressed(KEY_JUMP)){
+		if(Tryg3D_KeyPressed(KEY_JUMP)){
 			if(GetTickCount()-DarkNGCLaunchB[playerid] < 30000){
 				GameTextForPlayer(playerid,"Heavy Missile Overheating",1000,4);
 			} else {
@@ -447,17 +447,17 @@ stock DarkNGCKeyUpdate(playerid,newkeys,oldkeys){
 				}
 				GameTextForPlayer(playerid,"Heavy Missile Launch",2000,4);
 			}
-		} else if(Tryg3DKeyPressed(KEY_WALK)){
+		} else if(Tryg3D_KeyPressed(KEY_WALK)){
 			DarkNGCMoveType = (!DarkNGCMoveType);
 			if(DarkNGCMoveType){
 				GameTextForPlayer(playerid,"Move Type Height",1000,4);
 			} else {
 				GameTextForPlayer(playerid,"Move Type Forward",1000,4);
 			}
-		} else if(Tryg3DKeyPressed(KEY_CTRL_BACK)){
+		} else if(Tryg3D_KeyPressed(KEY_CTRL_BACK)){
 			//stop
 			StopObject(DarkNGC[0]);
-		} else if(Tryg3DKeyPressed(KEY_ANALOG_RIGHT)){
+		} else if(Tryg3D_KeyPressed(KEY_ANALOG_RIGHT)){
 			//speed increase
 			DarkNGCSpeed += 5.0;
 			if(DarkNGCSpeed > 200.0){
@@ -467,7 +467,7 @@ stock DarkNGCKeyUpdate(playerid,newkeys,oldkeys){
 				format(buffer,sizeof buffer,"Speed: %.1f",DarkNGCSpeed);
 				GameTextForPlayer(playerid,buffer,500,4);
 			}
-		} else if(Tryg3DKeyPressed(KEY_ANALOG_LEFT)){
+		} else if(Tryg3D_KeyPressed(KEY_ANALOG_LEFT)){
 			//speed decrease
 			DarkNGCSpeed -= 5.0;
 			if(DarkNGCSpeed < 0.0){

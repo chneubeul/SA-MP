@@ -14,7 +14,7 @@
  * File Version: 2.3.2                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.8.2                                                                          *
- * 3DTryg Version: 3.0.5                                                                            *
+ * 3DTryg Version: 3.2.2                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamKnifeShoot(bool:toggle);            //default: false                                *
@@ -41,11 +41,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.0.5
+	#error [ADM] You need 3DTryg.inc v3.2.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.0.5
-#elseif (Tryg3D_Version < 30005)
-	#error [ADM] Update you 3DTryg.inc to v3.0.5
+	#error [ADM] Update you 3DTryg.inc to v3.2.2
+#elseif (Tryg3D_Version < 30202)
+	#error [ADM] Update you 3DTryg.inc to v3.2.2
 #endif
 
 #define KNIFE_SPEED 						(12.0)
@@ -128,7 +128,7 @@ public KnifeShot(playerid){
 					#if defined USE_OLD_KNIFE_DATIVE
 						if(IsPointNearly2Points3D(px,py,pz, mx,my,mz, mtx,mty,mz, 1.0)){
 					#else
-						if(IsPointInCylinder(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
+						if(IsPointInCylinder3D(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
 					#endif
 							new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
 							if(dist < ldist){
