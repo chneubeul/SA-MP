@@ -39,7 +39,7 @@ This option is available in ATM.inc
 [ADM] Error: Invalid server config, check your max players.
 [ADM] Error: Invalid server config, check your rcon password.
 [ADM] Error: Invalid server config, check your language.
-[ADM] Error: The script did not get permission to activation
+[ADM] Error: The script did not get permission to activation.
 
 
 //Mines.inc
@@ -64,7 +64,8 @@ This option is available in ATM.inc
 
 //SAOI.inc
 [ADM] Error: This SAOI file is protected.
-
+[ADM] Info: SAOI has been attached to ...
+[ADM] Info: SAOI has been detached from ...
 
 //Global
 [ADM] Error: Invalid MapAndreas Memory.

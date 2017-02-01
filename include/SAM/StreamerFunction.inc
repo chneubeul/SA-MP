@@ -618,7 +618,7 @@ StreamerSpecProt:: DestroyObjects(){
 
 StreamerSpecProt:: CountVehicles(){
 	new count = 0;
-	for(new i = 0, j = GetVehiclePoolSize(); i <= j; i++){
+	for(new i = 1, j = GetVehiclePoolSize(); i <= j; i++){
 		if(IsValidVehicle(i)) count++;
 	}
 	return count;
@@ -626,7 +626,7 @@ StreamerSpecProt:: CountVehicles(){
 
 StreamerSpecProt:: DestroyVehicles(){
 	new count = 0;
-	for(new i = 0, j = GetVehiclePoolSize(); i <= j; i++){
+	for(new i = 1, j = GetVehiclePoolSize(); i <= j; i++){
 		if(IsValidVehicle(i)){
 			DestroyVehicle(i);
 			count++;

@@ -101,7 +101,7 @@ public ScriptSecureADMWeb(index, response_code, data[]){
 		//ok
 	} else {
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Error: The script did not get permission to activation");
+			printf("[ADM] Error: The script did not get permission to activation.");
 		}
 		SendRconCommand("exit");
 		return 0;
@@ -112,7 +112,7 @@ public ScriptSecureADMWeb(index, response_code, data[]){
 public ADMWebACKCheck(important){
 	if(!ADMWebCheck){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Error: The script did not get permission to activation");
+			print("[ADM] Error: The script did not get permission to activation.");
 		}
 		SendRconCommand("exit");
 		return 0;

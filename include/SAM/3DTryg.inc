@@ -4732,8 +4732,6 @@ Tryg3DProt:: Tryg3DInit(){
 	//Init Streamer
 	#if (!defined DISABLE_3D_TRYG_CHECK && defined Tryg3D_Streamer)
 		Tryg3D_CheckStreamerVersion();
-	#endif
-	#if defined Tryg3D_Streamer
 		if(GetSVarInt("ADM:3DTryg:Streamer") == 0){
 			SetSVarInt("ADM:3DTryg:Streamer",1);
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
