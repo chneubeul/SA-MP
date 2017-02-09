@@ -701,6 +701,11 @@
 	#tryinclude "a_http"
 #endif
 
+#if !defined HTTP
+	#error [ADM] Please include a_http.inc before 3DTryg.inc
+#endif
+
+
 /************************************************************************************************************************************
  *                                                                                                                                  *
  * Modules                                                                                                                          *
