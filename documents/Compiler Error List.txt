@@ -15,7 +15,8 @@ Detected another command system
 All Include:
 [ADM] You need <include name> <include version>
 [ADM] Update you <include name> to <include version>
-
+[ADM] You need a_actor.inc
+[ADM] You need izcmd.inc or zcmd.inc
 
 SAM Include:
 [ADM] Please include FoxForeach before 3DTryg, for increase loop speed.
@@ -24,6 +25,7 @@ SAM Include:
 [ADM] Please remove deprecated file base64.inc
 [ADM] Please remove deprecated file TextDrawEx.inc
 [ADM] Please remove deprecated file MapAndreasEx.inc
+[ADM] Invalid mechanism StreamerFunction.inc:DestroyFix (Use #define DISABLE_STREAMER_SPEC_FIXES before StreamerFunction.inc)
 
 Engine Include:
 [ADM] Fatal error incompatible NOX
