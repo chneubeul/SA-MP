@@ -4718,7 +4718,9 @@ Tryg3D_Function:: Tryg3DInit(){
 				}
 			}
 		}
-	#else
+	#endif
+	
+	#if defined Tryg3D_Streamer
 		#pragma unused v3DTryg3DStreamerExam
 	#endif
 	
