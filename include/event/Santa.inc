@@ -16,7 +16,7 @@
  * Streamer Version: 2.8.2                                                                          *
  * MapAndreas Version: 1.2.1                                                                        *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 3.0.5                                                                            *
+ * 3DTryg Version: 3.3.0                                                                            *
  * StreamerFunction Version: 2.5.4                                                                  *
  *                                                                                                  *
  * Callbacks:                                                                                       *
@@ -26,10 +26,6 @@
 
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
 	#error [ADM] Unknown Streamer Version
-#endif
-
-#if !defined Tryg3DMapAndreasFindZ
-	#error [ADM] Unknown ColAndreas/MapAndreas Version
 #endif
 
 //Check Version StreamerFunction.inc
@@ -43,11 +39,15 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.0.5
+	#error [ADM] You need 3DTryg.inc v3.3.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.0.5
-#elseif (Tryg3D_Version < 30005)
-	#error [ADM] Update you 3DTryg.inc to v3.0.5
+	#error [ADM] Update you 3DTryg.inc to v3.3.0
+#elseif (Tryg3D_Version < 30300)
+	#error [ADM] Update you 3DTryg.inc to v3.3.0
+#endif
+
+#if !defined Tryg3D_MapAndreasFindZ
+	#error [ADM] Unknown ColAndreas/MapAndreas Version
 #endif
 
 #if defined _santa_gifts
@@ -219,7 +219,7 @@ public SantaGiftCreate(giftid){
 	
 	SantaErrorPos:
 	GetRandomPointInCube(-3000.0,-3000.0,0.0,3000.0,3000.0,1.0,piox,pioy,pioz);
-	Tryg3DMapAndreasFindZ(piox,pioy,pioz);
+	Tryg3D_MapAndreasFindZ(piox,pioy,pioz);
 	if(pioz <= 0.0) goto SantaErrorPos; //water
 	
 	pioz+=1.0;
@@ -232,7 +232,7 @@ public SantaGiftReset(giftid){
 	
 	SantaErrorPos:
 	GetRandomPointInCube(-3000.0,-3000.0,0.0,3000.0,3000.0,1.0,piox,pioy,pioz);
-	Tryg3DMapAndreasFindZ(piox,pioy,pioz);
+	Tryg3D_MapAndreasFindZ(piox,pioy,pioz);
 	if(pioz <= 0.0) goto SantaErrorPos; //water
 	
 	pioz+=1.0;

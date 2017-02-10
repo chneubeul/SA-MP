@@ -14,7 +14,7 @@
  * File Version: 1.7.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.8.2                                                                                                        *
- * 3DTryg Version: 3.0.5                                                                                                          *
+ * 3DTryg Version: 3.3.0                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, *
@@ -61,11 +61,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.0.5
+	#error [ADM] You need 3DTryg.inc v3.3.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.0.5
-#elseif (Tryg3D_Version < 30005)
-	#error [ADM] Update you 3DTryg.inc to v3.0.5
+	#error [ADM] Update you 3DTryg.inc to v3.3.0
+#elseif (Tryg3D_Version < 30300)
+	#error [ADM] Update you 3DTryg.inc to v3.3.0
 #endif
 
 #define Missile_Version						(10700)
@@ -196,7 +196,7 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 			}
 			idx++;
 		}
-		Tryg3DMapAndreasFindZ(MissileComponent[mobid][missile_remote_X][0],MissileComponent[mobid][missile_remote_Y][0],MissileComponent[mobid][missile_remote_Z][0]);
+		Tryg3D_MapAndreasFindZ(MissileComponent[mobid][missile_remote_X][0],MissileComponent[mobid][missile_remote_Y][0],MissileComponent[mobid][missile_remote_Z][0]);
 		
 		tx = MissileComponent[mobid][missile_remote_X][remote_count];
 		ty = MissileComponent[mobid][missile_remote_Y][remote_count];

@@ -41,11 +41,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.2.2
+	#error [ADM] You need 3DTryg.inc v3.3.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.2.2
-#elseif (Tryg3D_Version < 30202)
-	#error [ADM] Update you 3DTryg.inc to v3.2.2
+	#error [ADM] Update you 3DTryg.inc to v3.3.0
+#elseif (Tryg3D_Version < 30300)
+	#error [ADM] Update you 3DTryg.inc to v3.3.0
 #endif
 
 #define KNIFE_SPEED 						(12.0)

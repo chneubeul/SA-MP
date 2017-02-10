@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7                                                                                                            *
  * Streamer Version: 2.8.2                                                                                                         *
  * MapAndreas Version: 1.2.1                                                                                                       *
- * 3DTryg Version: 3.0.5                                                                                                           *
+ * 3DTryg Version: 3.3.0                                                                                                           *
  *                                                                                                                                 *
  * Include created for the project Next Generation City Mod http://ngc.porobieni.com                                               *
  *                                                                                                                                 *
@@ -71,11 +71,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.0.5
+	#error [ADM] You need 3DTryg.inc v3.3.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.0.5
-#elseif (Tryg3D_Version < 30005)
-	#error [ADM] Update you 3DTryg.inc to v3.0.5
+	#error [ADM] Update you 3DTryg.inc to v3.3.0
+#elseif (Tryg3D_Version < 30300)
+	#error [ADM] Update you 3DTryg.inc to v3.3.0
 #endif
 
 #if defined _NOX_ENGINE_X
