@@ -14,7 +14,7 @@
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                            *
  * Attributes: Overload resistance.                                                                                                 *
  *                                                                                                                                  *
- * File Version: 3.3.0                                                                                                              *
+ * File Version: 4.0.0                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -76,12 +76,18 @@
  * Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0);   //CompressRotationFloat                                          *
  * Float:DeCompRotationFloat(Float:rotation,&Float:crotation=0.0); //DeCompressRotationFloat                                        *
  * bool:IsRotationTest(Float:rotation,Float:r_min,Float:r_max);                                                                     *
- * Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,T3D:eulermode:mode=T3D:euler_default);                 *
- * Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&Float:y,&Float:z);                                     *
  * Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true,bool:death_msg=true,bool:death_call=true); *
  * Tryg3D_GetWeaponDamage(weaponid);                                                                                                *
  * Tryg3D_SwapInt(variable1,variable2);                                                                                             *
  * bool:Tryg3D_IsPlayerSpawned(playerid);                                                                                           *
+ *                                                                                                                                  *
+ * Nero_3D Rotations Functions:                                                                                                     *
+ * Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,T3D:eulermode:mode=T3D:euler_default);                 *
+ * Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:oZ,&Float:x,&Float:y,&Float:z);                                     *
+ * Tryg3D_QuatRotate(Float:qw,Float:qx,Float:qy,Float:qz,Float:oX,Float:oY,Float:oZ,&Float:tx,&Float:ty,&Float:tz);                 *
+ * Tryg3D_GetQuatFromEuler(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz,T3D:eulermode:mode=T3D:euler_default);*
+ * Tryg3D_EulerRotate(Float:rX,Float:rY,Float:rZ,Float:oX,Float:oY,Float:oZ,&Float:tx,&Float:ty,&Float:tz,                          *
+ *                    T3D:eulermode:mode=T3D:euler_default);                                                                        *
  *                                                                                                                                  *
  * General Functions:                                                                                                               *
  * CountPlayers(bool:isplayer=true,bool:isnpc=true);                                                                                *
@@ -102,6 +108,7 @@
  * Float:GetDistanceBetweenPoints3D(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2);                                         *
  * GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float:tx,&Float:ty);                                                    *
  * GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                         *
+ * GetPointInFront3DEx(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);              *
  * Float:GetPointInFrontOfPlayer(playerid,&Float:tx,&Float:ty,Float:radius);                                                        *
  * Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,Float:radius);                                                      *
  * GetPointInFrontOfCamera3D(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                      *
@@ -127,13 +134,24 @@
  * Float:GetRandomPointOnClock(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty,&Float:trz,Float:rz = INVALID_ROTATION);            *
  * GetRandomPointInCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty);                                                        *
  * GetRandomPointInCylinder2D(Float:x,Float:y,Float:minz,Float:maxz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                    *
+ * GetRandomPointInCylinder3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius,&Float:tx,&Float:ty,&Float:tz);    *
  * GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz);                                      *
  * GetRandomPointInRectangle(Float:minx,Float:miny,Float:maxx,Float:maxy,&Float:tx,&Float:ty);                                      *
  * GetRandomPointInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,&Float:tx,&Float:ty,&Float:tz);           *
  * GetRandomPointInCircularSector(Float:x,Float:y,Float:rz,Float:radius,Float:view_angle,&Float:tx,&Float:ty);                      *
+ * GetRandomPointInSphericalSector(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz,                      *
+ *                                 &Float:tx,&Float:ty,&Float:tz);                                                                  *
  * GetRandomPointOnCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty);                                                        *
+ * GetRandomPointOnCylinder2D(Float:x,Float:y,Float:minz,Float:maxz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                    *
+ * GetRandomPointOnCylinder3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius,&Float:tx,&Float:ty,&Float:tz);    *
  * GetRandomPointOnSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz);                                      *
  * GetRandomPointOnCircularSector(Float:x,Float:y,Float:rz,Float:radius,Float:view_angle,&Float:tx,&Float:ty);                      *
+ * GetRandomPointOnSphericalSector(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz,                      *
+ *                                 &Float:tx,&Float:ty,&Float:tz);                                                                  *
+ * GetRandomPointInCone3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:pointA_radius,Float:pointB_radius,            *
+ *                        &Float:tx,&Float:ty,&Float:tz);                                                                           *
+ * GetRandomPointOnCone3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:pointA_radius,Float:pointB_radius,            *
+ *                        &Float:tx,&Float:ty,&Float:tz);                                                                           *
  * bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB);                                             *
  * bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB);                  *
  * bool:IsPointNearly2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB,Float:maxdist);                                *
@@ -177,7 +195,6 @@
  * GetObjectUpPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                                *
  * GetObjectDownPos(objectid,Float:radius,&Float:x,&Float:y,&Float:z);                                                              *
  * GetQuatUpVector(Float:qw,Float:qx,Float:qy,Float:qz,&Float:vx,&Float:vy,&Float:vz);                                              *
- * GetQuatFromRot(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz);                                              *
  * Float:GetLineSize2D(Float:points[][],maxpoints=sizeof(points));                                                                  *
  * Float:GetLineSize3D(Float:points[][],maxpoints=sizeof(points));                                                                  *
  * bool:GetPointToPointVector(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);                    *
@@ -197,10 +214,14 @@
  *                        Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                                  *
  * GetVehicleRotatedVector(vehicleid,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,              *
  *                         Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);                                                                 *
- * bool:GetArcPointsFloor2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));     *
- * bool:GetArcPointsCellar2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));    *
- * bool:GetArcPointsStarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points)); *
- * bool:GetArcPointsLarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));  *
+ * bool:GetArcPointsFloor3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:spread,Float:points[][],                       *
+ *                          max_points = sizeof(points));                                                                           *
+ * bool:GetArcPointsCellar3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:spread,Float:points[][],                      *
+ *                           max_points = sizeof(points));                                                                          *
+ * bool:GetArcPointsLarboard3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:spread,Float:points[][],                    *
+ *                             max_points = sizeof(points));                                                                        *
+ * bool:GetArcPointsStarboard3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:spread,Float:points[][],                   *
+ *                              max_points = sizeof(points));                                                                       *
  * bool:IsPointInSphericalSectorEx(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,               *
  *                                 Float:vrx,Float:vrz,bool:testLOS=true);                                                          *
  * Float:GetDistanceFromPointToLine(Float:px,Float:py,Float:pz,Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,               *
@@ -319,6 +340,7 @@
  * bool:MovePointColCutLine(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0);   *
  * bool:MovePointColCutLineEx(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0); *
  * GetPointInFront3DCol(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                      *
+ * GetPointInFront3DColEx(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz);           *
  * Float:GetPointInFrontOfPlayerCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                     *
  * Float:GetPointInFrontOfCamera2DCol(playerid,&Float:tx,&Float:ty,Float:radius);                                                   *
  * GetPointInFrontOfCamera3DCol(playerid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                   *
@@ -442,6 +464,7 @@
  * bool:IsValidStream(Stream:StreamData[Stream3D]);                                                                                 *
  * bool:IsPointInStream(Float:x,Float:y,Float:z,Stream:StreamData[Stream3D]);                                                       *
  * bool:GetRandomPointInStream(Stream:StreamData[Stream3D],&Float:x,&Float:y,&Float:z);                                             *
+ * bool:GetRandomPointOnStream(Stream:StreamData[Stream3D],&Float:x,&Float:y,&Float:z);                                             *
  *                                                                                                                                  *
  * Line3D Functions:                                                                                                                *
  * Line3DCreate(variable,max_points);                                                                                               *
@@ -476,6 +499,10 @@
  * bool:IsPlayerInCircularSector(playerid,Float:x,Float:y,Float:rz,Float:radius,Float:view_angle);                                  *
  * bool:IsPlayerInSphericalSector(playerid,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz);             *
  * bool:IsPlayerInCone(playerid,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:pointA_radius,Float:pointB_radius);     *
+ * bool:GetArcPointsFloor2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));     *
+ * bool:GetArcPointsCellar2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));    *
+ * bool:GetArcPointsStarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points)); *
+ * bool:GetArcPointsLarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));  *
  *                                                                                                                                  *
  * Symbols:                                                                                                                         *
  * FLOAT_PI                   - pi constant value                                                                                   *
@@ -632,11 +659,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.3.0
+	#error [ADM] You need 3DTryg.inc v4.0.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.3.0
-#elseif (Tryg3D_Version < 30300)
-	#error [ADM] Update you 3DTryg.inc to v3.3.0
+	#error [ADM] Update you 3DTryg.inc to v4.0.0
+#elseif (Tryg3D_Version < 40000)
+	#error [ADM] Update you 3DTryg.inc to v4.0.0
 #endif
 */
 
@@ -651,6 +678,9 @@
 #endif
 #define _3D_Tryg
 
+#define Tryg3D_Version									(40000) //a.b.c 10000*a+100*b+c
+#define Tryg3D_SAMP_Version								"0.3.7"
+
 #if (!defined GetPlayerPoolSize)
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
@@ -662,9 +692,6 @@
 #if defined _Map_Andreas_Ex
 	#error [ADM] Please remove deprecated file MapAndreasEx.inc
 #endif
-
-#define Tryg3D_Version									(30300) //a.b.c 10000*a+100*b+c
-#define Tryg3D_SAMP_Version								"0.3.7"
 
 //Update Checker
 #if !defined HTTP
@@ -678,7 +705,6 @@
 #if !defined HTTP
 	#error [ADM] Please include a_http.inc before 3DTryg.inc
 #endif
-
 
 /************************************************************************************************************************************
  *                                                                                                                                  *
@@ -820,6 +846,7 @@
 //Detect Prot [Slot: 999]
 #define Tryg3D_Function::								stock
 #define Tryg3D_Deprecated::								stock
+#define Tryg3D_Public::%0(%1)							forward %0(%1); public %0(%1)
 #define T3D:											v3D
 
 /************************************************************************************************************************************
@@ -1209,8 +1236,48 @@ Tryg3D_Function:: bool:Tryg3D_IsPlayerSpawned(playerid){
 
 #define Tryg3D_GetWeaponDamage(%0)						Tryg3D_WeaponDamage[(%0)]
 
-//Module: rotation.inc by Nero_3D
-//Code anti-collision: YES
+Tryg3D_Function:: Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true,bool:death_msg=true,bool:death_call=true){
+	new Float:T3D:health,Float:T3D:armour;
+	GetPlayerArmour(targetid,T3D:armour);
+	GetPlayerHealth(targetid,T3D:health);
+	if(T3D:armour >= damage){
+		SetPlayerArmour(targetid,T3D:armour-damage);
+	} else if(T3D:armour < damage){
+		damage -= T3D:armour;
+		SetPlayerArmour(targetid,0.0);
+		if(T3D:health-damage <= 0.0){
+			if(force_spawn){
+				SpawnPlayer(targetid);
+			} else {
+				SetPlayerHealth(targetid,0.0);
+			}
+			if(death_msg) SendDeathMessage(playerid,targetid,weaponid);
+			if(death_call) CallRemoteFunction("OnPlayerDeath","ddd",targetid,playerid,weaponid);
+		} else {
+			SetPlayerHealth(targetid,T3D:health-damage);
+		}
+	} else {
+		if(T3D:health-damage <= 0.0){
+			if(force_spawn){
+				SpawnPlayer(targetid);
+			} else {
+				SetPlayerHealth(targetid,0.0);
+			}
+			if(death_msg) SendDeathMessage(playerid,targetid,weaponid);
+			if(death_call) CallRemoteFunction("OnPlayerDeath","ddd",targetid,playerid,weaponid);
+		} else {
+			SetPlayerHealth(targetid,T3D:health-damage);
+		}
+	}
+}
+
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ * Nero_3D Rotations Functions                                                                                                      *
+ * Code anti-collision: YES                                                                                                         *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
+ 
 enum T3D:eulermode {
 	// Proper / Classic Euler angles
 	T3D:euler_xzx,
@@ -1384,41 +1451,117 @@ Tryg3D_Function:: Tryg3D_MatrixRotate(Float:matrix[][],Float:oX,Float:oY,Float:o
 	y += oX * matrix[1][0] + oY * matrix[1][1] + oZ * matrix[1][2];
 	z += oX * matrix[2][0] + oY * matrix[2][1] + oZ * matrix[2][2];
 }
-//End Module: rotation.inc
 
-Tryg3D_Function:: Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponid,bool:force_spawn=true,bool:death_msg=true,bool:death_call=true){
-	new Float:T3D:health,Float:T3D:armour;
-	GetPlayerArmour(targetid,T3D:armour);
-	GetPlayerHealth(targetid,T3D:health);
-	if(T3D:armour >= damage){
-		SetPlayerArmour(targetid,T3D:armour-damage);
-	} else if(T3D:armour < damage){
-		damage -= T3D:armour;
-		SetPlayerArmour(targetid,0.0);
-		if(T3D:health-damage <= 0.0){
-			if(force_spawn){
-				SpawnPlayer(targetid);
-			} else {
-				SetPlayerHealth(targetid,0.0);
-			}
-			if(death_msg) SendDeathMessage(playerid,targetid,weaponid);
-			if(death_call) CallRemoteFunction("OnPlayerDeath","ddd",targetid,playerid,weaponid);
-		} else {
-			SetPlayerHealth(targetid,T3D:health-damage);
+//GetQuatFromEuler by Nero_3D
+Tryg3D_Function:: Tryg3D_GetQuatFromEuler(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz,T3D:eulermode:mode=T3D:euler_default){
+	rx /= 2.0; // could be done with multiplication but would be slower
+	ry /= 2.0;
+	rz /= 2.0;
+
+	new	Float:cosX = floatcos(rx,degrees),
+		Float:cosY = floatcos(ry,degrees),
+		Float:cosZ = floatcos(rz,degrees),
+		Float:sinX = floatsin(rx,degrees),
+		Float:sinY = floatsin(ry,degrees),
+		Float:sinZ = floatsin(rz,degrees);
+
+	switch(mode) {
+		case T3D:euler_xzx: {
+			qw = sinX * cosY * sinZ - cosX * cosY * cosZ;
+			qx = cosX * cosY * sinZ + sinX * cosY * cosZ;
+			qy = cosX * sinY * sinZ - sinX * sinY * cosZ;
+			qz = cosX * sinY * cosZ + sinX * sinY * sinZ;
 		}
-	} else {
-		if(T3D:health-damage <= 0.0){
-			if(force_spawn){
-				SpawnPlayer(targetid);
-			} else {
-				SetPlayerHealth(targetid,0.0);
-			}
-			if(death_msg) SendDeathMessage(playerid,targetid,weaponid);
-			if(death_call) CallRemoteFunction("OnPlayerDeath","ddd",targetid,playerid,weaponid);
-		} else {
-			SetPlayerHealth(targetid,T3D:health-damage);
+		case T3D:euler_xyx: {
+			qw = sinX * cosY * sinZ - cosX * cosY * cosZ;
+			qx = cosX * cosY * sinZ + sinX * cosY * cosZ;
+			qy = cosX * sinY * cosZ + sinX * sinY * sinZ;
+			qz = sinX * sinY * cosZ - cosX * sinY * sinZ;
+		}
+		case T3D:euler_yxy: {
+			qw = sinX * cosY * sinZ - cosX * cosY * cosZ;
+			qx = cosX * sinY * cosZ + sinX * sinY * sinZ;
+			qy = cosX * cosY * sinZ + sinX * cosY * cosZ;
+			qz = cosX * sinY * sinZ - sinX * sinY * cosZ;
+		}
+		case T3D:euler_yzy: {
+			qw = sinX * cosY * sinZ - cosX * cosY * cosZ;
+			qx = sinX * sinY * cosZ - cosX * sinY * sinZ;
+			qy = cosX * cosY * sinZ + sinX * cosY * cosZ;
+			qz = cosX * sinY * cosZ + sinX * sinY * sinZ;
+		}
+		case T3D:euler_zyz: {
+			qw = sinX * cosY * sinZ - cosX * cosY * cosZ;
+			qx = cosX * sinY * sinZ - sinX * sinY * cosZ;
+			qy = cosX * sinY * cosZ + sinX * sinY * sinZ;
+			qz = cosX * cosY * sinZ + sinX * cosY * cosZ;
+		}
+		case T3D:euler_zxz: {
+			qw = sinX * cosY * sinZ - cosX * cosY * cosZ;
+			qx = cosX * sinY * cosZ + sinX * sinY * sinZ;
+			qy = sinX * sinY * cosZ - cosX * sinY * sinZ;
+			qz = cosX * cosY * sinZ + sinX * cosY * cosZ;
+		}
+		case T3D:euler_xzy: {
+			qw = cosX * cosY * cosZ + sinX * sinY * sinZ;
+			qx = cosX * sinY * sinZ - sinX * cosY * cosZ;
+			qy = sinX * cosY * sinZ - cosX * sinY * cosZ;
+			qz = -(cosX * cosY * sinZ + sinX * sinY * cosZ);
+		}
+		case T3D:euler_xyz: {
+			qw = sinX * sinY * sinZ - cosX * cosY * cosZ;
+			qx = sinX * cosY * cosZ + cosX * sinY * sinZ;
+			qy = cosX * sinY * cosZ - sinX * cosY * sinZ;
+			qz = cosX * cosY * sinZ + sinX * sinY * cosZ;
+		}
+		case T3D:euler_yxz: {
+			qw = cosX * cosY * cosZ + sinX * sinY * sinZ;
+			qx = -(sinX * cosY * cosZ + cosX * sinY * sinZ);
+			qy = sinX * cosY * sinZ - cosX * sinY * cosZ;
+			qz = sinX * sinY * cosZ - cosX * cosY * sinZ;
+		}
+		case T3D:euler_yzx: {
+			qw = sinX * sinY * sinZ - cosX * cosY * cosZ;
+			qx = sinX * cosY * cosZ + cosX * sinY * sinZ;
+			qy = cosX * sinY * cosZ + sinX * cosY * sinZ;
+			qz = cosX * cosY * sinZ - sinX * sinY * cosZ;
+		}
+		case T3D:euler_zyx: {
+			qw = cosX * cosY * cosZ + sinX * sinY * sinZ;
+			qx = cosX * sinY * sinZ - sinX * cosY * cosZ;
+			qy = -(cosX * sinY * cosZ + sinX * cosY * sinZ);
+			qz = sinX * sinY * cosZ - cosX * cosY * sinZ;
+		}
+		case T3D:euler_zxy: {
+			qw = sinX * sinY * sinZ - cosX * cosY * cosZ;
+			qx = sinX * cosY * cosZ - cosX * sinY * sinZ;
+			qy = cosX * sinY * cosZ + sinX * cosY * sinZ;
+			qz = cosX * cosY * sinZ + sinX * sinY * cosZ;
 		}
 	}
+}
+
+//QuatRotate by Nero_3D
+Tryg3D_Function:: Tryg3D_QuatRotate(Float:qw,Float:qx,Float:qy,Float:qz,Float:oX,Float:oY,Float:oZ,&Float:tx,&Float:ty,&Float:tz){
+	// wikipedia suggest this formula (a x b - cross prudct)
+	// v + 2*r x (r x v + w*v) | q = w,r
+	// 15 muls, 15 adds, 9 saves, 42 loads
+	// but I used this one because it more compact (a.b - dot product)
+	// 2*((r.v)*r + (0.5 - (|r.r|^2))*v + w * (r x v)) | q = w,r
+	// 22 muls, 12 adds, 5 saves, 38 loads
+	new Float:dot = qx * oX + qy * oY + qz * oZ,
+		Float:abs = qw * qw - 0.5;
+
+	tx += 2.0 * (dot * qx + abs * oX + qw * (qz * oY - qy * oZ));
+	ty += 2.0 * (dot * qy + abs * oY + qw * (qx * oZ - qz * oX));
+	tz += 2.0 * (dot * qz + abs * oZ + qw * (qy * oX - qx * oY));
+}
+
+//EulerRotate by Nero_3D
+Tryg3D_Function:: Tryg3D_EulerRotate(Float:rx,Float:ry,Float:rz,Float:oX,Float:oY,Float:oZ,&Float:tx,&Float:ty,&Float:tz,T3D:eulermode:mode=T3D:euler_default){
+	// saddly I couldn't find a way to rotate euler angles without a step in between, is there even a way?
+	Tryg3D_GetQuatFromEuler(rx,ry,rz,Float:mode,rx,ry,rz,mode);
+	Tryg3D_QuatRotate(Float:mode,rx,ry,rz,oX,oY,oZ,tx,ty,tz);
 }
 
 /************************************************************************************************************************************
@@ -1484,6 +1627,11 @@ Tryg3D_Function:: Tryg3D_GivePlayerDamage(targetid,Float:damage,playerid,weaponi
 #define IsPlayerInCone(%0,%1,%2,%3,%4,%5,%6,%7,%8)		IsElementInCone((%0),item_player,(%1),(%2),(%3),(%4),(%5),(%6),(%7),(%8))
 
 #define IsPlayerInSphericalSector(%0,%1,%2,%3,%4,%5,%6,%7,%8)	IsElementInSphericalSector((%0),item_player,(%1),(%2),(%3),(%4),(%5),(%6),(%7),(%8))
+
+#define GetArcPointsFloor2D(%0,%1,%2,%3,%4,%5,%6) 		GetArcPointsFloor3D(%0,%1,%2,%3,%4,%2,%5,%6)
+#define GetArcPointsCellar2D(%0,%1,%2,%3,%4,%5,%6)		GetArcPointsCellar3D(%0,%1,%2,%3,%4,%2,%5,%6)
+#define GetArcPointsLarboard2D(%0,%1,%2,%3,%4,%5,%6)	GetArcPointsLarboard3D(%0,%1,%2,%3,%4,%2,%5,%6)
+#define GetArcPointsStarboard2D(%0,%1,%2,%3,%4,%5,%6)	GetArcPointsStarboard3D(%0,%1,%2,%3,%4,%2,%5,%6)
 
 #if !defined Tryg3D_i_quat
 	//GetVehicleRotation Created by IllidanS4
@@ -1606,11 +1754,27 @@ Tryg3D_Function:: GetPointInFront2D(Float:x,Float:y,Float:rz,Float:radius,&Float
 	ty = y + (radius * floatcos(rz,degrees));
 }
 
+//new code version support 3D made by Abyss Morgan
+Tryg3D_Function:: bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz){
+	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
+	if(radius <= 0.0) return false;
+	CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
+	CompRotationFloat((atan2(ty-y,tx-x)-90.0),rz);
+	return true;
+}
+
 //new code version support 3D made by Abyss Morgan, Update by Nero_3D
 Tryg3D_Function:: GetPointInFront3D(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 	tx = x - (radius * floatcos(rx,degrees) * floatsin(rz,degrees));
 	ty = y + (radius * floatcos(rx,degrees) * floatcos(rz,degrees));
 	tz = z + (radius * floatsin(rx,degrees));
+}
+
+Tryg3D_Function:: GetPointInFront3DEx(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+	new Float:vx,Float:vy,Float:vz,Float:trx,Float:trz;
+	Tryg3D_EulerRotate(rx,ry,rz,0.0,1.0,0.0,vx,vy,vz,T3D:euler_zyx);
+	GetRotationFor2Point3D(0.0,0.0,0.0,vx,vy,vz,trx,trz);
+	GetPointInFront3D(x,y,z,trx,trz,radius,tx,ty,tz); 
 }
 
 //GetXYInFrontOfPlayer
@@ -1663,17 +1827,8 @@ Tryg3D_Function:: Float:GetPointInFrontOfCamera2D(playerid,&Float:tx,&Float:ty,F
 	return rz;
 }
 
-//new code version support 3D made by Abyss Morgan
-Tryg3D_Function:: bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz){
-	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
-	if(radius <= 0.0) return false;
-	CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
-	CompRotationFloat((atan2(ty-y,tx-x)-90.0),rz);
-	return true;
-}
-
 //random clock pos
-Tryg3D_Function:: GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = INVALID_ROTATION){
+Tryg3D_Deprecated:: GetRandomClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,&Float:trz,Float:rz = INVALID_ROTATION){
 	if(rz == INVALID_ROTATION) rz = RandomFloat(0.0,360.0);
 	GetPointInFront2D(x,y,rz,radius,tx,ty);
 	CompRotationFloat(rz-180.0,trz);
@@ -1700,6 +1855,27 @@ Tryg3D_Function:: GetRandomPointInCircle(Float:x,Float:y,Float:radius,&Float:tx,
 Tryg3D_Function:: GetRandomPointInCylinder2D(Float:x,Float:y,Float:minz,Float:maxz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
 	GetRandomPointInCircle(x,y,radius,tx,ty);
 	tz = RandomFloat(0.0,floatsqroot(floatpower(minz-maxz,2)))+minz;
+}
+
+Tryg3D_Function:: GetRandomPointOnCylinder2D(Float:x,Float:y,Float:minz,Float:maxz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+	GetRandomPointOnCircle(x,y,radius,tx,ty);
+	tz = RandomFloat(0.0,floatsqroot(floatpower(minz-maxz,2)))+minz;
+}
+
+//GetRandomPointInCylinder3D by Abyss Morgan
+Tryg3D_Function:: GetRandomPointInCylinder3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+	new Float:px,Float:py,Float:pz,Float:trx,Float:trz;
+	GetRotationFor2Point3D(xA,yA,zA,xB,yB,zB,trx,trz);
+	GetPointInFront3D(xA,yA,zA,trx,trz,RandomFloat(0.0,GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB)),px,py,pz);
+	GetPointInFront3DEx(px,py,pz,RandomFloat(0.0,360.0),trx,CompRotationFloat(trz+90.0),RandomFloat(0.0,radius),tx,ty,tz);
+}
+
+//GetRandomPointOnCylinder3D by Abyss Morgan
+Tryg3D_Function:: GetRandomPointOnCylinder3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+	new Float:px,Float:py,Float:pz,Float:trx,Float:trz;
+	GetRotationFor2Point3D(xA,yA,zA,xB,yB,zB,trx,trz);
+	GetPointInFront3D(xA,yA,zA,trx,trz,RandomFloat(0.0,GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB)),px,py,pz);
+	GetPointInFront3DEx(px,py,pz,RandomFloat(0.0,360.0),trx,CompRotationFloat(trz+90.0),radius,tx,ty,tz);
 }
 
 Tryg3D_Function:: GetRandomPointInSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz){
@@ -1746,6 +1922,64 @@ Tryg3D_Function:: GetRandomPointOnCircularSector(Float:x,Float:y,Float:rz,Float:
 	GetPointInFront2D(x,y,rand_rz,radius,tx,ty);
 }
 
+//Beta Alghoritm by Abyss Morgan
+Tryg3D_Function:: GetRandomPointInSphericalSector(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz,&Float:tx,&Float:ty,&Float:tz){
+	new Float:rand_rx = CompRotationFloat(RandomFloat(rx-vrx+360.0,rx+vrx+360.0,6)),
+		Float:rand_rz = CompRotationFloat(RandomFloat(rz-vrz+360.0,rz+vrz+360.0,6)),
+		Float:rand_rad = RandomFloat(FLOAT_DEFECT*100.0,radius,6);
+		
+	vrx /= 2.0;
+	vrz /= 2.0;
+
+	if(rand_rad > radius) rand_rad = radius;
+	
+	if(rand_rx > rx+vrx) rand_rx = rx+vrx;
+	if(rand_rx < rx-vrx) rand_rx = rx-vrx;
+	
+	if(rand_rz > rz+vrz) rand_rz = rz+vrz;
+	if(rand_rz < rz-vrz) rand_rz = rz-vrz;
+	
+	GetPointInFront3D(x,y,z,rand_rx,rand_rz,rand_rad,tx,ty,tz);
+}
+
+//Beta Alghoritm by Abyss Morgan
+Tryg3D_Function:: GetRandomPointOnSphericalSector(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz,&Float:tx,&Float:ty,&Float:tz){
+	vrx /= 2.0;
+	vrz /= 2.0;
+	new Float:rand_rx = CompRotationFloat(RandomFloat(rx-vrx+360.0,rx+vrx+360.0,6)),
+		Float:rand_rz = CompRotationFloat(RandomFloat(rz-vrz+360.0,rz+vrz+360.0,6));
+	
+	if(rand_rx > rx+vrx) rand_rx = rx+vrx;
+	if(rand_rx < rx-vrx) rand_rx = rx-vrx;
+	
+	if(rand_rz > rz+vrz) rand_rz = rz+vrz;
+	if(rand_rz < rz-vrz) rand_rz = rz-vrz;
+	
+	GetPointInFront3D(x,y,z,rand_rx,rand_rz,radius,tx,ty,tz);
+}
+
+//GetRandomPointInCone3D by Abyss Morgan
+Tryg3D_Function:: GetRandomPointInCone3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:pointA_radius,Float:pointB_radius,&Float:tx,&Float:ty,&Float:tz){
+	new Float:px,Float:py,Float:pz,Float:trx,Float:trz,
+		Float:dist = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB),
+		Float:rand_dist = RandomFloat(0.0,dist),
+		Float:radius = rand_dist*((pointB_radius-pointA_radius)*(1.0/dist))+pointA_radius;
+	GetRotationFor2Point3D(xA,yA,zA,xB,yB,zB,trx,trz);
+	GetPointInFront3D(xA,yA,zA,trx,trz,rand_dist,px,py,pz);
+	GetPointInFront3DEx(px,py,pz,RandomFloat(0.0,360.0),trx,CompRotationFloat(trz+90.0),RandomFloat(0.0,radius),tx,ty,tz);
+}
+
+//GetRandomPointOnCone3D by Abyss Morgan
+Tryg3D_Function:: GetRandomPointOnCone3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:pointA_radius,Float:pointB_radius,&Float:tx,&Float:ty,&Float:tz){
+	new Float:px,Float:py,Float:pz,Float:trx,Float:trz,
+		Float:dist = GetDistanceBetweenPoints3D(xA,yA,zA,xB,yB,zB),
+		Float:rand_dist = RandomFloat(0.0,dist),
+		Float:radius = rand_dist*((pointB_radius-pointA_radius)*(1.0/dist))+pointA_radius;
+	GetRotationFor2Point3D(xA,yA,zA,xB,yB,zB,trx,trz);
+	GetPointInFront3D(xA,yA,zA,trx,trz,rand_dist,px,py,pz);
+	GetPointInFront3DEx(px,py,pz,RandomFloat(0.0,360.0),trx,CompRotationFloat(trz+90.0),radius,tx,ty,tz);
+}
+
 Tryg3D_Function:: ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz){
 	rx = ShiftRadianToDegreeEx(rotation3);
 	ry = ShiftRadianToDegreeEx(rotation2);
@@ -1782,178 +2016,159 @@ Tryg3D_Function:: GetQuatUpVector(Float:qw,Float:qx,Float:qy,Float:qz,&Float:vx,
 	vz = 1.0-(2.0*(qx*qx+qy*qy));
 }
 
-//GetQuatFromRot by Nero_3D
-Tryg3D_Function:: GetQuatFromRot(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
-	rx /= 2.0;
-	ry /= 2.0;
-	rz /= 2.0;
-
-	new Float:cosX = floatcos(rx,degrees), 
-		Float:cosY = floatcos(ry,degrees), 
-		Float:cosZ = floatcos(rz,degrees), 
-		Float:sinX = floatsin(rx,degrees), 
-		Float:sinY = floatsin(ry,degrees), 
-		Float:sinZ = floatsin(rz,degrees); 
-
-	qw = cosZ*cosX*cosY - sinZ*sinX*sinY; 
-	qx = cosY*cosZ*sinX - sinZ*cosX*sinY; 
-	qy = cosZ*cosX*sinY + cosY*sinZ*sinX; 
-	qz = cosY*sinZ*cosX + cosZ*sinX*sinY; 
-}
-
-Tryg3D_Function:: bool:GetArcPointsFloor2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points = sizeof(points)){
+Tryg3D_Function:: bool:GetArcPointsFloor3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:spread,Float:points[][],max_points = sizeof(points)){
 	if(max_points < 3) return false;
 	
 	max_points--;
-	new Float:rz;
-	GetRotationFor2Point2D(x,y,tx,ty,rz);
+	new Float:rx,Float:rz;
+	GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz);
 	
 	if(spread <= 0.0) spread = 1.0;
 	
-	new Float:T3D:mercury = (1.0/(max_points)),
-		Float:dist = GetDistanceBetweenPoints2D(x,y,tx,ty),
-		Float:T3D:jun = (dist/2.0), Float:rsize, idx = 1;
+	new Float:mercury = (1.0/(max_points)),
+		Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz),
+		Float:jun = (dist/2.0), Float:rsize, idx = 1,
+		Float:sion = CompRotationFloat(rx+90.0),
+		Float:px,Float:py,Float:pz;
 	
 	points[max_points][0] = x;
 	points[max_points][1] = y;
 	points[max_points][2] = z;
 	
 	for(new i = max_points-1; i > 0; i--){
-		rsize = (dist*(T3D:mercury*idx));
-		GetPointInFront2D(x,y,rz,rsize,points[i][0],points[i][1]);
-		if(rsize == T3D:jun){
-			points[i][2] = (z + spread);
-		} else if(rsize < T3D:jun){
+		rsize = (dist*(mercury*idx));
+		GetPointInFront3D(x,y,z,rx,rz,rsize,px,py,pz);
+		if(rsize == jun){
+			GetPointInFront3D(px,py,pz,sion,rz,spread,points[i][0],points[i][1],points[i][2]);
+		} else if(rsize < jun){
 			//upward
-			points[i][2] = (z + (rsize * (spread / T3D:jun)));
+			GetPointInFront3D(px,py,pz,sion,rz,((rsize * (spread / jun))),points[i][0],points[i][1],points[i][2]);
 		} else {
 			//downward
-			points[i][2] = (z + spread - ((rsize * (spread / T3D:jun)) - spread));
+			GetPointInFront3D(px,py,pz,sion,rz,(spread - ((rsize * (spread / jun)) - spread)),points[i][0],points[i][1],points[i][2]);
 		}
 		idx++;
 	}
 	points[0][0] = tx;
 	points[0][1] = ty;
-	points[0][2] = z;
+	points[0][2] = tz;
 	return true;
 }
 
-Tryg3D_Function:: bool:GetArcPointsCellar2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points = sizeof(points)){
+Tryg3D_Function:: bool:GetArcPointsCellar3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:spread,Float:points[][],max_points = sizeof(points)){
 	if(max_points < 3) return false;
 	
 	max_points--;
-	new Float:rz;
-	GetRotationFor2Point2D(x,y,tx,ty,rz);
+	new Float:rx,Float:rz;
+	GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz);
 	
 	if(spread <= 0.0) spread = 1.0;
 	
-	new Float:T3D:mercury = (1.0/(max_points)),
-		Float:dist = GetDistanceBetweenPoints2D(x,y,tx,ty),
-		Float:T3D:jun = (dist/2.0), Float:rsize, idx = 1;
+	new Float:mercury = (1.0/(max_points)),
+		Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz),
+		Float:jun = (dist/2.0), Float:rsize, idx = 1,
+		Float:sion = CompRotationFloat(rx-90.0),
+		Float:px,Float:py,Float:pz;
 	
 	points[max_points][0] = x;
 	points[max_points][1] = y;
 	points[max_points][2] = z;
 	
 	for(new i = max_points-1; i > 0; i--){
-		rsize = (dist*(T3D:mercury*idx));
-		GetPointInFront2D(x,y,rz,rsize,points[i][0],points[i][1]);
-		if(rsize == T3D:jun){
-			points[i][2] = (z - spread);
-		} else if(rsize < T3D:jun){
-			//downward
-			points[i][2] = (z - (rsize * (spread / T3D:jun)));
-		} else {
+		rsize = (dist*(mercury*idx));
+		GetPointInFront3D(x,y,z,rx,rz,rsize,px,py,pz);
+		if(rsize == jun){
+			GetPointInFront3D(px,py,pz,sion,rz,spread,points[i][0],points[i][1],points[i][2]);
+		} else if(rsize < jun){
 			//upward
-			points[i][2] = ((z - spread + (rsize * (spread / T3D:jun))) - spread);
+			GetPointInFront3D(px,py,pz,sion,rz,((rsize * (spread / jun))),points[i][0],points[i][1],points[i][2]);
+		} else {
+			//downward
+			GetPointInFront3D(px,py,pz,sion,rz,(spread - ((rsize * (spread / jun)) - spread)),points[i][0],points[i][1],points[i][2]);
 		}
 		idx++;
 	}
 	points[0][0] = tx;
 	points[0][1] = ty;
-	points[0][2] = z;
+	points[0][2] = tz;
 	return true;
 }
 
-Tryg3D_Function:: bool:GetArcPointsLarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points = sizeof(points)){
+Tryg3D_Function:: bool:GetArcPointsLarboard3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:spread,Float:points[][],max_points = sizeof(points)){
 	if(max_points < 3) return false;
 	
 	max_points--;
-	new Float:rz, Float:line_x, Float:line_y, Float:trz;
-	GetRotationFor2Point2D(x,y,tx,ty,rz);
+	new Float:rx,Float:rz;
+	GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz);
 	
 	if(spread <= 0.0) spread = 1.0;
 	
-	new Float:T3D:mercury = (1.0/(max_points)),
-		Float:dist = GetDistanceBetweenPoints2D(x,y,tx,ty),
-		Float:T3D:jun = (dist/2.0), Float:rsize, idx = 1;
+	new Float:mercury = (1.0/(max_points)),
+		Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz),
+		Float:jun = (dist/2.0), Float:rsize, idx = 1,
+		Float:sion = CompRotationFloat(rz+90.0),
+		Float:px,Float:py,Float:pz;
 	
 	points[max_points][0] = x;
 	points[max_points][1] = y;
 	points[max_points][2] = z;
 	
-	trz = CompRotationFloat(rz+90.0);
-	
 	for(new i = max_points-1; i > 0; i--){
-		rsize = (dist*(T3D:mercury*idx));
-		GetPointInFront2D(x,y,rz,rsize,line_x,line_y); //points[i][0],points[i][1]
-		
-		if(rsize == T3D:jun){
-			GetPointInFront2D(line_x,line_y,trz,spread,points[i][0],points[i][1]);
-		} else if(rsize < T3D:jun){
-			//expansion
-			GetPointInFront2D(line_x,line_y,trz,(rsize * (spread / T3D:jun)),points[i][0],points[i][1]);
+		rsize = (dist*(mercury*idx));
+		GetPointInFront3D(x,y,z,rx,rz,rsize,px,py,pz);
+		if(rsize == jun){
+			GetPointInFront3DEx(px,py,pz,0.0,rx,sion,spread,points[i][0],points[i][1],points[i][2]);
+		} else if(rsize < jun){
+			//upward
+			GetPointInFront3DEx(px,py,pz,0.0,rx,sion,((rsize * (spread / jun))),points[i][0],points[i][1],points[i][2]);
 		} else {
-			//narrowing
-			GetPointInFront2D(line_x,line_y,trz,(spread - ((rsize * (spread / T3D:jun)) - spread)),points[i][0],points[i][1]);
+			//downward
+			GetPointInFront3DEx(px,py,pz,0.0,rx,sion,(spread - ((rsize * (spread / jun)) - spread)),points[i][0],points[i][1],points[i][2]);
 		}
-		points[i][2] = z;
 		idx++;
 	}
 	points[0][0] = tx;
 	points[0][1] = ty;
-	points[0][2] = z;
+	points[0][2] = tz;
 	return true;
 }
 
-Tryg3D_Function:: bool:GetArcPointsStarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points = sizeof(points)){
+Tryg3D_Function:: bool:GetArcPointsStarboard3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:spread,Float:points[][],max_points = sizeof(points)){
 	if(max_points < 3) return false;
 	
 	max_points--;
-	new Float:rz, Float:line_x, Float:line_y, Float:trz;
-	GetRotationFor2Point2D(x,y,tx,ty,rz);
+	new Float:rx,Float:rz;
+	GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz);
 	
 	if(spread <= 0.0) spread = 1.0;
 	
-	new Float:T3D:mercury = (1.0/(max_points)),
-		Float:dist = GetDistanceBetweenPoints2D(x,y,tx,ty),
-		Float:T3D:jun = (dist/2.0), Float:rsize, idx = 1;
+	new Float:mercury = (1.0/(max_points)),
+		Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz),
+		Float:jun = (dist/2.0), Float:rsize, idx = 1,
+		Float:sion = CompRotationFloat(rz-90.0),
+		Float:px,Float:py,Float:pz;
 	
 	points[max_points][0] = x;
 	points[max_points][1] = y;
 	points[max_points][2] = z;
 	
-	trz = CompRotationFloat(rz-90.0);
-	
 	for(new i = max_points-1; i > 0; i--){
-		rsize = (dist*(T3D:mercury*idx));
-		GetPointInFront2D(x,y,rz,rsize,line_x,line_y); //points[i][0],points[i][1]
-		
-		if(rsize == T3D:jun){
-			GetPointInFront2D(line_x,line_y,trz,spread,points[i][0],points[i][1]);
-		} else if(rsize < T3D:jun){
-			//expansion
-			GetPointInFront2D(line_x,line_y,trz,(rsize * (spread / T3D:jun)),points[i][0],points[i][1]);
+		rsize = (dist*(mercury*idx));
+		GetPointInFront3D(x,y,z,rx,rz,rsize,px,py,pz);
+		if(rsize == jun){
+			GetPointInFront3DEx(px,py,pz,0.0,rx,sion,spread,points[i][0],points[i][1],points[i][2]);
+		} else if(rsize < jun){
+			//upward
+			GetPointInFront3DEx(px,py,pz,0.0,rx,sion,((rsize * (spread / jun))),points[i][0],points[i][1],points[i][2]);
 		} else {
-			//narrowing
-			GetPointInFront2D(line_x,line_y,trz,(spread - ((rsize * (spread / T3D:jun)) - spread)),points[i][0],points[i][1]);
+			//downward
+			GetPointInFront3DEx(px,py,pz,0.0,rx,sion,(spread - ((rsize * (spread / jun)) - spread)),points[i][0],points[i][1],points[i][2]);
 		}
-		points[i][2] = z;
 		idx++;
 	}
 	points[0][0] = tx;
 	points[0][1] = ty;
-	points[0][2] = z;
+	points[0][2] = tz;
 	return true;
 }
 
@@ -2161,7 +2376,8 @@ Tryg3D_Function:: Float:SetPlayerTargetPlayerAngle(playerid,targetid,&Float:rz=0
 Tryg3D_Function:: GetObjectRotationQuat(objectid,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
 	new Float:rx,Float:ry,Float:rz;
 	GetObjectRot(objectid,rx,ry,rz);
-	GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
+	Tryg3D_GetQuatFromEuler(rx,ry,rz,qw,qx,qy,qz);
+	qw *= (-1);
 }
 
 Tryg3D_Function:: GetObjectUpVector(objectid,&Float:vx,&Float:vy,&Float:vz){
@@ -2351,9 +2567,7 @@ Tryg3D_Function:: bool:IsPointInSphericalSectorEx(Float:px,Float:py,Float:pz,Flo
 //Original code by Crayder
 Tryg3D_Function:: ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
 	//Get difference
-	eX -= sX;
-	eY -= sY;
-	eZ -= sZ;
+	eX -= sX, eY -= sY, eZ -= sZ;
 	//Get rotation matrix from degrees
 	new Float:T3D:matrix[3][3];
 	Tryg3D_GetRotationMatrixEuler(T3D:matrix,rx,ry,rz);
@@ -2363,15 +2577,11 @@ Tryg3D_Function:: ShiftLineRotation(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY
 //Original code by Crayder
 Tryg3D_Function:: ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,Float:rx,Float:ry,Float:rz,&Float:nX,&Float:nY,&Float:nZ){
 	//Get difference
-	eX -= sX;
-	eY -= sY;
-	eZ -= sZ;
+	eX -= sX, eY -= sY, eZ -= sZ;
 	
 	//Normalizing, but isn`t needed for the matrix rotation
 	new Float:dist = VectorSize(eX,eY,eZ);
-	eX /= dist;
-	eY /= dist;
-	eZ /= dist;
+	eX /= dist, eY /= dist, eZ /= dist;
 	
 	//Get rotation matrix from degrees
 	new Float:T3D:matrix[3][3];
@@ -3050,8 +3260,8 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 				return true;
 			}
 			case s_cylinder3d: {
-				x = y = z = FLOAT_INFINITY;
-				return false;
+				GetRandomPointInCylinder3D(StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],StreamData[T3D:R],x,y,z);
+				return true;
 			}
 			case s_cylinder2d: {
 				GetRandomPointInCylinder2D(StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:minZ],StreamData[T3D:maxZ],StreamData[T3D:R],x,y,z);
@@ -3076,17 +3286,61 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 				return true;
 			}
 			case s_sphericalsector: {
-				x = y = z = FLOAT_INFINITY;
-				return false;
+				GetRandomPointInSphericalSector(StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:Z],StreamData[T3D:minX],StreamData[T3D:minZ],StreamData[T3D:R],StreamData[T3D:maxX],StreamData[T3D:maxZ],x,y,z);
+				return true;
 			}
 			case s_cone: {
-				x = y = z = FLOAT_INFINITY;
-				return false;
+				GetRandomPointInCone3D(StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],StreamData[T3D:X],StreamData[T3D:Y],x,y,z);
+				return true;
 			}
 		}
 		return false;
 	}
 
+	Tryg3D_Function:: bool:GetRandomPointOnStream(Stream:StreamData[Stream3D],&Float:x,&Float:y,&Float:z){
+		switch(StreamData[T3D:type]){
+			case s_circle: {
+				GetRandomPointOnCircle(StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:R],x,y);
+				z = FLOAT_INFINITY;
+				return true;
+			}
+			case s_cylinder3d: {
+				GetRandomPointOnCylinder3D(StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],StreamData[T3D:R],x,y,z);
+				return true;
+			}
+			case s_cylinder2d: {
+				GetRandomPointOnCylinder2D(StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:minZ],StreamData[T3D:maxZ],StreamData[T3D:R],x,y,z);
+				return true;
+			}
+			case s_sphere: {
+				GetRandomPointOnSphere(StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:Z],StreamData[T3D:R],x,y,z);
+				return true;
+			}
+			case s_rectangle: {
+				x = y = z = FLOAT_INFINITY;
+				return false;
+			}
+			case s_cube: {
+				x = y = z = FLOAT_INFINITY;
+				return false;
+			}
+			case s_circularsector: {
+				GetRandomPointOnCircularSector(StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:minZ],StreamData[T3D:R],StreamData[T3D:maxZ],x,y);
+				z = FLOAT_INFINITY;
+				return true;
+			}
+			case s_sphericalsector: {
+				GetRandomPointOnSphericalSector(StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:Z],StreamData[T3D:minX],StreamData[T3D:minZ],StreamData[T3D:R],StreamData[T3D:maxX],StreamData[T3D:maxZ],x,y,z);
+				return true;
+			}
+			case s_cone: {
+				GetRandomPointOnCone3D(StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],StreamData[T3D:X],StreamData[T3D:Y],x,y,z);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	Tryg3D_Function:: bool:IsElementInStream({Text3D,_}:elementid,Item3D_Type:element_type,Stream:StreamData[Stream3D]){
 		new Float:px,Float:py,Float:pz;
 		GetElementPos(elementid,element_type,px,py,pz);
@@ -3231,7 +3485,8 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 	Tryg3D_Function:: GetDynamicObjectRotationQuat(objectid,&Float:qw,&Float:qx,&Float:qy,&Float:qz){
 		new Float:rx,Float:ry,Float:rz;
 		GetDynamicObjectRot(objectid,rx,ry,rz);
-		GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
+		Tryg3D_GetQuatFromEuler(rx,ry,rz,qw,qx,qy,qz);
+		qw *= (-1);
 	}
 
 	Tryg3D_Function:: GetDynamicObjectUpVector(objectid,&Float:vx,&Float:vy,&Float:vz){
@@ -3442,18 +3697,14 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 	}
 	
 	Tryg3D_Function:: MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
+		x = EndX, y = EndY, z = EndZ;
 		CA_RayCastLine(StartX,StartY,StartZ,EndX,EndY,EndZ,x,y,z);
-		if(x == 0.0) x = EndX;
-		if(y == 0.0) y = EndY;
-		if(z == 0.0) z = EndZ;
 	}
 	
 	Tryg3D_Function:: bool:MovePointColCutLine(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
+		x = eX, y = eY, z = eZ;
 		CA_RayCastLine(sX,sY,sZ,eX,eY,eZ,x,y,z);
-		if(x == 0.0) x = eX;
-		if(y == 0.0) y = eY;
-		if(z == 0.0) z = eZ;
 		if((radius = GetDistanceBetweenPoints3D(sX,sY,sZ,x,y,z)) <= 0.0) return false;
 		CompRotationFloat(-(acos((z-sZ)/radius)-90.0),rx);
 		CompRotationFloat((atan2(y-sY,x-sX)-90.0),rz);
@@ -3464,10 +3715,8 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 
 	Tryg3D_Function:: bool:MovePointColCutLineEx(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
+		x = eX, y = eY, z = eZ;
 		CA_RayCastLine(sX,sY,sZ,eX,eY,eZ,x,y,z);
-		if(x == 0.0) x = eX;
-		if(y == 0.0) y = eY;
-		if(z == 0.0) z = eZ;
 		if((radius = GetDistanceBetweenPoints3D(sX,sY,sZ,x,y,z)) <= 0.0) return false;
 		CompRotationFloat(-(acos((z-sZ)/radius)-90.0),rx);
 		CompRotationFloat((atan2(y-sY,x-sX)-90.0),rz);
@@ -3486,6 +3735,13 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 		ty = y + (radius * floatcos(rx,degrees) * floatcos(rz,degrees));
 		tz = z + (radius * floatsin(rx,degrees));
 		MovePointCol(x,y,z,tx,ty,tz,tx,ty,tz);
+	}
+	
+	Tryg3D_Function:: GetPointInFront3DColEx(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:radius,&Float:tx,&Float:ty,&Float:tz){
+		new Float:vx,Float:vy,Float:vz,Float:trx,Float:trz;
+		Tryg3D_EulerRotate(rx,ry,rz,0.0,1.0,0.0,vx,vy,vz,T3D:euler_zyx);
+		GetRotationFor2Point3D(0.0,0.0,0.0,vx,vy,vz,trx,trz);
+		GetPointInFront3DCol(x,y,z,trx,trz,radius,tx,ty,tz); 
 	}
 	
 	//GetPointInFrontOfPlayer (ColAndreas)
@@ -4306,8 +4562,8 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 	
 	Tryg3D_Function:: FCNPC_SetVehicleRotation(npcid,Float:rx,Float:ry,Float:rz){
 		new Float:qw,Float:qx,Float:qy,Float:qz;
-		GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
-		FCNPC_SetQuaternion(npcid,-qw,qx,qy,qz);
+		Tryg3D_GetQuatFromEuler(rx,ry,rz,qw,qx,qy,qz);
+		FCNPC_SetQuaternion(npcid,qw,qx,qy,qz);
 	}
 	
 	Tryg3D_Function:: bool:FCNPC_SetVehicleTargetRotation(npcid,Float:tx,Float:ty,Float:tz,Float:ry=0.0){
@@ -4315,8 +4571,8 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 		GetVehiclePos(FCNPC_GetVehicleID(npcid),x,y,z);
 		if(GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz)){
 			new Float:qw,Float:qx,Float:qy,Float:qz;
-			GetQuatFromRot(rx,ry,rz,qw,qx,qy,qz);
-			FCNPC_SetQuaternion(npcid,-qw,qx,qy,qz);
+			Tryg3D_GetQuatFromEuler(rx,ry,rz,qw,qx,qy,qz);
+			FCNPC_SetQuaternion(npcid,qw,qx,qy,qz);
 			return true;
 		}
 		return false;
@@ -4639,8 +4895,7 @@ Tryg3D_Function:: Tryg3DInit_MapPrecision(){
 	#endif
 }
 
-forward Tryg3D_OnRequestResponse(index, response_code, data[]);
-public Tryg3D_OnRequestResponse(index, response_code, data[]){
+Tryg3D_Public:: Tryg3D_OnRequestResponse(index, response_code, data[]){
 	if(index == 0 && response_code == 200){
 		if(isnull(data)) return 0;
 		new T3D:version[16], T3D:ver, T3D:file_ver = Tryg3D_Version;
