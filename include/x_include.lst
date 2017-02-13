@@ -26,3 +26,4 @@ event/Santa.inc
 security/MultiScriptSecure.inc
 security/ScriptChecker.inc
 security/ScriptSecure.inc
+security/UltimateScriptSecure.inc
