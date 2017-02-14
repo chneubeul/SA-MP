@@ -68,7 +68,7 @@
  * ERROR_CODE_ADM_SIZE         //Invalid file size                                                                                *
  * ERROR_CODE_ADM_DEST         //Destination size                                                                                 *
  * ERROR_CODE_ADM_OPEN_INPUT   //Open input file                                                                                  *
- * ERROR_CODE_ADM_OPEN_OUTPUT  //Open output file                                                                                 * 
+ * ERROR_CODE_ADM_OPEN_OUTPUT  //Open output file                                                                                 *
  * ERROR_CODE_ADM_INVALID_TYPE //Invalid key type                                                                                 *
  * ERROR_CODE_ADM_PASSWORD     //Invalid password len                                                                             *
  * ERROR_CODE_ADM_MD5          //Invalid MD5 Load                                                                                 *
@@ -1114,14 +1114,14 @@ stock DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
 }
 
 stock bool:DumpFileDestroy(&DMP:index){
-	if(index < 0 || index >= MAX_DUMP_FILE) return false;
+	if(index < DMP:0 || index >= MAX_DUMP_FILE) return false;
 	new tid = fremove(ADM_ProtVar::DumpFileName[index]);
 	ADM_ProtVar::DumpFileName[index] = "";
 	ADM_ProtVar::DumpFileKey[index] = "";
 	ADM_ProtVar::DumpFileStatus[index] = false;
 	ADM_ProtVar::DumpFileType[index] = KEY_TYPE_UNKNOWN;
 	index = INVALID_DUMP_FILE;
-	return tid;
+	return bool:tid;
 }
 
 stock bool:IsValidDumpFile(const name[]){

@@ -191,7 +191,7 @@ stock GetPercentLY(prefix,suffix,&o_prefix,&o_suffix,Float:percent = 0.0,limitpr
 
 //Operator  a == b
 stock bool:IsLYEqual(prefix,suffix,from_prefix,from_suffix){
-	if(prefix == from_prefix && sufix == from_suffix) return true;
+	if(prefix == from_prefix && suffix == from_suffix) return true;
 	return false;
 }
 
