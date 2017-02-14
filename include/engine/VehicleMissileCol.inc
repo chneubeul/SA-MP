@@ -11,12 +11,12 @@
  * Modules: 3DTryg, Missile                                                                                                       *
  * Attributes: Overload resistance.                                                                                               *
  *                                                                                                                                *
- * File Version: 1.5.4                                                                                                            *
+ * File Version: 1.6.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
- * 3DTryg Version: 3.3.0                                                                                                          *
- * Missile Version: 1.6.6                                                                                                         *
+ * 3DTryg Version: 4.0.1                                                                                                          *
+ * Missile Version: 1.8.0                                                                                                         *
  *                                                                                                                                *
  * Vehicle Weapons:                                                                                                               *
  * - Mini Missile (Dual rocket)                                                                                                   *
@@ -25,6 +25,7 @@
  * - Bomber Missile (Quadruple-ground missiles)                                                                                   *
  * - Mortar Missile (Marica mortar)                                                                                               *
  * - Mega Missile (Heavy Marica mortar)                                                                                           *
+ * - Congreve Rocket (Large area of destruction)                                                                                  *
  *                                                                                                                                *
  * Functions Mini Missile:                                                                                                        *
  * ToggleVehicleMiniMissile(vehicleid,toggle);                                                                                    *
@@ -100,6 +101,22 @@
  * Float:GetVehicleMegaMissileHeight(vehicleid);                                                                                  *
  * SetVehicleMegaMissileHeight(vehicleid,Float:height);                                                                           *
  *                                                                                                                                *
+ * Functions Congreve Rocket:                                                                                                     *
+ * ToggleVehicleCongreve(vehicleid,toggle);                                                                                       *
+ * IsToggleVehicleCongreve(vehicleid);                                                                                            *
+ * Float:GetVehicleCongreveSpeed(vehicleid);                                                                                      *
+ * SetVehicleCongreveSpeed(vehicleid,Float:speed);                                                                                *
+ * GetVehicleCongreveReload(vehicleid);                                                                                           *
+ * SetVehicleCongreveReload(vehicleid,time);                                                                                      *
+ * Float:GetVehicleCongreveDistance(vehicleid);                                                                                   *
+ * SetVehicleCongreveDistance(vehicleid,Float:distance);                                                                          *
+ * GetVehicleCongreveKey(vehicleid);                                                                                              *
+ * SetVehicleCongreveKey(vehicleid,key);                                                                                          *
+ * Float:GetVehicleCongreveSpread(vehicleid);                                                                                     *
+ * SetVehicleCongreveSpread(vehicleid,Float:spread);                                                                              *
+ * GetVehicleCongreveSalvo(vehicleid);                                                                                            *
+ * SetVehicleCongreveSalvo(vehicleid,salvo);                                                                                      *
+ *                                                                                                                                *
  * Extended Functions:                                                                                                            *
  * Float:GetMissileStreamDistance();                                                                                              *
  * SetMissileStreamDistance(Float:streamdistance);                                                                                *
@@ -125,20 +142,20 @@
 
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v1.6.6
+	#error [ADM] You need Missile.inc v1.8.0
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v1.6.6
-#elseif (Missile_Version < 10606)
-	#error [ADM] Update you Missile.inc to v1.6.6
+	#error [ADM] Update you Missile.inc to v1.8.0
+#elseif (Missile_Version < 10800)
+	#error [ADM] Update you Missile.inc to v1.8.0
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.3.0
+	#error [ADM] You need 3DTryg.inc v4.0.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.3.0
-#elseif (Tryg3D_Version < 30300)
-	#error [ADM] Update you 3DTryg.inc to v3.3.0
+	#error [ADM] Update you 3DTryg.inc to v4.0.1
+#elseif (Tryg3D_Version < 40001)
+	#error [ADM] Update you 3DTryg.inc to v4.0.1
 #endif
 
 #if defined _veh_missile_launcher
@@ -146,19 +163,21 @@
 #endif
 #define _veh_missile_launcher
 
-#define MAX_VEHICLE_MISSILE_TYPE				(6)
+#define MAX_VEHICLE_MISSILE_TYPE				(7)
 #define VEHICLE_MISSILE_TYPE_MINI				(0)
 #define VEHICLE_MISSILE_TYPE_HEAVY				(1)
 #define VEHICLE_MISSILE_TYPE_BOMBER				(2)
 #define VEHICLE_MISSILE_TYPE_RHINO				(3)
 #define VEHICLE_MISSILE_TYPE_MORTAR				(4)
 #define VEHICLE_MISSILE_TYPE_MEGA				(5)
+#define VEHICLE_MISSILE_TYPE_CON				(6)
 
 #define VEHICLE_MISSILE_SPEED_MINI				(40.0)
 #define VEHICLE_MISSILE_SPEED_HEAVY				(40.0)
 #define VEHICLE_MISSILE_SPEED_BOMBER			(40.0)
 #define VEHICLE_MISSILE_SPEED_MORTAR			(40.0)
 #define VEHICLE_MISSILE_SPEED_MEGA				(40.0)
+#define VEHICLE_MISSILE_SPEED_CON				(80.0)
 
 #define VEHICLE_MISSILE_RELOAD_MINI				(500) //500 ms
 #define VEHICLE_MISSILE_RELOAD_HEAVY			(3000)
@@ -166,6 +185,7 @@
 #define VEHICLE_MISSILE_RELOAD_RHINO			(250)
 #define VEHICLE_MISSILE_RELOAD_MORTAR			(500)
 #define VEHICLE_MISSILE_RELOAD_MEGA				(500)
+#define VEHICLE_MISSILE_RELOAD_CON				(1000)
 
 #define VEHICLE_MISSILE_DISTANCE_MINI			(1200.0)
 #define VEHICLE_MISSILE_DISTANCE_HEAVY			(2000.0)
@@ -173,6 +193,7 @@
 #define VEHICLE_MISSILE_DISTANCE_RHINO			(12.0)
 #define VEHICLE_MISSILE_DISTANCE_MORTAR			(250.0)
 #define VEHICLE_MISSILE_DISTANCE_MEGA			(250.0)
+#define VEHICLE_MISSILE_DISTANCE_CON			(500.0)
 
 #define VEHICLE_MISSILE_KEY_MINI				(KEY_FIRE)
 #define VEHICLE_MISSILE_KEY_HEAVY				(KEY_ACTION)
@@ -180,9 +201,13 @@
 #define VEHICLE_MISSILE_KEY_RHINO				(KEY_FIRE)
 #define VEHICLE_MISSILE_KEY_MORTAR				(KEY_YES)
 #define VEHICLE_MISSILE_KEY_MEGA				(KEY_YES)
+#define VEHICLE_MISSILE_KEY_CON					(KEY_NO)
 
 #define VEHICLE_MISSILE_HEIGHT_MORTAR			(50.0)
 #define VEHICLE_MISSILE_HEIGHT_MEGA				(50.0)
+
+#define VEHICLE_MISSILE_SPREAD_CON				(15.0)
+#define VEHICLE_MISSILE_SALVO_CON				(8)
 
 //Get Compress Adress
 #define GetVehicleConfigAddress(%0)				(floatround((%0)/32))
@@ -198,6 +223,7 @@ new VehicleConfigMiniMissile[64],
 	VehicleConfigBomberMissile[64],
 	VehicleConfigMortarMissile[64],
 	VehicleConfigMegaMissile[64],
+	VehicleConfigCongreveMissile[64],
 	
 	VehicleWeaponTick[MAX_PLAYERS][MAX_VEHICLE_MISSILE_TYPE],
 	VehicleWeaponReload[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
@@ -207,6 +233,8 @@ new VehicleConfigMiniMissile[64],
 	
 	Float:VehicleMortarHeight[MAX_VEHICLES+1],
 	Float:VehicleMegaHeight[MAX_VEHICLES+1],
+	Float:VehicleCongreveSpread[MAX_VEHICLES+1],
+	VehicleCongreveSalvo[MAX_VEHICLES+1],
 	
 	Float:MissileStreamDistance = 200.0,
 	bool:VehicleMissileAutoDisarm = false;
@@ -280,6 +308,21 @@ new VehicleConfigMiniMissile[64],
 #define GetVehicleMegaMissileHeight(%0)			VehicleMegaHeight[(%0)]
 #define SetVehicleMegaMissileHeight(%0,%1)		VehicleMegaHeight[(%0)] = (%1)
 
+#define IsToggleVehicleCongreve(%0)				VM_GetValueBit(VehicleConfigCongreveMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleCongreve(%0,%1)			VM_SetValueBit(VehicleConfigCongreveMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define GetVehicleCongreveSpeed(%0)				VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_CON]
+#define SetVehicleCongreveSpeed(%0,%1)			VehicleWeaponSpeed[(%0)][VEHICLE_MISSILE_TYPE_CON] = (%1)
+#define GetVehicleCongreveReload(%0)			VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_CON]
+#define SetVehicleCongreveReload(%0,%1)			VehicleWeaponReload[(%0)][VEHICLE_MISSILE_TYPE_CON] = (%1)
+#define GetVehicleCongreveDistance(%0)			VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_CON]
+#define SetVehicleCongreveDistance(%0,%1)		VehicleWeaponDistance[(%0)][VEHICLE_MISSILE_TYPE_CON] = (%1)
+#define GetVehicleCongreveKey(%0)				VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_CON]
+#define SetVehicleCongreveKey(%0,%1)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_CON] = (%1)
+#define GetVehicleCongreveSpread(%0)			VehicleCongreveSpread[(%0)]
+#define SetVehicleCongreveSpread(%0,%1)			VehicleCongreveSpread[(%0)] = (%1)
+#define GetVehicleCongreveSalvo(%0)				VehicleCongreveSalvo[(%0)]
+#define SetVehicleCongreveSalvo(%0,%1)			VehicleCongreveSalvo[(%0)] = (%1)
+
 #define GetMissileStreamDistance()				MissileStreamDistance
 #define SetMissileStreamDistance(%0)			MissileStreamDistance = (%0)
 
@@ -293,6 +336,7 @@ stock DisarmVehicleMissile(vehicleid){
 	ToggleVehicleBomberMissile(vehicleid,0);
 	ToggleVehicleMortarMissile(vehicleid,0);
 	ToggleVehicleMegaMissile(vehicleid,0);
+	ToggleVehicleCongreve(vehicleid,0);
 }
 
 stock SetVehicleMissileDefaultConfig(vehicleid){
@@ -326,6 +370,13 @@ stock SetVehicleMissileDefaultConfig(vehicleid){
 	SetVehicleMegaMissileDistance(vehicleid,VEHICLE_MISSILE_DISTANCE_MEGA);
 	SetVehicleMegaMissileKey(vehicleid,VEHICLE_MISSILE_KEY_MEGA);
 	SetVehicleMegaMissileHeight(vehicleid,VEHICLE_MISSILE_HEIGHT_MEGA);
+	
+	SetVehicleCongreveSpeed(vehicleid,VEHICLE_MISSILE_SPEED_CON);
+	SetVehicleCongreveReload(vehicleid,VEHICLE_MISSILE_RELOAD_CON);
+	SetVehicleCongreveDistance(vehicleid,VEHICLE_MISSILE_DISTANCE_CON);
+	SetVehicleCongreveKey(vehicleid,VEHICLE_MISSILE_KEY_CON);
+	SetVehicleCongreveSpread(vehicleid,VEHICLE_MISSILE_SPREAD_CON);
+	SetVehicleCongreveSalvo(vehicleid,VEHICLE_MISSILE_SALVO_CON);
 }
 
 forward OnVehicleShot(playerid,type);
@@ -496,6 +547,22 @@ public OnVehicleShot(playerid,type){
 
 			VehicleWeaponTick[playerid][type] = GetTickCount();
 		}
+		
+		case VEHICLE_MISSILE_TYPE_CON: {
+			if(GetTickCount()-VehicleWeaponTick[playerid][type] < GetVehicleCongreveReload(vid)) return 1;
+			
+			new F4[Float3D], F5[Vectors3D];
+			GetPointInFrontOfVehicle3D(vid,F4[T3D:X],F4[T3D:Y],F4[T3D:Z],5.0);
+			GetVehicleRotation(vid,F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
+			
+			for(new i = 0; i < GetVehicleCongreveSalvo(vid); i++){
+				GetRandomPointOnSphericalSector(F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rZ],GetVehicleCongreveDistance(vid),GetVehicleCongreveSpread(vid),GetVehicleCongreveSpread(vid),F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
+				MovePointCol(F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],F5[T3D:X],F5[T3D:Y],F5[T3D:Z]);
+				MissileLaunch(MISSILE_TYPE_EXPLODE_NORMAL,15.0,35.0,GetVehicleCongreveSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F5[T3D:X],F5[T3D:Y],F5[T3D:Z],playerid,ANY_TEAM);
+			}
+			
+			VehicleWeaponTick[playerid][type] = GetTickCount();
+		}
 	}
 
 	return 1;
@@ -541,6 +608,11 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 		if(Tryg3D_KeyPressed(GetVehicleMegaMissileKey(vid))){
 			if(IsToggleVehicleMegaMissile(vid)){
 				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_MEGA);
+			}
+		}
+		if(Tryg3D_KeyPressed(GetVehicleCongreveKey(vid))){
+			if(IsToggleVehicleCongreve(vid)){
+				OnVehicleShot(playerid,VEHICLE_MISSILE_TYPE_CON);
 			}
 		}
 	}

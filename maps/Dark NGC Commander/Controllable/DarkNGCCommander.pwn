@@ -8,8 +8,8 @@
 #include <SAM/3DTryg>
 #include <SAM/StreamerFunction>
 
-#include <engine/Missile.inc>
-#include <NGCR/DarkNGCCommander>
+#include <engine/Missile>
+#include <DarkNGCCommander>
 
 public OnFilterScriptInit(){
 
