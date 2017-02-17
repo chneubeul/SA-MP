@@ -520,6 +520,53 @@ ADM_Function:: ADM:CreateADMKey(key[], type, maxdest = sizeof(key)){
  *                                                                                                                                  *
  ************************************************************************************************************************************/
 
+ADM_Function:: ADM:StringToHexString(input[], output[], maxdest = sizeof(output)){
+	new asize = strlen(input), offset = 0;
+	if((asize*2) > maxdest) return ERROR_CODE_ADM_DEST;
+	for(new i = 0; i < asize; i++){
+		output[offset] = (0xF & (input[i] >> 4));
+		if(output[offset] < 10){
+			output[offset] += 48;
+		} else {
+			output[offset] += 55;
+		}
+		output[offset+1] = (0xF & input[i]);
+		if(output[offset+1] < 10){
+			output[offset+1] += 48;
+		} else {
+			output[offset+1] += 55;
+		}
+		offset += 2;
+	}
+	output[asize*2] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
+ADM_Function:: ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
+	new asize = (strlen(input)/2), offset = 0, unit[2];
+	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
+	for(new i = 0; i < asize; i++){
+		if(input[offset] >= 97){
+			unit[0] = (input[offset]-87);
+		} else if(input[offset] < 58){
+			unit[0] = (input[offset]-48);
+		} else {
+			unit[0] = (input[offset]-55);
+		}
+		if(input[offset+1] >= 97){
+			unit[1] = (input[offset+1]-87);
+		} else if(input[offset+1] < 58){
+			unit[1] = (input[offset+1]-48);
+		} else {
+			unit[1] = (input[offset+1]-55);
+		}
+		output[i] = (unit[0]*16)+unit[1];
+		offset += 2;
+	}
+	output[asize] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
 ADM_Function:: ADM:InvertString(input[], output[], maxdest = sizeof(output)){
 	new asize = strlen(input);
 	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
@@ -723,53 +770,6 @@ ADM_Function:: ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(outp
 		return ERROR_CODE_ADM_MD5;
 	}
 #endif
-
-ADM_Function:: ADM:StringToHexString(input[], output[], maxdest = sizeof(output)){
-	new asize = strlen(input), offset = 0;
-	if((asize*2) > maxdest) return ERROR_CODE_ADM_DEST;
-	for(new i = 0; i < asize; i++){
-		output[offset] = (0xF & (input[i] >> 4));
-		if(output[offset] < 10){
-			output[offset] += 48;
-		} else {
-			output[offset] += 55;
-		}
-		output[offset+1] = (0xF & input[i]);
-		if(output[offset+1] < 10){
-			output[offset+1] += 48;
-		} else {
-			output[offset+1] += 55;
-		}
-		offset += 2;
-	}
-	output[asize*2] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
-
-ADM_Function:: ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
-	new asize = (strlen(input)/2), offset = 0, unit[2];
-	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
-	for(new i = 0; i < asize; i++){
-		if(input[offset] >= 97){
-			unit[0] = (input[offset]-87);
-		} else if(input[offset] < 58){
-			unit[0] = (input[offset]-48);
-		} else {
-			unit[0] = (input[offset]-55);
-		}
-		if(input[offset+1] >= 97){
-			unit[1] = (input[offset+1]-87);
-		} else if(input[offset+1] < 58){
-			unit[1] = (input[offset+1]-48);
-		} else {
-			unit[1] = (input[offset+1]-55);
-		}
-		output[i] = (unit[0]*16)+unit[1];
-		offset += 2;
-	}
-	output[asize] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
 
 /************************************************************************************************************************************
  *                                                                                                                                  *
