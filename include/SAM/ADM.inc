@@ -11,7 +11,7 @@
  * Modules: MD5, ProtVar                                                                                                          *
  * Attributes: Overload resistance.                                                                                               *
  *                                                                                                                                *
- * File Version: 2.2.1                                                                                                            *
+ * File Version: 2.3.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * SScanf Version: 2.8.2                                                                                                          *
  * ProtVar Version: 1.0.1                                                                                                         *
@@ -25,6 +25,9 @@
  * ADM:ADMx128(const input[], const output[], key[]);                                                                             *
  * ADM:ADMx256(const input[], const output[], key[]);                                                                             *
  * ADM:ADMx512(const input[], const output[], password[], bool:invertpassword = false);                                           *
+ * ADM:MergeFile(const first_file[],const second_file[],bool:erase_second=false);                                                 *
+ * ADM:MergeFileGroup(const group_name[],const output[],upperbound_index,bool:erase_input=false);                                 *
+ * ADM:SplitFile(const input[],const output[],max_size,&upperbound_index=0);                                                      *
  *                                                                                                                                *
  * String Functions:                                                                                                              *
  * ADM:InvertString(input[], output[], maxdest = sizeof(output));                                                                 *
@@ -35,6 +38,8 @@
  * ADM:ADMx128String(input[], output[], key[], maxdest = sizeof(output));                                                         *
  * ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output));                                                         *
  * ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output));                       *
+ * ADM:StringToHexString(input[], output[], maxdest = sizeof(output));                                                            *
+ * ADM:HexStringToString(input[], output[], maxdest = sizeof(output));                                                            *
  *                                                                                                                                *
  * Dump Functions:                                                                                                                *
  * DMP:FindFreeDumpFileID();                                                                                                      *
@@ -49,15 +54,14 @@
  * bool:IsDumpFileEmpty(const name[]);                                                                                            *
  * DMPToInt(DMP:dmpvar);                                                                                                          *
  *                                                                                                                                *
- * Other Functions:                                                                                                               *
+ * Extended Functions:                                                                                                            *
+ * ADM_fcreate(const name[]);                                                                                                     *
  * ADMToInt(ADM:admvar);                                                                                                          *
  * bool:IsValidADMKey(key[], type);                                                                                               *
  * GetADMKeyType(key[], bool:distorted = false);                                                                                  *
  * GetADMErrorName(ADM:code);                                                                                                     *
  * ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(outputkey));                                                  *
  * ADM:CreateADMKey(key[], type, maxdest = sizeof(key));                                                                          *
- * ADM:StringToHexString(input[], output[], maxdest = sizeof(output));                                                            *
- * ADM:HexStringToString(input[], output[], maxdest = sizeof(output));                                                            *
  *                                                                                                                                *
  * Return value:                                                                                                                  *
  * ERROR_CODE_ADM_UNEXEC       //Function unexecutable                                                                            *
@@ -76,8 +80,6 @@
  * ERROR_CODE_ADM_DMP_IDX      //Invalid dump file index                                                                          *
  *                                                                                                                                *
  * Key Generator:                                                                                                                 *
- * http://ngc.ugu.pl/admkg                                                                                                        *
- * http://ngc.ct8.pl/admkg                                                                                                        *
  * http://8.ct8.pl/admkg                                                                                                          *
  *                                                                                                                                *
  **********************************************************************************************************************************/
@@ -85,11 +87,11 @@
 /*
 //Check Version ADM.inc
 #if !defined _adm_encryption
-	#error [ADM] You need ADM.inc v2.2.1
+	#error [ADM] You need ADM.inc v2.3.0
 #elseif !defined ADM_Encryption_Version
-	#error [ADM] Update you ADM.inc to v2.2.1
-#elseif (ADM_Encryption_Version < 20201)
-	#error [ADM] Update you ADM.inc to v2.2.1
+	#error [ADM] Update you ADM.inc to v2.3.0
+#elseif (ADM_Encryption_Version < 20300)
+	#error [ADM] Update you ADM.inc to v2.3.0
 #endif
 */
 
@@ -98,7 +100,7 @@
 #endif
 #define _adm_encryption
 
-#define ADM_Encryption_Version 		(20201) //a.b.c 10000*a+100*b+c
+#define ADM_Encryption_Version 		(20300) //a.b.c 10000*a+100*b+c
 
 #if !defined sscanf
 	#error [ADM] Unknown SScanf Version
@@ -111,6 +113,7 @@
 	#define ADM_ProtVar::
 #endif
 
+#define ADM_Function::				stock
 #define ADM::						ADM:
 #define DMP::						DMP:
 #define DUMP						DMP
@@ -200,9 +203,11 @@ new bool:ADM_ProtVar::DumpFileStatus[MAX_DUMP_FILE] = false,
 	ADM_ProtVar::DumpFileKey[MAX_DUMP_FILE][MAX_KEY_LEN_ADMx256];
 	
 
-/********************
- * Other Functions  *
- ********************/
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ * Extended Functions                                                                                                               *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
 
 //Remove ADM: tag
 #define ADMToInt(%0)				(_:%0)
@@ -210,7 +215,17 @@ new bool:ADM_ProtVar::DumpFileStatus[MAX_DUMP_FILE] = false,
 //Remove DMP: tag
 #define DMPToInt(%0)				(_:%0)
 
-stock bool:IsValidADMKey(key[], type){
+ADM_Function:: ADM_fcreate(const name[]){
+	if(!fexist(name)){
+		new File:cfile = fopen(name,io_readwrite);
+		fwrite(cfile,"");
+		fclose(cfile);
+		return 1;
+	}
+	return 0;
+}
+
+ADM_Function:: bool:IsValidADMKey(key[], type){
 	switch(type){
 	
 		case KEY_TYPE_HEXNEGATIVE: {
@@ -286,7 +301,7 @@ stock bool:IsValidADMKey(key[], type){
 	return true;
 }
 
-stock GetADMKeyType(key[], bool:distorted = false){
+ADM_Function:: GetADMKeyType(key[], bool:distorted = false){
 	new mode[MAX_MODE_ADMx256], cnt = 0;
 	sscanf(key,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
 		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
@@ -321,7 +336,7 @@ stock GetADMKeyType(key[], bool:distorted = false){
 	}
 }
 
-stock ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(outputkey)){
+ADM_Function:: ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(outputkey)){
 	switch(type){
 	
 		case KEY_TYPE_HEXNEGATIVE: {
@@ -437,7 +452,7 @@ stock ADM:DecodeADMKey(inputkey[], outputkey[], type, maxdest = sizeof(outputkey
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:CreateADMKey(key[], type, maxdest = sizeof(key)){
+ADM_Function:: ADM:CreateADMKey(key[], type, maxdest = sizeof(key)){
 	switch(type){
 	
 		case KEY_TYPE_HEXNEGATIVE: {
@@ -499,7 +514,217 @@ stock ADM:CreateADMKey(key[], type, maxdest = sizeof(key)){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:StringToHexString(input[], output[], maxdest = sizeof(output)){
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ * String Functions                                                                                                                 *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
+
+ADM_Function:: ADM:InvertString(input[], output[], maxdest = sizeof(output)){
+	new asize = strlen(input);
+	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
+	for(new i = 0; i < asize; i++){
+		output[i] = (input[i] ^ 0xFF);
+	}
+	output[asize] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
+ADM_Function:: ADM:HexNegativeString(input[], output[], key[], maxdest = sizeof(output)){
+	new mode;
+	sscanf(key,"D(0)",mode);
+	if(mode < 1 || mode > 15) return ERROR_CODE_ADM_KEY;
+	new asize = strlen(input);
+	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
+	for(new i = 0; i < asize; i++){
+		output[i] = (((0xF & ((input[i] >> 4)+mode))*16) + (0xF & ((input[i] & 0xF)+mode)));
+	}
+	output[asize] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
+ADM_Function:: ADM:RollXString(input[], output[], key[], maxdest = sizeof(output)){
+	new mode;
+	sscanf(key,"D(0)",mode);
+	if(mode < 1 || mode > 255) return ERROR_CODE_ADM_KEY;
+	new asize = strlen(input);
+	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
+	for(new i = 0; i < asize; i++){
+		output[i] = (0xFF & (input[i]+mode));
+	}
+	output[strlen(input)] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
+ADM_Function:: ADM:ADMx32String(input[], output[], key[], maxdest = sizeof(output)){
+	new asize = strlen(input);
+	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
+	new mode[MAX_MODE_ADMx32];
+	sscanf(key,"D(0)D(0)D(0)D(0)",
+		mode[0],mode[1],mode[2],mode[3]
+	);
+	for(new i = 0; i < MAX_MODE_ADMx32; i++){
+		if(mode[i] < 1 || mode[i] > 255){
+			return ERROR_CODE_ADM_KEY;
+		}
+	}
+	new s = 0;
+	for(new i = 0; i < asize; i++){
+		output[i] = ((input[i]+mode[s]) & 0xFF);
+		s++;
+		if(s >= MAX_MODE_ADMx32) s = 0;
+	}
+	output[asize] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
+ADM_Function:: ADM:ADMx64String(input[], output[], key[], maxdest = sizeof(output)){
+	new asize = strlen(input);
+	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
+	new mode[MAX_MODE_ADMx64];
+	sscanf(key,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7]
+	);
+	for(new i = 0; i < MAX_MODE_ADMx64; i++){
+		if(mode[i] < 1 || mode[i] > 255){
+			return ERROR_CODE_ADM_KEY;
+		}
+	}
+	new s = 0;
+	for(new i = 0; i < asize; i++){
+		output[i] = ((input[i]+mode[s]) & 0xFF);
+		s++;
+		if(s >= MAX_MODE_ADMx64) s = 0;
+	}
+	output[asize] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
+ADM_Function:: ADM:ADMx128String(input[], output[], key[], maxdest = sizeof(output)){
+	new asize = strlen(input);
+	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
+	new mode[MAX_MODE_ADMx128];
+	sscanf(key,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
+		mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15]
+	);
+	for(new i = 0; i < MAX_MODE_ADMx128; i++){
+		if(mode[i] < 1 || mode[i] > 255){
+			return ERROR_CODE_ADM_KEY;
+		}
+	}
+	new s = 0;
+	for(new i = 0; i < asize; i++){
+		output[i] = ((input[i]+mode[s]) & 0xFF);
+		s++;
+		if(s >= MAX_MODE_ADMx128) s = 0;
+	}
+	output[asize] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
+ADM_Function:: ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output)){
+	new asize = strlen(input);
+	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
+	new mode[MAX_MODE_ADMx256];
+	sscanf(key,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
+		mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15],
+		mode[16],mode[17],mode[18],mode[19],mode[20],mode[21],mode[22],mode[23],
+		mode[24],mode[25],mode[26],mode[27],mode[28],mode[29],mode[30],mode[31]
+	);
+	for(new i = 0; i < MAX_MODE_ADMx256; i++){
+		if(mode[i] < 1 || mode[i] > 255){
+			return ERROR_CODE_ADM_KEY;
+		}
+	}
+	new s = 0;
+	for(new i = 0; i < asize; i++){
+		output[i] = ((input[i]+mode[s]) & 0xFF);
+		s++;
+		if(s >= MAX_MODE_ADMx256) s = 0;
+	}
+	output[asize] = EOS;
+	return ERROR_CODE_ADM_OK;
+}
+
+
+#if defined MD5_Hash
+	ADM_Function:: ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output)){
+		new asize = strlen(input);
+		if(maxdest < asize) return ERROR_CODE_ADM_DEST;
+		new psize = strlen(password);
+		if(psize < 1 || psize > 255) return ERROR_CODE_ADM_PASSWORD;
+		
+		new	mode[MAX_MODE_ADMx512],
+			hash[MAX_KEY_LEN_ADMx512],
+			BinKeyAlfa[MAX_LEN_BINARY_ADMx512],
+			BinKeyBeta[MAX_LEN_BINARY_ADMx512],
+			BinKeyGamma[MAX_LEN_BINARY_ADMx512],
+			BinKeyDelta[MAX_LEN_BINARY_ADMx512];
+			
+		//Create Bin Key Alfa
+		format(hash,sizeof(hash),"%s",MD5_Hash(password));
+		HexStringToString(hash,BinKeyAlfa);
+		
+		//Create Bin Key Beta	
+		for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
+			BinKeyBeta[i] = (BinKeyAlfa[i] ^ 0xFF);
+		}
+		
+		//Create Bin Key Gamma
+		for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
+			BinKeyGamma[i] = (((0xF & ((BinKeyAlfa[i] >> 4)+8))*16) + (0xF & ((BinKeyAlfa[i] & 0xF)+8)));
+		}
+		
+		//Create Bin Key Delta
+		for(new i = 0, j = strlen(BinKeyBeta); i < j; i++){
+			BinKeyDelta[i] = (((0xF & ((BinKeyBeta[i] >> 4)+8))*16) + (0xF & ((BinKeyBeta[i] & 0xF)+8)));
+		}
+		
+		//Decode password
+		if(invertpassword){
+			for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
+				BinKeyAlfa[i] = (0xFF & (256-BinKeyAlfa[i]));
+				BinKeyBeta[i] = (0xFF & (256-BinKeyBeta[i]));
+				BinKeyGamma[i] = (0xFF & (256-BinKeyGamma[i]));
+				BinKeyDelta[i] = (0xFF & (256-BinKeyDelta[i]));
+			}
+		}
+		
+		//Allocate key address
+		new tid = 0;
+		for(new i = 0; i < MAX_MODE_ADMx512; i++){
+			switch(i % 8){
+				case 0: mode[i] = BinKeyAlfa[tid];
+				case 1: mode[i] = BinKeyGamma[tid];
+				case 2: mode[i] = BinKeyBeta[tid];
+				case 3: mode[i] = BinKeyDelta[tid];
+				case 4: mode[i] = BinKeyGamma[tid];
+				case 5: mode[i] = BinKeyBeta[tid];
+				case 6: mode[i] = BinKeyAlfa[tid];
+				case 7: mode[i] = BinKeyDelta[tid];
+			}
+			if((i+1) % 8 == 0) tid++;
+		}
+		
+		new s = 0;
+		for(new i = 0; i < asize; i++){
+			output[i] = ((input[i]+mode[s]) & 0xFF);
+			s++;
+			if(s >= MAX_MODE_ADMx512) s = 0;
+		}
+		output[asize] = EOS;
+		return ERROR_CODE_ADM_OK;
+	}
+#else 
+	ADM_Function:: ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output)){
+		#pragma unused input, output, password, invertpassword, maxdest
+		return ERROR_CODE_ADM_MD5;
+	}
+#endif
+
+ADM_Function:: ADM:StringToHexString(input[], output[], maxdest = sizeof(output)){
 	new asize = strlen(input), offset = 0;
 	if((asize*2) > maxdest) return ERROR_CODE_ADM_DEST;
 	for(new i = 0; i < asize; i++){
@@ -521,7 +746,7 @@ stock ADM:StringToHexString(input[], output[], maxdest = sizeof(output)){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
+ADM_Function:: ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
 	new asize = (strlen(input)/2), offset = 0, unit[2];
 	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
 	for(new i = 0; i < asize; i++){
@@ -546,12 +771,13 @@ stock ADM:HexStringToString(input[], output[], maxdest = sizeof(output)){
 	return ERROR_CODE_ADM_OK;
 }
 
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ * File Functions                                                                                                                   *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
 
-/********************
- * File Functions   *
- ********************/
-
-stock ADM:InvertFile(const input[], const output[]){
+ADM_Function:: ADM:InvertFile(const input[], const output[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new File:inpf = fopen(input,io_read);
@@ -575,7 +801,7 @@ stock ADM:InvertFile(const input[], const output[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:HexNegativeFile(const input[], const output[], key[]){
+ADM_Function:: ADM:HexNegativeFile(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode;
@@ -594,7 +820,7 @@ stock ADM:HexNegativeFile(const input[], const output[], key[]){
 		return ERROR_CODE_ADM_OPEN_OUTPUT;
 	}
 	while(idx < asize){
-		fputchar(outf,(((0xF & ((fgetchar(inpf,0,false) >> 4)+mode))*16) + (0xF & ((fgetchar(inpf,0,false) & 0xF)+mode))));
+		fputchar(outf,(((0xF & ((fgetchar(inpf,0,false) >> 4)+mode))*16) + (0xF & ((fgetchar(inpf,0,false) & 0xF)+mode))),false);
 		idx++;
 	}
 	fclose(inpf);
@@ -602,7 +828,7 @@ stock ADM:HexNegativeFile(const input[], const output[], key[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:RollXFile(const input[], const output[], key[]){
+ADM_Function:: ADM:RollXFile(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode;
@@ -629,7 +855,7 @@ stock ADM:RollXFile(const input[], const output[], key[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:ADMx32(const input[], const output[], key[]){
+ADM_Function:: ADM:ADMx32(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx32];
@@ -664,7 +890,7 @@ stock ADM:ADMx32(const input[], const output[], key[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:ADMx64(const input[], const output[], key[]){
+ADM_Function:: ADM:ADMx64(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx64];
@@ -699,7 +925,7 @@ stock ADM:ADMx64(const input[], const output[], key[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:ADMx128(const input[], const output[], key[]){
+ADM_Function:: ADM:ADMx128(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx128];
@@ -735,7 +961,7 @@ stock ADM:ADMx128(const input[], const output[], key[]){
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:ADMx256(const input[], const output[], key[]){
+ADM_Function:: ADM:ADMx256(const input[], const output[], key[]){
 	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 	new mode[MAX_MODE_ADMx256];
@@ -774,7 +1000,7 @@ stock ADM:ADMx256(const input[], const output[], key[]){
 }
 
 #if defined MD5_Hash
-	stock ADM:ADMx512(const input[], const output[], password[], bool:invertpassword = false){
+	ADM_Function:: ADM:ADMx512(const input[], const output[], password[], bool:invertpassword = false){
 		if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
 		if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
 		new psize = strlen(password);
@@ -855,238 +1081,132 @@ stock ADM:ADMx256(const input[], const output[], key[]){
 		return ERROR_CODE_ADM_OK;
 	}
 #else 
-	stock ADM:ADMx512(const input[], const output[], password[], bool:invertpassword = false){
+	ADM_Function:: ADM:ADMx512(const input[], const output[], password[], bool:invertpassword = false){
 		#pragma unused input, output, password, invertpassword
 		return ERROR_CODE_ADM_MD5;
 	}
 #endif
 
-/********************
- * String Functions *
- ********************/
-
-stock ADM:InvertString(input[], output[], maxdest = sizeof(output)){
-	new asize = strlen(input);
-	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
-	for(new i = 0; i < asize; i++){
-		output[i] = (input[i] ^ 0xFF);
+ADM_Function:: ADM:MergeFile(const first_file[],const second_file[],bool:erase_second=false){
+	if(!fexist(first_file)) return ERROR_CODE_ADM_OUTPUT;
+	if(!fexist(second_file)) return ERROR_CODE_ADM_INPUT;
+	
+	new File:inpf = fopen(second_file,io_read);
+	if(!inpf) return ERROR_CODE_ADM_OPEN_INPUT;
+	new asize = flength(inpf), idx = 0;
+	if(asize > MAX_FILE_SIZE || asize < 0){
+		fclose(inpf);
+		return ERROR_CODE_ADM_SIZE;
 	}
-	output[asize] = EOS;
+	new File:outf = fopen(first_file,io_append);
+	if(!outf){
+		fclose(inpf);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
+	while(idx < asize){
+		fputchar(outf,fgetchar(inpf,0,false),false);
+		idx++;
+	}
+	fclose(inpf);
+	fclose(outf);
+	if(erase_second){
+		fremove(second_file);
+	}
 	return ERROR_CODE_ADM_OK;
 }
 
-stock ADM:HexNegativeString(input[], output[], key[], maxdest = sizeof(output)){
-	new mode;
-	sscanf(key,"D(0)",mode);
-	if(mode < 1 || mode > 15) return ERROR_CODE_ADM_KEY;
-	new asize = strlen(input);
-	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
-	for(new i = 0; i < asize; i++){
-		output[i] = (((0xF & ((input[i] >> 4)+mode))*16) + (0xF & ((input[i] & 0xF)+mode)));
-	}
-	output[asize] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
-
-stock ADM:RollXString(input[], output[], key[], maxdest = sizeof(output)){
-	new mode;
-	sscanf(key,"D(0)",mode);
-	if(mode < 1 || mode > 255) return ERROR_CODE_ADM_KEY;
-	new asize = strlen(input);
-	if(asize > maxdest) return ERROR_CODE_ADM_DEST;
-	for(new i = 0; i < asize; i++){
-		output[i] = (0xFF & (input[i]+mode));
-	}
-	output[strlen(input)] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
-
-stock ADM:ADMx32String(input[], output[], key[], maxdest = sizeof(output)){
-	new asize = strlen(input);
-	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
-	new mode[MAX_MODE_ADMx32];
-	sscanf(key,"D(0)D(0)D(0)D(0)",
-		mode[0],mode[1],mode[2],mode[3]
-	);
-	for(new i = 0; i < MAX_MODE_ADMx32; i++){
-		if(mode[i] < 1 || mode[i] > 255){
-			return ERROR_CODE_ADM_KEY;
+ADM_Function:: ADM:MergeFileGroup(const group_name[],const output[],upperbound_index,bool:erase_input=false){
+	if(fexist(output)) return ERROR_CODE_ADM_OUTPUT;
+	ADM_fcreate(output);
+	new part_file[256], File:inpf, idx, asize;
+	for(new i = 0; i <= upperbound_index; i++){
+		new File:outf = fopen(output,io_append);
+		format(part_file,sizeof(part_file),"%s_%04d",group_name,i);
+		if(!fexist(part_file)){
+			fclose(inpf);
+			return ERROR_CODE_ADM_INPUT;
 		}
-	}
-	new s = 0;
-	for(new i = 0; i < asize; i++){
-		output[i] = ((input[i]+mode[s]) & 0xFF);
-		s++;
-		if(s >= MAX_MODE_ADMx32) s = 0;
-	}
-	output[asize] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
-
-stock ADM:ADMx64String(input[], output[], key[], maxdest = sizeof(output)){
-	new asize = strlen(input);
-	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
-	new mode[MAX_MODE_ADMx64];
-	sscanf(key,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
-		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7]
-	);
-	for(new i = 0; i < MAX_MODE_ADMx64; i++){
-		if(mode[i] < 1 || mode[i] > 255){
-			return ERROR_CODE_ADM_KEY;
-		}
-	}
-	new s = 0;
-	for(new i = 0; i < asize; i++){
-		output[i] = ((input[i]+mode[s]) & 0xFF);
-		s++;
-		if(s >= MAX_MODE_ADMx64) s = 0;
-	}
-	output[asize] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
-
-stock ADM:ADMx128String(input[], output[], key[], maxdest = sizeof(output)){
-	new asize = strlen(input);
-	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
-	new mode[MAX_MODE_ADMx128];
-	sscanf(key,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
-		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
-		mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15]
-	);
-	for(new i = 0; i < MAX_MODE_ADMx128; i++){
-		if(mode[i] < 1 || mode[i] > 255){
-			return ERROR_CODE_ADM_KEY;
-		}
-	}
-	new s = 0;
-	for(new i = 0; i < asize; i++){
-		output[i] = ((input[i]+mode[s]) & 0xFF);
-		s++;
-		if(s >= MAX_MODE_ADMx128) s = 0;
-	}
-	output[asize] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
-
-stock ADM:ADMx256String(input[], output[], key[], maxdest = sizeof(output)){
-	new asize = strlen(input);
-	if(maxdest < asize) return ERROR_CODE_ADM_DEST;
-	new mode[MAX_MODE_ADMx256];
-	sscanf(key,"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
-		mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
-		mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15],
-		mode[16],mode[17],mode[18],mode[19],mode[20],mode[21],mode[22],mode[23],
-		mode[24],mode[25],mode[26],mode[27],mode[28],mode[29],mode[30],mode[31]
-	);
-	for(new i = 0; i < MAX_MODE_ADMx256; i++){
-		if(mode[i] < 1 || mode[i] > 255){
-			return ERROR_CODE_ADM_KEY;
-		}
-	}
-	new s = 0;
-	for(new i = 0; i < asize; i++){
-		output[i] = ((input[i]+mode[s]) & 0xFF);
-		s++;
-		if(s >= MAX_MODE_ADMx256) s = 0;
-	}
-	output[asize] = EOS;
-	return ERROR_CODE_ADM_OK;
-}
-
-
-#if defined MD5_Hash
-	stock ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output)){
-		new asize = strlen(input);
-		if(maxdest < asize) return ERROR_CODE_ADM_DEST;
-		new psize = strlen(password);
-		if(psize < 1 || psize > 255) return ERROR_CODE_ADM_PASSWORD;
+		inpf = fopen(part_file,io_read);
+		idx = 0, asize = flength(inpf);
 		
-		new	mode[MAX_MODE_ADMx512],
-			hash[MAX_KEY_LEN_ADMx512],
-			BinKeyAlfa[MAX_LEN_BINARY_ADMx512],
-			BinKeyBeta[MAX_LEN_BINARY_ADMx512],
-			BinKeyGamma[MAX_LEN_BINARY_ADMx512],
-			BinKeyDelta[MAX_LEN_BINARY_ADMx512];
-			
-		//Create Bin Key Alfa
-		format(hash,sizeof(hash),"%s",MD5_Hash(password));
-		HexStringToString(hash,BinKeyAlfa);
-		
-		//Create Bin Key Beta	
-		for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
-			BinKeyBeta[i] = (BinKeyAlfa[i] ^ 0xFF);
+		while(idx < asize){
+			fputchar(outf,fgetchar(inpf,0,false),false);
+			idx++;
 		}
-		
-		//Create Bin Key Gamma
-		for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
-			BinKeyGamma[i] = (((0xF & ((BinKeyAlfa[i] >> 4)+8))*16) + (0xF & ((BinKeyAlfa[i] & 0xF)+8)));
+		fclose(inpf);
+		fclose(outf);
+		if(erase_input){
+			fremove(part_file);
 		}
-		
-		//Create Bin Key Delta
-		for(new i = 0, j = strlen(BinKeyBeta); i < j; i++){
-			BinKeyDelta[i] = (((0xF & ((BinKeyBeta[i] >> 4)+8))*16) + (0xF & ((BinKeyBeta[i] & 0xF)+8)));
-		}
-		
-		//Decode password
-		if(invertpassword){
-			for(new i = 0, j = strlen(BinKeyAlfa); i < j; i++){
-				BinKeyAlfa[i] = (0xFF & (256-BinKeyAlfa[i]));
-				BinKeyBeta[i] = (0xFF & (256-BinKeyBeta[i]));
-				BinKeyGamma[i] = (0xFF & (256-BinKeyGamma[i]));
-				BinKeyDelta[i] = (0xFF & (256-BinKeyDelta[i]));
+	}
+	return ERROR_CODE_ADM_OK;
+}
+
+ADM_Function:: ADM:SplitFile(const input[],const output[],max_size,&upperbound_index=0){
+	if(!fexist(input)) return ERROR_CODE_ADM_INPUT;
+	new File:inpf = fopen(input,io_read);
+	if(!inpf) return ERROR_CODE_ADM_OPEN_INPUT;
+	new asize = flength(inpf), idx = 0;
+	if(asize > MAX_FILE_SIZE || asize < 0){
+		fclose(inpf);
+		return ERROR_CODE_ADM_SIZE;
+	}
+	new used_mem = 0, part_file[256], current_status = false;
+	
+	upperbound_index = 0;
+	
+	format(part_file,sizeof(part_file),"%s_%04d",output,upperbound_index);
+	ADM_fcreate(part_file);
+
+	new File:outf = fopen(part_file,io_write);
+	if(!outf){
+		fclose(inpf);
+		return ERROR_CODE_ADM_OPEN_OUTPUT;
+	}
+	current_status = true;
+	
+	while(idx < asize){
+		fputchar(outf,fgetchar(inpf,0,false),false);
+		used_mem++;
+		idx++;
+		if(used_mem >= max_size){
+			used_mem = 0;
+			fclose(outf);
+			current_status = false;
+			if(idx < asize){
+				upperbound_index++;
+				format(part_file,sizeof(part_file),"%s_%04d",output,upperbound_index);
+				ADM_fcreate(part_file);
+				outf = fopen(part_file,io_write);
+				current_status = true;
 			}
 		}
-		
-		//Allocate key address
-		new tid = 0;
-		for(new i = 0; i < MAX_MODE_ADMx512; i++){
-			switch(i % 8){
-				case 0: mode[i] = BinKeyAlfa[tid];
-				case 1: mode[i] = BinKeyGamma[tid];
-				case 2: mode[i] = BinKeyBeta[tid];
-				case 3: mode[i] = BinKeyDelta[tid];
-				case 4: mode[i] = BinKeyGamma[tid];
-				case 5: mode[i] = BinKeyBeta[tid];
-				case 6: mode[i] = BinKeyAlfa[tid];
-				case 7: mode[i] = BinKeyDelta[tid];
-			}
-			if((i+1) % 8 == 0) tid++;
-		}
-		
-		new s = 0;
-		for(new i = 0; i < asize; i++){
-			output[i] = ((input[i]+mode[s]) & 0xFF);
-			s++;
-			if(s >= MAX_MODE_ADMx512) s = 0;
-		}
-		output[asize] = EOS;
-		return ERROR_CODE_ADM_OK;
 	}
-#else 
-	stock ADM:ADMx512String(input[], output[], password[], bool:invertpassword = false, maxdest = sizeof(output)){
-		#pragma unused input, output, password, invertpassword, maxdest
-		return ERROR_CODE_ADM_MD5;
-	}
-#endif
+	fclose(inpf);
+	if(current_status) fclose(outf);
+	return ERROR_CODE_ADM_OK;
+}
 
-/********************
- * Dump Functions   *
- ********************/
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ * Dump Functions                                                                                                                   *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
 
-stock DMP:FindFreeDumpFileID(){
+ADM_Function:: DMP:FindFreeDumpFileID(){
 	for(new DMP:i = DMP:0; i < MAX_DUMP_FILE; i = DMP:(DMPToInt(i)+1)){
 		if(ADM_ProtVar::DumpFileStatus[i] == false) return i;
 	}
 	return INVALID_DUMP_FILE;
 }
 
-stock bool:IsDumpFileOpen(DMP:index){
+ADM_Function:: bool:IsDumpFileOpen(DMP:index){
 	if(index < DMP:0 || index >= MAX_DUMP_FILE) return false;
 	if(!fexist(ADM_ProtVar::DumpFileName[index])) return false;
 	return ADM_ProtVar::DumpFileStatus[index];
 }
 
-stock DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
+ADM_Function:: DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
 	if(fexist(name)) return INVALID_DUMP_FILE;
 	new File:dmpfile = fopen(name,io_write);
 	if(dmpfile){
@@ -1113,7 +1233,7 @@ stock DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
 	}
 }
 
-stock bool:DumpFileDestroy(&DMP:index){
+ADM_Function:: bool:DumpFileDestroy(&DMP:index){
 	if(index < DMP:0 || index >= MAX_DUMP_FILE) return false;
 	new tid = fremove(ADM_ProtVar::DumpFileName[index]);
 	ADM_ProtVar::DumpFileName[index] = "";
@@ -1124,7 +1244,7 @@ stock bool:DumpFileDestroy(&DMP:index){
 	return bool:tid;
 }
 
-stock bool:IsValidDumpFile(const name[]){
+ADM_Function:: bool:IsValidDumpFile(const name[]){
 	if(!fexist(name)) return false;
 	new File:dmpfile = fopen(name,io_read), midi = 0, buffer[20];
 	if(dmpfile){
@@ -1150,7 +1270,7 @@ stock bool:IsValidDumpFile(const name[]){
 	}
 }
 
-stock GetDumpFileType(const name[]){
+ADM_Function:: GetDumpFileType(const name[]){
 	if(!fexist(name)) return KEY_TYPE_UNKNOWN;
 	new File:dmpfile = fopen(name,io_read), midi = 0, buffer[20];
 	if(dmpfile){
@@ -1176,7 +1296,7 @@ stock GetDumpFileType(const name[]){
 	}
 }
 
-stock DMP:DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32){
+ADM_Function:: DMP:DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32){
 	if(!fexist(name)) return INVALID_DUMP_FILE;
 	if(!IsValidDumpFile(name)) return INVALID_DUMP_FILE;
 	new DMP:idx = FindFreeDumpFileID();
@@ -1188,7 +1308,7 @@ stock DMP:DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32){
 	return idx;
 }
 
-stock bool:DumpFileClose(&DMP:index){
+ADM_Function:: bool:DumpFileClose(&DMP:index){
 	if(index < DMP:0 || index >= MAX_DUMP_FILE) return false;
 	ADM_ProtVar::DumpFileName[index] = "";
 	ADM_ProtVar::DumpFileKey[index] = "";
@@ -1198,7 +1318,7 @@ stock bool:DumpFileClose(&DMP:index){
 	return true;
 }
 
-stock ADM:DumpFileWrite(DMP:index, string[]){
+ADM_Function:: ADM:DumpFileWrite(DMP:index, string[]){
 	if(index < DMP:0 || index >= MAX_DUMP_FILE) return ERROR_CODE_ADM_DMP_IDX;
 	if(isnull(ADM_ProtVar::DumpFileName[index])) return ERROR_CODE_ADM_DMP_NAME;
 	if(!IsValidADMKey(ADM_ProtVar::DumpFileKey[index],ADM_ProtVar::DumpFileType[index])) return ERROR_CODE_ADM_KEY;
@@ -1249,7 +1369,7 @@ stock ADM:DumpFileWrite(DMP:index, string[]){
 	}
 }
 
-stock bool:IsDumpFileEmpty(const name[]){
+ADM_Function:: bool:IsDumpFileEmpty(const name[]){
 	if(!IsValidDumpFile(name)) return false;
 	new File:inpf = fopen(name,io_read), asize = flength(inpf);
 	fclose(inpf);
