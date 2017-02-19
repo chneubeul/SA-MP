@@ -1,11 +1,11 @@
 /****************************************************************************************************
  *                                                                                                  *
- *                                        Magic Shoot Script                                        *
+ *                                        Magic Wand Script                                         *
  *                                                                                                  *
  * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
- * Publication: http://forum.sa-mp.com/showthread.php?t=599773                                      *
+ * Publication: http://forum.sa-mp.com/showthread.php?p=3846263                                     *
  *                                                                                                  *
  * Plugins: Streamer, ColAndreas                                                                    *
  * Modules: 3DTryg                                                                                  *
