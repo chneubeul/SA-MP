@@ -45,6 +45,11 @@
 │   │   └───Streamer
 │   ├───Knife
 │   │   ├───3DTryg
+│   │   ├───ColAndreas
+│   │   └───Streamer
+│   ├───Magic
+│   │   ├───3DTryg
+│   │   ├───ColAndreas
 │   │   └───Streamer
 │   ├───Mines
 │   │   ├───3DTryg
@@ -52,17 +57,13 @@
 │   ├───Missile
 │   │   ├───3DTryg
 │   │   └───Streamer
-│   ├───VehicleMissile
-│   │   ├───3DTryg
-│   │   ├───MapAndreas
-│   │   ├───Missile
-│   │   └───Streamer
 │   └───VehicleMissileCol
 │       ├───3DTryg
 │       ├───ColAndreas
 │       ├───Missile
 │       └───Streamer
 ├───security
+│   ├───UltimateScriptSecure
 │   ├───MultiScriptSecure
 │   ├───ScriptChecker
 │   └───ScriptSecure
