@@ -4,13 +4,14 @@
 */
 
 main(){
-	new var[Vectors3D];
+	new tmp[Vectors3D];
 	
-	var[T3D:X] = 0.0;
-	var[T3D:Y] = 0.0;
-	var[T3D:Z] = 0.0;
-	var[T3D:A] = 0.0;
+	tmp[T3D:X] = 0.0;
+	tmp[T3D:Y] = 0.0;
+	tmp[T3D:Z] = 0.0;
+	tmp[T3D:A] = 0.0;
 
+	GetPlayerPos(0,tmp[T3D:X],tmp[T3D:Y],tmp[T3D:Z]);
 	
 	new var[Float3D];
 	
