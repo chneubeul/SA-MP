@@ -73,7 +73,6 @@ new MagicLockTarget[MAX_PLAYERS],
 stock ToggleMagicShootForPlayer(playerid,bool:toggle){
 	MagicEnabledForPlayer[playerid] = toggle;
 	if(toggle){
-		ResetPlayerWeapons(playerid);
 		SetPlayerAttachedObject(playerid,7,338,6,0.080000,-0.010000,0.000000,0.000000,353.134094,65.000000,0.300000,0.300000,0.300000);
 	} else {
 		RemovePlayerAttachedObject(playerid,7);
@@ -84,7 +83,7 @@ stock ToggleMagicShootForPlayer(playerid,bool:toggle){
 public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 	if(IsToggleMagicShootForAll() || IsToggleMagicShootForPlayer(playerid)){
 		if(GetTickCount()-MagicTime[playerid] >= MAGIC_REFRESH_ACTION){
-			if(Tryg3D_KeyPressed(KEY_FIRE)){
+			if(GetPlayerWeapon(playerid) == 0 && Tryg3D_KeyPressed(KEY_FIRE)){
 				MagicShot(playerid);
 			}
 		}
