@@ -7,14 +7,15 @@
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
  * Publication: http://forum.sa-mp.com/showthread.php?t=599773                                      *
  *                                                                                                  *
- * Plugins: Streamer                                                                                *
+ * Plugins: Streamer, ColAndreas                                                                    *
  * Modules: 3DTryg                                                                                  *
  * Attributes: None                                                                                 *
  *                                                                                                  *
- * File Version: 2.3.2                                                                              *
+ * File Version: 2.4.0                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.8.2                                                                          *
- * 3DTryg Version: 3.2.2                                                                            *
+ * ColAndreas Version: 1.4.0                                                                        *
+ * 3DTryg Version: 4.0.2                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamKnifeShoot(bool:toggle);            //default: false                                *
@@ -39,13 +40,18 @@
 	#error [ADM] Unknown Streamer Version
 #endif
 
+#if !defined COLANDREAS
+	#error [ADM] Unknown ColAndreas Version
+#endif
+
+
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.3.0
+	#error [ADM] You need 3DTryg.inc v4.0.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.3.0
-#elseif (Tryg3D_Version < 30300)
-	#error [ADM] Update you 3DTryg.inc to v3.3.0
+	#error [ADM] Update you 3DTryg.inc to v4.0.2
+#elseif (Tryg3D_Version < 40002)
+	#error [ADM] Update you 3DTryg.inc to v4.0.2
 #endif
 
 #define KNIFE_SPEED 						(12.0)
@@ -111,29 +117,26 @@ public KnifeShot(playerid){
 	mint = GetPlayerInterior(playerid);
 	GetPointInFront2D(mx,my,mrz,KNIFE_MAX_RADIUS,mtx,mty);
 	KnifeLockTarget[playerid] = INVALID_PLAYER_ID;
-	new Float:ldist = 9000;
+	new Float:ldist = 20000;
 	pteam = GetPlayerTeam(playerid);
 	
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+	Tryg3DForeach(i){
 		if(i != playerid){
 			if(IsPlayerConnected(i)){
 				if(!IsToggleUseTeamKnifeShoot() || (IsToggleUseTeamKnifeShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
-					new pstate = GetPlayerState(i);
-					if(pstate != 1 && pstate != 2 && pstate != 3) continue;
-					GetPlayerPos(i,px,py,pz);
-					pvw = GetPlayerVirtualWorld(i);
-					pint = GetPlayerInterior(i);
-					if(pvw == mvw && pint == mint){
-					
-					#if defined USE_OLD_KNIFE_DATIVE
-						if(IsPointNearly2Points3D(px,py,pz, mx,my,mz, mtx,mty,mz, 1.0)){
-					#else
-						if(IsPointInCylinder3D(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
-					#endif
-							new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
-							if(dist < ldist){
-								ldist = dist;
-								KnifeLockTarget[playerid] = i;
+					if(Tryg3D_IsPlayerSpawned(i)){
+						GetPlayerPos(i,px,py,pz);
+						pvw = GetPlayerVirtualWorld(i);
+						pint = GetPlayerInterior(i);
+						if(pvw == mvw && pint == mint){
+							if(IsPointInCylinder3D(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
+								if(!IsBetweenElementsIsWall(playerid,item_player,i,item_player)){
+									new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
+									if(dist < ldist){
+										ldist = dist;
+										KnifeLockTarget[playerid] = i;
+									}
+								}
 							}
 						}
 					}
@@ -145,7 +148,7 @@ public KnifeShot(playerid){
 	if(KnifeLockTarget[playerid] == INVALID_PLAYER_ID){
 		CompRotationFloat(mrz+90.0,trz);
 		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
-		GetPointInFront3D(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);		
+		GetPointInFront3DCol(mx,my,mz,356.7,mrz,KNIFE_MAX_RADIUS,mtx,mty,mtz);		
 		GetMoveTime(mx,my,mz,mtx,mty,mtz,KNIFE_SPEED,mtime);
 		MoveDynamicObject(tmpobj,mtx,mty,mtz,KNIFE_SPEED,0.0,110.0,trz);
 		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"ddd",tmpobj,INVALID_PLAYER_ID,playerid);
@@ -166,15 +169,8 @@ public KnifeShot(playerid){
 public KnifeDestroy(objectid,targetid,playerid){
 	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
-		Tryg3D_GivePlayerDamage(targetid,KNIFE_DAMAGE,playerid,4,true);
+		Tryg3D_GivePlayerDamage(targetid,KNIFE_DAMAGE,playerid,4,3);
 		ApplyAnimation(targetid,"ped","SHOT_partial",4.1,0,1,1,1,1,1);
-		#if !defined DISABLE_KNIFE_SOUND
-			PlayerPlaySound(targetid,17802,0.0,0.0,0.0);
-		#endif
-		#if !defined DISABLE_KNIFE_CALL_DAMAGE
-			CallLocalFunction("OnPlayerGiveDamage","ddfdd",playerid,targetid,KNIFE_DAMAGE,4,3);
-			CallLocalFunction("OnPlayerTakeDamage","ddfdd",targetid,playerid,KNIFE_DAMAGE,4,3);
-		#endif
 	}
 	return 1;
 }

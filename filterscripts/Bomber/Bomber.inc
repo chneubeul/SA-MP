@@ -8,20 +8,20 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v2.6.5
+	#error [ADM] You need 3DTryg.inc v4.0.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v2.6.5
-#elseif (Tryg3D_Version < 20605)
-	#error [ADM] Update you 3DTryg.inc to v2.6.5
+	#error [ADM] Update you 3DTryg.inc to v4.0.2
+#elseif (Tryg3D_Version < 40002)
+	#error [ADM] Update you 3DTryg.inc to v4.0.2
 #endif
 
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.5.2
+	#error [ADM] You need StreamerFunction.inc v2.6.0
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.5.2
-#elseif (Streamer_Spec_Version < 20501)
-	#error [ADM] Update you StreamerFunction.inc to v2.5.2
+	#error [ADM] Update you StreamerFunction.inc to v2.6.0
+#elseif (Streamer_Spec_Version < 20600)
+	#error [ADM] Update you StreamerFunction.inc to v2.6.0
 #endif
 
 //Check Version EngineX.inc
@@ -200,7 +200,7 @@ public OnMobUpdate(tec){
 					NGCBomber[mobid][6] = rand;
 					MapAndreasFindZ(BomberTarget[rand][X],BomberTarget[rand][Y],F4[Z]);
 					F4[Z] += 150.0;
-					GetRandomClockPos(BomberTarget[rand][X],BomberTarget[rand][Y],F4[Z],BOMBER_DISTANCE,F4[X],F4[Y],F4[Z],F4[rZ]);
+					GetRandomPointOnClock(BomberTarget[rand][X],BomberTarget[rand][Y],BOMBER_DISTANCE,F4[X],F4[Y],F4[rZ]);
 					SetDynamicObjectVW(NGCBomber[mobid][0],0);
 					SetDynamicObjectPos(NGCBomber[mobid][0],F4[X],F4[Y],F4[Z]);
 					CompRotationFloat(F4[rZ]+90.0,F4[rZ]);

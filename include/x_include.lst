@@ -16,9 +16,9 @@ SAM/FoxForeach.inc
 engine/EngineV6.inc
 engine/EngineX.inc
 engine/Knife.inc
+engine/Magic.inc
 engine/Mines.inc
 engine/Missile.inc
-engine/VehicleMissile.inc
 engine/VehicleMissileCol.inc
 event/Fireworks.inc
 event/Lottery.inc

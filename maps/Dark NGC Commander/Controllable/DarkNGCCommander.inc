@@ -47,7 +47,7 @@ stock ExitPlayerDarkNGC(playerid){
 }
 
 stock SetDarkNGCShipColor(color){
-	foX(i,2,17){
+	for(new i = 2; i <= 17; i++){
 		SetObjectMaterial(DarkNGC[i],0,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],1,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],2,10817,"airportgnd_sfse","black64",0x00000000); 
@@ -63,33 +63,33 @@ stock SetDarkNGCShipColor(color){
 		SetObjectMaterial(DarkNGC[i],12,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],13,10817,"airportgnd_sfse","black64",0x00000000); 
 	}
-	foX(i,18,29){
+	for(new i = 18; i <= 29; i++){
 		SetObjectMaterial(DarkNGC[i],0,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],1,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],2,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],5,10817,"airportgnd_sfse","black64",0x00000000); 
 	}
-	foX(i,30,45){
+	for(new i = 30; i <= 45; i++){
 		SetObjectMaterial(DarkNGC[i],0,5150,"wiresetc_las2","metpat64",0xFF909090); 
 		SetObjectMaterial(DarkNGC[i],1,5150,"wiresetc_las2","metpat64",0xFF909090); 
 		SetObjectMaterial(DarkNGC[i],2,5150,"wiresetc_las2","metpat64",0xFF909090); 
 		SetObjectMaterial(DarkNGC[i],4,5150,"wiresetc_las2","metpat64",0xFF909090); 
 		SetObjectMaterial(DarkNGC[i],5,5150,"wiresetc_las2","metpat64",0xFF909090); 
 	}
-	foX(i,46,65){
+	for(new i = 46; i <= 65; i++){
 		SetObjectMaterial(DarkNGC[i],0,8463,"vgseland","triadcarpet2",0xFF909090); 
 	}
-	foX(i,66,105){
+	for(new i = 66; i <= 105; i++){
 		SetObjectMaterial(DarkNGC[i],0,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],1,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],2,2707,"Shopping","white",color); 
 	}
-	foX(i,106,115){
+	for(new i = 106; i <= 115; i++){
 		SetObjectMaterial(DarkNGC[i],0,5150,"wiresetc_las2","metpat64",0xFF3B3B3B); 
 		SetObjectMaterial(DarkNGC[i],1,5150,"wiresetc_las2","metpat64",0xFF3B3B3B); 
 		SetObjectMaterial(DarkNGC[i],3,5150,"wiresetc_las2","metpat64",0xFF3B3B3B); 
 	}
-	foX(i,116,149){
+	for(new i = 116; i <= 149; i++){
 		SetObjectMaterial(DarkNGC[i],0,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],1,10817,"airportgnd_sfse","black64",0x00000000); 
 		SetObjectMaterial(DarkNGC[i],2,10817,"airportgnd_sfse","black64",0x00000000); 
@@ -264,7 +264,7 @@ stock DarkNGCInit(){
 	DarkNGC[idx++] = CreateObject(1489,0.000000,-200.000000,100.000000,0.000000,0.000000,0.000000,1300.0); //camera
 	DarkNGC[idx++] = CreateObject(1489,0.000000,-200.000000,100.000000,0.000000,0.000000,0.000000,1300.0); //camera
 	DarkNGC[idx++] = CreateObject(1489,0.000000,-200.000000,100.000000,0.000000,0.000000,0.000000,1300.0); //camera
-	foX(i,1,149){
+	for(new i = 1; i <= 149; i++){
 		new F4[Float3D];
 		GetObjectPosAndRot(DarkNGC[i],F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
 		AttachObjectToObject(DarkNGC[i],DarkNGC[0],F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ],1);
@@ -281,7 +281,7 @@ stock DarkNGCExit(){
 			ExitPlayerDarkNGC(DarkNGCDrive[i]);
 		}
 	}
-	foX(i,0,149){
+	for(new i = 0; i <= 149; i++){
 		if(IsValidObject(DarkNGC[i])) DestroyObject(DarkNGC[i]);
 	}
 }

@@ -16,8 +16,8 @@
  * Streamer Version: 2.8.2                                                                          *
  * MapAndreas Version: 1.2.1                                                                        *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 3.3.0                                                                            *
- * StreamerFunction Version: 2.5.4                                                                  *
+ * 3DTryg Version: 4.0.2                                                                            *
+ * StreamerFunction Version: 2.6.0                                                                  *
  *                                                                                                  *
  * Callbacks:                                                                                       *
  * OnSantaPickupReward(playerid);                                                                   *
@@ -28,22 +28,22 @@
 	#error [ADM] Unknown Streamer Version
 #endif
 
-//Check Version StreamerFunction.inc
-#if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.5.4
-#elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.5.4
-#elseif (Streamer_Spec_Version < 20504)
-	#error [ADM] Update you StreamerFunction.inc to v2.5.4
-#endif
-
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v3.3.0
+	#error [ADM] You need 3DTryg.inc v4.0.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v3.3.0
-#elseif (Tryg3D_Version < 30300)
-	#error [ADM] Update you 3DTryg.inc to v3.3.0
+	#error [ADM] Update you 3DTryg.inc to v4.0.2
+#elseif (Tryg3D_Version < 40002)
+	#error [ADM] Update you 3DTryg.inc to v4.0.2
+#endif
+
+//Check Version StreamerFunction.inc
+#if !defined _streamer_spec
+	#error [ADM] You need StreamerFunction.inc v2.6.0
+#elseif !defined Streamer_Spec_Version
+	#error [ADM] Update you StreamerFunction.inc to v2.6.0
+#elseif (Streamer_Spec_Version < 20600)
+	#error [ADM] Update you StreamerFunction.inc to v2.6.0
 #endif
 
 #if !defined Tryg3D_MapAndreasFindZ
@@ -217,11 +217,12 @@ public SantaReset(tec){
 public SantaGiftCreate(giftid){
 	new smodel = random(sizeof(SantaPickupModel)), Float:piox, Float:pioy, Float:pioz;
 	
-	SantaErrorPos:
-	GetRandomPointInCube(-3000.0,-3000.0,0.0,3000.0,3000.0,1.0,piox,pioy,pioz);
+	GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
+	while(!IsPointInWater(piox,pioy,0.0)){
+		GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
+	}
 	Tryg3D_MapAndreasFindZ(piox,pioy,pioz);
-	if(pioz <= 0.0) goto SantaErrorPos; //water
-	
+
 	pioz+=1.0;
 	SantaGift[giftid] = CreateDynamicPickup(SantaPickupModel[smodel][0],2,piox,pioy,pioz,0,0);
 	return 1;
@@ -230,10 +231,11 @@ public SantaGiftCreate(giftid){
 public SantaGiftReset(giftid){
 	new smodel = random(sizeof(SantaPickupModel)), Float:piox, Float:pioy, Float:pioz;
 	
-	SantaErrorPos:
-	GetRandomPointInCube(-3000.0,-3000.0,0.0,3000.0,3000.0,1.0,piox,pioy,pioz);
+	GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
+	while(!IsPointInWater(piox,pioy,0.0)){
+		GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
+	}
 	Tryg3D_MapAndreasFindZ(piox,pioy,pioz);
-	if(pioz <= 0.0) goto SantaErrorPos; //water
 	
 	pioz+=1.0;
 	SetDynamicPickupPos(SantaGift[giftid],piox,pioy,pioz);

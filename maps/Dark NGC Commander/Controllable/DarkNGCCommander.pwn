@@ -4,12 +4,11 @@
 #include <mapandreas>
 #include <izcmd>
 
-#include <SAM/FoxForeach>
 #include <SAM/3DTryg>
 #include <SAM/StreamerFunction>
 
 #include <engine/Missile>
-#include <DarkNGCCommander>
+#include "DarkNGCCommander"
 
 public OnFilterScriptInit(){
 
