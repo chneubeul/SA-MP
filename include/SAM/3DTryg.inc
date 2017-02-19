@@ -775,7 +775,7 @@
 #endif
 
 //Detect ATM Module [Slot: 11]
-#if !defined DISABLE_3D_TRYG_ATM)
+#if !defined DISABLE_3D_TRYG_ATM
 	#define Tryg3D_ATM
 	#define Tryg3D_Module_ATM							(true)
 #else
@@ -783,7 +783,7 @@
 #endif
 
 //Detect Anims Module [Slot: 12]
-#if defined ENABLE_3D_TRYG_ANIMS)
+#if defined ENABLE_3D_TRYG_ANIMS
 	#define Tryg3D_Anims
 	#define Tryg3D_Module_Anims							(true)
 #else
