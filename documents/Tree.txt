@@ -23,8 +23,6 @@
 │   ├───BitFunctions
 │   ├───DataConvert
 │   │   └───SScanf
-│   ├───DoT
-│   │   └───ADM
 │   ├───FoxForeach
 │   ├───GangZoneEx
 │   │   └───Streamer

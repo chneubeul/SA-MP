@@ -51,13 +51,6 @@
 //Logs.inc Config
 //#define EMPTY_LOG_BUFFER          "My Log File\n"
 
-
-//Knife.inc Config
-//#define DISABLE_KNIFE_SOUND
-//#define USE_OLD_KNIFE_DATIVE 
-//#define DISABLE_KNIFE_CALL_DAMAGE
-
-
 //Santa.inc Config
 //#define SANTA_IS_EASTER_EVENT     //Change to Easter Event 
 //#define SANTA_IS_EASTER_HALLOWEEN //Change to Halloween Event 
@@ -75,7 +68,6 @@
 #include <SAM/DataConvert>          //http://forum.sa-mp.com/showthread.php?p=3719467
 #include <SAM/EVF>                  //http://forum.sa-mp.com/showthread.php?p=3727224
 #include <SAM/BINLDR>               //http://forum.sa-mp.com/showthread.php?p=3653547 (Deprecated, use SAOI.inc)
-#include <SAM/DoT>                  //not published (Deprecated, use SAOI.inc)
 #include <SAM/GangZoneEx>           //not published
 #include <SAM/Logs>                 //not published
 #include <SAM/ATM>                  //not published
@@ -88,15 +80,16 @@
 #include <engine/EngineX>           //http://forum.sa-mp.com/showthread.php?t=600617 [Old Version] (Incompatible with NGCM Core)
 #include <engine/EngineV6>          //http://forum.sa-mp.com/showthread.php?t=600617 [New Version] (Compatible with NGCM Core)
 #include <engine/Knife>             //http://forum.sa-mp.com/showthread.php?t=599773
+#include <engine/Magic>             //http://forum.sa-mp.com/showthread.php?p=3846263
 #include <engine/Mines>             //http://forum.sa-mp.com/showthread.php?t=600369
 #include <engine/Missile>           //http://forum.sa-mp.com/showthread.php?t=608018
-#include <engine/VehicleMissile>    //http://forum.sa-mp.com/showthread.php?t=609788
+#include <engine/VehicleMissileCol>    //http://forum.sa-mp.com/showthread.php?t=609788
 
 #include <event/Fireworks>
 #include <event/Lottery>            //http://forum.sa-mp.com/showthread.php?t=604954
 #include <event/Santa>              //http://forum.sa-mp.com/showthread.php?t=595265
 
-#include <security/ScriptSecure>    //http://forum.sa-mp.com/showthread.php?t=600408
+#include <security/UltimateScriptSecure>    //http://forum.sa-mp.com/showthread.php?t=600408
 #include <security/ScriptChecker>
 
 //EOF
