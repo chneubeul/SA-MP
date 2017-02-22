@@ -18,8 +18,6 @@
 │   │   ├───ProtVar
 │   │   └───SScanf
 │   ├───ATM
-│   ├───BINLDR
-│   │   └───SScanf
 │   ├───BitFunctions
 │   ├───DataConvert
 │   │   └───SScanf
