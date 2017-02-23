@@ -218,7 +218,7 @@ public SantaGiftCreate(giftid){
 	new smodel = random(sizeof(SantaPickupModel)), Float:piox, Float:pioy, Float:pioz;
 	
 	GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
-	while(!IsPointInWater(piox,pioy,0.0)){
+	while(IsPointInWater(piox,pioy,0.0)){
 		GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
 	}
 	Tryg3D_MapAndreasFindZ(piox,pioy,pioz);
@@ -232,7 +232,7 @@ public SantaGiftReset(giftid){
 	new smodel = random(sizeof(SantaPickupModel)), Float:piox, Float:pioy, Float:pioz;
 	
 	GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
-	while(!IsPointInWater(piox,pioy,0.0)){
+	while(IsPointInWater(piox,pioy,0.0)){
 		GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
 	}
 	Tryg3D_MapAndreasFindZ(piox,pioy,pioz);
