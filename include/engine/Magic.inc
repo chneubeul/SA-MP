@@ -11,7 +11,7 @@
  * Modules: 3DTryg                                                                                  *
  * Attributes: None                                                                                 *
  *                                                                                                  *
- * File Version: 1.1.0                                                                              *
+ * File Version: 1.1.1                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.8.2                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
@@ -120,12 +120,13 @@ stock ToggleMagicShootForPlayer(playerid,bool:toggle){
 }
 
 T3D:function MagicShot(playerid){
-	new Vec[LongFloat3D], mtime, pteam, Float:ldist = 20000;
-	GetPlayerPos(playerid,Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z]);
-	GetPlayerFacingAngle(playerid,Vec[T3D:rZ]);
-	Vec[T3D:VW] = GetPlayerVirtualWorld(playerid);
-	Vec[T3D:INT] = GetPlayerInterior(playerid);
-	GetPointInFront2D(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:rZ],GetMagicShootRange(playerid),Vec[T3D:tX],Vec[T3D:tY]);
+	new Float:mx, Float:my, Float:mz, Float:mrz, Float:mtx, Float:mty, Float:mtz, mvw, mint,
+		Float:px, Float:py, Float:pz, mtime, pteam, Float:ldist = 20000;
+	GetPlayerPos(playerid,mx,my,mz);
+	GetPlayerFacingAngle(playerid,mrz);
+	mvw = GetPlayerVirtualWorld(playerid);
+	mint = GetPlayerInterior(playerid);
+	GetPointInFront2D(mx,my,mrz,GetMagicShootRange(playerid),mtx,mty);
 	MagicLockTarget[playerid] = INVALID_PLAYER_ID;
 	pteam = GetPlayerTeam(playerid);
 	
@@ -134,15 +135,13 @@ T3D:function MagicShot(playerid){
 			if(IsPlayerConnected(i)){
 				if(!IsToggleUseTeamMagicShoot() || (IsToggleUseTeamMagicShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
 					if(Tryg3D_IsPlayerSpawned(i)){
-						GetPlayerPos(i,Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ]);
-						if(GetPlayerVirtualWorld(i) == Vec[T3D:VW] && GetPlayerInterior(i) == Vec[T3D:INT]){
-							if(IsPointInCylinder3D(Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ],Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],Vec[T3D:tX],Vec[T3D:tY],Vec[T3D:tZ],2.0)){
-								if(!IsBetweenElementsIsWall(playerid,item_player,i,item_player)){
-									new Float:dist = GetDistanceBetweenPoints3D(Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ],Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z]);
-									if(dist < ldist){
-										ldist = dist;
-										MagicLockTarget[playerid] = i;
-									}
+						GetPlayerPos(i,px,py,pz);
+						if(GetPlayerVirtualWorld(i) == mvw && GetPlayerInterior(i) == mint){
+							if(IsPointInCylinder3D(px,py,pz,mx,my,mz,mtx,mty,mz,2.0)){
+								new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
+								if(dist < ldist){
+									ldist = dist;
+									MagicLockTarget[playerid] = i;
 								}
 							}
 						}
@@ -154,19 +153,19 @@ T3D:function MagicShot(playerid){
 	
 	ApplyAnimation(playerid,"KNIFE","knife_3",4.1,0,1,1,0,0,1);
 	if(MagicLockTarget[playerid] == INVALID_PLAYER_ID){
-		new tmpobj = CreateDynamicObject(MagicP[playerid][T3D:INT],Vec[T3D:X]+MagicP[playerid][T3D:X],Vec[T3D:Y]+MagicP[playerid][T3D:Y],Vec[T3D:Z]+MagicP[playerid][T3D:Z],MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(Vec[T3D:rZ]+MagicP[playerid][T3D:rZ]),Vec[T3D:VW],Vec[T3D:INT],-1,_,100.0);
-		GetDynamicObjectPos(tmpobj,Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z]);
-		GetPointInFront3DCol(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],0.0,Vec[T3D:rZ],GetMagicShootRange(playerid),Vec[T3D:tX],Vec[T3D:tY],Vec[T3D:tZ]);		
-		GetMoveTime(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],Vec[T3D:tX],Vec[T3D:tY],Vec[T3D:tZ],GetMagicShootSpeed(playerid),mtime);
-		MoveDynamicObject(tmpobj,Vec[T3D:tX],Vec[T3D:tY],Vec[T3D:tZ],GetMagicShootSpeed(playerid),MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(Vec[T3D:rZ]+MagicP[playerid][T3D:rZ]));
+		new tmpobj = CreateDynamicObject(MagicP[playerid][T3D:INT],mx+MagicP[playerid][T3D:X],my+MagicP[playerid][T3D:Y],mz+MagicP[playerid][T3D:Z],MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]),mvw,mint,-1,_,100.0);
+		GetDynamicObjectPos(tmpobj,mx,my,mz);
+		GetPointInFront3DCol(mx,my,mz,0.0,mrz,GetMagicShootRange(playerid),mtx,mty,mtz);		
+		GetMoveTime(mx,my,mz,mtx,mty,mtz,GetMagicShootSpeed(playerid),mtime);
+		MoveDynamicObject(tmpobj,mtx,mty,mtz,GetMagicShootSpeed(playerid),MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]));
 		SetTimerEx("MagicDestroy",mtime,0,"ddd",tmpobj,INVALID_PLAYER_ID,playerid);
 	} else {
-		GetPlayerPos(MagicLockTarget[playerid],Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ]);
-		GetRotationFor2Point2D(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:rZ]);
-		new tmpobj = CreateDynamicObject(MagicP[playerid][T3D:INT],Vec[T3D:X]+MagicP[playerid][T3D:X],Vec[T3D:Y]+MagicP[playerid][T3D:Y],Vec[T3D:Z]+MagicP[playerid][T3D:Z],MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(Vec[T3D:rZ]+MagicP[playerid][T3D:rZ]),Vec[T3D:VW],Vec[T3D:INT],-1,_,100.0);
-		GetDynamicObjectPos(tmpobj,Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z]);
-		GetMoveTime(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ],GetMagicShootSpeed(playerid),mtime);
-		MoveDynamicObject(tmpobj,Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ],GetMagicShootSpeed(playerid),MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(Vec[T3D:rZ]+MagicP[playerid][T3D:rZ]));
+		GetPlayerPos(MagicLockTarget[playerid],px,py,pz);
+		GetRotationFor2Point2D(mx,my,px,py,mrz);
+		new tmpobj = CreateDynamicObject(MagicP[playerid][T3D:INT],mx+MagicP[playerid][T3D:X],my+MagicP[playerid][T3D:Y],mz+MagicP[playerid][T3D:Z],MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]),mvw,mint,-1,_,100.0);
+		GetDynamicObjectPos(tmpobj,mx,my,mz);
+		GetMoveTime(mx,my,mz,px,py,pz,GetMagicShootSpeed(playerid),mtime);
+		MoveDynamicObject(tmpobj,px,py,pz,GetMagicShootSpeed(playerid),MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]));
 		SetTimerEx("MagicDestroy",mtime,0,"ddd",tmpobj,MagicLockTarget[playerid],playerid);
 	}
 	MagicTime[playerid] = GetTickCount();

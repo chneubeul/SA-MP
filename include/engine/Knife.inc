@@ -11,7 +11,7 @@
  * Modules: 3DTryg                                                                                  *
  * Attributes: None                                                                                 *
  *                                                                                                  *
- * File Version: 2.5.0                                                                              *
+ * File Version: 2.5.1                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.8.2                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
@@ -90,13 +90,15 @@ new KnifeLockTarget[MAX_PLAYERS],
 #define SetKnifeShootRange(%0,%1)			KnifeShootRange[(%0)] = (%1)
 
 T3D:function KnifeShot(playerid){
-	new Vec[LongFloat3D], mtime, pteam, Float:ldist = 20000;
-	GetPlayerPos(playerid,Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z]);
-	GetPlayerFacingAngle(playerid,Vec[T3D:rZ]);
-	Vec[T3D:VW] = GetPlayerVirtualWorld(playerid);
-	Vec[T3D:INT] = GetPlayerInterior(playerid);
-	GetPointInFront2D(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:rZ],GetKnifeShootRange(playerid),Vec[T3D:tX],Vec[T3D:tY]);
+	new Float:mx, Float:my, Float:mz, Float:mrz, Float:mtx, Float:mty, Float:mtz, mvw, mint, Float:trz,
+		Float:px, Float:py, Float:pz, mtime, pteam;
+	GetPlayerPos(playerid,mx,my,mz);
+	GetPlayerFacingAngle(playerid,mrz);
+	mvw = GetPlayerVirtualWorld(playerid);
+	mint = GetPlayerInterior(playerid);
+	GetPointInFront2D(mx,my,mrz,GetKnifeShootRange(playerid),mtx,mty);
 	KnifeLockTarget[playerid] = INVALID_PLAYER_ID;
+	new Float:ldist = 20000;
 	pteam = GetPlayerTeam(playerid);
 	
 	Tryg3DForeach(i){
@@ -104,15 +106,13 @@ T3D:function KnifeShot(playerid){
 			if(IsPlayerConnected(i)){
 				if(!IsToggleUseTeamKnifeShoot() || (IsToggleUseTeamKnifeShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
 					if(Tryg3D_IsPlayerSpawned(i)){
-						GetPlayerPos(i,Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ]);
-						if(GetPlayerVirtualWorld(i) == Vec[T3D:VW] && GetPlayerInterior(i) == Vec[T3D:INT]){
-							if(IsPointInCylinder3D(Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ],Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],Vec[T3D:tX],Vec[T3D:tY],Vec[T3D:tZ],2.0)){
-								if(!IsBetweenElementsIsWall(playerid,item_player,i,item_player)){
-									new Float:dist = GetDistanceBetweenPoints3D(Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ],Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z]);
-									if(dist < ldist){
-										ldist = dist;
-										KnifeLockTarget[playerid] = i;
-									}
+						GetPlayerPos(i,px,py,pz);
+						if(GetPlayerVirtualWorld(i) == mvw && GetPlayerInterior(i) == mint){
+							if(IsPointInCylinder3D(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
+								new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
+								if(dist < ldist){
+									ldist = dist;
+									KnifeLockTarget[playerid] = i;
 								}
 							}
 						}
@@ -123,19 +123,19 @@ T3D:function KnifeShot(playerid){
 	}
 	
 	if(KnifeLockTarget[playerid] == INVALID_PLAYER_ID){
-		CompRotationFloat(Vec[T3D:rZ]+90.0,Vec[T3D:trZ]);
-		new tmpobj = CreateDynamicObject(335,Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],0.0,90.0,Vec[T3D:trZ],Vec[T3D:VW],Vec[T3D:INT],-1);
-		GetPointInFront3DCol(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],356.7,Vec[T3D:rZ],GetKnifeShootRange(playerid),Vec[T3D:tX],Vec[T3D:tY],Vec[T3D:tZ]);		
-		GetMoveTime(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],Vec[T3D:tX],Vec[T3D:tY],Vec[T3D:tZ],GetKnifeShootSpeed(playerid),mtime);
-		MoveDynamicObject(tmpobj,Vec[T3D:tX],Vec[T3D:tY],Vec[T3D:tZ],GetKnifeShootSpeed(playerid),0.0,110.0,Vec[T3D:trZ]);
+		CompRotationFloat(mrz+90.0,trz);
+		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
+		GetPointInFront3DCol(mx,my,mz,356.7,mrz,GetKnifeShootRange(playerid),mtx,mty,mtz);		
+		GetMoveTime(mx,my,mz,mtx,mty,mtz,GetKnifeShootSpeed(playerid),mtime);
+		MoveDynamicObject(tmpobj,mtx,mty,mtz,GetKnifeShootSpeed(playerid),0.0,110.0,trz);
 		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"ddd",tmpobj,INVALID_PLAYER_ID,playerid);
 	} else {
-		GetPlayerPos(KnifeLockTarget[playerid],Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ]);
-		GetRotationFor2Point2D(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:trZ]);
-		CompRotationFloat(Vec[T3D:trZ]+90.0,Vec[T3D:trZ]);
-		new tmpobj = CreateDynamicObject(335,Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],0.0,90.0,Vec[T3D:trZ],Vec[T3D:VW],Vec[T3D:INT],-1);
-		GetMoveTime(Vec[T3D:X],Vec[T3D:Y],Vec[T3D:Z],Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ],GetKnifeShootSpeed(playerid),mtime);
-		MoveDynamicObject(tmpobj,Vec[T3D:VecX],Vec[T3D:VecY],Vec[T3D:VecZ],GetKnifeShootSpeed(playerid),0.0,90.0,Vec[T3D:trZ]);
+		GetPlayerPos(KnifeLockTarget[playerid],px,py,pz);
+		GetRotationFor2Point2D(mx,my,px,py,trz);
+		CompRotationFloat(trz+90.0,trz);
+		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
+		GetMoveTime(mx,my,mz,px,py,pz,GetKnifeShootSpeed(playerid),mtime);
+		MoveDynamicObject(tmpobj,px,py,pz,GetKnifeShootSpeed(playerid),0.0,90.0,trz);
 		SetTimerEx("KnifeDestroy",mtime,0,"ddd",tmpobj,KnifeLockTarget[playerid],playerid);
 	}
 	KnifeTime[playerid] = GetTickCount();
