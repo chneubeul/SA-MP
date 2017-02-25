@@ -18,6 +18,7 @@ engine/Magic.inc
 engine/Mines.inc
 engine/Missile.inc
 engine/VehicleMissileCol.inc
+engine/VehPara.inc
 event/Fireworks.inc
 event/Lottery.inc
 event/Santa.inc
