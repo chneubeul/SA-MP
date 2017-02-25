@@ -145,7 +145,7 @@ public OnPlayerUpdate(playerid){
 	if(IsPlayerUsingVehPara(playerid)){
 		if(IsCollisionFlag(GetElementCollisionFlags(GetPlayerVehicleID(playerid),item_vehicle),POSITION_FLAG_GROUND)){
 			StopVehicleParachuteAction(playerid);
-			GameTextForPlayer(playerid,"~g~Parachute was thrown",2500,3);
+			GameTextForPlayer(playerid,"~g~Parachute has been thrown",2500,3);
 		} else {
 			static vid, Float:T3D:x, Float:T3D:y, Float:T3D:z;
 			vid = GetPlayerVehicleID(playerid);
@@ -192,7 +192,7 @@ public OnVehicleSpawn(vehicleid){
 public OnPlayerEnterVehicle(playerid,vehicleid,ispassenger){
 	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][0])){
 		ToggleVehicleParachute(vehicleid,false);
-		GameTextForPlayer(playerid,"~g~Parachute was thrown",2500,3);
+		GameTextForPlayer(playerid,"~g~Parachute has been thrown",2500,3);
 	}
 	#if defined VP_OnPlayerEnterVehicle
 		VP_OnPlayerEnterVehicle(playerid,vehicleid,ispassenger);
@@ -214,7 +214,7 @@ public OnPlayerEnterVehicle(playerid,vehicleid,ispassenger){
 public OnPlayerExitVehicle(playerid,vehicleid){
 	if(IsPlayerUsingVehPara(playerid)){
 		StopVehicleParachuteAction(playerid);
-		GameTextForPlayer(playerid,"~g~Parachute was thrown",2500,3);
+		GameTextForPlayer(playerid,"~g~Parachute has been thrown",2500,3);
 	}
 	#if defined VP_OnPlayerExitVehicle
 		VP_OnPlayerExitVehicle(playerid,vehicleid);
@@ -261,7 +261,7 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 			if(IsToggleVehicleParachute(vid)){
 				if(IsPlayerUsingVehPara(playerid)){
 					StopVehicleParachuteAction(playerid);
-					GameTextForPlayer(playerid,"~g~Parachute was thrown",2500,3);
+					GameTextForPlayer(playerid,"~g~Parachute has been thrown",2500,3);
 				} else {
 					if(IsCollisionFlag(GetElementCollisionFlags(vid,item_vehicle),POSITION_FLAG_AIR)){
 						StartVehicleParachuteAction(playerid);
