@@ -760,7 +760,7 @@ stock VM_PutPlayerInVehicle(playerid,vehicleid,seatid){
 #if defined _ALS_PutPlayerInVehicle
     #undef PutPlayerInVehicle
 #else
-    #define _ALSPutPlayerInVehicle
+    #define _ALS_PutPlayerInVehicle
 #endif
 #define PutPlayerInVehicle VM_PutPlayerInVehicle
 

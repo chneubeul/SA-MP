@@ -11,7 +11,7 @@
  * Modules: 3DTryg                                                                                  *
  * Attributes: None                                                                                 *
  *                                                                                                  *
- * File Version: 1.0.0                                                                              *
+ * File Version: 1.0.1                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.8.2                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
@@ -68,6 +68,15 @@ new VehicleConfigParachute[64],
 #define IsToggleVehicleParachute(%0)				VP_GetValueBit(VehicleConfigParachute[GetVehicleParaConfAddress(%0)],GetVehicleParaConfBit(%0))
 
 stock ToggleVehicleParachute(vehicleid,bool:toggle){
+	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][0])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][0]);
+	VehicleParachuteObject[vehicleid][0] = INVALID_STREAMER_ID;
+	
+	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][1])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][1]);
+	VehicleParachuteObject[vehicleid][1] = INVALID_STREAMER_ID;
+	
+	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][2])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][2]);
+	VehicleParachuteObject[vehicleid][2] = INVALID_STREAMER_ID;
+	
 	if(toggle){
 		if(!IsToggleVehicleParachute(vehicleid)){
 			new T3D:vw = GetVehicleVirtualWorld(vehicleid);
@@ -80,17 +89,6 @@ stock ToggleVehicleParachute(vehicleid,bool:toggle){
 		
 			AttachDynamicObjectToVehicle(VehicleParachuteObject[vehicleid][1],vehicleid,0.5,0.0,T3D:z+0.1,270.0,0.0,35.0);
 			AttachDynamicObjectToVehicle(VehicleParachuteObject[vehicleid][2],vehicleid,-0.5,0.0,T3D:z+0.1,270.0,0.0,325.0);
-		}
-	} else {
-		if(IsToggleVehicleParachute(vehicleid)){
-			if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][0])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][0]);
-			VehicleParachuteObject[vehicleid][0] = INVALID_STREAMER_ID;
-			
-			if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][1])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][1]);
-			VehicleParachuteObject[vehicleid][1] = INVALID_STREAMER_ID;
-			
-			if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][2])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][2]);
-			VehicleParachuteObject[vehicleid][2] = INVALID_STREAMER_ID;
 		}
 	}
 	VP_SetValueBit(VehicleConfigParachute[GetVehicleParaConfAddress(vehicleid)],GetVehicleParaConfBit(vehicleid),(_:toggle));
@@ -106,8 +104,10 @@ stock StartVehicleParachuteAction(playerid){
 	if(IsValidDynamicObject(VehicleParachuteObject[vid][2])) DestroyDynamicObject(VehicleParachuteObject[vid][2]);
 	VehicleParachuteObject[vid][2] = INVALID_STREAMER_ID;
 	
+	if(IsValidDynamicObject(VehicleParachuteObject[vid][0])) DestroyDynamicObject(VehicleParachuteObject[vid][0]);
 	VehicleParachuteObject[vid][0] = CreateDynamicObject(18849,0.0,0.0,-6000.0,0.0,0.0,0.0,GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid));
-	switch(random(4)){
+	
+	switch(random(5)){
 		case 0: {
 			SetDynamicObjectMaterial(VehicleParachuteObject[vid][0],0,18841,"MickyTextures","Smileyface2",0x00000000);
 			SetDynamicObjectMaterial(VehicleParachuteObject[vid][0],2,10412,"hotel1","carpet_red_256",0x00FFFFFF);
@@ -122,6 +122,9 @@ stock StartVehicleParachuteAction(playerid){
 		}
 		case 3: {
 			SetDynamicObjectMaterial(VehicleParachuteObject[vid][0],0,18841,"MickyTextures","waterclear256",0x00000000);
+			SetDynamicObjectMaterial(VehicleParachuteObject[vid][0],2,10412,"hotel1","carpet_red_256",0x00FFFFFF);
+		}
+		case 4: {
 			SetDynamicObjectMaterial(VehicleParachuteObject[vid][0],2,10412,"hotel1","carpet_red_256",0x00FFFFFF);
 		}
 	}
@@ -285,6 +288,21 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 #if defined VP_OnPlayerKeyStateChange
 	forward VP_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 #endif
+
+//Hook: PutPlayerInVehicle
+stock VP_PutPlayerInVehicle(playerid,vehicleid,seatid){
+	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][0])){
+		ToggleVehicleParachute(vehicleid,false);
+	}
+	return PutPlayerInVehicle(playerid,vehicleid,seatid);
+}
+
+#if defined _ALS_PutPlayerInVehicle
+    #undef PutPlayerInVehicle
+#else
+    #define _ALS_PutPlayerInVehicle
+#endif
+#define PutPlayerInVehicle VP_PutPlayerInVehicle
 
 //Hook: CreateVehicle
 stock VP_CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,respawn_delay,addsiren=0){
