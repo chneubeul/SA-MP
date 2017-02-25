@@ -80,7 +80,7 @@
 #include <engine/EngineV6>          //http://forum.sa-mp.com/showthread.php?t=600617 [New Version] (Compatible with NGCM Core)
 #include <engine/Knife>             //http://forum.sa-mp.com/showthread.php?t=599773
 #include <engine/Magic>             //http://forum.sa-mp.com/showthread.php?p=3846263
-#include <engine/VehPara>           //
+#include <engine/VehPara>           //http://forum.sa-mp.com/showthread.php?p=3848232
 #include <engine/Mines>             //http://forum.sa-mp.com/showthread.php?t=600369
 #include <engine/Missile>           //http://forum.sa-mp.com/showthread.php?t=608018
 #include <engine/VehicleMissileCol>    //http://forum.sa-mp.com/showthread.php?t=609788
