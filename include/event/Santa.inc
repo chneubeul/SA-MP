@@ -16,7 +16,7 @@
  * Streamer Version: 2.8.2                                                                          *
  * MapAndreas Version: 1.2.1                                                                        *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.0.2                                                                            *
+ * 3DTryg Version: 4.0.3                                                                            *
  * StreamerFunction Version: 2.6.0                                                                  *
  *                                                                                                  *
  * Callbacks:                                                                                       *
@@ -25,16 +25,16 @@
  ****************************************************************************************************/
 
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
-	#error [ADM] Unknown Streamer Version
+	#error [ADM] You need Streamer v2.8.2
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.0.2
+	#error [ADM] You need 3DTryg.inc v4.0.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.0.2
-#elseif (Tryg3D_Version < 40002)
-	#error [ADM] Update you 3DTryg.inc to v4.0.2
+	#error [ADM] Update you 3DTryg.inc to v4.0.3
+#elseif (Tryg3D_Version < 40003)
+	#error [ADM] Update you 3DTryg.inc to v4.0.3
 #endif
 
 //Check Version StreamerFunction.inc
@@ -47,7 +47,7 @@
 #endif
 
 #if !defined Tryg3D_MapAndreasFindZ
-	#error [ADM] Unknown ColAndreas/MapAndreas Version
+	#error [ADM] You need ColAndreas/MapAndreas
 #endif
 
 #if defined _santa_gifts

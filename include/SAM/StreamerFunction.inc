@@ -363,7 +363,7 @@
 #endif
 
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
-	#error [ADM] Unknown Streamer Version
+	#error [ADM] You need Streamer v2.8.2
 #endif
 
 #define Streamer_Spec_Version 					(20600) //a.b.c 10000*a+100*b+c

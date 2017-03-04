@@ -14,7 +14,7 @@
  * File Version: 2.0.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.8.2                                                                                                        *
- * 3DTryg Version: 4.0.2                                                                                                          *
+ * 3DTryg Version: 4.0.3                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,            *
@@ -63,16 +63,16 @@
  **********************************************************************************************************************************/
 
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
-	#error [ADM] Unknown Streamer Version
+	#error [ADM] You need Streamer v2.8.2
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.0.2
+	#error [ADM] You need 3DTryg.inc v4.0.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.0.2
-#elseif (Tryg3D_Version < 40002)
-	#error [ADM] Update you 3DTryg.inc to v4.0.2
+	#error [ADM] Update you 3DTryg.inc to v4.0.3
+#elseif (Tryg3D_Version < 40003)
+	#error [ADM] Update you 3DTryg.inc to v4.0.3
 #endif
 
 #if defined _dynamic_mine_system

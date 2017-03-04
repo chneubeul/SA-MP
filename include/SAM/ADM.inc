@@ -103,7 +103,7 @@
 #define ADM_Encryption_Version 		(20300) //a.b.c 10000*a+100*b+c
 
 #if !defined sscanf
-	#error [ADM] Unknown SScanf Version
+	#error [ADM] You need SScanf v2.8.2
 #endif
 
 //ProtVar:: Detect

@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.8.2                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.0.2                                                                            *
+ * 3DTryg Version: 4.0.3                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * bool:IsPlayerUsingVehPara(playerid);                                                             *
@@ -34,20 +34,20 @@
 #endif
 
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
-	#error [ADM] Unknown Streamer Version
+	#error [ADM] You need Streamer v2.8.2
 #endif
 
 #if !defined COLANDREAS
-	#error [ADM] Unknown ColAndreas Version
+	#error [ADM] You need ColAndreas v1.4.0
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.0.2
+	#error [ADM] You need 3DTryg.inc v4.0.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.0.2
-#elseif (Tryg3D_Version < 40002)
-	#error [ADM] Update you 3DTryg.inc to v4.0.2
+	#error [ADM] Update you 3DTryg.inc to v4.0.3
+#elseif (Tryg3D_Version < 40003)
+	#error [ADM] Update you 3DTryg.inc to v4.0.3
 #endif
 
 new VehicleConfigParachute[64],
@@ -79,9 +79,8 @@ stock ToggleVehicleParachute(vehicleid,bool:toggle){
 	
 	if(toggle){
 		if(!IsToggleVehicleParachute(vehicleid)){
-			new T3D:vw = GetVehicleVirtualWorld(vehicleid);
-			VehicleParachuteObject[vehicleid][1] = CreateDynamicObject(1310,0.0,0.0,-6000.0,0.0,0.0,0.0,T3D:vw,-1);
-			VehicleParachuteObject[vehicleid][2] = CreateDynamicObject(1310,0.0,0.0,-6000.0,0.0,0.0,0.0,T3D:vw,-1);
+			VehicleParachuteObject[vehicleid][1] = CreateDynamicObject(1310,0.0,0.0,-6000.0,0.0,0.0,0.0,-1,-1);
+			VehicleParachuteObject[vehicleid][2] = CreateDynamicObject(1310,0.0,0.0,-6000.0,0.0,0.0,0.0,-1,-1);
 			
 			new Float:T3D:x,Float:T3D:y,Float:T3D:z;
 			GetVehicleModelInfo(GetVehicleModel(vehicleid),VEHICLE_MODEL_INFO_SIZE,T3D:x,T3D:y,T3D:z);

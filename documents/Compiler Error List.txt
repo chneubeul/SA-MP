@@ -1,12 +1,10 @@
 Plugin Include:
-[ADM] Unknown SScanf Version
-[ADM] Unknown Streamer Version
-[ADM] Unknown MapAndreas Version
-[ADM] Unknown ColAndreas Version
-[ADM] Unknown ColAndreas/MapAndreas Version
 [ADM] This include requires SA:MP version 0.3.7
-[ADM] You need MapAndreas or ColAndreas
-[ADM] You need update FCNPC Plugin
+[ADM] You need SScanf v2.8.2
+[ADM] You need Streamer v2.8.2
+[ADM] You need MapAndreas v1.2.1
+[ADM] You need ColAndreas v1.4.0
+[ADM] You need ColAndreas/MapAndreas
 
 Global Include:
 Detected another command system

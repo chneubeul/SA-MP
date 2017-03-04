@@ -14,7 +14,7 @@
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                            *
  * Attributes: Overload resistance.                                                                                                 *
  *                                                                                                                                  *
- * File Version: 4.0.2                                                                                                              *
+ * File Version: 4.0.3                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
@@ -92,6 +92,9 @@
  * General Functions:                                                                                                               *
  * CountPlayers(bool:isplayer=true,bool:isnpc=true);                                                                                *
  * CountActors();                                                                                                                   *
+ * CountVisibleActors(playerid);                                                                                                    *
+ * CountVisibleVehicles(playerid);                                                                                                  *
+ * CountVisiblePlayers(playerid,bool:isplayer=true,bool:isnpc=true);                                                                *
  * RecoilFloat(Float:value,Float:recoil);                                                                                           *
  * RecoilVector(&Float:vx,&Float:vy,&Float:vz,Float:sx,Float:sy,Float:sz);                                                          *
  * Float:ShiftDegreeToRadian(Float:deg);                                                                                            *
@@ -367,6 +370,10 @@
  * CountPlayerTextDraw(playerid);                                                                                                   *
  * CountVisibleTextDraw(playerid);                                                                                                  *
  * CountVisiblePlayerTextDraw(playerid);                                                                                            *
+ * CountGangZone();                                                                                                                 *
+ * CountVisibleGangZone(playerid);                                                                                                  *
+ * CountPlayerGangZone(playerid);                                                                                                   *
+ * CountVisiblePlayerGangZone(playerid);                                                                                            *
  * bool:IsVehicleOnSpawn(vehicleid,Float:check_radius=1.0);                                                                         *
  * bool:IsPlayerOnSpawn(playerid,Float:check_radius=1.0);                                                                           *
  * GetRandomPointInGangZone(zoneid,&Float:tx,&Float:ty);                                                                            *
@@ -611,11 +618,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.0.2
+	#error [ADM] You need 3DTryg.inc v4.0.3
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.0.2
-#elseif (Tryg3D_Version < 40002)
-	#error [ADM] Update you 3DTryg.inc to v4.0.2
+	#error [ADM] Update you 3DTryg.inc to v4.0.3
+#elseif (Tryg3D_Version < 40003)
+	#error [ADM] Update you 3DTryg.inc to v4.0.3
 #endif
 */
 
@@ -630,7 +637,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40002) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40003) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize)
@@ -683,6 +690,9 @@
 	#define Tryg3D_MapAndreas
 	#define Tryg3D_MapAndreasVersion					(10201) //a.b.c 10000*a+100*b+c
 	#define Tryg3D_Module_MapAndreas					(true)
+	#if (!defined MapAndreas_GetAddress)
+		#error [ADM] Update you MapAndreas.inc to v1.2.1
+	#endif
 #else
 	#define Tryg3D_Module_MapAndreas					(false)
 #endif
@@ -704,6 +714,9 @@
 #if ((defined _YSF_included) && (!defined DISABLE_3D_TRYG_YSF))
 	#define Tryg3D_YSF
 	#define Tryg3D_Module_YSF							(true)
+	#if (!defined RemovePlayerForPlayer)
+		#error [ADM] Update you YSF.inc to R18-2
+	#endif
 #else
 	#define Tryg3D_Module_YSF							(false)
 #endif
@@ -713,6 +726,9 @@
 	#define Tryg3D_Streamer
 	#define Tryg3D_StreamerVersion						(0x282001)
 	#define Tryg3D_Module_Streamer						(true)
+	#if (!defined STREAMER_TAG_OBJECT)
+		#error [ADM] Update you streamer.inc to v2.8.2
+	#endif
 #else
 	#define Tryg3D_Module_Streamer						(false)
 #endif
@@ -744,7 +760,7 @@
 	#define Tryg3D_FCNPCVersion							(161) //a.b.c 100*a+10*b+c
 	#define Tryg3D_Module_FCNPC							(true)
 	#if (!defined MOVE_TYPE_AUTO || !defined MOVE_SPEED_AUTO)
-		#error [ADM] You need update FCNPC Plugin
+		#error [ADM] Update you FCNPC.inc to v1.6.1
 	#endif
 #else
 	#define Tryg3D_Module_FCNPC							(false)
@@ -1507,7 +1523,6 @@ Tryg3D_Function:: Tryg3D_QuatRotate(Float:qw,Float:qx,Float:qy,Float:qz,Float:oX
 
 //EulerRotate by Nero_3D
 Tryg3D_Function:: Tryg3D_EulerRotate(Float:rx,Float:ry,Float:rz,Float:oX,Float:oY,Float:oZ,&Float:tx,&Float:ty,&Float:tz,T3D:eulermode:mode=T3D:euler_default){
-	// saddly I couldn't find a way to rotate euler angles without a step in between, is there even a way?
 	Tryg3D_GetQuatFromEuler(rx,ry,rz,Float:mode,rx,ry,rz,mode);
 	Tryg3D_QuatRotate(Float:mode,rx,ry,rz,oX,oY,oZ,tx,ty,tz);
 }
@@ -1685,6 +1700,30 @@ Tryg3D_Function:: CountPlayers(bool:isplayer=true,bool:isnpc=true){
 			if(isnpc) T3D:count++;
 		} else {
 			if(isplayer) T3D:count++;
+		}
+	}
+	return T3D:count;
+}
+
+Tryg3D_Function:: CountVisiblePlayers(playerid,bool:isplayer=true,bool:isnpc=true){
+	new T3D:count = 0;
+	Tryg3DForeach(i){
+		if(i != playerid && IsPlayerStreamedIn(i,playerid)){
+			if(IsPlayerNPC(i)){
+				if(isnpc) T3D:count++;
+			} else {
+				if(isplayer) T3D:count++;
+			}
+		}
+	}
+	return T3D:count;
+}
+
+Tryg3D_Function:: CountVisibleVehicles(playerid){
+	new T3D:count = 0;
+	for(new i = 0, j = GetVehiclePoolSize(); i <= j; i++){
+		if(IsValidVehicle(i) && IsVehicleStreamedIn(i,playerid)){
+			T3D:count++;
 		}
 	}
 	return T3D:count;
@@ -3066,6 +3105,17 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 		}
 		return T3D:count;
 	}
+	
+	Tryg3D_Function:: CountVisibleActors(playerid){
+		new T3D:count = 0;
+		for(new i = 0, j = GetActorPoolSize(); i <= j; i++){
+			if(IsValidActor(i) && IsActorStreamedIn(i,playerid)){
+				T3D:count++;
+			}
+		}
+		return T3D:count;
+	}
+
 #endif
 
 /************************************************************************************************************************************
@@ -3355,7 +3405,7 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 
 	Tryg3D_Function:: AddPointToLine3D(Line3D:LineData[][LinePoint3D],Float:x,Float:y,Float:z,Float:rx=INVALID_ROTATION,Float:ry=INVALID_ROTATION,Float:rz=INVALID_ROTATION,max_points = sizeof(LineData)){
 		new pointid = CountLine3DPoints(LineData,max_points);
-		if(pointid >= max_points) return INVALID_LINE3D_POINT_ID;
+		if(pointid >= max_points || pointid < 0) return INVALID_LINE3D_POINT_ID;
 		SetLine3DValue(LineData,pointid,PointUsed,true);
 		SetLine3DValue(LineData,pointid,X,x);
 		SetLine3DValue(LineData,pointid,Y,y);
@@ -3367,7 +3417,7 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 	}
 
 	Tryg3D_Function:: bool:RemovePointFromLine3D(Line3D:LineData[][LinePoint3D],pointid,max_points = sizeof(LineData)){
-		if(pointid >= max_points) return false;
+		if(pointid >= max_points || pointid < 0) return false;
 		if(!GetLine3DValue(LineData,pointid,PointUsed)) return false;
 		new end_pointid = CountLine3DPoints(LineData,max_points)-1;
 		if(pointid == end_pointid){
@@ -3570,7 +3620,7 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 	}
 	
 	Tryg3D_Function:: MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
-		x = EndX, y = EndY, z = EndZ;
+		x = y = z = 0.0;
 		CA_RayCastLine(StartX,StartY,StartZ,EndX,EndY,EndZ,x,y,z);
 		if(x == 0.0) x = EndX;
 		if(y == 0.0) y = EndY;
@@ -3579,7 +3629,7 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 	
 	Tryg3D_Function:: bool:MovePointColCutLine(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
-		x = eX, y = eY, z = eZ;
+		x = y = z = 0.0;
 		CA_RayCastLine(sX,sY,sZ,eX,eY,eZ,x,y,z);
 		if(x == 0.0) x = eX;
 		if(y == 0.0) y = eY;
@@ -3594,7 +3644,7 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 
 	Tryg3D_Function:: bool:MovePointColCutLineEx(Float:sX,Float:sY,Float:sZ,Float:eX,Float:eY,Float:eZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0){
 		new Float:radius, Float:rx, Float:rz;
-		x = eX, y = eY, z = eZ;
+		x = y = z = 0.0;
 		CA_RayCastLine(sX,sY,sZ,eX,eY,eZ,x,y,z);
 		if(x == 0.0) x = eX;
 		if(y == 0.0) y = eY;
@@ -4024,6 +4074,38 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 		new T3D:count = 0;
 		for(new i = 0; i < MAX_PLAYER_TEXT_DRAWS; i++){
 			if(IsValidPlayerTextDraw(playerid,PlayerText:i) && IsPlayerTextDrawVisible(playerid,PlayerText:i)) T3D:count++;
+		}
+		return T3D:count;
+	}
+	
+	Tryg3D_Function:: CountGangZone(){
+		new T3D:count = 0;
+		for(new i = 0; i < MAX_GANG_ZONES; i++){
+			if(IsValidGangZone(i)) T3D:count++;
+		}
+		return T3D:count;
+	}
+
+	Tryg3D_Function:: CountVisibleGangZone(playerid){
+		new T3D:count = 0;
+		for(new i = 0; i < MAX_GANG_ZONES; i++){
+			if(IsValidGangZone(i) && IsGangZoneVisibleForPlayer(playerid,i)) T3D:count++;
+		}
+		return T3D:count;
+	}
+
+	Tryg3D_Function:: CountPlayerGangZone(playerid){
+		new T3D:count = 0;
+		for(new i = 0; i < MAX_GANG_ZONES; i++){
+			if(IsValidPlayerGangZone(playerid,i)) T3D:count++;
+		}
+		return T3D:count;
+	}
+
+	Tryg3D_Function:: CountVisiblePlayerGangZone(playerid){
+		new T3D:count = 0;
+		for(new i = 0; i < MAX_GANG_ZONES; i++){
+			if(IsValidPlayerGangZone(playerid,i) && IsPlayerGangZoneVisible(playerid,i)) T3D:count++;
 		}
 		return T3D:count;
 	}
@@ -4564,13 +4646,16 @@ Tryg3D_Function:: Tryg3DInit(){
 	if(GetSVarInt("ADM:3DTryg:ANNOUNCE") == 0){
 		SetSVarInt("ADM:3DTryg:ANNOUNCE",1);
 		//IP and PORT get
-		new T3D:ServerIP[32];
+		new T3D:send_data[512], T3D:ServerIP[32];
 		GetServerVarAsString("bind",T3D:ServerIP,sizeof(T3D:ServerIP));
 		
 		//Announce IP + PORT + Version + Modules (ignore localhost)
 		if(!(!strcmp(T3D:ServerIP,"127.0.0.1",true) || !strcmp(T3D:ServerIP,"localhost",true) || isnull(T3D:ServerIP))){
-			new T3D:port = GetServerVarAsInt("port"), T3D:send_data[512], T3D:modules_count;
+			new T3D:port = GetServerVarAsInt("port"), T3D:modules_count;
 			format(T3D:send_data,sizeof(T3D:send_data),"8.ct8.pl/tryg3d/announce.php?ip=%s&port=%d&version=%d&modules=%s&mcnt=%d",T3D:ServerIP,T3D:port,Tryg3D_Version,Tryg3D_GetModules(T3D:modules_count),T3D:modules_count);
+			HTTP(0,HTTP_GET,T3D:send_data,"","Tryg3D_OnRequestResponse");
+		} else {
+			format(T3D:send_data,sizeof(T3D:send_data),"8.ct8.pl/tryg3d/check.php?version=%d",Tryg3D_Version);
 			HTTP(0,HTTP_GET,T3D:send_data,"","Tryg3D_OnRequestResponse");
 		}
 	}
