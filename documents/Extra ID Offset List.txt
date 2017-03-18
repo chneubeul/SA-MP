@@ -2,4 +2,5 @@ Streamer Extra ID Offset:
 
 MINE_EXTRA_ID_OFFSET		200001	//Include: ./engine/Mines.inc
 MISSILE_EXTRA_ID_OFFSET		300001	//Include: ./engine/Missile.inc
-SAOI_EXTRA_ID_OFFSET		1000000	//Include: Repository:SAOI/Beta Version/SAOI.inc
+SAOI_EXTRA_ID_OFFSET		1000000	//Include: Repository:SAOI/include/SAOI.inc
+NGC_EXTRA_ID_OFFSET			2000000	//Include: ./engine/NGC.inc
