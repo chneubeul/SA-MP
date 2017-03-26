@@ -46,7 +46,7 @@
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
 
-#if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined DISABLE_3D_TRYG_STREAMER))
+#if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined STREAMER_TYPE_ACTOR))
 	#error [ADM] You need Streamer v2.9.0
 #endif
 

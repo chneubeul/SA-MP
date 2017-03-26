@@ -11,7 +11,7 @@
  * Modules: 3DTryg                                                                                                                *
  * Attributes: Overload resistance.                                                                                               *
  *                                                                                                                                *
- * File Version: 1.8.0                                                                                                            *
+ * File Version: 1.8.1                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.0                                                                                                        *
  * 3DTryg Version: 4.0.3                                                                                                          *
@@ -38,11 +38,11 @@
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v1.8.0
+	#error [ADM] You need Missile.inc v1.8.1
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v1.8.0
-#elseif (Missile_Version < 10800)
-	#error [ADM] Update you Missile.inc to v1.8.0
+	#error [ADM] Update you Missile.inc to v1.8.1
+#elseif (Missile_Version < 10801)
+	#error [ADM] Update you Missile.inc to v1.8.1
 #endif
 */
 
@@ -55,7 +55,7 @@
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
 
-#if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined DISABLE_3D_TRYG_STREAMER))
+#if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined STREAMER_TYPE_ACTOR))
 	#error [ADM] You need Streamer v2.9.0
 #endif
 
@@ -68,7 +68,7 @@
 	#error [ADM] Update you 3DTryg.inc to v4.0.3
 #endif
 
-#define Missile_Version						(10800)
+#define Missile_Version						(10801)
 
 #define MISSILE_OBJECT_NORMAL				(0)
 #define MISSILE_OBJECT_BIG					(1)
@@ -342,7 +342,7 @@ stock MissileDestroy(mobid,type,playerid){
 		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 			if(IsPlayerConnected(i)){
 				if(IsPlayerInDynamicArea(i,MissileComponent[mobid][missile_areaid])){
-					SetTimerEx("OnMissileDetectPlayer",50,false,"dd",i,MissileComponent[mobid][missile_playerid]);
+					CallRemoteFunction("OnMissileDetectPlayer","dd",i,MissileComponent[mobid][missile_playerid]);
 				}
 			}
 		}

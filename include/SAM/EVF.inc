@@ -3,7 +3,7 @@
  *                                              )(   Extended Vehicle Functions   )(                                              *
  *                                                                                                                                *
  * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                            *
- * Contributors: Emmet_, Pottus, kvann, Hanger, , Freaksken                                                                       *
+ * Contributors: Emmet_, Pottus, kvann, Hanger, Freaksken                                                                         *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=486060                                                                    *
@@ -13,7 +13,7 @@
  * Attributes: None                                                                                                               *
  *                                                                                                                                *
  * File Version: 2.1.0                                                                                                            *
- * SA:MP Version: 0.3.7 (REQUIRED)                                                                                                *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  *                                                                                                                                *
  * VehicleEx Functions (Abyss Morgan):                                                                                            *
  * bool:IsValidVehicleModelID(modelid);                                                                                           *
