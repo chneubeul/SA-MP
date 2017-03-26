@@ -10,9 +10,9 @@
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
  *                                                                                                                                         *
- * File Version: 2.6.0                                                                                                                     *
+ * File Version: 2.7.0                                                                                                                     *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *
- * Streamer Version: 2.8.2                                                                                                                 *
+ * Streamer Version: 2.9.0                                                                                                                 *
  *                                                                                                                                         *
  * Compiler Options:                                                                                                                       *
  * DISABLE_STREAMER_SPEC_CHECK  //Turn off check streamer version                                                                          *
@@ -345,11 +345,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.6.0
+	#error [ADM] You need StreamerFunction.inc v2.7.0
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.6.0
-#elseif (Streamer_Spec_Version < 20600)
-	#error [ADM] Update you StreamerFunction.inc to v2.6.0
+	#error [ADM] Update you StreamerFunction.inc to v2.7.0
+#elseif (Streamer_Spec_Version < 20700)
+	#error [ADM] Update you StreamerFunction.inc to v2.7.0
 #endif
 */
 
@@ -362,23 +362,32 @@
 	#error [ADM] This include requires SA:MP version 0.3.7
 #endif
 
-#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
-	#error [ADM] You need Streamer v2.8.2
+#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID) || (!defined STREAMER_TYPE_ACTOR))
+	#error [ADM] You need Streamer v2.9.0
 #endif
 
-#define Streamer_Spec_Version 					(20600) //a.b.c 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20700) //a.b.c 10000*a+100*b+c
 #define Streamer_Spec_SAMP_Version				"0.3.7"
-#define Valid_Streamer_Version 					(0x282001)
+#define Valid_Streamer_Version 					(0x290)
+
+//Update Checker
+#if !defined HTTP
+	#tryinclude <a_http>
+#endif
+
+#if !defined HTTP
+	#tryinclude "a_http"
+#endif
+
+#if !defined HTTP
+	#error [ADM] Please include a_http.inc before StreamerFunction.inc
+#endif
 
 #if defined INVALID_DYNAMIC_OBJECT_ID
 	#if (INVALID_DYNAMIC_OBJECT_ID != INVALID_STREAMER_ID)
 		#error [ADM] Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
 	#endif
 	#undef INVALID_DYNAMIC_OBJECT_ID
-#endif
-
-#if defined STREAMER_TYPE_ACTOR
-	#define SSpec_Actor
 #endif
 
 #define INVALID_DYNAMIC_OBJECT_ID				STREAMER_TAG_OBJECT			INVALID_STREAMER_ID
@@ -388,10 +397,7 @@
 #define INVALID_DYNAMIC_MAP_ICON_ID				STREAMER_TAG_MAP_ICON		INVALID_STREAMER_ID
 #define INVALID_DYNAMIC_3D_TEXT_ID				STREAMER_TAG_3D_TEXT_LABEL	INVALID_STREAMER_ID
 #define INVALID_DYNAMIC_AREA_ID					STREAMER_TAG_AREA			INVALID_STREAMER_ID
-
-#if defined SSpec_Actor
-	#define INVALID_DYNAMIC_ACTOR_ID				STREAMER_TAG_ACTOR			INVALID_STREAMER_ID
-#endif
+#define INVALID_DYNAMIC_ACTOR_ID				STREAMER_TAG_ACTOR			INVALID_STREAMER_ID
 
 #define DEFAULT_VISIBLE_OBJECT					500
 #define DEFAULT_VISIBLE_PICKUP					4096
@@ -414,6 +420,7 @@
 #define STREAMEX_VEHICLE						12
 
 #define StreamerSpec_Function::					stock
+#define StreamerSpec_Public::%0(%1)				forward %0(%1); public %0(%1)
 
 #if !defined isnull
 	#define isnull(%1) 							((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
@@ -570,24 +577,22 @@
 #define IsSetDynamicAreaDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_AREA,(%1))
 
 //DynamicActor
-#if defined SSpec_Actor
-	#define GetDynamicActorModel(%1)				Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_MODEL_ID)
-	#define SetDynamicActorModel(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_MODEL_ID,(%2))
-	#define GetDynamicActorInterior(%1)				Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_INTERIOR_ID)
-	#define SetDynamicActorInterior(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_INTERIOR_ID,(%2))
-	#define GetDynamicActorArea(%1)					STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_AREA_ID)
-	#define SetDynamicActorArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_AREA_ID,(_:%2))
-	#define GetDynamicActorPriority(%1)				Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_PRIORITY)
-	#define SetDynamicActorPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_PRIORITY,(%2))
-	#define GetDynamicActorSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-	#define SetDynamicActorSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-	#define GetDynamicActorDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1),(%2))
-	#define SetDynamicActorDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1),(%2))
-	#define RemoveDynamicActorDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_ACTOR,(%1))
-	#define IsSetDynamicActorDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1))
-	#define DestroyAllDynamicActors()				Streamer_DestroyAllItems(STREAMER_TYPE_ACTOR,1)
-	#define CountDynamicActors()					Streamer_CountItems(STREAMER_TYPE_ACTOR,1)
-#endif
+#define GetDynamicActorModel(%1)				Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_MODEL_ID)
+#define SetDynamicActorModel(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_MODEL_ID,(%2))
+#define GetDynamicActorInterior(%1)				Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_INTERIOR_ID)
+#define SetDynamicActorInterior(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicActorArea(%1)					STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_AREA_ID)
+#define SetDynamicActorArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_AREA_ID,(_:%2))
+#define GetDynamicActorPriority(%1)				Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_PRIORITY)
+#define SetDynamicActorPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicActorSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define SetDynamicActorSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define GetDynamicActorDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1),(%2))
+#define SetDynamicActorDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1),(%2))
+#define RemoveDynamicActorDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_ACTOR,(%1))
+#define IsSetDynamicActorDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1))
+#define DestroyAllDynamicActors()				Streamer_DestroyAllItems(STREAMER_TYPE_ACTOR,1)
+#define CountDynamicActors()					Streamer_CountItems(STREAMER_TYPE_ACTOR,1)
 
 //DynamicAntiArea
 #define IsPlayerInAntiArea(%0,%1,%2)			(!IsPlayerInDynamicArea(%0,%1,%2))
@@ -610,9 +615,7 @@
 #define GetDynamicMapIconPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_MAP_ICON)
 #define GetDynamic3DTextPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_3D_TEXT_LABEL)
 #define GetDynamicAreaPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_AREA)
-#if defined SSpec_Actor
-	#define GetDynamicActorPoolSize()			Streamer_GetUpperBound(STREAMER_TYPE_ACTOR)
-#endif
+#define GetDynamicActorPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_ACTOR)
 
 //Foreach
 #define ForDynamicObjects(%1)					for(new STREAMER_TAG_OBJECT			%1 = STREAMER_TAG_OBJECT		1, STREAMER_TAG_OBJECT			p_%1 = STREAMER_TAG_OBJECT			GetDynamicObjectPoolSize();		_:%1 <= _:p_%1; STREAMER_TAG_OBJECT			((_:%1)+=1))
@@ -622,9 +625,7 @@
 #define ForDynamicMapIcons(%1)					for(new STREAMER_TAG_MAP_ICON		%1 = STREAMER_TAG_MAP_ICON		1, STREAMER_TAG_MAP_ICON		p_%1 = STREAMER_TAG_MAP_ICON		GetDynamicMapIconPoolSize();	_:%1 <= _:p_%1; STREAMER_TAG_MAP_ICON		((_:%1)+=1))
 #define ForDynamic3DTextLabels(%1)				for(new STREAMER_TAG_3D_TEXT_LABEL	%1 = STREAMER_TAG_3D_TEXT_LABEL	1, STREAMER_TAG_3D_TEXT_LABEL	p_%1 = STREAMER_TAG_3D_TEXT_LABEL	GetDynamic3DTextPoolSize(); 	_:%1 <= _:p_%1; STREAMER_TAG_3D_TEXT_LABEL	((_:%1)+=1))
 #define ForDynamicAreas(%1)						for(new STREAMER_TAG_AREA			%1 = STREAMER_TAG_AREA			1, STREAMER_TAG_AREA			p_%1 = STREAMER_TAG_AREA			GetDynamicAreaPoolSize();		_:%1 <= _:p_%1; STREAMER_TAG_AREA			((_:%1)+=1))
-#if defined SSpec_Actor
-	#define ForDynamicActors(%1)				for(new STREAMER_TAG_ACTOR			%1 = STREAMER_TAG_ACTOR			1, STREAMER_TAG_ACTOR			p_%1 = STREAMER_TAG_ACTOR			GetDynamicActorPoolSize();		_:%1 <= _:p_%1; STREAMER_TAG_ACTOR			((_:%1)+=1))
-#endif
+#define ForDynamicActors(%1)					for(new STREAMER_TAG_ACTOR			%1 = STREAMER_TAG_ACTOR			1, STREAMER_TAG_ACTOR			p_%1 = STREAMER_TAG_ACTOR			GetDynamicActorPoolSize();		_:%1 <= _:p_%1; STREAMER_TAG_ACTOR			((_:%1)+=1))
 
 //GetNearestVisibleItem
 #define GetNearestVisibleObject(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_OBJECT)
@@ -634,9 +635,8 @@
 #define GetNearestVisibleMapIcon(%0)			GetNearestVisibleItem((%0),STREAMER_TYPE_MAP_ICON)
 #define GetNearestVisible3DText(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_3D_TEXT_LABEL)
 #define GetNearestVisibleArea(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_AREA)
-#if defined SSpec_Actor
-	#define GetNearestVisibleActor(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_ACTOR)
-#endif
+#define GetNearestVisibleActor(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_ACTOR)
+
 #define GetStreamerSpecActiveCount() 			GetSVarInt("ADM:StreamerSpec:ACTIVE")
 
 //Datagram
@@ -666,14 +666,14 @@ StreamerSpec_Function:: bool:IsSetStreamerDatagram(type,STREAMER_ALL_TAGS itemid
 }
 
 StreamerSpec_Function:: bool:IsValidStreamer(version){
-	return !(GetStreamerVersion() < version);
+	return (GetStreamerVersion() == version);
 }
 
 StreamerSpec_Function:: GetStreamerVersionName(name[], value = GET_STREAMER_VERSION, maxdest = sizeof name){
 	if(value == GET_STREAMER_VERSION) value = GetStreamerVersion();
 	new ver_str[10];
-	format(ver_str,sizeof(ver_str),"%06x",value);
-	format(name,maxdest,"%d.%d.%dr%d",(ver_str[0]-48),(ver_str[1]-48),(ver_str[2]-48),(((ver_str[3]-48)*100) + ((ver_str[4]-48)*10) + (ver_str[5]-48)));
+	format(ver_str,sizeof(ver_str),"%03x",value);
+	format(name,maxdest,"%d.%d.%d",(ver_str[0]-48),(ver_str[1]-48),(ver_str[2]-48));
 }
 
 StreamerSpec_Function:: SetDynamicObjectPosAndRot(STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
@@ -1166,13 +1166,11 @@ StreamerSpec_Function:: UpdateAllDynamicAreas(){
 	}
 }
 
-#if defined SSpec_Actor
-	StreamerSpec_Function:: UpdateAllDynamicActors(){
-		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-			Streamer_Update(i,STREAMER_TYPE_ACTOR);
-		}
+StreamerSpec_Function:: UpdateAllDynamicActors(){
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+		Streamer_Update(i,STREAMER_TYPE_ACTOR);
 	}
-#endif
+}
 
 StreamerSpec_Function:: UpdateAllDynamicElements(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
@@ -1212,23 +1210,20 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	GetPlayerPos(playerid,x,y,z);
 	idx_max = Streamer_CountVisibleItems(playerid,type,1);
 	switch(type){
-		
-		#if defined SSpec_Actor
-			case STREAMER_TYPE_ACTOR: {
-				max_element = Streamer_GetVisibleItems(type,playerid);
-				while(idx <= max_element && idx_max > 0){
-					if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
-						idx_max--;
-						Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
-						if(distance < min_radius){
-							itemid = tmp_item;
-							min_radius = distance;
-						}
+		case STREAMER_TYPE_ACTOR: {
+			max_element = Streamer_GetVisibleItems(type,playerid);
+			while(idx <= max_element && idx_max > 0){
+				if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
+					idx_max--;
+					Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+					if(distance < min_radius){
+						itemid = tmp_item;
+						min_radius = distance;
 					}
-					idx++;
 				}
+				idx++;
 			}
-		#endif
+		}
 		case STREAMER_TYPE_OBJECT, STREAMER_TYPE_PICKUP, STREAMER_TYPE_MAP_ICON, STREAMER_TYPE_3D_TEXT_LABEL: {
 			max_element = Streamer_GetVisibleItems(type,playerid);
 			while(idx <= max_element && idx_max > 0){
@@ -1382,21 +1377,19 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#endif
 	#define DestroyDynamicArea SF_DestroyDynamicArea
 	
-	#if defined SSpec_Actor
-		//Hook: DestroyDynamicActor
-		StreamerSpec_Function:: SF_DestroyDynamicActor(&STREAMER_TAG_ACTOR actorid){
-			new dobj = DestroyDynamicActor(actorid);
-			actorid = INVALID_DYNAMIC_ACTOR_ID;
-			return dobj;
-		}
+	//Hook: DestroyDynamicActor
+	StreamerSpec_Function:: SF_DestroyDynamicActor(&STREAMER_TAG_ACTOR actorid){
+		new dobj = DestroyDynamicActor(actorid);
+		actorid = INVALID_DYNAMIC_ACTOR_ID;
+		return dobj;
+	}
 
-		#if defined _ALS_DestroyDynamicActor
-			#undef DestroyDynamicActor
-		#else
-			#define _ALS_DestroyDynamicActor
-		#endif
-		#define DestroyDynamicActor SF_DestroyDynamicActor
+	#if defined _ALS_DestroyDynamicActor
+		#undef DestroyDynamicActor
+	#else
+		#define _ALS_DestroyDynamicActor
 	#endif
+	#define DestroyDynamicActor SF_DestroyDynamicActor
 	
 	//Hook: AttachDynamicObjectToObject
 	StreamerSpec_Function:: SF_AttachDynamicObjectToObject(STREAMER_TAG_OBJECT objectid,attachtoid,Float:offsetx,Float:offsety,Float:offsetz,Float:rx,Float:ry,Float:rz,syncrotation = 1){
@@ -1583,6 +1576,22 @@ public OnPlayerLeaveDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 new bool:CRC_StreamerFunctionInit = true,
 	bool:CRC_StreamerFunctionExit = true;
 
+StreamerSpec_Public:: SSpec_OnRequestResponse(index, response_code, data[]){
+	if(response_code == 200){
+		if(isnull(data)) return 0;
+		new sspec_version[16], sspec_ver, sspec_file_ver = Streamer_Spec_Version;
+		strmid(sspec_version,data,0,strlen(data));
+		sspec_ver = strval(sspec_version);
+		if(sspec_ver != sspec_file_ver){
+			print(" ");
+			printf("[ADM] Info: Please update your StreamerFunction include to v%d.%d.%d from here:",(sspec_ver / 10000),((sspec_ver % 10000) / 100),((sspec_ver % 10000) % 100));
+			print("https://github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc");
+			print(" ");
+		}
+	}
+	return 1;
+}
+
 StreamerSpec_Function:: StreamerSpecInit(){
 	SetSVarInt("ADM:StreamerSpec:ACTIVE",GetStreamerSpecActiveCount()+1);
 	
@@ -1595,6 +1604,14 @@ StreamerSpec_Function:: StreamerSpecInit(){
 			printf("[ADM] Info: Load Streamer Functions v%s for SA:MP %s by Abyss Morgan",ver_name,Streamer_Spec_SAMP_Version);
 		}
 	}
+	
+	if(GetSVarInt("ADM:StreamerSpec:VERCHECK") == 0){
+		SetSVarInt("ADM:StreamerSpec:VERCHECK",1);
+		new sspec_send_data[50];
+		format(sspec_send_data,sizeof(sspec_send_data),"8.ct8.pl/sspec/check.php?version=%d",Streamer_Spec_Version);
+		HTTP(1,HTTP_GET,sspec_send_data,"","SSpec_OnRequestResponse");
+	}
+	
 	#if !defined DISABLE_STREAMER_SPEC_CHECK
 		CheckStreamerVersion();
 	#endif

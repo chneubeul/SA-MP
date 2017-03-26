@@ -13,7 +13,7 @@
  *                                                                                                                                 *
  * File Version: 6.0.24                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                            *
- * Streamer Version: 2.8.2                                                                                                         *
+ * Streamer Version: 2.9.0                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                       *
  * 3DTryg Version: 4.0.3                                                                                                           *
  *                                                                                                                                 *
@@ -62,8 +62,8 @@
 #endif
 */
 
-#if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID))
-	#error [ADM] You need Streamer v2.8.2
+#if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined DISABLE_3D_TRYG_STREAMER))
+	#error [ADM] You need Streamer v2.9.0
 #endif
 
 #if !defined COLANDREAS

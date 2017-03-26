@@ -2,7 +2,7 @@
 GetSVarInt("ADM:3DTryg:Error");
 GetSVarInt("ADM:3DTryg:ACTIVE");
 GetSVarInt("ADM:3DTryg:INIT");
-GetSVarInt("ADM:3DTryg:ANNOUNCE");
+GetSVarInt("ADM:3DTryg:VERCHECK");
 GetSVarInt("ADM:3DTryg:YSF:TIMELINE");
 GetSVarInt("ADM:3DTryg:Streamer");
 GetSVarInt("ADM:3DTryg:FCNPC");
@@ -13,3 +13,7 @@ GetSVarInt("ADM:Logging:Disable");
 //StreamerFunction.inc
 GetSVarInt("ADM:StreamerSpec:ACTIVE");
 GetSVarInt("ADM:StreamerSpec:INIT");
+GetSVarInt("ADM:StreamerSpec:VERCHECK");
+
+//SAOI.inc
+GetSVarInt("ADM:SAOI:VERCHECK");

@@ -14,12 +14,12 @@
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                            *
  * Attributes: Overload resistance.                                                                                                 *
  *                                                                                                                                  *
- * File Version: 4.0.3                                                                                                              *
+ * File Version: 4.0.4                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
  * YSF Version: R18-2 (kurta999)                                                                                                    *
- * Streamer Version: 2.8.2                                                                                                          *
+ * Streamer Version: 2.9.0                                                                                                          *
  * FCNPC Version: 1.6.1                                                                                                             *
  *                                                                                                                                  *
  * 3DTryg FindZ Precision:                                                                                                          *
@@ -80,6 +80,7 @@
  * Tryg3D_GetWeaponDamage(weaponid);                                                                                                *
  * Tryg3D_SwapInt(variable1,variable2);                                                                                             *
  * bool:Tryg3D_IsPlayerSpawned(playerid);                                                                                           *
+ * Tryg3D_GetActiveTime();                                                                                                          *
  *                                                                                                                                  *
  * Nero_3D Rotations Functions:                                                                                                     *
  * Tryg3D_GetRotationMatrixEuler(Float:matrix[][],Float:rx,Float:ry,Float:rz,T3D:eulermode:mode=T3D:euler_default);                 *
@@ -618,11 +619,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.0.3
+	#error [ADM] You need 3DTryg.inc v4.0.4
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.0.3
-#elseif (Tryg3D_Version < 40003)
-	#error [ADM] Update you 3DTryg.inc to v4.0.3
+	#error [ADM] Update you 3DTryg.inc to v4.0.4
+#elseif (Tryg3D_Version < 40004)
+	#error [ADM] Update you 3DTryg.inc to v4.0.4
 #endif
 */
 
@@ -637,7 +638,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40003) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40004) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize)
@@ -724,10 +725,10 @@
 //Detect Streamer Plugin [Slot: 4]
 #if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined DISABLE_3D_TRYG_STREAMER))
 	#define Tryg3D_Streamer
-	#define Tryg3D_StreamerVersion						(0x282001)
+	#define Tryg3D_StreamerVersion						(0x290)
 	#define Tryg3D_Module_Streamer						(true)
-	#if (!defined STREAMER_TAG_OBJECT)
-		#error [ADM] Update you streamer.inc to v2.8.2
+	#if (!defined STREAMER_TYPE_ACTOR)
+		#error [ADM] Update you streamer.inc to v2.9.0
 	#endif
 #else
 	#define Tryg3D_Module_Streamer						(false)
@@ -824,7 +825,7 @@
  ************************************************************************************************************************************/
 
 #if !defined TRYG3D_ELEMENT_TAG
-	#define TRYG3D_ELEMENT_TAG							{Text3D,DynamicObject,DynamicPickup,DynamicCP,DynamicRaceCP,DynamicMapIcon,DynamicText3D,DynamicArea,_}:
+	#define TRYG3D_ELEMENT_TAG							{Text3D,DynamicObject,DynamicPickup,DynamicCP,DynamicRaceCP,DynamicMapIcon,DynamicText3D,DynamicArea,DynamicActor,_}:
 #endif
 
 #if !defined FLOAT_PI
@@ -2487,11 +2488,9 @@ Tryg3D_Function:: bool:GetElementPos(TRYG3D_ELEMENT_TAG elementid,Item3D_Type:el
 				Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,_:elementid,E_STREAMER_Y,y);
 				Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,_:elementid,E_STREAMER_Z,z);
 			}
-			#if defined STREAMER_TYPE_ACTOR
-				case item_dynamic_actor: {
-					GetDynamicActorPos(STREAMER_TAG_ACTOR (_:elementid),x,y,z);
-				}
-			#endif
+			case item_dynamic_actor: {
+				GetDynamicActorPos(STREAMER_TAG_ACTOR (_:elementid),x,y,z);
+			}
 		#endif
 		default: return false;
 	}
@@ -2629,11 +2628,9 @@ Tryg3D_Function:: bool:IsElementOnPlayerScreen(playerid,TRYG3D_ELEMENT_TAG targe
 			case item_dynamic_3dtext: {
 				if(testVW && worldid != Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,_:targetid,E_STREAMER_WORLD_ID)) return false;
 			}
-			#if defined STREAMER_TYPE_ACTOR
-				case item_dynamic_actor: {
-					if(testVW && worldid != GetDynamicActorVirtualWorld(_:targetid)) return false;
-				}
-			#endif
+			case item_dynamic_actor: {
+				if(testVW && worldid != GetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR (_:targetid))) return false;
+			}
 		#endif
 		default: return false;
 	}
@@ -2775,11 +2772,9 @@ Tryg3D_Function:: bool:GetElementOrientationPos(TRYG3D_ELEMENT_TAG elementid,Ite
 			case item_dynamic_object: {
 				GetDynamicObjectRot(STREAMER_TAG_OBJECT (_:elementid),rx,ry,rz);
 			}
-			#if defined STREAMER_TYPE_ACTOR
-				case item_dynamic_actor: {
-					GetDynamicActorFacingAngle(elementid,rz);
-				}
-			#endif
+			case item_dynamic_actor: {
+				GetDynamicActorFacingAngle(STREAMER_TAG_ACTOR (_:elementid),rz);
+			}
 		#endif
 		default: return false;
 	}
@@ -3457,14 +3452,14 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 	#define IsDynamicObjectInRangeOfPoint(%0,%1,%2,%3,%4) 	(GetElementDistanceFromPoint((%0),item_dynamic_object,(%2),(%3),(%4)) <= (%1))
 	
 	Tryg3D_Function:: bool:Tryg3D_IsValidStreamer(value){
-		return (Tryg3D_GetStreamerVersion() >= value);
+		return (Tryg3D_GetStreamerVersion() == value);
 	}
 
 	Tryg3D_Function:: Tryg3D_GetStreamerVersionName(name[],value = TRYG3D_GET_STREAMER_VERSION,maxdest = sizeof(name)){
 		if(value == TRYG3D_GET_STREAMER_VERSION) value = Tryg3D_GetStreamerVersion();
 		new T3D:version[10];
-		format(T3D:version,sizeof(T3D:version),"%06x",value);
-		format(name,maxdest,"%d.%d.%dr%d",(T3D:version[0]-48),(T3D:version[1]-48),(T3D:version[2]-48),(((T3D:version[3]-48)*100) + ((T3D:version[4]-48)*10) + (T3D:version[5]-48)));
+		format(T3D:version,sizeof(T3D:version),"%03x",value);
+		format(name,maxdest,"%d.%d.%d",(T3D:version[0]-48),(T3D:version[1]-48),(T3D:version[2]-48));
 	}
 
 	Tryg3D_Function:: Tryg3D_CheckStreamerVersion(){
@@ -3514,11 +3509,7 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 		}
 	}
 	
-	#if defined STREAMER_TYPE_ACTOR
-		
-		#define IsDynamicActorInRangeOfPoint(%0,%1,%2,%3,%4)	(GetElementDistanceFromPoint((%0),item_dynamic_actor,(%2),(%3),(%4)) <= (%1))
-		
-	#endif
+	#define IsDynamicActorInRangeOfPoint(%0,%1,%2,%3,%4)	(GetElementDistanceFromPoint((%0),item_dynamic_actor,(%2),(%3),(%4)) <= (%1))
 	
 	#if defined Tryg3D_FCNPC
 		Tryg3D_Function:: SetNPCAbsolutePosition(npcid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1,compensatedtime = -1){
@@ -3916,11 +3907,9 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
 				case item_dynamic_object: {
 					GetDynamicObjectRot(STREAMER_TAG_OBJECT (_:elementid),rx,ry,rz);
 				}
-				#if defined STREAMER_TYPE_ACTOR
-					case item_dynamic_actor: {
-						GetDynamicActorFacingAngle(STREAMER_TAG_ACTOR (_:elementid),rz);
-					}
-				#endif
+				case item_dynamic_actor: {
+					GetDynamicActorFacingAngle(STREAMER_TAG_ACTOR (_:elementid),rz);
+				}
 			#endif
 			default: return false;
 		}
@@ -4504,7 +4493,10 @@ Tryg3D_Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x,
  ************************************************************************************************************************************/
 
 new bool:CRC_Tryg3DInit = true,
-	bool:CRC_Tryg3DExit = true;
+	bool:CRC_Tryg3DExit = true,
+	T3D:FSAT = 0;
+
+#define Tryg3D_GetActiveTime()							(GetTickCount()-T3D:FSAT)
 
 #if defined Tryg3D_ColAndreas
 
@@ -4614,7 +4606,7 @@ Tryg3D_Function:: Tryg3DInit_MapPrecision(){
 }
 
 Tryg3D_Public:: Tryg3D_OnRequestResponse(index, response_code, data[]){
-	if(index == 0 && response_code == 200){
+	if(response_code == 200){
 		if(isnull(data)) return 0;
 		new T3D:version[16], T3D:ver, T3D:file_ver = Tryg3D_Version;
 		strmid(T3D:version,data,0,strlen(data));
@@ -4630,7 +4622,7 @@ Tryg3D_Public:: Tryg3D_OnRequestResponse(index, response_code, data[]){
 }
 
 Tryg3D_Function:: Tryg3DInit(){
-	
+	T3D:FSAT = GetTickCount();
 	SetSVarInt("ADM:3DTryg:ACTIVE",Tryg3D_GetActiveCount()+1);
 	
 	//Welcome to 3DTryg
@@ -4643,21 +4635,11 @@ Tryg3D_Function:: Tryg3DInit(){
 		}
 	}
 	
-	if(GetSVarInt("ADM:3DTryg:ANNOUNCE") == 0){
-		SetSVarInt("ADM:3DTryg:ANNOUNCE",1);
-		//IP and PORT get
-		new T3D:send_data[512], T3D:ServerIP[32];
-		GetServerVarAsString("bind",T3D:ServerIP,sizeof(T3D:ServerIP));
-		
-		//Announce IP + PORT + Version + Modules (ignore localhost)
-		if(!(!strcmp(T3D:ServerIP,"127.0.0.1",true) || !strcmp(T3D:ServerIP,"localhost",true) || isnull(T3D:ServerIP))){
-			new T3D:port = GetServerVarAsInt("port"), T3D:modules_count;
-			format(T3D:send_data,sizeof(T3D:send_data),"8.ct8.pl/tryg3d/announce.php?ip=%s&port=%d&version=%d&modules=%s&mcnt=%d",T3D:ServerIP,T3D:port,Tryg3D_Version,Tryg3D_GetModules(T3D:modules_count),T3D:modules_count);
-			HTTP(0,HTTP_GET,T3D:send_data,"","Tryg3D_OnRequestResponse");
-		} else {
-			format(T3D:send_data,sizeof(T3D:send_data),"8.ct8.pl/tryg3d/check.php?version=%d",Tryg3D_Version);
-			HTTP(0,HTTP_GET,T3D:send_data,"","Tryg3D_OnRequestResponse");
-		}
+	if(GetSVarInt("ADM:3DTryg:VERCHECK") == 0){
+		SetSVarInt("ADM:3DTryg:VERCHECK",1);
+		new T3D:send_data[50];
+		format(T3D:send_data,sizeof(T3D:send_data),"8.ct8.pl/tryg3d/check.php?version=%d",Tryg3D_Version);
+		HTTP(0,HTTP_GET,T3D:send_data,"","Tryg3D_OnRequestResponse");
 	}
 	
 	//Init ColAndreas
@@ -4839,6 +4821,7 @@ public OnGameModeExit(){
 
 #pragma unused Tryg3D_WeaponDamage
 #pragma unused Tryg3D_StreamDistance
+#pragma unused v3DFSAT
 
 #undef Update3DTrygErrorCount
 
