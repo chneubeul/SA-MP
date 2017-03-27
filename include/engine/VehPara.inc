@@ -50,7 +50,7 @@
 	#error [ADM] Update you 3DTryg.inc to v4.0.3
 #endif
 
-new VehicleConfigParachute[64],
+new VehicleConfigParachute[63],
 	VehicleParachuteObject[MAX_VEHICLES][3],
 	PlayerUsingVehPara[32];
 

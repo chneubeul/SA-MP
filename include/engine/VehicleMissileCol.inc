@@ -217,24 +217,24 @@
 #define VM_GetValueBit(%0,%1)					((%0) >>> (%1) & 0x01)
 #define VM_SetValueBit(%0,%1,%2)				((%0) = (((%0) & ~(0x01 << (%1))) | ((0x01 << (%1))*(%2))))
 
-new VehicleConfigMiniMissile[64],
-	VehicleConfigHeavyMissile[64],
-	VehicleConfigRhinoMissile[64],
-	VehicleConfigBomberMissile[64],
-	VehicleConfigMortarMissile[64],
-	VehicleConfigMegaMissile[64],
-	VehicleConfigCongreveMissile[64],
+new VehicleConfigMiniMissile[63],
+	VehicleConfigHeavyMissile[63],
+	VehicleConfigRhinoMissile[63],
+	VehicleConfigBomberMissile[63],
+	VehicleConfigMortarMissile[63],
+	VehicleConfigMegaMissile[63],
+	VehicleConfigCongreveMissile[63],
 	
 	VehicleWeaponTick[MAX_PLAYERS][MAX_VEHICLE_MISSILE_TYPE],
-	VehicleWeaponReload[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
-	VehicleWeaponKey[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
-	Float:VehicleWeaponSpeed[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
-	Float:VehicleWeaponDistance[MAX_VEHICLES+1][MAX_VEHICLE_MISSILE_TYPE],
+	VehicleWeaponReload[MAX_VEHICLES][MAX_VEHICLE_MISSILE_TYPE],
+	VehicleWeaponKey[MAX_VEHICLES][MAX_VEHICLE_MISSILE_TYPE],
+	Float:VehicleWeaponSpeed[MAX_VEHICLES][MAX_VEHICLE_MISSILE_TYPE],
+	Float:VehicleWeaponDistance[MAX_VEHICLES][MAX_VEHICLE_MISSILE_TYPE],
 	
-	Float:VehicleMortarHeight[MAX_VEHICLES+1],
-	Float:VehicleMegaHeight[MAX_VEHICLES+1],
-	Float:VehicleCongreveSpread[MAX_VEHICLES+1],
-	VehicleCongreveSalvo[MAX_VEHICLES+1],
+	Float:VehicleMortarHeight[MAX_VEHICLES],
+	Float:VehicleMegaHeight[MAX_VEHICLES],
+	Float:VehicleCongreveSpread[MAX_VEHICLES],
+	VehicleCongreveSalvo[MAX_VEHICLES],
 	
 	Float:MissileStreamDistance = 200.0,
 	bool:VehicleMissileAutoDisarm = false;
@@ -569,7 +569,7 @@ public OnVehicleShot(playerid,type){
 }
 
 public OnVehicleMissileInit(){
-	for(new i = 0; i <= MAX_VEHICLES; i++){
+	for(new i = 0; i < MAX_VEHICLES; i++){
 		SetVehicleMissileDefaultConfig(i);
 		DisarmVehicleMissile(i);
 	}
