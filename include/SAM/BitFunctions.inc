@@ -47,6 +47,7 @@
  * Dynamic Toggle Config Macros:                                                                    *
  * GetConfigAddress(itemid);                                                                        *
  * GetConfigBit(itemid);                                                                            *
+ * GetConfigSize(max_items);                                                                        *
  * IsToggleConfigInformation(variable,itemid);                                                      *
  * ToggleConfigInformation(variable,itemid,value); //values: 1/0                                    *
  *                                                                                                  *
@@ -99,6 +100,7 @@
 //Dynamic Toggle Config Macros
 #define GetConfigAddress(%0)				(floatround((%0)/32))
 #define GetConfigBit(%0)					((%0) % 32)
+#define GetConfigSize(%0)					(((%0) / 32)+1)
 
 #define IsToggleConfigInformation(%0,%1)	GetValueBit(%0[GetConfigAddress(%1)],GetConfigBit(%1))
 #define ToggleConfigInformation(%0,%1,%2)	SetValueBit(%0[GetConfigAddress(%1)],GetConfigBit(%1),((%2) & 0x1))
