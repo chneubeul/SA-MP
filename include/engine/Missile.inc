@@ -314,11 +314,7 @@ stock MissileLaunchAimPlayer(targetid,type,Float:detection_range,Float:explode_r
 			MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,rx,0.0,rz);
 		}
 		case MISSILE_OBJECT_BOMB_STATIC: {
-			if(remote && remote_count > -1){
-				MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,rx,0.0,rz);
-			} else {
-				MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,0.0,0.0,rz);
-			}
+			MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,rx,0.0,rz);
 		}
 		default: {
 			MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,0.0,rx,rz);
