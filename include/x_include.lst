@@ -5,7 +5,6 @@ SAM/RGB.inc
 SAM/3DTryg.inc
 SAM/LY.inc
 SAM/ADM.inc
-SAM/GangZoneEx.inc
 SAM/DataConvert.inc
 SAM/EVF.inc
 SAM/Logs.inc
@@ -19,10 +18,10 @@ engine/Mines.inc
 engine/Missile.inc
 engine/VehicleMissileCol.inc
 engine/VehPara.inc
+engine/PortalGun.inc
 event/Fireworks.inc
 event/Lottery.inc
 event/Santa.inc
 security/MultiScriptSecure.inc
-security/ScriptChecker.inc
 security/ScriptSecure.inc
 security/UltimateScriptSecure.inc
