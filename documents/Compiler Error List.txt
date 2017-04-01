@@ -33,8 +33,6 @@ Engine Include:
 
 
 Security Include:
-[ADM] Please #define SCRIPT_NAME <script name> before including ScriptChecker.inc
-
 [ADM] Please #define SCRIPT_ACK_KEY "key"
 [ADM] Please #define SCRIPT_ACK_URL "ack_url"
 [ADM] Please #define SCRIPT_ANTI_FLOOD <random number>

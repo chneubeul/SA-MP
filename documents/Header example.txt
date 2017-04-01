@@ -67,7 +67,6 @@
 #include <SAM/ADM>                  //http://forum.sa-mp.com/showthread.php?t=595203
 #include <SAM/DataConvert>          //http://forum.sa-mp.com/showthread.php?p=3719467
 #include <SAM/EVF>                  //http://forum.sa-mp.com/showthread.php?p=3727224
-#include <SAM/GangZoneEx>           //not published
 #include <SAM/Logs>                 //not published
 #include <SAM/ATM>                  //not published
 
@@ -81,6 +80,7 @@
 #include <engine/Knife>             //http://forum.sa-mp.com/showthread.php?t=599773
 #include <engine/Magic>             //http://forum.sa-mp.com/showthread.php?p=3846263
 #include <engine/VehPara>           //http://forum.sa-mp.com/showthread.php?p=3848232
+#include <engine/PortalGun>         //http://forum.sa-mp.com/showthread.php?p=3862804
 #include <engine/Mines>             //http://forum.sa-mp.com/showthread.php?t=600369
 #include <engine/Missile>           //http://forum.sa-mp.com/showthread.php?t=608018
 #include <engine/VehicleMissileCol>    //http://forum.sa-mp.com/showthread.php?t=609788
@@ -90,6 +90,5 @@
 #include <event/Santa>              //http://forum.sa-mp.com/showthread.php?t=595265
 
 #include <security/UltimateScriptSecure>    //http://forum.sa-mp.com/showthread.php?t=600408
-#include <security/ScriptChecker>
 
 //EOF

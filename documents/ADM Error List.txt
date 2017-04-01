@@ -27,11 +27,6 @@ This option is available in ATM.inc
 [ADM] Error: Cannot load /scriptfiles/colandreas/ColAndreas.cadb
 
 
-//GangZoneEx.inc
-[ADM] Error: Invalid zoneid, range 0 - 1023
-[ADM] Error: GangZoneCreate returned INVALID_GANG_ZONE
-
-
 //ScriptSecure.inc & MultiScriptSecure.inc
 [ADM] Info: Local server detect.
 [ADM] Error: This script is stolen.

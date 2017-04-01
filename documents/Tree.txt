@@ -22,8 +22,6 @@
 │   ├───DataConvert
 │   │   └───SScanf
 │   ├───FoxForeach
-│   ├───GangZoneEx
-│   │   └───Streamer
 │   ├───Logs
 │   ├───LY
 │   ├───RGB
@@ -51,6 +49,10 @@
 │   │   ├───3DTryg
 │   │   ├───ColAndreas
 │   │   └───Streamer
+│   ├───PortalGun
+│   │   ├───3DTryg
+│   │   ├───ColAndreas
+│   │   └───Streamer
 │   ├───Mines
 │   │   ├───3DTryg
 │   │   └───Streamer
@@ -65,7 +67,6 @@
 ├───security
 │   ├───UltimateScriptSecure
 │   ├───MultiScriptSecure
-│   ├───ScriptChecker
 │   └───ScriptSecure
 ├───SAOI
 │   ├───SAOI
