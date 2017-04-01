@@ -22,6 +22,3 @@ engine/PortalGun.inc
 event/Fireworks.inc
 event/Lottery.inc
 event/Santa.inc
-security/MultiScriptSecure.inc
-security/ScriptSecure.inc
-security/UltimateScriptSecure.inc
