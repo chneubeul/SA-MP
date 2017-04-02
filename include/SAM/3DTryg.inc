@@ -14,13 +14,13 @@
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                            *
  * Attributes: Overload resistance.                                                                                                 *
  *                                                                                                                                  *
- * File Version: 4.0.4                                                                                                              *
+ * File Version: 4.0.5                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * MapAndreas Version: 1.2.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                        *
  * YSF Version: R18-2 (kurta999)                                                                                                    *
  * Streamer Version: 2.9.0                                                                                                          *
- * FCNPC Version: 1.6.1                                                                                                             *
+ * FCNPC Version: 1.7.0                                                                                                             *
  *                                                                                                                                  *
  * 3DTryg FindZ Precision:                                                                                                          *
  * 1. ColAndreas   - The most accurate precision with ColAndreas plugin.                                                            *
@@ -619,11 +619,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.0.4
+	#error [ADM] You need 3DTryg.inc v4.0.5
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.0.4
-#elseif (Tryg3D_Version < 40004)
-	#error [ADM] Update you 3DTryg.inc to v4.0.4
+	#error [ADM] Update you 3DTryg.inc to v4.0.5
+#elseif (Tryg3D_Version < 40005)
+	#error [ADM] Update you 3DTryg.inc to v4.0.5
 #endif
 */
 
@@ -638,7 +638,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40004) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40005) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize)
@@ -758,10 +758,10 @@
 //Detect FCNPC Plugin [Slot: 7]
 #if ((defined _FCNPC_included) && (defined FCNPC_INCLUDE_VERSION) && (!defined DISABLE_3D_TRYG_FCNPC))
 	#define Tryg3D_FCNPC
-	#define Tryg3D_FCNPCVersion							(161) //a.b.c 100*a+10*b+c
+	#define Tryg3D_FCNPCVersion							(170) //a.b.c 100*a+10*b+c
 	#define Tryg3D_Module_FCNPC							(true)
 	#if (!defined MOVE_TYPE_AUTO || !defined MOVE_SPEED_AUTO)
-		#error [ADM] Update you FCNPC.inc to v1.6.1
+		#error [ADM] Update you FCNPC.inc to v1.7.0
 	#endif
 #else
 	#define Tryg3D_Module_FCNPC							(false)
@@ -2417,12 +2417,17 @@ Tryg3D_Function:: ShiftLineRotationVector(Float:sX,Float:sY,Float:sZ,Float:eX,Fl
 	
 	//Normalizing, but isn`t needed for the matrix rotation
 	new Float:dist = VectorSize(eX,eY,eZ);
+	if(dist <= 0.0){
+		nX = eX, nY = eY, nZ = eZ;
+		return 0;
+	}
 	eX /= dist, eY /= dist, eZ /= dist;
 	
 	//Get rotation matrix from degrees
 	new Float:T3D:matrix[3][3];
 	Tryg3D_GetRotationMatrixEuler(T3D:matrix,rx,ry,rz);
 	Tryg3D_MatrixRotate(T3D:matrix,eX,eY,eZ,nX,nY,nZ);
+	return 1;
 }
 
 /************************************************************************************************************************************
