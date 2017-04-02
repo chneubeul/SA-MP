@@ -1,34 +1,37 @@
-/****************************************************************************************************
- *                                                                                                  *
- *                                        Portal Gun Script                                         *
- *                                                                                                  *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
- *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
- * Publication: http://forum.sa-mp.com/showthread.php?p=3862804                                     *
- *                                                                                                  *
- * Plugins: Streamer, ColAndreas                                                                    *
- * Modules: 3DTryg                                                                                  *
- * Attributes: None                                                                                 *
- *                                                                                                  *
- * File Version: 1.0.0                                                                              *
- * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
- * Streamer Version: 2.9.0                                                                          *
- * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.0.4                                                                            *
- *                                                                                                  *
- * Functions:                                                                                       *
- * TogglePrivatePortalGun(bool:toggle);            //default: false                                 *
- * bool:IsTogglePrivatePortalGun();                                                                 *
- * TogglePortalGunForAll(bool:toggle);             //default: true                                  *
- * bool:IsTogglePortalGunForAll();                                                                  *
- * TogglePortalGunForPlayer(playerid,bool:toggle); //default: false                                 *
- * bool:IsTogglePortalGunForPlayer(playerid);                                                       *
- * Float:GetPortalGunSpeed(playerid);                                                               *
- * SetPortalGunSpeed(playerid,Float:speed);                                                         *
- * ForceClosePortalGunRing(playerid);                                                               *
- *                                                                                                  *
- ****************************************************************************************************/
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ *                                        Portal Gun Script                                                                         *
+ *                                                                                                                                  *
+ * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                              *
+ *                                                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                        *
+ * Publication: http://forum.sa-mp.com/showthread.php?p=3862804                                                                     *
+ *                                                                                                                                  *
+ * Plugins: Streamer, ColAndreas                                                                                                    *
+ * Modules: 3DTryg                                                                                                                  *
+ * Attributes: None                                                                                                                 *
+ *                                                                                                                                  *
+ * File Version: 1.0.1                                                                                                              *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
+ * Streamer Version: 2.9.0                                                                                                          *
+ * ColAndreas Version: 1.4.0                                                                                                        *
+ * 3DTryg Version: 4.0.5                                                                                                            *
+ *                                                                                                                                  *
+ * Functions:                                                                                                                       *
+ * TogglePrivatePortalGun(bool:toggle);            //default: false                                                                 *
+ * bool:IsTogglePrivatePortalGun();                                                                                                 *
+ * TogglePortalGunForAll(bool:toggle);             //default: true                                                                  *
+ * bool:IsTogglePortalGunForAll();                                                                                                  *
+ * TogglePortalGunForPlayer(playerid,bool:toggle); //default: false                                                                 *
+ * bool:IsTogglePortalGunForPlayer(playerid);                                                                                       *
+ * Float:GetPortalGunSpeed(playerid);                                                                                               *
+ * SetPortalGunSpeed(playerid,Float:speed);                                                                                         *
+ * Float:GetPortalGunStreamDistance();                                                                                              *
+ * SetPortalGunStreamDistance(Float:streamdistance);                                                                                *
+ * ForceOpenPortalGunRing(playerid,portal_id,Float:ox,Float:oy,Float:oz,Float:tx,Float:ty,Float:tz,worldid,interiorid);             *
+ * ForceClosePortalGunRing(playerid);                                                                                               *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
 
 #if defined _portal_gun
 	#endinput
@@ -49,11 +52,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.0.4
+	#error [ADM] You need 3DTryg.inc v4.0.5
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.0.4
-#elseif (Tryg3D_Version < 40004)
-	#error [ADM] Update you 3DTryg.inc to v4.0.4
+	#error [ADM] Update you 3DTryg.inc to v4.0.5
+#elseif (Tryg3D_Version < 40005)
+	#error [ADM] Update you 3DTryg.inc to v4.0.5
 #endif
 
 #define PG_GetValueBit(%0,%1)					((%0) >>> (%1) & 0x01)
@@ -67,17 +70,17 @@
 #define PG_ToggleConfigInformation(%0,%1,%2)	PG_SetValueBit(%0[PG_GetConfigAddress(%1)],PG_GetConfigBit(%1),((%2) & 0x1))
 
 #define PORTAL_EXTRA_ID_OFFSET					(400000)
-#define PORTAL_GUN_SPEED 						(25.0)
+#define PORTAL_GUN_SPEED 						(70.0)
 #define PORTAL_GUN_BLUE							(0)
 #define PORTAL_GUN_ORANGE						(1)
 
 new PortalGunRing[MAX_PLAYERS][2],
 	PortalGunZone[MAX_PLAYERS][2],
-	PortalGunTick[MAX_PLAYERS][2],
 	PlayerInPortal[MAX_PLAYERS],
 	Float:PortalGunSpeed[MAX_PLAYERS],
 	PortalEnabledForPlayer[PG_GetConfigSize(MAX_PLAYERS)],
 	PlayerPortalType[PG_GetConfigSize(MAX_PLAYERS)],
+	Float:PortalGunStreamDistance = 100.0,
 	bool:PortalEnabledForAll = true,
 	bool:PrivatePortalGun = false;
 
@@ -91,6 +94,36 @@ new PortalGunRing[MAX_PLAYERS][2],
 #define GetPortalGunType(%0)				PG_IsToggleConfigInformation(PlayerPortalType,(%0))
 #define GetPortalGunSpeed(%0)				PortalGunSpeed[(%0)]
 #define SetPortalGunSpeed(%0,%1)			PortalGunSpeed[(%0)] = (%1)
+#define GetPortalGunStreamDistance()		PortalGunStreamDistance
+#define SetPortalGunStreamDistance(%0)		PortalGunStreamDistance = (%0)
+
+T3D:function ForceOpenPortalGunRing(playerid,portal_id,Float:ox,Float:oy,Float:oz,Float:tx,Float:ty,Float:tz,worldid,interiorid){
+	new Float:T3D:rx, Float:T3D:ry, Float:T3D:rz, Float:T3D:tmp[3];
+	CA_RayCastLineAngle(ox,oy,oz, tx,ty,tz, T3D:tmp[0],T3D:tmp[1],T3D:tmp[2], T3D:rx,T3D:ry,T3D:rz);
+	
+	if(T3D:rx == 0.0 && T3D:ry == 0.0 && T3D:rz == 0.0){
+		GetRotationFor2Point3D(ox,oy,oz,tx,ty,tz,T3D:rx,T3D:rz);
+		T3D:rx = CompRotationFloat(T3D:rx+90.0);
+	} else {
+		GetPointInFront3DEx(0.0,0.0,0.0,T3D:rx,T3D:ry,T3D:rz,1.0,T3D:tmp[0],T3D:tmp[1],T3D:tmp[2]);
+		ShiftVectorToRotation(T3D:tmp[0],T3D:tmp[1],T3D:tmp[2],T3D:rx,T3D:rz);
+	}
+	MovePointColCutLine(ox,oy,oz, tx,ty,tz, tx,ty,tz,0.2);
+	
+	if(IsValidDynamicObject(PortalGunRing[playerid][portal_id])) DestroyDynamicObject(PortalGunRing[playerid][portal_id]);
+	if(IsValidDynamicArea(PortalGunZone[playerid][portal_id])) DestroyDynamicArea(PortalGunZone[playerid][portal_id]);
+
+	PortalGunRing[playerid][portal_id] = CreateDynamicObject(1316,ox,oy,oz,T3D:rx,0.0,T3D:rz,worldid,interiorid,-1,GetPortalGunStreamDistance());
+	if(portal_id == PORTAL_GUN_ORANGE){
+		SetDynamicObjectMaterial(PortalGunRing[playerid][portal_id],0,1316,"ingame","CJ_W_GRAD",0xFFFF6600);
+	} else {
+		SetDynamicObjectMaterial(PortalGunRing[playerid][portal_id],0,1316,"ingame","CJ_W_GRAD",0xFF00FFFF);
+	}
+	PortalGunZone[playerid][portal_id] = CreateDynamicSphere(0.0,0.0,-6000.0,1.5,worldid,interiorid,-1);
+	AttachDynamicAreaToObject(PortalGunZone[playerid][portal_id],PortalGunRing[playerid][portal_id]);
+	Streamer_SetIntData(STREAMER_TYPE_AREA,PortalGunZone[playerid][portal_id],E_STREAMER_EXTRA_ID,playerid+PORTAL_EXTRA_ID_OFFSET);
+	MoveDynamicObject(PortalGunRing[playerid][portal_id],tx,ty,tz,GetPortalGunSpeed(playerid));
+}
 
 T3D:function ForceClosePortalGunRing(playerid){
 	if(IsValidDynamicObject(PortalGunRing[playerid][0])) DestroyDynamicObject(PortalGunRing[playerid][0]);
@@ -142,6 +175,25 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 	forward PG_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 #endif
 
+//Hook: OnPlayerDisconnect
+public OnPlayerDisconnect(playerid,reason){
+	ForceClosePortalGunRing(playerid);
+	#if defined PG_OnPlayerDisconnect
+		PG_OnPlayerDisconnect(playerid,reason);
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnPlayerDisconnect
+	#undef OnPlayerDisconnect
+#else
+	#define _ALS_OnPlayerDisconnect
+#endif
+#define OnPlayerDisconnect PG_OnPlayerDisconnect
+#if defined PG_OnPlayerDisconnect
+	forward PG_OnPlayerDisconnect(playerid,reason);
+#endif
+
 //Hook: OnPlayerWeaponShot
 public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Float:fZ){
 	if(IsTogglePortalGunForAll() || IsTogglePortalGunForPlayer(playerid)){
@@ -164,33 +216,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 				} else {
 					portal_id = PORTAL_GUN_BLUE;
 				}
-				F4[T3D:VW] = GetPlayerVirtualWorld(playerid);
-				F4[T3D:INT] = GetPlayerInterior(playerid);
-				
-				MovePointColCutLine(F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],0.1);
-				
-				PortalGunTick[playerid][portal_id] = GetTickCount();
-				if(IsValidDynamicObject(PortalGunRing[playerid][portal_id])) DestroyDynamicObject(PortalGunRing[playerid][portal_id]);
-				if(IsValidDynamicArea(PortalGunZone[playerid][portal_id])) DestroyDynamicArea(PortalGunZone[playerid][portal_id]);
-
-				if(IsPointInGround(F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],(F4[T3D:INT] != 0),2.2)){
-					GetGroundRotation(F4[T3D:tX],F4[T3D:tY],1.0,F4[T3D:rX],F4[T3D:rZ]);
-					F4[T3D:rZ] = CompRotationFloat(F4[T3D:rZ]+180.0);
-				} else {
-					GetRotationFor2Point3D(F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],F4[T3D:rX],F4[T3D:rZ]);
-					F4[T3D:rX] = CompRotationFloat(F4[T3D:rX]+90.0);
-				}
-				
-				PortalGunRing[playerid][portal_id] = CreateDynamicObject(1316,F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],0.0,F4[T3D:rZ],F4[T3D:VW],F4[T3D:INT],-1,100.0);
-				if(portal_id == PORTAL_GUN_ORANGE){
-					SetDynamicObjectMaterial(PortalGunRing[playerid][portal_id],0,1316,"ingame","CJ_W_GRAD",0xFFFF6600);
-				} else {
-					SetDynamicObjectMaterial(PortalGunRing[playerid][portal_id],0,1316,"ingame","CJ_W_GRAD",0xFF00FFFF);
-				}
-				PortalGunZone[playerid][portal_id] = CreateDynamicSphere(0.0,0.0,-6000.0,1.5,F4[T3D:VW],F4[T3D:INT],-1);
-				AttachDynamicAreaToObject(PortalGunZone[playerid][portal_id],PortalGunRing[playerid][portal_id]);
-				Streamer_SetIntData(STREAMER_TYPE_AREA,PortalGunZone[playerid][portal_id],E_STREAMER_EXTRA_ID,playerid+PORTAL_EXTRA_ID_OFFSET);
-				MoveDynamicObject(PortalGunRing[playerid][portal_id],F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],GetPortalGunSpeed(playerid));
+				ForceOpenPortalGunRing(playerid,portal_id,F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid));
 			}
 		}
 	}
@@ -224,27 +250,39 @@ public OnPlayerEnterDynamicArea(playerid,areaid){
 			} else if(PortalGunZone[targetid][PORTAL_GUN_BLUE] == areaid){
 				portal_id = PORTAL_GUN_ORANGE;
 			}
-			if(portal_id != -1 && IsValidDynamicObject(PortalGunRing[targetid][portal_id]) && !IsDynamicObjectMoving(PortalGunRing[targetid][portal_id])){
-				if((GetTickCount()-PortalGunTick[targetid][portal_id] >= 10000) && (GetTickCount()-PlayerInPortal[playerid] >= 2000)){
-					PlayerInPortal[playerid] = GetTickCount();
-					new F4[Float3D];
-					GetDynamicObjectPos(PortalGunRing[targetid][portal_id],F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
-					GetDynamicObjectRot(PortalGunRing[targetid][portal_id],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
-					F4[T3D:VW] = Streamer_GetIntData(STREAMER_TYPE_OBJECT,PortalGunRing[targetid][portal_id],E_STREAMER_WORLD_ID);
-					F4[T3D:INT] = Streamer_GetIntData(STREAMER_TYPE_OBJECT,PortalGunRing[targetid][portal_id],E_STREAMER_INTERIOR_ID);
-					
-					F4[T3D:rX] = CompRotationFloat(F4[T3D:rX]+90.0);
-					
-					if(IsPlayerInAnyVehicle(playerid)){
-						new Float:T3D:x,Float:T3D:y,Float:T3D:z;
-						GetVehicleModelInfo(GetVehicleModel(GetPlayerVehicleID(playerid)),VEHICLE_MODEL_INFO_SIZE,T3D:x,T3D:y,T3D:z);
-						GetPointInFront3D(F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rZ],((T3D:y+1.0)/2.0),F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
-						GetRotationFor2Point2D(F4[T3D:X],F4[T3D:Y],F4[T3D:tX],F4[T3D:tY],F4[T3D:rZ]);
-						SetPlayerAbsolutePositionVeh(playerid,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],F4[T3D:rZ],F4[T3D:VW],F4[T3D:INT],500);
-					} else {
-						GetPointInFront3D(F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rZ],2.0,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
-						GetRotationFor2Point2D(F4[T3D:X],F4[T3D:Y],F4[T3D:tX],F4[T3D:tY],F4[T3D:rZ]);
-						SetPlayerAbsolutePosition(playerid,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],F4[T3D:rZ],F4[T3D:VW],F4[T3D:INT],500);
+			if(portal_id != -1 && IsValidDynamicObject(PortalGunRing[targetid][portal_id])){
+				if(!IsDynamicObjectMoving(PortalGunRing[targetid][PORTAL_GUN_BLUE]) && !IsDynamicObjectMoving(PortalGunRing[targetid][PORTAL_GUN_ORANGE])){
+					if(GetTickCount()-PlayerInPortal[playerid] >= 1500){
+						PlayerInPortal[playerid] = GetTickCount();
+						new F4[Float3D];
+						GetDynamicObjectPos(PortalGunRing[targetid][portal_id],F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
+						GetDynamicObjectRot(PortalGunRing[targetid][portal_id],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
+						F4[T3D:VW] = Streamer_GetIntData(STREAMER_TYPE_OBJECT,PortalGunRing[targetid][portal_id],E_STREAMER_WORLD_ID);
+						F4[T3D:INT] = Streamer_GetIntData(STREAMER_TYPE_OBJECT,PortalGunRing[targetid][portal_id],E_STREAMER_INTERIOR_ID);
+						
+						F4[T3D:rX] = CompRotationFloat(F4[T3D:rX]+90.0);
+						
+						new Float:T3D:vx,Float:T3D:vy,Float:T3D:vz,
+							Float:T3D:tvx,Float:T3D:tvy,Float:T3D:tvz;
+						if(IsPlayerInAnyVehicle(playerid)){
+							new Float:T3D:x,Float:T3D:y,Float:T3D:z;
+							GetVehicleVelocity(GetPlayerVehicleID(playerid),T3D:vx,T3D:vy,T3D:vz);
+							ShiftLineRotationVector(0.0,0.0,0.0,T3D:vx,T3D:vy,T3D:vz,CompRotationFloat(F4[T3D:rX]+90.0),0.0,F4[T3D:rZ],T3D:tvx,T3D:tvy,T3D:tvz);
+							GetVehicleModelInfo(GetVehicleModel(GetPlayerVehicleID(playerid)),VEHICLE_MODEL_INFO_SIZE,T3D:x,T3D:y,T3D:z);
+							GetPointInFront3D(F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rZ],((T3D:y+1.0)/2.0),F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
+							GetRotationFor2Point2D(F4[T3D:X],F4[T3D:Y],F4[T3D:tX],F4[T3D:tY],F4[T3D:rZ]);
+							SetPlayerAbsolutePositionVeh(playerid,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],F4[T3D:rZ],F4[T3D:VW],F4[T3D:INT],-1);
+							
+							SetVehicleVelocity(GetPlayerVehicleID(playerid),T3D:tvx,T3D:tvy,T3D:tvz);
+						} else {
+							GetPlayerVelocity(playerid,T3D:vx,T3D:vy,T3D:vz);
+							ShiftLineRotationVector(0.0,0.0,0.0,T3D:vx,T3D:vy,T3D:vz,CompRotationFloat(F4[T3D:rX]+90.0),0.0,F4[T3D:rZ],T3D:tvx,T3D:tvy,T3D:tvz);
+							
+							GetPointInFront3D(F4[T3D:X],F4[T3D:Y],F4[T3D:Z],F4[T3D:rX],F4[T3D:rZ],2.0,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
+							GetRotationFor2Point2D(F4[T3D:X],F4[T3D:Y],F4[T3D:tX],F4[T3D:tY],F4[T3D:rZ]);
+							SetPlayerAbsolutePosition(playerid,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],F4[T3D:rZ],F4[T3D:VW],F4[T3D:INT],-1);
+							SetPlayerVelocity(playerid,T3D:tvx,T3D:tvy,T3D:tvz);
+						}
 					}
 				}
 			}
@@ -255,6 +293,16 @@ public OnPlayerEnterDynamicArea(playerid,areaid){
 	#endif
 	return 1;
 }
+
+#if defined _ALS_OnPlayerEnterDynamicArea
+	#undef OnPlayerEnterDynamicArea
+#else
+	#define _ALS_OnPlayerEnterDynamicArea
+#endif
+#define OnPlayerEnterDynamicArea PG_OnPlayerEnterDynamicArea
+#if defined PG_OnPlayerEnterDynamicArea
+	forward PG_OnPlayerEnterDynamicArea(playerid,areaid);
+#endif
 
 //Hook: OnFilterScriptInit
 public OnFilterScriptInit(){
