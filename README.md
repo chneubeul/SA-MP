@@ -24,4 +24,4 @@ http://8.ct8.pl
 Crayder, Nero_3D, IllidanS4, eider, Witkacy, Zoutdaxv, RyDeR, hesambia, tsynotnu, Neil Lamoureux, Freaksken, Shiny, Emmet_, Pottus, kvann, Hanger
 
 ### Beta Testers:
-banangame, FerilanS, Kozdyr0, Nizzur, MuchomoE
+banangame, FerilanS, MuchomoE
