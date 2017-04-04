@@ -1210,21 +1210,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	GetPlayerPos(playerid,x,y,z);
 	idx_max = Streamer_CountVisibleItems(playerid,type,1);
 	switch(type){
-		case STREAMER_TYPE_ACTOR: {
-			max_element = Streamer_GetVisibleItems(type,playerid);
-			while(idx <= max_element && idx_max > 0){
-				if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
-					idx_max--;
-					Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
-					if(distance < min_radius){
-						itemid = tmp_item;
-						min_radius = distance;
-					}
-				}
-				idx++;
-			}
-		}
-		case STREAMER_TYPE_OBJECT, STREAMER_TYPE_PICKUP, STREAMER_TYPE_MAP_ICON, STREAMER_TYPE_3D_TEXT_LABEL: {
+		case STREAMER_TYPE_OBJECT, STREAMER_TYPE_PICKUP, STREAMER_TYPE_MAP_ICON, STREAMER_TYPE_3D_TEXT_LABEL, STREAMER_TYPE_ACTOR: {
 			max_element = Streamer_GetVisibleItems(type,playerid);
 			while(idx <= max_element && idx_max > 0){
 				if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
