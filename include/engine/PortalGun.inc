@@ -11,11 +11,11 @@
  * Modules: 3DTryg                                                                                                                  *
  * Attributes: None                                                                                                                 *
  *                                                                                                                                  *
- * File Version: 1.0.1                                                                                                              *
+ * File Version: 1.1.0                                                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * Streamer Version: 2.9.0                                                                                                          *
  * ColAndreas Version: 1.4.0                                                                                                        *
- * 3DTryg Version: 4.0.5                                                                                                            *
+ * 3DTryg Version: 4.1.0                                                                                                            *
  *                                                                                                                                  *
  * Functions:                                                                                                                       *
  * TogglePrivatePortalGun(bool:toggle);            //default: false                                                                 *
@@ -52,11 +52,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.0.5
+	#error [ADM] You need 3DTryg.inc v4.1.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.0.5
-#elseif (Tryg3D_Version < 40005)
-	#error [ADM] Update you 3DTryg.inc to v4.0.5
+	#error [ADM] Update you 3DTryg.inc to v4.1.0
+#elseif (Tryg3D_Version < 40100)
+	#error [ADM] Update you 3DTryg.inc to v4.1.0
 #endif
 
 #define PG_GetValueBit(%0,%1)					((%0) >>> (%1) & 0x01)
@@ -98,22 +98,14 @@ new PortalGunRing[MAX_PLAYERS][2],
 #define SetPortalGunStreamDistance(%0)		PortalGunStreamDistance = (%0)
 
 T3D:function ForceOpenPortalGunRing(playerid,portal_id,Float:ox,Float:oy,Float:oz,Float:tx,Float:ty,Float:tz,worldid,interiorid){
-	new Float:T3D:rx, Float:T3D:ry, Float:T3D:rz, Float:T3D:tmp[3];
-	CA_RayCastLineAngle(ox,oy,oz, tx,ty,tz, T3D:tmp[0],T3D:tmp[1],T3D:tmp[2], T3D:rx,T3D:ry,T3D:rz);
+	new Float:T3D:rx,Float:T3D:rz,Float:px,Float:py,Float:pz;
 	
-	if(T3D:rx == 0.0 && T3D:ry == 0.0 && T3D:rz == 0.0){
-		GetRotationFor2Point3D(ox,oy,oz,tx,ty,tz,T3D:rx,T3D:rz);
-		T3D:rx = CompRotationFloat(T3D:rx+90.0);
-	} else {
-		GetPointInFront3DEx(0.0,0.0,0.0,T3D:rx,T3D:ry,T3D:rz,1.0,T3D:tmp[0],T3D:tmp[1],T3D:tmp[2]);
-		ShiftVectorToRotation(T3D:tmp[0],T3D:tmp[1],T3D:tmp[2],T3D:rx,T3D:rz);
-	}
-	MovePointColCutLine(ox,oy,oz, tx,ty,tz, tx,ty,tz,0.2);
+	GetWallRotation(ox,oy,oz, tx,ty,tz, T3D:rx,T3D:rz, px,py,pz, 1.0, 0.2);
 	
 	if(IsValidDynamicObject(PortalGunRing[playerid][portal_id])) DestroyDynamicObject(PortalGunRing[playerid][portal_id]);
 	if(IsValidDynamicArea(PortalGunZone[playerid][portal_id])) DestroyDynamicArea(PortalGunZone[playerid][portal_id]);
 
-	PortalGunRing[playerid][portal_id] = CreateDynamicObject(1316,ox,oy,oz,T3D:rx,0.0,T3D:rz,worldid,interiorid,-1,GetPortalGunStreamDistance());
+	PortalGunRing[playerid][portal_id] = CreateDynamicObject(1316,ox,oy,oz,T3D:rx,0.0,CompRotationFloat(T3D:rz-90.0),worldid,interiorid,-1,GetPortalGunStreamDistance());
 	if(portal_id == PORTAL_GUN_ORANGE){
 		SetDynamicObjectMaterial(PortalGunRing[playerid][portal_id],0,1316,"ingame","CJ_W_GRAD",0xFFFF6600);
 	} else {
@@ -122,7 +114,7 @@ T3D:function ForceOpenPortalGunRing(playerid,portal_id,Float:ox,Float:oy,Float:o
 	PortalGunZone[playerid][portal_id] = CreateDynamicSphere(0.0,0.0,-6000.0,1.5,worldid,interiorid,-1);
 	AttachDynamicAreaToObject(PortalGunZone[playerid][portal_id],PortalGunRing[playerid][portal_id]);
 	Streamer_SetIntData(STREAMER_TYPE_AREA,PortalGunZone[playerid][portal_id],E_STREAMER_EXTRA_ID,playerid+PORTAL_EXTRA_ID_OFFSET);
-	MoveDynamicObject(PortalGunRing[playerid][portal_id],tx,ty,tz,GetPortalGunSpeed(playerid));
+	MoveDynamicObject(PortalGunRing[playerid][portal_id],px,py,pz,GetPortalGunSpeed(playerid));
 }
 
 T3D:function ForceClosePortalGunRing(playerid){
