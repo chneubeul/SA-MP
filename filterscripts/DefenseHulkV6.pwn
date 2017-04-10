@@ -83,23 +83,12 @@ public OnFilterScriptInit(){
 	
 	for(new i = 0; i < 10; i++){
 		CreateFighter(i, -2119.5449,496.9574,35.1719, 0,0, myarea);
-	}
-	
-	for(new i = 0; i < 10; i++){
-		CreateDragon(i, -2119.5449,496.9574,35.1719, 0,0, myarea);
-	}
-	
-	for(new i = 0; i < 10; i++){
 		CreateCommander(i, -2119.5449,496.9574,35.1719, 0,0, myarea);
-	}
-	
-	for(new i = 0; i < 10; i++){
+		CreateDragon(i, -2119.5449,496.9574,35.1719, 0,0, myarea);
 		CreateExcavator(i, 0.0,0.0,3.0, 0,0, myarea);
-	}
-	
-	for(new i = 0; i < 10; i++){
 		CreateUnderDude(i, -2170.0430,1623.7864,-6.0942, 0,0, myarea);
 	}
+	
 	return 1;
 }
 
@@ -343,28 +332,9 @@ public CreateDefenseHulk(mobid,Float:x,Float:y,Float:z,worldid,interiorid,areaid
 public DestroyDefenseHulk(mobid){
 	DefenseHulkStatus[mobid] = (0);
 	StopDynamicObject(DefenseHulk[mobid][22]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][2])) DestroyDynamicObject(DefenseHulk[mobid][2]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][3])) DestroyDynamicObject(DefenseHulk[mobid][3]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][4])) DestroyDynamicObject(DefenseHulk[mobid][4]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][5])) DestroyDynamicObject(DefenseHulk[mobid][5]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][6])) DestroyDynamicObject(DefenseHulk[mobid][6]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][7])) DestroyDynamicObject(DefenseHulk[mobid][7]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][8])) DestroyDynamicObject(DefenseHulk[mobid][8]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][9])) DestroyDynamicObject(DefenseHulk[mobid][9]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][10])) DestroyDynamicObject(DefenseHulk[mobid][10]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][11])) DestroyDynamicObject(DefenseHulk[mobid][11]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][12])) DestroyDynamicObject(DefenseHulk[mobid][12]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][13])) DestroyDynamicObject(DefenseHulk[mobid][13]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][14])) DestroyDynamicObject(DefenseHulk[mobid][14]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][15])) DestroyDynamicObject(DefenseHulk[mobid][15]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][16])) DestroyDynamicObject(DefenseHulk[mobid][16]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][17])) DestroyDynamicObject(DefenseHulk[mobid][17]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][18])) DestroyDynamicObject(DefenseHulk[mobid][18]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][19])) DestroyDynamicObject(DefenseHulk[mobid][19]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][20])) DestroyDynamicObject(DefenseHulk[mobid][20]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][21])) DestroyDynamicObject(DefenseHulk[mobid][21]);
-	if(IsValidDynamicObject(DefenseHulk[mobid][22])) DestroyDynamicObject(DefenseHulk[mobid][22]);
-	
+	for(new i=2;i<23;++i)
+		if(IsValidDynamicObject(DefenseHulk[mobid][i])) 
+			DestroyDynamicObject(DefenseHulk[mobid][i]);
 	return 1;
 }
 
