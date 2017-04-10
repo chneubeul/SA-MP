@@ -332,9 +332,11 @@ public CreateDefenseHulk(mobid,Float:x,Float:y,Float:z,worldid,interiorid,areaid
 public DestroyDefenseHulk(mobid){
 	DefenseHulkStatus[mobid] = (0);
 	StopDynamicObject(DefenseHulk[mobid][22]);
-	for(new i=2;i<23;++i)
-		if(IsValidDynamicObject(DefenseHulk[mobid][i])) 
+	for(new i = 2; i < 23; i++){
+		if(IsValidDynamicObject(DefenseHulk[mobid][i])){
 			DestroyDynamicObject(DefenseHulk[mobid][i]);
+		}
+	}
 	return 1;
 }
 
