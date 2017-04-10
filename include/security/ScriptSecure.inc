@@ -6,10 +6,10 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                      *
  * Publication: http://forum.sa-mp.com/showthread.php?t=600408                                      *
+ * Website: http://8.ct8.pl                                                                         *
  *                                                                                                  *
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
- * Attributes: None                                                                                 *
  *                                                                                                  *
  * File Version: 4.0.1                                                                              *
  * SA:MP Version: 0.3.7                                                                             *

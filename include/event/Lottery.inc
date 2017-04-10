@@ -6,10 +6,10 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=604954                                      *
+ * Website: http://8.ct8.pl                                                                         *
  *                                                                                                  *
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
- * Attributes: None                                                                                 *
  *                                                                                                  *
  * File Version: 1.0.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *

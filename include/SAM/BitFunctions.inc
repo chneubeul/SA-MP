@@ -6,10 +6,10 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  * Publication: http://forum.sa-mp.com/showthread.php?t=591223                                      *
+ * Website: http://8.ct8.pl                                                                         *
  *                                                                                                  *
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
- * Attributes: Overload resistance.                                                                 *
  *                                                                                                  *
  * File Version: 1.8.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *

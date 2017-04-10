@@ -6,10 +6,10 @@
  *                                                                                                                                 *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                       *
  * Publication: http://forum.sa-mp.com/showthread.php?t=600617                                                                     *
+ * Website: http://8.ct8.pl                                                                                                        *
  *                                                                                                                                 *
  * Plugins: Streamer, ColAndreas                                                                                                   *
  * Modules: 3DTryg                                                                                                                 *
- * Attributes: Overload resistance.                                                                                                *
  *                                                                                                                                 *
  * File Version: 6.0.24                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                            *

@@ -6,10 +6,10 @@
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=595203                                                                    *
+ * Website: http://8.ct8.pl                                                                                                       *
  *                                                                                                                                *
  * Plugins: SScanf                                                                                                                *
  * Modules: MD5, ProtVar                                                                                                          *
- * Attributes: Overload resistance.                                                                                               *
  *                                                                                                                                *
  * File Version: 2.3.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *

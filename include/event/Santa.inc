@@ -6,10 +6,10 @@
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/event                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=595265                                      *
+ * Website: http://8.ct8.pl                                                                         *
  *                                                                                                  *
  * Plugins: Streamer, ColAndreas/MapAndreas                                                         *
  * Modules: 3DTryg, StreamerFunction                                                                *
- * Attributes: None                                                                                 *
  *                                                                                                  *
  * File Version: 1.4.2                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
