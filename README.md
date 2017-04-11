@@ -18,8 +18,8 @@ http://forum.sa-mp.com/showpost.php?p=3705791&postcount=140
 ### Repository developer:
 Abyss Morgan
 
-#### Contributors:
+### Contributors:
 Crayder, Nero_3D, IllidanS4, eider, Witkacy, Zoutdaxv, RyDeR, hesambia, tsynotnu, Neil Lamoureux, Freaksken, Shiny, Emmet_, Pottus, kvann, Hanger, Ivan_Ino
 
-#### Beta Testers:
+### Beta Testers:
 banangame, FerilanS, MuchomoE
