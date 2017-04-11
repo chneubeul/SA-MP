@@ -19,7 +19,11 @@ http://forum.sa-mp.com/showpost.php?p=3705791&postcount=140
 Abyss Morgan
 
 ### Contributors:
-Crayder, Nero_3D, IllidanS4, eider, Witkacy, Zoutdaxv, RyDeR, hesambia, tsynotnu, Neil Lamoureux, Freaksken, Shiny, Emmet_, Pottus, kvann, Hanger, Ivan_Ino
+[Crayder](https://github.com/Crayder),
+Nero_3D,
+IllidanS4,
+eider,
+Witkacy, Zoutdaxv, RyDeR, hesambia, tsynotnu, Neil Lamoureux, Freaksken, Shiny, Emmet_, Pottus, kvann, Hanger, [Ivan_Ino](https://github.com/Ino42O)
 
 ### Beta Testers:
-![alt banangame](), ![alt FerilanS](http://8.ct8.pl/ferilans), ![alt MuchomoE](http://8.ct8.pl/muchomoe)
+banangame, [FerilanS](http://8.ct8.pl/ferilans), [MuchomoE](http://8.ct8.pl/muchomoe)
