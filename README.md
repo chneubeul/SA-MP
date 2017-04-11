@@ -22,4 +22,4 @@ Abyss Morgan
 Crayder, Nero_3D, IllidanS4, eider, Witkacy, Zoutdaxv, RyDeR, hesambia, tsynotnu, Neil Lamoureux, Freaksken, Shiny, Emmet_, Pottus, kvann, Hanger, Ivan_Ino
 
 ### Beta Testers:
-banangame, FerilanS, MuchomoE
+![alt banangame](), ![alt FerilanS](http://8.ct8.pl/ferilans), ![alt MuchomoE](http://8.ct8.pl/muchomoe)
