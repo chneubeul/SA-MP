@@ -20,10 +20,22 @@ Abyss Morgan
 
 ### Contributors:
 [Crayder](https://github.com/Crayder),
-Nero_3D,
-IllidanS4,
-eider,
-Witkacy, Zoutdaxv, RyDeR, hesambia, tsynotnu, Neil Lamoureux, Freaksken, Shiny, Emmet_, Pottus, kvann, Hanger, [Ivan_Ino](https://github.com/Ino42O)
+[Nero_3D](https://github.com/Shiska),
+[IllidanS4](https://github.com/IllidanS4),
+Witkacy,
+Zoutdaxv,
+RyDeR,
+hesambia,
+tsynotnu,
+Neil Lamoureux,
+Freaksken,
+Shiny,
+[Emmet_](https://github.com/emmet-jones),
+[Pottus](https://github.com/Pottus),
+kvann,
+Hanger,
+[Ivan_Ino](https://github.com/Ino42O),
+[Sreyas](https://github.com/Sreyas-Sreelal)
 
 ### Beta Testers:
 banangame, [FerilanS](http://8.ct8.pl/ferilans), [MuchomoE](http://8.ct8.pl/muchomoe)
