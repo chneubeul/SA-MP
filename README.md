@@ -19,23 +19,25 @@ http://forum.sa-mp.com/showpost.php?p=3705791&postcount=140
 Abyss Morgan
 
 ### Contributors:
-[Crayder](https://github.com/Crayder),
-[Nero_3D](https://github.com/Shiska),
-[IllidanS4](https://github.com/IllidanS4),
+[Crayder](http://forum.sa-mp.com/member.php?u=214776),
+[Nero_3D](http://forum.sa-mp.com/member.php?u=9765),
+[IllidanS4](http://forum.sa-mp.com/member.php?u=193537),
 Witkacy,
-Zoutdaxv,
-RyDeR,
-hesambia,
+[Zoutdaxv](http://forum.sa-mp.com/member.php?u=23496),
+[RyDeR](http://forum.sa-mp.com/member.php?u=46049),
+[hesambia](http://forum.sa-mp.com/member.php?u=241383),
 tsynotnu,
 Neil Lamoureux,
-Freaksken,
+[Freaksken](http://forum.sa-mp.com/member.php?u=46764),
 Shiny,
 [Emmet_](https://github.com/emmet-jones),
-[Pottus](https://github.com/Pottus),
-kvann,
-Hanger,
-[Ivan_Ino](https://github.com/Ino42O),
-[Sreyas](https://github.com/Sreyas-Sreelal)
+[Pottus](http://forum.sa-mp.com/member.php?u=169807),
+[kvann](http://forum.sa-mp.com/member.php?u=169274),
+[Hanger](http://forum.sa-mp.com/member.php?u=160578),
+[Ivan_Ino](http://forum.sa-mp.com/member.php?u=182165),
+[Sreyas](http://forum.sa-mp.com/member.php?u=268427)
 
 ### Beta Testers:
-banangame, [FerilanS](http://8.ct8.pl/ferilans), [MuchomoE](http://8.ct8.pl/muchomoe)
+banangame,
+[FerilanS](http://8.ct8.pl/ferilans),
+[MuchomoE](http://8.ct8.pl/muchomoe)
