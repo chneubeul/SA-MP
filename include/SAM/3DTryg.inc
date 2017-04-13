@@ -13,7 +13,7 @@
  * Modules: FoxForeach, Foreach                                                                                                      *
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                             *
  *                                                                                                                                   *
- * File Version: 4.1.1                                                                                                               *
+ * File Version: 4.1.2                                                                                                               *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                    *
  * MapAndreas Version: 1.2.1                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                         *
@@ -148,6 +148,8 @@
  *                                 &Float:tx,&Float:ty,&Float:tz);                                                                   *
  * GetRandomPointInCone3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:pointA_radius,Float:pointB_radius,             *
  *                        &Float:tx,&Float:ty,&Float:tz);                                                                            *
+ * GetRandomPointInCube3D(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z,                 *
+ *                        &Float:tx,&Float:ty,&Float:tz);                                                                            *
  * GetRandomPointOnCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty);                                                         *
  * GetRandomPointOnCylinder2D(Float:x,Float:y,Float:minz,Float:maxz,Float:radius,&Float:tx,&Float:ty,&Float:tz);                     *
  * GetRandomPointOnCylinder3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:radius,&Float:tx,&Float:ty,&Float:tz);     *
@@ -158,6 +160,8 @@
  * GetRandomPointOnSphericalSector(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz,                       *
  *                                 &Float:tx,&Float:ty,&Float:tz);                                                                   *
  * GetRandomPointOnCone3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:pointA_radius,Float:pointB_radius,             *
+ *                        &Float:tx,&Float:ty,&Float:tz);                                                                            *
+ * GetRandomPointOnCube3D(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z,                 *
  *                        &Float:tx,&Float:ty,&Float:tz);                                                                            *
  * bool:IsPointBetween2Points2D(Float:px,Float:py,Float:xA,Float:yA,Float:xB,Float:yB);                                              *
  * bool:IsPointBetween2Points3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB);                   *
@@ -175,6 +179,8 @@
  *                               Float:vrx,Float:vrz);                                                                               *
  * bool:IsPointInCone3D(Float:px,Float:py,Float:pz,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,                            *
  *                      Float:pointA_radius,Float:pointB_radius);                                                                    *
+ * bool:IsPointInCube3D(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,                               *
+ *                      Float:size_x,Float:size_y,Float:size_z);                                                                     *
  * bool:IsPointInSphericalSectorEx(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,                *
  *                                 Float:vrx,Float:vrz,bool:testLOS=true);                                                           *
  * bool:IsProbable(chance);                                                                                                          *
@@ -220,6 +226,8 @@
  * Tryg3D::EulerToQuat(Float:rx,Float:ry,Float:rz,&Float:qw,&Float:qx,&Float:qy,&Float:qz);                                          *
  * Tryg3D::QuatToEuler(&Float:rx,&Float:ry,&Float:rz,Float:qw,Float:qx,Float:qy,Float:qz);                                           *
  * ShiftVectorRotation(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,&Float:tx,&Float:ty,&Float:tz);                            *
+ * GetCube3DPoint(OrientationCube3D:orientation,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,                                  *
+ *                Float:size_x,Float:size_y,Float:size_z,&Float:tx,&Float:ty,&Float:tz);                                             *
  *                                                                                                                                   *
  * Universal Functions:                                                                                                              *
  * bool:GetElementPos(elementid,Item3D_Type:element_type,&Float:x,&Float:y,&Float:z);                                                *
@@ -246,6 +254,8 @@
  *                                 Float:radius,Float:vrx,Float:vrz);                                                                *
  * bool:IsElementInCone(elementid,Item3D_Type:element_type,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,                    *
  *                      Float:pointA_radius,Float:pointB_radius);                                                                    *
+ * bool:IsElementInCube3D(elementid,Item3D_Type:element_type,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,                     *
+ *                        Float:size_x,Float:size_y,Float:size_z);                                                                   *
  * GetElementToPointVector(elementid,Item3D_Type:element_type,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz);             *
  * bool:GetElementRotatedVector(elementid,Item3D_Type:element_type,Float:tx,Float:ty,Float:tz,                                       *
  *                              &Float:vx,&Float:vy,&Float:vz,bool:return_vector=true,Float:rx=0.0,Float:ry=0.0,Float:rz=0.0);       *
@@ -318,6 +328,7 @@
  *                              freezeplayer = 1);                                                                                   *
  * bool:IsDynamicActorInRangeOfPoint(actorid,Float:range,Float:x,Float:y,Float:z);                                                   *
  * bool:IsVehicleFullyInDynamicArea(vehicleid,areaid);                                                                               *
+ * bool:GetRandomPointInDynamicArea(STREAMER_TAG_AREA areaid,&Float:tx,&Float:ty,&Float:tz);                                         *
  *                                                                                                                                   *
  * Streamer Extended Functions:                                                                                                      *
  * bool:Tryg3D::IsValidStreamer(version);                                                                                            *
@@ -446,6 +457,7 @@
  * Stream:StreamCircularSector(Float:x,Float:y,Float:rz,Float:radius,Float:view_angle);                                              *
  * Stream:StreamSphericalSector(Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz);                         *
  * Stream:StreamCone3D(Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:pointA_radius,Float:pointB_radius);               *
+ * Stream:StreamCube3D(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z);                   *
  * bool:IsValidStream(Stream:StreamData[Stream3D]);                                                                                  *
  * bool:IsPointInStream(Float:x,Float:y,Float:z,Stream:StreamData[Stream3D]);                                                        *
  * bool:GetRandomPointInStream(Stream:StreamData[Stream3D],&Float:x,&Float:y,&Float:z);                                              *
@@ -483,6 +495,7 @@
  * bool:IsPlayerInCircularSector(playerid,Float:x,Float:y,Float:rz,Float:radius,Float:view_angle);                                   *
  * bool:IsPlayerInSphericalSector(playerid,Float:x,Float:y,Float:z,Float:rx,Float:rz,Float:radius,Float:vrx,Float:vrz);              *
  * bool:IsPlayerInCone(playerid,Float:xA,Float:yA,Float:zA,Float:xB,Float:yB,Float:zB,Float:pointA_radius,Float:pointB_radius);      *
+ * bool:IsPlayerInCube3D(playerid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z);        *
  * bool:GetArcPointsFloor2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));      *
  * bool:GetArcPointsCellar2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));     *
  * bool:GetArcPointsStarboard2D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:spread,Float:points[][],max_points=sizeof(points));  *
@@ -616,14 +629,25 @@
  * enum 'StreamType'                                                                                                                 *
  * # s_invalid                                                                                                                       *
  * # s_circle                                                                                                                        *
- * # s_cylinder3d                                                                                                                    *
  * # s_cylinder2d                                                                                                                    *
+ * # s_cylinder3d                                                                                                                    *
  * # s_sphere                                                                                                                        *
  * # s_rectangle                                                                                                                     *
- * # s_cube                                                                                                                          *
+ * # s_cube2d                                                                                                                        *
+ * # s_cube3d                                                                                                                        *
  * # s_circularsector                                                                                                                *
  * # s_sphericalsector                                                                                                               *
  * # s_cone                                                                                                                          *
+ *                                                                                                                                   *
+ * enum 'OrientationCube3D'                                                                                                          *
+ * # o_left_back_down                                                                                                                *
+ * # o_right_back_down                                                                                                               *
+ * # o_right_front_down                                                                                                              *
+ * # o_left_front_down                                                                                                               *
+ * # o_left_back_up                                                                                                                  *
+ * # o_right_back_up                                                                                                                 *
+ * # o_right_front_up                                                                                                                *
+ * # o_left_front_up                                                                                                                 *
  *                                                                                                                                   *
  * enum 'LinePoint3D'                                                                                                                *
  * # bool:  T3D:PointUsed     - Is point used                                                                                        *
@@ -646,11 +670,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.1.1
+	#error [ADM] You need 3DTryg.inc v4.1.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.1.1
-#elseif (Tryg3D_Version < 40101)
-	#error [ADM] Update you 3DTryg.inc to v4.1.1
+	#error [ADM] Update you 3DTryg.inc to v4.1.2
+#elseif (Tryg3D_Version < 40102)
+	#error [ADM] Update you 3DTryg.inc to v4.1.2
 #endif
 */
 
@@ -665,7 +689,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40101) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40102) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize)
@@ -1048,15 +1072,38 @@ enum LongFloat4D {
 	T3D:VW, T3D:INT, T3D:TL, Float:T3D:SPEED
 }
 
+enum OrientationCube3D {
+	o_left_back_down,
+	o_right_back_down,
+	o_right_front_down,
+	o_left_front_down,
+	o_left_back_up,
+	o_right_back_up,
+	o_right_front_up,
+	o_left_front_up
+}
+
+static const Float:Cube3DOffset[OrientationCube3D][3] = {
+	{-1.0,-1.0,-1.0},	//left - back - down
+	{1.0,-1.0,-1.0},	//right - back - down
+	{1.0,1.0,-1.0},		//right - front - down
+	{-1.0,1.0,-1.0},	//left - front - down
+	{-1.0,-1.0,1.0},	//left - back - up
+	{1.0,-1.0,1.0},		//right - back - up
+	{1.0,1.0,1.0},		//right - front - up
+	{-1.0,1.0,1.0}		//left - front - up
+};
+
 #if defined Tryg3D_Stream3D
 	enum StreamType {
 		s_invalid,
 		s_circle,
-		s_cylinder3d,
 		s_cylinder2d,
+		s_cylinder3d,
 		s_sphere,
 		s_rectangle,
-		s_cube,
+		s_cube2d,
+		s_cube3d,
 		s_circularsector,
 		s_sphericalsector,
 		s_cone
@@ -1628,6 +1675,7 @@ Tryg3D::Function:: Tryg3D::EulerRotate(Float:rx,Float:ry,Float:rz,Float:oX,Float
 #define IsPlayerInPolygon(%0,%1)						IsElementInPolygon((%0),item_player,(%1))
 #define IsPlayerInCircularSector(%0,%1,%2,%3,%4,%5)		IsElementInCircularSector((%0),item_player,(%1),(%2),(%3),(%4),(%5))
 #define IsPlayerInCone(%0,%1,%2,%3,%4,%5,%6,%7,%8)		IsElementInCone((%0),item_player,(%1),(%2),(%3),(%4),(%5),(%6),(%7),(%8))
+#define IsPlayerInCube3D(%0,%1,%2,%3,%4,%5,%6,%7,%8,%9)	IsElementInCube3D((%0),item_player,(%1),(%2),(%3),(%4),(%5),(%6),(%7),(%8),(%9))
 
 #define IsPlayerInSphericalSector(%0,%1,%2,%3,%4,%5,%6,%7,%8)	IsElementInSphericalSector((%0),item_player,(%1),(%2),(%3),(%4),(%5),(%6),(%7),(%8))
 
@@ -2113,6 +2161,24 @@ Tryg3D::Function:: GetRandomPointOnCone3D(Float:xA,Float:yA,Float:zA,Float:xB,Fl
 	GetPointInFront3DEx(px,py,pz,RandomFloat(0.0,360.0),trx,CompRotationFloat(trz+90.0),radius,tx,ty,tz);
 }
 
+Tryg3D::Function:: GetRandomPointInCube3D(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z,&Float:tx,&Float:ty,&Float:tz){
+	if(size_x <= 0 || size_y <= 0 || size_z <= 0.0) return 0;
+	new Float:offset_x,Float:offset_y,Float:offset_z;
+	size_x /= 2.0, size_y /= 2.0, size_z /= 2.0;
+	GetRandomPointInCube(-size_x,-size_y,-size_z,size_x,size_y,size_z,offset_x,offset_y,offset_z);
+	ShiftOffsetToPosition(x,y,z,rx,ry,rz,offset_x,offset_y,offset_z,tx,ty,tz);
+	return 1;
+}
+
+Tryg3D::Function:: GetRandomPointOnCube3D(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z,&Float:tx,&Float:ty,&Float:tz){
+	if(size_x <= 0 || size_y <= 0 || size_z <= 0.0) return 0;
+	new Float:offset_x,Float:offset_y,Float:offset_z;
+	size_x /= 2.0, size_y /= 2.0, size_z /= 2.0;
+	GetRandomPointOnCube(-size_x,-size_y,-size_z,size_x,size_y,size_z,offset_x,offset_y,offset_z);
+	ShiftOffsetToPosition(x,y,z,rx,ry,rz,offset_x,offset_y,offset_z,tx,ty,tz);
+	return 1;
+}
+
 Tryg3D::Function:: ConvertMTARaceRotation(Float:rotation1,Float:rotation2,Float:rotation3,&Float:rx,&Float:ry,&Float:rz){
 	rx = ShiftRadianToDegreeEx(rotation3);
 	ry = ShiftRadianToDegreeEx(rotation2);
@@ -2485,6 +2551,15 @@ Tryg3D::Function:: bool:IsPointInCone3D(Float:px,Float:py,Float:pz,Float:xA,Floa
 	return (distance != -1.0 && distance <= radius);
 }
 
+//x,y,z - cube center point, rx,ry,rz - cube rotations
+Tryg3D::Function:: bool:IsPointInCube3D(Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z){
+	if(size_x <= 0 || size_y <= 0 || size_z <= 0.0) return false;
+	new Float:offset_x,Float:offset_y,Float:offset_z;
+	size_x /= 2.0, size_y /= 2.0, size_z /= 2.0;
+	ShiftPositionToOffset(x,y,z,rx,ry,rz,offset_x,offset_y,offset_z,px,py,pz);
+	return IsPointInCube(offset_x,offset_y,offset_z,-size_x,-size_y,-size_z,size_x,size_y,size_z); 
+}
+
 Tryg3D::Function:: Float:GetPlayerTargetAngle(playerid,Float:x,Float:y,&Float:rz=0.0){
 	new Float:mx,Float:my;
 	GetPlayerPos(playerid,mx,my,rz);
@@ -2643,6 +2718,10 @@ Tryg3D::Function:: ShiftPositionToOffset(Float:x,Float:y,Float:z,Float:rx,Float:
 		ShiftVectorRotation(px,py,pz,CompRotationFloat(-rx),CompRotationFloat(-ry),CompRotationFloat(-rz),ex,ey,ez);
 		GetPointFor2Point3DEx(0.0,0.0,0.0,ex,ey,ez,dist,offset_x,offset_y,offset_z);
 	}
+}
+
+Tryg3D::Function:: GetCube3DPoint(OrientationCube3D:orientation,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z,&Float:tx,&Float:ty,&Float:tz){
+	ShiftOffsetToPosition(x,y,z,rx,ry,rz,(Cube3DOffset[orientation][0]*size_x),(Cube3DOffset[orientation][1]*size_y),(Cube3DOffset[orientation][2]*size_z),tx,ty,tz);
 }
 
 /************************************************************************************************************************************
@@ -2995,6 +3074,12 @@ Tryg3D::Function:: bool:IsElementInCone(TRYG3D_ELEMENT_TAG elementid,Item3D_Type
 	new Float:px,Float:py,Float:pz;
 	GetElementPos(elementid,element_type,px,py,pz);
 	return IsPointInCone3D(px,py,pz,xA,yA,zA,xB,yB,zB,pointA_radius,pointB_radius);
+}
+
+Tryg3D::Function:: bool:IsElementInCube3D(TRYG3D_ELEMENT_TAG elementid,Item3D_Type:element_type,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z){
+	new Float:px,Float:py,Float:pz;
+	GetElementPos(elementid,element_type,px,py,pz);
+	return IsPointInCube3D(px,py,pz,x,y,z,rx,ry,rz,size_x,size_y,size_z);
 }
 
 Tryg3D::Function:: bool:GetElementToPointVector(TRYG3D_ELEMENT_TAG elementid,Item3D_Type:element_type,Float:tx,Float:ty,Float:tz,&Float:vx,&Float:vy,&Float:vz){
@@ -3444,6 +3529,21 @@ Tryg3D::Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x
 		StreamData[T3D:Y] = pointB_radius;
 		return StreamData;
 	}
+	
+	Tryg3D::Function:: Stream:StreamCube3D(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,Float:size_x,Float:size_y,Float:size_z){
+		new StreamCreate(StreamData);
+		StreamData[T3D:type] = s_cube3d;
+		StreamData[T3D:X] = x;
+		StreamData[T3D:Y] = y;
+		StreamData[T3D:Z] = z;
+		StreamData[T3D:minX] = rx;
+		StreamData[T3D:minY] = ry;
+		StreamData[T3D:minZ] = rz;
+		StreamData[T3D:maxX] = size_x;
+		StreamData[T3D:maxY] = size_y;
+		StreamData[T3D:maxZ] = size_z;
+		return StreamData;
+	}
 
 	Tryg3D::Function:: Stream:StreamCylinder2D(Float:x,Float:y,Float:minz,Float:maxz,Float:radius){
 		new StreamCreate(StreamData);
@@ -3478,7 +3578,7 @@ Tryg3D::Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x
 
 	Tryg3D::Function:: Stream:StreamCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
 		new StreamCreate(StreamData);
-		StreamData[T3D:type] = s_cube;
+		StreamData[T3D:type] = s_cube2d;
 		StreamData[T3D:minX] = minx;
 		StreamData[T3D:minY] = miny;
 		StreamData[T3D:minZ] = minz;
@@ -3520,10 +3620,11 @@ Tryg3D::Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x
 			case s_cylinder2d:		return IsPointInCylinder2D(x,y,z,StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:minZ],StreamData[T3D:maxZ],StreamData[T3D:R]);
 			case s_sphere:			return IsPointInSphere(x,y,z,StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:Z],StreamData[T3D:R]);
 			case s_rectangle:		return IsPointInRectangle(x,y,StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:maxX],StreamData[T3D:maxY]);
-			case s_cube:			return IsPointInCube(x,y,z,StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ]);
+			case s_cube2d:			return IsPointInCube(x,y,z,StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ]);
 			case s_circularsector:	return IsPointInCircularSector(x,y,StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:minZ],StreamData[T3D:R],StreamData[T3D:maxZ]);
 			case s_sphericalsector:	return IsPointInSphericalSector(x,y,z,StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:Z],StreamData[T3D:minX],StreamData[T3D:minZ],StreamData[T3D:R],StreamData[T3D:maxX],StreamData[T3D:maxZ]);
 			case s_cone:			return IsPointInCone3D(x,y,z,StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],StreamData[T3D:X],StreamData[T3D:Y]);
+			case s_cube3d:			return IsPointInCube3D(x,y,z,StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:Z],StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ]);
 		}
 		return false;
 	}
@@ -3552,7 +3653,7 @@ Tryg3D::Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x
 				z = FLOAT_INFINITY;
 				return true;
 			}
-			case s_cube: {
+			case s_cube2d: {
 				GetRandomPointInCube(StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],x,y,z);
 				return true;
 			}
@@ -3567,6 +3668,10 @@ Tryg3D::Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x
 			}
 			case s_cone: {
 				GetRandomPointInCone3D(StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],StreamData[T3D:X],StreamData[T3D:Y],x,y,z);
+				return true;
+			}
+			case s_cube3d: {
+				GetRandomPointInCube3D(StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:Z],StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],x,y,z);
 				return true;
 			}
 		}
@@ -3597,7 +3702,7 @@ Tryg3D::Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x
 				z = FLOAT_INFINITY;
 				return true;
 			}
-			case s_cube: {
+			case s_cube2d: {
 				GetRandomPointOnCube(StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],x,y,z);
 				return true;
 			}
@@ -3612,6 +3717,10 @@ Tryg3D::Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x
 			}
 			case s_cone: {
 				GetRandomPointOnCone3D(StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],StreamData[T3D:X],StreamData[T3D:Y],x,y,z);
+				return true;
+			}
+			case s_cube3d: {
+				GetRandomPointOnCube3D(StreamData[T3D:X],StreamData[T3D:Y],StreamData[T3D:Z],StreamData[T3D:minX],StreamData[T3D:minY],StreamData[T3D:minZ],StreamData[T3D:maxX],StreamData[T3D:maxY],StreamData[T3D:maxZ],x,y,z);
 				return true;
 			}
 		}
@@ -3849,6 +3958,61 @@ Tryg3D::Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x
 		return true;
 	}
 	
+	Tryg3D::Function:: bool:GetRandomPointInDynamicArea(STREAMER_TAG_AREA areaid,&Float:tx,&Float:ty,&Float:tz){
+		switch(Streamer_GetIntData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_TYPE)){
+			case STREAMER_AREA_TYPE_CIRCLE: {
+				new Float:x,Float:y,Float:size;
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_X,x);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_Y,y);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_SIZE,size);
+				GetRandomPointInCircle(x,y,size,tx,ty);
+				tz = FLOAT_INFINITY;
+				return true;
+			}
+			case STREAMER_AREA_TYPE_CYLINDER: {
+				new Float:x,Float:y,Float:size,Float:minz,Float:maxz;
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_X,x);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_Y,y);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MIN_Z,minz);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MAX_Z,maxz);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_SIZE,size);
+				GetRandomPointInCylinder2D(x,y,minz,maxz,size,tx,ty,tz);
+				return true;
+			}
+			case STREAMER_AREA_TYPE_SPHERE: {
+				new Float:x,Float:y,Float:z,Float:size;
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_X,x);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_Y,y);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_Z,z);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_SIZE,size);
+				GetRandomPointInSphere(x,y,z,size,tx,ty,tz);
+				return true;
+			}
+			case STREAMER_AREA_TYPE_RECTANGLE: {
+				new Float:minx,Float:miny,Float:maxx,Float:maxy;
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MIN_X,minx);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MIN_Y,miny);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MAX_X,maxx);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MAX_Y,maxy);
+				GetRandomPointInRectangle(minx,miny,maxx,maxy,tx,ty);
+				tz = FLOAT_INFINITY;
+				return true;
+			}
+			case STREAMER_AREA_TYPE_CUBOID: {
+				new Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz;
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MIN_X,minx);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MIN_Y,miny);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MIN_Z,minz);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MAX_X,maxx);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MAX_Y,maxy);
+				Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MAX_Z,maxz);
+				GetRandomPointInCube(minx,miny,minz,maxx,maxy,maxz,tx,ty,tz);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	#define IsDynamicActorInRangeOfPoint(%0,%1,%2,%3,%4)	(GetElementDistanceFromPoint((%0),item_dynamic_actor,(%2),(%3),(%4)) <= (%1))
 	
 	#if defined Tryg3D_FCNPC
@@ -3896,7 +4060,7 @@ Tryg3D::Function:: ShiftOrionToPosition(Float:orion,Float:lon,Float:lat,&Float:x
 					Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MAX_Y,StreamData[T3D:maxY]);
 				}
 				case STREAMER_AREA_TYPE_CUBOID: {
-					StreamData[T3D:type] = s_cube;
+					StreamData[T3D:type] = s_cube2d;
 					Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MIN_X,StreamData[T3D:minX]);
 					Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MIN_Y,StreamData[T3D:minY]);
 					Streamer_GetFloatData(STREAMER_TYPE_AREA,_:areaid,E_STREAMER_MIN_Z,StreamData[T3D:minZ]);
