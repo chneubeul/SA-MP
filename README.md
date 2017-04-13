@@ -15,6 +15,10 @@ http://forum.sa-mp.com/showpost.php?p=3705791&postcount=140
 * http://8.ct8.pl/sendreport
 
 
+### Repository Scripts/Includes Support:
+https://github.com/AbyssMorgan/SA-MP/wiki/Support
+
+
 ### Repository developer:
 Abyss Morgan
 
