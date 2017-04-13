@@ -230,7 +230,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 #endif
 #define OnPlayerWeaponShot PG_OnPlayerWeaponShot
 #if defined PG_OnPlayerWeaponShot
-	forward PG_OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,fX,fY,fZ);
+	forward PG_OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Float:fZ);
 #endif
 
 //Hook: OnPlayerEnterDynamicArea
