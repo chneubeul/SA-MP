@@ -16,7 +16,7 @@
  * Streamer Version: 2.9.0                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
  * 3DTryg Version: 4.2.0                                                                                                          *
- * Missile Version: 1.8.0                                                                                                         *
+ * Missile Version: 2.0.0                                                                                                         *
  *                                                                                                                                *
  * Vehicle Weapons:                                                                                                               *
  * - Mini Missile (Dual rocket)                                                                                                   *
