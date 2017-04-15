@@ -11,11 +11,11 @@
  * Plugins: Streamer, ColAndreas                                                                                                  *
  * Modules: 3DTryg, Missile                                                                                                       *
  *                                                                                                                                *
- * File Version: 1.6.0                                                                                                            *
+ * File Version: 1.7.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.0                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
- * 3DTryg Version: 4.1.2                                                                                                          *
+ * 3DTryg Version: 4.2.0                                                                                                          *
  * Missile Version: 1.8.0                                                                                                         *
  *                                                                                                                                *
  * Vehicle Weapons:                                                                                                               *
@@ -86,6 +86,8 @@
  * SetVehicleMortarMissileKey(vehicleid,key);                                                                                     *
  * Float:GetVehicleMortarMissileHeight(vehicleid);                                                                                *
  * SetVehicleMortarMissileHeight(vehicleid,Float:height);                                                                         *
+ * Float:GetVehicleMortarMissileRotation(vehicleid);                                                                              *
+ * SetVehicleMortarMissileRotation(vehicleid,Float:rotation);                                                                     *
  *                                                                                                                                *
  * Functions Mega Missile:                                                                                                        *
  * ToggleVehicleMegaMissile(vehicleid,toggle);                                                                                    *
@@ -100,6 +102,8 @@
  * SetVehicleMegaMissileKey(vehicleid,key);                                                                                       *
  * Float:GetVehicleMegaMissileHeight(vehicleid);                                                                                  *
  * SetVehicleMegaMissileHeight(vehicleid,Float:height);                                                                           *
+ * Float:GetVehicleMegaMissileRotation(vehicleid);                                                                                *
+ * SetVehicleMegaMissileRotation(vehicleid,Float:rotation);                                                                       *
  *                                                                                                                                *
  * Functions Congreve Rocket:                                                                                                     *
  * ToggleVehicleCongreve(vehicleid,toggle);                                                                                       *
@@ -142,20 +146,20 @@
 
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v1.8.0
+	#error [ADM] You need Missile.inc v2.0.0
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v1.8.0
-#elseif (Missile_Version < 10800)
-	#error [ADM] Update you Missile.inc to v1.8.0
+	#error [ADM] Update you Missile.inc to v2.0.0
+#elseif (Missile_Version < 20000)
+	#error [ADM] Update you Missile.inc to v2.0.0
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.1.2
+	#error [ADM] You need 3DTryg.inc v4.2.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.1.2
-#elseif (Tryg3D_Version < 40102)
-	#error [ADM] Update you 3DTryg.inc to v4.1.2
+	#error [ADM] Update you 3DTryg.inc to v4.2.0
+#elseif (Tryg3D_Version < 40200)
+	#error [ADM] Update you 3DTryg.inc to v4.2.0
 #endif
 
 #if defined _veh_missile_launcher
@@ -205,6 +209,7 @@
 
 #define VEHICLE_MISSILE_HEIGHT_MORTAR			(50.0)
 #define VEHICLE_MISSILE_HEIGHT_MEGA				(50.0)
+#define VEHICLE_MISSILE_ROTATION				(0.0)
 
 #define VEHICLE_MISSILE_SPREAD_CON				(15.0)
 #define VEHICLE_MISSILE_SALVO_CON				(8)
@@ -232,7 +237,9 @@ new VehicleConfigMiniMissile[63],
 	Float:VehicleWeaponDistance[MAX_VEHICLES][MAX_VEHICLE_MISSILE_TYPE],
 	
 	Float:VehicleMortarHeight[MAX_VEHICLES],
+	Float:VehicleMortarRotation[MAX_VEHICLES],
 	Float:VehicleMegaHeight[MAX_VEHICLES],
+	Float:VehicleMegaRotation[MAX_VEHICLES],
 	Float:VehicleCongreveSpread[MAX_VEHICLES],
 	VehicleCongreveSalvo[MAX_VEHICLES],
 	
@@ -294,6 +301,8 @@ new VehicleConfigMiniMissile[63],
 #define SetVehicleMortarMissileKey(%0,%1)		VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
 #define GetVehicleMortarMissileHeight(%0)		VehicleMortarHeight[(%0)]
 #define SetVehicleMortarMissileHeight(%0,%1)	VehicleMortarHeight[(%0)] = (%1)
+#define GetVehicleMortarMissileRotation(%0)		VehicleMortarRotation[(%0)]
+#define SetVehicleMortarMissileRotation(%0,%1)	VehicleMortarRotation[(%0)] = (%1)
 
 #define IsToggleVehicleMegaMissile(%0)			VM_GetValueBit(VehicleConfigMegaMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
 #define ToggleVehicleMegaMissile(%0,%1)			VM_SetValueBit(VehicleConfigMegaMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
@@ -307,6 +316,8 @@ new VehicleConfigMiniMissile[63],
 #define SetVehicleMegaMissileKey(%0,%1)			VehicleWeaponKey[(%0)][VEHICLE_MISSILE_TYPE_MEGA] = (%1)
 #define GetVehicleMegaMissileHeight(%0)			VehicleMegaHeight[(%0)]
 #define SetVehicleMegaMissileHeight(%0,%1)		VehicleMegaHeight[(%0)] = (%1)
+#define GetVehicleMegaMissileRotation(%0)		VehicleMegaRotation[(%0)]
+#define SetVehicleMegaMissileRotation(%0,%1)	VehicleMegaRotation[(%0)] = (%1)
 
 #define IsToggleVehicleCongreve(%0)				VM_GetValueBit(VehicleConfigCongreveMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
 #define ToggleVehicleCongreve(%0,%1)			VM_SetValueBit(VehicleConfigCongreveMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
@@ -497,12 +508,12 @@ public OnVehicleShot(playerid,type){
 				GetPointInFront3D(F5[T3D:X],F5[T3D:Y],F5[T3D:Z],0.0,F4[T3D:rZ]-90.0,3.0,F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
 				GetPointInFront2D(F4[T3D:X],F4[T3D:Y],F4[T3D:rZ],GetVehicleMortarMissileDistance(vid),F4[T3D:tX],F4[T3D:tY]);
 				Tryg3D_MapAndreasFindZ(F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
-				MissileLaunch(MISSILE_TYPE_EXPLODE_NORMAL,5.0,25.0,GetVehicleMortarMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMortarMissileHeight(vid));
+				MissileLaunch(MISSILE_TYPE_EXPLODE_NORMAL,5.0,25.0,GetVehicleMortarMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMortarMissileHeight(vid),GetVehicleMortarMissileRotation(vid));
 	
 				GetPointInFront3D(F5[T3D:X],F5[T3D:Y],F5[T3D:Z],0.0,F4[T3D:rZ]+90.0,3.0,F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
 				GetPointInFront2D(F4[T3D:X],F4[T3D:Y],F4[T3D:rZ],GetVehicleMortarMissileDistance(vid),F4[T3D:tX],F4[T3D:tY]);
 				Tryg3D_MapAndreasFindZ(F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
-				MissileLaunch(MISSILE_TYPE_EXPLODE_NORMAL,5.0,25.0,GetVehicleMortarMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMortarMissileHeight(vid));
+				MissileLaunch(MISSILE_TYPE_EXPLODE_NORMAL,5.0,25.0,GetVehicleMortarMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMortarMissileHeight(vid),-GetVehicleMortarMissileRotation(vid));
 	
 				VehicleWeaponTick[playerid][type] = GetTickCount();
 			}
@@ -518,12 +529,12 @@ public OnVehicleShot(playerid,type){
 			GetPointInFront3D(F5[T3D:X],F5[T3D:Y],F5[T3D:Z],0.0,CompRotationFloat(F4[T3D:rZ]+60.0),8.0,F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
 			GetPointInFront2D(F4[T3D:X],F4[T3D:Y],F4[T3D:rZ],GetVehicleMegaMissileDistance(vid),F4[T3D:tX],F4[T3D:tY]);
 			Tryg3D_MapAndreasFindZ(F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
-			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid),-GetVehicleMegaMissileRotation(vid));
 
 			GetPointInFront3D(F5[T3D:X],F5[T3D:Y],F5[T3D:Z],0.0,CompRotationFloat(F4[T3D:rZ]+120.0),8.0,F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
 			GetPointInFront2D(F4[T3D:X],F4[T3D:Y],F4[T3D:rZ],GetVehicleMegaMissileDistance(vid),F4[T3D:tX],F4[T3D:tY]);
 			Tryg3D_MapAndreasFindZ(F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
-			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid),-GetVehicleMegaMissileRotation(vid));
 
 			GetPointInFront3D(F5[T3D:X],F5[T3D:Y],F5[T3D:Z],0.0,CompRotationFloat(F4[T3D:rZ]+180.0),8.0,F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
 			GetPointInFront2D(F4[T3D:X],F4[T3D:Y],F4[T3D:rZ],GetVehicleMegaMissileDistance(vid),F4[T3D:tX],F4[T3D:tY]);
@@ -533,12 +544,12 @@ public OnVehicleShot(playerid,type){
 			GetPointInFront3D(F5[T3D:X],F5[T3D:Y],F5[T3D:Z],0.0,CompRotationFloat(F4[T3D:rZ]+240.0),8.0,F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
 			GetPointInFront2D(F4[T3D:X],F4[T3D:Y],F4[T3D:rZ],GetVehicleMegaMissileDistance(vid),F4[T3D:tX],F4[T3D:tY]);
 			Tryg3D_MapAndreasFindZ(F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
-			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid),GetVehicleMegaMissileRotation(vid));
 
 			GetPointInFront3D(F5[T3D:X],F5[T3D:Y],F5[T3D:Z],0.0,CompRotationFloat(F4[T3D:rZ]+300.0),8.0,F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
 			GetPointInFront2D(F4[T3D:X],F4[T3D:Y],F4[T3D:rZ],GetVehicleMegaMissileDistance(vid),F4[T3D:tX],F4[T3D:tY]);
 			Tryg3D_MapAndreasFindZ(F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
-			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid));
+			MissileLaunch(MISSILE_TYPE_EXPLODE_HUGE,15.0,35.0,GetVehicleMegaMissileSpeed(vid),F4[T3D:X],F4[T3D:Y],F4[T3D:Z],GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid),-1,GetMissileStreamDistance(),MISSILE_OBJECT_HYDRA,F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ],playerid,ANY_TEAM,true,MAX_MISSILE_REMOTE_TARGET,GetVehicleMegaMissileHeight(vid),GetVehicleMegaMissileRotation(vid));
 
 			GetPointInFront3D(F5[T3D:X],F5[T3D:Y],F5[T3D:Z],0.0,F4[T3D:rZ],8.0,F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
 			GetPointInFront2D(F4[T3D:X],F4[T3D:Y],F4[T3D:rZ],GetVehicleMegaMissileDistance(vid),F4[T3D:tX],F4[T3D:tY]);

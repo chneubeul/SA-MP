@@ -11,15 +11,15 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.9.0                                                                                                            *
+ * File Version: 2.0.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.0                                                                                                        *
- * 3DTryg Version: 4.1.2                                                                                                          *
+ * 3DTryg Version: 4.2.0                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, *
  *               Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM,     *
- *               bool:remote=false,remote_count=MAX_MISSILE_REMOTE_TARGET,remote_height=1.0);                                     *
+ *               bool:remote=false,remote_count=MAX_MISSILE_REMOTE_TARGET,remote_height=1.0,Float:arc_roll=0.0);                  *
  * MissileLaunchAimPlayer(targetid,type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,           *
  *                        worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,             *
  *                        byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM);                                                          *
@@ -39,11 +39,11 @@
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v1.9.0
+	#error [ADM] You need Missile.inc v2.0.0
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v1.9.0
-#elseif (Missile_Version < 10900)
-	#error [ADM] Update you Missile.inc to v1.9.0
+	#error [ADM] Update you Missile.inc to v2.0.0
+#elseif (Missile_Version < 20000)
+	#error [ADM] Update you Missile.inc to v2.0.0
 #endif
 */
 
@@ -62,14 +62,14 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.1.2
+	#error [ADM] You need 3DTryg.inc v4.2.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.1.2
-#elseif (Tryg3D_Version < 40102)
-	#error [ADM] Update you 3DTryg.inc to v4.1.2
+	#error [ADM] Update you 3DTryg.inc to v4.2.0
+#elseif (Tryg3D_Version < 40200)
+	#error [ADM] Update you 3DTryg.inc to v4.2.0
 #endif
 
-#define Missile_Version						(10900)
+#define Missile_Version						(20000)
 
 #define MISSILE_OBJECT_NORMAL				(0)
 #define MISSILE_OBJECT_BIG					(1)
@@ -82,7 +82,7 @@
 #endif
 
 #if !defined MAX_MISSILE_REMOTE_TARGET
-	#define MAX_MISSILE_REMOTE_TARGET		(32)
+	#define MAX_MISSILE_REMOTE_TARGET		(34)
 #endif
 
 #define MISSILE_EXTRA_ID_OFFSET				(300001)
@@ -113,14 +113,13 @@ enum e_missile {
 	missile_teamid,
 	missile_vehicleid,
 	missile_remote_count,
+	missile_remote_id,
 	Float:missile_speed,
-	Float:missile_remote_X[MAX_MISSILE_REMOTE_TARGET],
-	Float:missile_remote_Y[MAX_MISSILE_REMOTE_TARGET],
-	Float:missile_remote_Z[MAX_MISSILE_REMOTE_TARGET],
 	player_target
 }
 
 new MissileComponent[MAX_MISSILE][e_missile],
+	Float:MissilePoints[MAX_MISSILE][MAX_MISSILE_REMOTE_TARGET][3],
 	bool:PlayerAimByMissile[MAX_PLAYERS],
 	MissileUsedUpperBound = -1,
 	Float:MissileExplosionVisibility = 200.0;
@@ -140,7 +139,7 @@ forward OnMissileDetectPlayer(playerid,killerid);
 
 stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, \
 	Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM, \
-	bool:remote=false,remote_count=MAX_MISSILE_REMOTE_TARGET,Float:remote_height=1.0){
+	bool:remote=false,remote_count=MAX_MISSILE_REMOTE_TARGET,Float:remote_height=1.0,Float:arc_roll=0.0){
 	
 	new mobid = FindFreeMissileID();
 	if(mobid == INVALID_MISSILE_ID){
@@ -151,10 +150,8 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 	}
 	if(mobid > MissileUsedUpperBound) MissileUsedUpperBound = mobid;
 	
-	remote_count--;
-	new Float:rx, Float:rz, Float:orgRZ;
+	new Float:rx, Float:rz;
 	GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz);
-	orgRZ = rz;
 	switch(missile_object){
 		case MISSILE_OBJECT_NORMAL: {
 			CompRotationFloat(rz-90.0,rz);
@@ -177,39 +174,26 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 	MissileComponent[mobid][missile_teamid] = teamid;
 	MissileComponent[mobid][missile_speed] = speed;
 	MissileComponent[mobid][player_target] = INVALID_PLAYER_ID;
-	if(remote && remote_count > -1){
-		if(remote_height <= 0.0){
-			remote_height = 1.0;
-		}
+	if(remote && remote_count > 0){
+		if(remote_height <= 0.0) remote_height = 1.0;
 		
-		if(remote_count >= MAX_MISSILE_REMOTE_TARGET) remote_count = (MAX_MISSILE_REMOTE_TARGET-1);
-		MissileComponent[mobid][missile_remote_count] = remote_count;
-	
-		new Float:mercury = (1.0/(remote_count+2)),
-			Float:dist = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz),
-			Float:jun = (dist/2.0), Float:rsize, idx = 1;
-			
-		//0 - primary target
-		//remote_count - first remote point
-		for(new i = remote_count; i >= 0; i--){
-			rsize = (dist*(mercury*idx));
-			GetPointInFront2D(x,y,orgRZ,rsize,MissileComponent[mobid][missile_remote_X][i],MissileComponent[mobid][missile_remote_Y][i]);
-			if(rsize == jun){
-				MissileComponent[mobid][missile_remote_Z][i] = (z + remote_height);
-			} else if(rsize < jun){
-				//upward
-				MissileComponent[mobid][missile_remote_Z][i] = (z + (rsize * (remote_height / jun)));
-			} else {
-				//downward
-				MissileComponent[mobid][missile_remote_Z][i] = (z + remote_height - ((rsize * (remote_height / jun)) - remote_height));
-			}
-			idx++;
-		}
-		Tryg3D_MapAndreasFindZ(MissileComponent[mobid][missile_remote_X][0],MissileComponent[mobid][missile_remote_Y][0],MissileComponent[mobid][missile_remote_Z][0]);
+		if(remote_count > MAX_MISSILE_REMOTE_TARGET) remote_count = MAX_MISSILE_REMOTE_TARGET;
+		MissileComponent[mobid][missile_remote_count] = remote_count-2;
+		MissileComponent[mobid][missile_remote_id] = 2;
 		
-		tx = MissileComponent[mobid][missile_remote_X][remote_count];
-		ty = MissileComponent[mobid][missile_remote_Y][remote_count];
-		tz = MissileComponent[mobid][missile_remote_Z][remote_count];
+		GetArcPoints3D(x,y,z,tx,ty,tz,arc_roll,remote_height,MissilePoints[mobid],remote_count);
+		
+		new rid = remote_count-1;
+		tx = MissilePoints[mobid][rid][0];
+		ty = MissilePoints[mobid][rid][1];
+		tz = MissilePoints[mobid][rid][2];
+		
+		MovePointCol(tx,ty,tz,tx,ty,tz-10000.0,MissilePoints[mobid][rid][0],MissilePoints[mobid][rid][1],MissilePoints[mobid][rid][2]);
+		
+		tx = MissilePoints[mobid][1][0];
+		ty = MissilePoints[mobid][1][1];
+		tz = MissilePoints[mobid][1][2];
+		
 		GetRotationFor2Point3D(x,y,z,tx,ty,tz,rx,rz);
 		switch(missile_object){
 			case MISSILE_OBJECT_NORMAL: {
@@ -247,7 +231,7 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 			MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,rx,0.0,rz);
 		}
 		case MISSILE_OBJECT_BOMB_STATIC: {
-			if(remote && remote_count > -1){
+			if(remote && remote_count > 0){
 				MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,rx,0.0,rz);
 			} else {
 				MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,0.0,0.0,rz);
@@ -403,6 +387,7 @@ stock MissileDestroy(mobid,type,playerid){
 	MissileComponent[mobid][missile_vehicleid] = 0;
 	MissileComponent[mobid][missile_speed] = 0.0;
 	MissileComponent[mobid][missile_remote_count] = 0;
+	MissileComponent[mobid][missile_remote_id] = 0;
 	MissileComponent[mobid][player_target] = INVALID_PLAYER_ID;
 	CallLocalFunction("OnMissileDestroy","dfffddd",mobid,x,y,z,type,playerid,byplayerid);
 	if(mobid == MissileUsedUpperBound) MissileUsedUpperBound--;
@@ -501,20 +486,20 @@ public OnDynamicObjectMoved(objectid){
 					#endif
 				} else {
 					MissileComponent[mobid][missile_remote_count]--;
-					new remote_id = MissileComponent[mobid][missile_remote_count];
+					new remote_id = MissileComponent[mobid][missile_remote_id]++;
 					#if defined COLANDREAS
 						new Float:x, Float:y, Float:z, Float:tx, Float:ty, Float:tz;
 						GetDynamicObjectPos(objectid,x,y,z);
-						MovePointCol(x,y,z,MissileComponent[mobid][missile_remote_X][remote_id],MissileComponent[mobid][missile_remote_Y][remote_id],MissileComponent[mobid][missile_remote_Z][remote_id],tx,ty,tz);
-						if(tx != MissileComponent[mobid][missile_remote_X][remote_id] || ty != MissileComponent[mobid][missile_remote_Y][remote_id] || tz != MissileComponent[mobid][missile_remote_Z][remote_id]){
+						MovePointCol(x,y,z,MissilePoints[mobid][remote_id][0],MissilePoints[mobid][remote_id][1],MissilePoints[mobid][remote_id][2],tx,ty,tz);
+						if(tx != MissilePoints[mobid][remote_id][0] || ty != MissilePoints[mobid][remote_id][1] || tz != MissilePoints[mobid][remote_id][2]){
 							//collision
 							MissileComponent[mobid][missile_remote_count] = 0;
 							MissileRemoteTarget(mobid,tx,ty,tz);
 						} else {
-							MissileRemoteTarget(mobid,MissileComponent[mobid][missile_remote_X][remote_id],MissileComponent[mobid][missile_remote_Y][remote_id],MissileComponent[mobid][missile_remote_Z][remote_id]);
+							MissileRemoteTarget(mobid,tx,ty,tz);
 						}
 					#else
-						MissileRemoteTarget(mobid,MissileComponent[mobid][missile_remote_X][remote_id],MissileComponent[mobid][missile_remote_Y][remote_id],MissileComponent[mobid][missile_remote_Z][remote_id]);
+						MissileRemoteTarget(mobid,MissilePoints[mobid][remote_id][0],MissilePoints[mobid][remote_id][1],MissilePoints[mobid][remote_id][2]);
 					#endif
 				}
 			}
