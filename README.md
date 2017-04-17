@@ -22,6 +22,7 @@ https://github.com/AbyssMorgan/SA-MP/wiki/Support
 ### Repository developer:
 Abyss Morgan
 
+
 ### Contributors:
 [Crayder](http://forum.sa-mp.com/member.php?u=214776),
 [Nero_3D](http://forum.sa-mp.com/member.php?u=9765),
@@ -38,7 +39,11 @@ Shiny,
 [kvann](http://forum.sa-mp.com/member.php?u=169274),
 [Hanger](http://forum.sa-mp.com/member.php?u=160578),
 [Ivan_Ino](http://forum.sa-mp.com/member.php?u=182165),
-[Sreyas](http://forum.sa-mp.com/member.php?u=268427)
+[Sreyas](http://forum.sa-mp.com/member.php?u=268427),
+[Gammix](http://forum.sa-mp.com/member.php?u=249500),
+[Yashas](http://forum.sa-mp.com/member.php?u=169426),
+[Admigo](http://forum.sa-mp.com/member.php?u=108398)
+
 
 ### Beta Testers:
 banangame,
