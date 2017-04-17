@@ -15,7 +15,6 @@
 │   │   └───Anims
 │   ├───ADM
 │   │   ├───MD5
-│   │   ├───ProtVar
 │   │   └───SScanf
 │   ├───ATM
 │   ├───BitFunctions
@@ -27,7 +26,9 @@
 │   ├───RGB
 │   ├───StreamerFunction
 │   │   └───Streamer
-│   └───EVF
+│   ├───EVF
+│   └───vnpc
+│       └───YSF
 ├───engine
 │   ├───EngineV6
 │   │   ├───3DTryg

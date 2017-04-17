@@ -9,12 +9,11 @@
  * Website: http://8.ct8.pl                                                                                                       *
  *                                                                                                                                *
  * Plugins: SScanf                                                                                                                *
- * Modules: MD5, ProtVar                                                                                                          *
+ * Modules: MD5                                                                                                                   *
  *                                                                                                                                *
  * File Version: 2.3.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * SScanf Version: 2.8.2                                                                                                          *
- * ProtVar Version: 1.0.1                                                                                                         *
  *                                                                                                                                *
  * File Functions:                                                                                                                *
  * ADM:InvertFile(const input[], const output[]);                                                                                 *
@@ -106,13 +105,6 @@
 	#error [ADM] You need SScanf v2.8.2
 #endif
 
-//ProtVar:: Detect
-#if defined ENABLE_PROTECTION_VARIABLES && defined ProtVar::
-	#define ADM_ProtVar::	ProtVar::
-#else
-	#define ADM_ProtVar::
-#endif
-
 #define ADM_Function::				stock
 #define ADM::						ADM:
 #define DMP::						DMP:
@@ -197,10 +189,10 @@ new ADMErrorList[][] = {
 	#define isnull(%1) ((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
 
-new bool:ADM_ProtVar::DumpFileStatus[MAX_DUMP_FILE] = false,
-	ADM_ProtVar::DumpFileType[MAX_DUMP_FILE],
-	ADM_ProtVar::DumpFileName[MAX_DUMP_FILE][MAX_DUMP_FILE_NAME],
-	ADM_ProtVar::DumpFileKey[MAX_DUMP_FILE][MAX_KEY_LEN_ADMx256];
+new bool:DumpFileStatus[MAX_DUMP_FILE] = false,
+	DumpFileType[MAX_DUMP_FILE],
+	DumpFileName[MAX_DUMP_FILE][MAX_DUMP_FILE_NAME],
+	DumpFileKey[MAX_DUMP_FILE][MAX_KEY_LEN_ADMx256];
 	
 
 /************************************************************************************************************************************
@@ -1195,15 +1187,15 @@ ADM_Function:: ADM:SplitFile(const input[],const output[],max_size,&upperbound_i
 
 ADM_Function:: DMP:FindFreeDumpFileID(){
 	for(new DMP:i = DMP:0; i < MAX_DUMP_FILE; i = DMP:(DMPToInt(i)+1)){
-		if(ADM_ProtVar::DumpFileStatus[i] == false) return i;
+		if(DumpFileStatus[i] == false) return i;
 	}
 	return INVALID_DUMP_FILE;
 }
 
 ADM_Function:: bool:IsDumpFileOpen(DMP:index){
 	if(index < DMP:0 || index >= MAX_DUMP_FILE) return false;
-	if(!fexist(ADM_ProtVar::DumpFileName[index])) return false;
-	return ADM_ProtVar::DumpFileStatus[index];
+	if(!fexist(DumpFileName[index])) return false;
+	return DumpFileStatus[index];
 }
 
 ADM_Function:: DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
@@ -1223,10 +1215,10 @@ ADM_Function:: DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
 		fclose(dmpfile);
 		new DMP:idx = FindFreeDumpFileID();
 		if(idx == INVALID_DUMP_FILE) return INVALID_DUMP_FILE;
-		ADM_ProtVar::DumpFileStatus[idx] = true;
-		ADM_ProtVar::DumpFileType[idx] = type;
-		format(ADM_ProtVar::DumpFileName[idx],MAX_DUMP_FILE_NAME,"%s",name);
-		format(ADM_ProtVar::DumpFileKey[idx],MAX_KEY_LEN_ADMx256,"%s",key);
+		DumpFileStatus[idx] = true;
+		DumpFileType[idx] = type;
+		format(DumpFileName[idx],MAX_DUMP_FILE_NAME,"%s",name);
+		format(DumpFileKey[idx],MAX_KEY_LEN_ADMx256,"%s",key);
 		return idx;
 	} else {
 		return INVALID_DUMP_FILE;
@@ -1235,11 +1227,11 @@ ADM_Function:: DMP:DumpFileCreate(const name[], key[], type = KEY_TYPE_ADMx32){
 
 ADM_Function:: bool:DumpFileDestroy(&DMP:index){
 	if(index < DMP:0 || index >= MAX_DUMP_FILE) return false;
-	new tid = fremove(ADM_ProtVar::DumpFileName[index]);
-	ADM_ProtVar::DumpFileName[index] = "";
-	ADM_ProtVar::DumpFileKey[index] = "";
-	ADM_ProtVar::DumpFileStatus[index] = false;
-	ADM_ProtVar::DumpFileType[index] = KEY_TYPE_UNKNOWN;
+	new tid = fremove(DumpFileName[index]);
+	DumpFileName[index] = "";
+	DumpFileKey[index] = "";
+	DumpFileStatus[index] = false;
+	DumpFileType[index] = KEY_TYPE_UNKNOWN;
 	index = INVALID_DUMP_FILE;
 	return bool:tid;
 }
@@ -1301,53 +1293,53 @@ ADM_Function:: DMP:DumpFileOpen(const name[], key[], type = KEY_TYPE_ADMx32){
 	if(!IsValidDumpFile(name)) return INVALID_DUMP_FILE;
 	new DMP:idx = FindFreeDumpFileID();
 	if(idx == INVALID_DUMP_FILE) return INVALID_DUMP_FILE;
-	ADM_ProtVar::DumpFileStatus[idx] = true;
-	ADM_ProtVar::DumpFileType[idx] = type;
-	format(ADM_ProtVar::DumpFileName[idx],MAX_DUMP_FILE_NAME,"%s",name);
-	format(ADM_ProtVar::DumpFileKey[idx],MAX_KEY_LEN_ADMx256,"%s",key);
+	DumpFileStatus[idx] = true;
+	DumpFileType[idx] = type;
+	format(DumpFileName[idx],MAX_DUMP_FILE_NAME,"%s",name);
+	format(DumpFileKey[idx],MAX_KEY_LEN_ADMx256,"%s",key);
 	return idx;
 }
 
 ADM_Function:: bool:DumpFileClose(&DMP:index){
 	if(index < DMP:0 || index >= MAX_DUMP_FILE) return false;
-	ADM_ProtVar::DumpFileName[index] = "";
-	ADM_ProtVar::DumpFileKey[index] = "";
-	ADM_ProtVar::DumpFileStatus[index] = false;
-	ADM_ProtVar::DumpFileType[index] = KEY_TYPE_UNKNOWN;
+	DumpFileName[index] = "";
+	DumpFileKey[index] = "";
+	DumpFileStatus[index] = false;
+	DumpFileType[index] = KEY_TYPE_UNKNOWN;
 	index = INVALID_DUMP_FILE;
 	return true;
 }
 
 ADM_Function:: ADM:DumpFileWrite(DMP:index, string[]){
 	if(index < DMP:0 || index >= MAX_DUMP_FILE) return ERROR_CODE_ADM_DMP_IDX;
-	if(isnull(ADM_ProtVar::DumpFileName[index])) return ERROR_CODE_ADM_DMP_NAME;
-	if(!IsValidADMKey(ADM_ProtVar::DumpFileKey[index],ADM_ProtVar::DumpFileType[index])) return ERROR_CODE_ADM_KEY;
-	new File:dmpfile = fopen(ADM_ProtVar::DumpFileName[index],io_append);
+	if(isnull(DumpFileName[index])) return ERROR_CODE_ADM_DMP_NAME;
+	if(!IsValidADMKey(DumpFileKey[index],DumpFileType[index])) return ERROR_CODE_ADM_KEY;
+	new File:dmpfile = fopen(DumpFileName[index],io_append);
 	if(dmpfile){
-		new mod = (ADM_ProtVar::DumpFileType[index]/8),
+		new mod = (DumpFileType[index]/8),
 			idx = flength(dmpfile),
 			s = (idx % mod),
 			mode[MAX_MODE_ADMx256];
 		
-		switch(ADM_ProtVar::DumpFileType[index]){
+		switch(DumpFileType[index]){
 			case KEY_TYPE_ADMx32: {
-				sscanf(ADM_ProtVar::DumpFileKey[index],"D(0)D(0)D(0)D(0)",
+				sscanf(DumpFileKey[index],"D(0)D(0)D(0)D(0)",
 					mode[0],mode[1],mode[2],mode[3]
 				);
 			}
 			case KEY_TYPE_ADMx64: {
-				sscanf(ADM_ProtVar::DumpFileKey[index],"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+				sscanf(DumpFileKey[index],"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
 					mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7]
 				);
 			}
 			case KEY_TYPE_ADMx128: {
-				sscanf(ADM_ProtVar::DumpFileKey[index],"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+				sscanf(DumpFileKey[index],"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
 					mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
 					mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15]
 				);
 			}
 			case KEY_TYPE_ADMx256: {
-				sscanf(ADM_ProtVar::DumpFileKey[index],"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
+				sscanf(DumpFileKey[index],"D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)D(0)",
 					mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],
 					mode[8],mode[9],mode[10],mode[11],mode[12],mode[13],mode[14],mode[15],
 					mode[16],mode[17],mode[18],mode[19],mode[20],mode[21],mode[22],mode[23],
