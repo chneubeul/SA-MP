@@ -172,18 +172,18 @@ enum e_OffsetTypes {
 
 new s_VehicleTrailerID[MAX_VEHICLES];
 
-new const s_TopSpeed[MAX_VEHICLE_MODEL] = {
-	157, 147, 186, 110, 133, 164, 110, 148, 100, 158, 129, 221, 168, 110, 105, 192, 154, 270,
-	115, 149, 145, 154, 140, 99,  135, 270, 173, 165, 157, 201, 190, 130, 94,  110, 167, 0,   149,
-	158, 142, 168, 136, 145, 139, 126, 110, 164, 270, 270, 111, 0,   0,   193, 270, 60,  135, 157,
-	106, 95,  157, 136, 270, 160, 111, 142, 145, 145, 147, 140, 144, 270, 157, 110, 190, 190,
-	149, 173, 270, 186, 117, 140, 184, 73,  156, 122, 190, 99,  64,  270, 270, 139, 157, 149, 140,
-	270, 214, 176, 162, 270, 108, 123, 140, 145, 216, 216, 173, 140, 179, 166, 108, 79,  101, 270,
-	270, 270, 120, 142, 157, 157, 164, 270, 270, 160, 176, 151, 130, 160, 158, 149, 176, 149, 60,
-	70,  110, 167, 168, 158, 173, 0,   0,   270, 149, 203, 164, 151, 150, 147, 149, 142, 270, 153, 145,
-	157, 121, 270, 144, 158, 113, 113, 156, 178, 169, 154, 178, 270, 145, 165, 160, 173, 146, 0,   0,
-	93,  60,  110, 60,  158, 158, 270, 130, 158, 153, 151, 136, 85,  0,   153, 142, 165, 108, 162, 0, 0,
-	270, 270, 130, 190, 175, 175, 175, 158, 151, 110, 169, 171, 148, 152, 0,   0,   0,   108, 0,   0
+new const Float:s_TopSpeed[MAX_VEHICLE_MODEL] = {
+	157.0, 147.0, 186.0, 110.0, 133.0, 164.0, 110.0, 148.0, 100.0, 158.0, 129.0, 221.0, 168.0, 110.0, 105.0, 192.0, 154.0, 270.0, 115.0, 149.0,
+	145.0, 154.0, 140.0, 99.0,  135.0, 270.0, 173.0, 165.0, 157.0, 201.0, 190.0, 130.0, 94.0,  110.0, 167.0, 0.0,   149.0, 158.0, 142.0, 168.0,
+	136.0, 145.0, 139.0, 126.0, 110.0, 164.0, 270.0, 270.0, 111.0, 0.0,   0.0,   193.0, 270.0, 60.0,  135.0, 157.0, 106.0, 95.0,  157.0, 136.0,
+	270.0, 160.0, 111.0, 142.0, 145.0, 145.0, 147.0, 140.0, 144.0, 270.0, 157.0, 110.0, 190.0, 190.0, 149.0, 173.0, 270.0, 186.0, 117.0, 140.0,
+	184.0, 73.0,  156.0, 122.0, 190.0, 99.0,  64.0,  270.0, 270.0, 139.0, 157.0, 149.0, 140.0, 270.0, 214.0, 176.0, 162.0, 270.0, 108.0, 123.0,
+	140.0, 145.0, 216.0, 216.0, 173.0, 140.0, 179.0, 166.0, 108.0, 79.0,  101.0, 270.0,	270.0, 270.0, 120.0, 142.0, 157.0, 157.0, 164.0, 270.0, 
+	270.0, 160.0, 176.0, 151.0, 130.0, 160.0, 158.0, 149.0, 176.0, 149.0, 60.0,  70.0,  110.0, 167.0, 168.0, 158.0, 173.0, 0.0,   0.0,   270.0,
+	149.0, 203.0, 164.0, 151.0, 150.0, 147.0, 149.0, 142.0, 270.0, 153.0, 145.0, 157.0, 121.0, 270.0, 144.0, 158.0, 113.0, 113.0, 156.0, 178.0,
+	169.0, 154.0, 178.0, 270.0, 145.0, 165.0, 160.0, 173.0, 146.0, 0.0,   0.0,   93.0,  60.0,  110.0, 60.0,  158.0, 158.0, 270.0, 130.0, 158.0,
+	153.0, 151.0, 136.0, 85.0,  0.0,   153.0, 142.0, 165.0, 108.0, 162.0, 0.0,   0.0,   270.0, 270.0, 130.0, 190.0, 175.0, 175.0, 175.0, 158.0,
+	151.0, 110.0, 169.0, 171.0, 148.0, 152.0, 0.0,   0.0,   0.0,   108.0, 0.0,   0.0
 };
 
 new const s_CarColors[][]={
@@ -418,9 +418,9 @@ new const s_VehicleDoor[MAX_VEHICLE_MODEL] = {
 #define IsValidVehicleModelID(%0)		(400 <= (%0) <= 611)
 #define GetVehicleSeats(%0)				GetVehicleModelSeats(GetVehicleModel(%0))
 #define SetVehicleInterior(%0,%1)		LinkVehicleToInterior(%0,%1)
-#define GetVehicleBoot(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_BOOT,%1,%2,%3)
-#define GetVehicleHood(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_HOOD,%1,%2,%3)
-#define GetVehicleRoof(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_ROOF,%1,%2,%3)
+#define GetVehicleBoot(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_BOOT,(%1),(%2),(%3))
+#define GetVehicleHood(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_HOOD,(%1),(%2),(%3))
+#define GetVehicleRoof(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_ROOF,(%1),(%2),(%3))
 #define GetVehicleDoorAmount(%0)		GetVehicleDoorAmountByModelid(GetVehicleModel(%0))
 
 forward OnVehicleCreated(vehicleid);
@@ -617,12 +617,12 @@ stock GetVehicleNextSeat(vehicleid,passenger = 1){
 
 stock GetVehicleModelSeats(modelid){
 	if(!IsValidVehicleModelID(modelid)) return 0;
-	return (s_VehicleSeats[(modelid - 400)]);
+	return (s_VehicleSeats[(modelid-400)]);
 }
 
 stock Float:GetVehicleTopSpeed(vehicleid){
 	new model = GetVehicleModel(vehicleid);
-	if(model) return float(s_TopSpeed[(model - 400)]);
+	if(model) return s_TopSpeed[(model-400)];
  	return 0.0;
 }
 
@@ -959,7 +959,7 @@ stock EVF_ChangeVehiclePaintjob(vehicleid,paintjobid){
 //Hook: OnPlayerUpdate
 public OnPlayerUpdate(playerid){
 	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER){
-		new vehicleid = GetPlayerVehicleID(playerid),trailerid = GetVehicleTrailer(vehicleid);
+		new vehicleid = GetPlayerVehicleID(playerid), trailerid = GetVehicleTrailer(vehicleid);
 
 		if(s_VehicleTrailerID[vehicleid] != trailerid){
 			if(trailerid != 0){

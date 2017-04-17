@@ -422,6 +422,7 @@
 
 #define StreamerSpec_Function::					stock
 #define StreamerSpec_Public::%0(%1)				forward %0(%1); public %0(%1)
+#define StreamerSpec::							StreamerSpec_
 
 #if !defined isnull
 	#define isnull(%1) 							((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
@@ -641,63 +642,63 @@
 #define GetStreamerSpecActiveCount() 			GetSVarInt("ADM:StreamerSpec:ACTIVE")
 
 //Datagram
-StreamerSpec_Function:: GetStreamerDatagram(type,STREAMER_ALL_TAGS itemid,data[]){
+StreamerSpec::Function:: GetStreamerDatagram(type,STREAMER_ALL_TAGS itemid,data[]){
 	new address[32];
 	format(address,sizeof(address),"Stream:%d:%d",type,_:itemid);
 	GetSVarString(address,data,MAX_STREAM_SIZE);
 }
 
-StreamerSpec_Function:: SetStreamerDatagram(type,STREAMER_ALL_TAGS itemid,data[]){
+StreamerSpec::Function:: SetStreamerDatagram(type,STREAMER_ALL_TAGS itemid,data[]){
 	new address[32];
 	format(address,sizeof(address),"Stream:%d:%d",type,_:itemid);
 	SetSVarString(address,data);
 }
 
-StreamerSpec_Function:: RemoveStreamDatagram(type,STREAMER_ALL_TAGS itemid){
+StreamerSpec::Function:: RemoveStreamDatagram(type,STREAMER_ALL_TAGS itemid){
 	new address[32];
 	format(address,sizeof(address),"Stream:%d:%d",type,_:itemid);
 	DeleteSVar(address);
 }
 
-StreamerSpec_Function:: bool:IsSetStreamerDatagram(type,STREAMER_ALL_TAGS itemid){
+StreamerSpec::Function:: bool:IsSetStreamerDatagram(type,STREAMER_ALL_TAGS itemid){
 	new stream_data[MAX_STREAM_SIZE];
 	GetStreamerDatagram(type,_:itemid,stream_data);
 	if(isnull(stream_data)) return false;
 	return true;
 }
 
-StreamerSpec_Function:: bool:IsValidStreamer(version){
+StreamerSpec::Function:: bool:IsValidStreamer(version){
 	return (GetStreamerVersion() == version);
 }
 
-StreamerSpec_Function:: GetStreamerVersionName(name[], value = GET_STREAMER_VERSION, maxdest = sizeof name){
+StreamerSpec::Function:: GetStreamerVersionName(name[], value = GET_STREAMER_VERSION, maxdest = sizeof name){
 	if(value == GET_STREAMER_VERSION) value = GetStreamerVersion();
 	new ver_str[10];
 	format(ver_str,sizeof(ver_str),"%03x",value);
 	format(name,maxdest,"%d.%d.%d",(ver_str[0]-48),(ver_str[1]-48),(ver_str[2]-48));
 }
 
-StreamerSpec_Function:: SetDynamicObjectPosAndRot(STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
+StreamerSpec::Function:: SetDynamicObjectPosAndRot(STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
 	SetDynamicObjectPos(objectid,x,y,z);
 	SetDynamicObjectRot(objectid,rx,ry,rz);
 }
 
-StreamerSpec_Function:: GetDynamicObjectPosAndRot(STREAMER_TAG_OBJECT objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
+StreamerSpec::Function:: GetDynamicObjectPosAndRot(STREAMER_TAG_OBJECT objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
 	GetDynamicObjectPos(objectid,x,y,z);
 	GetDynamicObjectRot(objectid,rx,ry,rz);
 }
 
-StreamerSpec_Function:: SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
+StreamerSpec::Function:: SetObjectPosAndRot(objectid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
 	SetObjectPos(objectid,x,y,z);
 	SetObjectRot(objectid,rx,ry,rz);
 }
 
-StreamerSpec_Function:: GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
+StreamerSpec::Function:: GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz){
 	GetObjectPos(objectid,x,y,z);
 	GetObjectRot(objectid,rx,ry,rz);
 }
 
-StreamerSpec_Function:: CountObjects(){
+StreamerSpec::Function:: CountObjects(){
 	new count = 0;
 	for(new i = 0; i <= MAX_OBJECTS; i++){
 		if(IsValidObject(i)) count++;
@@ -705,7 +706,7 @@ StreamerSpec_Function:: CountObjects(){
 	return count;
 }
 
-StreamerSpec_Function:: DestroyObjects(){
+StreamerSpec::Function:: DestroyObjects(){
 	new count = 0;
 	for(new i = 0; i <= MAX_OBJECTS; i++){
 		if(IsValidObject(i)){
@@ -716,7 +717,7 @@ StreamerSpec_Function:: DestroyObjects(){
 	return count;
 }
 
-StreamerSpec_Function:: CountVehicles(){
+StreamerSpec::Function:: CountVehicles(){
 	new count = 0;
 	for(new i = 0, j = GetVehiclePoolSize(); i <= j; i++){
 		if(IsValidVehicle(i)) count++;
@@ -724,7 +725,7 @@ StreamerSpec_Function:: CountVehicles(){
 	return count;
 }
 
-StreamerSpec_Function:: DestroyVehicles(){
+StreamerSpec::Function:: DestroyVehicles(){
 	new count = 0;
 	for(new i = 0, j = GetVehiclePoolSize(); i <= j; i++){
 		if(IsValidVehicle(i)){
@@ -735,13 +736,13 @@ StreamerSpec_Function:: DestroyVehicles(){
 	return count;
 }
 
-StreamerSpec_Function:: GangZoneDestroyAll(){
+StreamerSpec::Function:: GangZoneDestroyAll(){
 	for(new i = 0; i <= MAX_GANG_ZONES; i++){
 		GangZoneDestroy(i);
 	}
 }
 
-StreamerSpec_Function:: CountPlayerObjects(playerid,bool:streamer = false){
+StreamerSpec::Function:: CountPlayerObjects(playerid,bool:streamer = false){
 	new count = 0;
 	for(new i = 0; i <= MAX_OBJECTS; i++){
 		if(streamer){
@@ -759,7 +760,7 @@ StreamerSpec_Function:: CountPlayerObjects(playerid,bool:streamer = false){
 	return count;
 }
 
-StreamerSpec_Function:: DestroyPlayerObjects(playerid,bool:streamer = false){
+StreamerSpec::Function:: DestroyPlayerObjects(playerid,bool:streamer = false){
 	new count = 0;
 	for(new i = 0; i <= MAX_OBJECTS; i++){
 		if(streamer){
@@ -779,7 +780,7 @@ StreamerSpec_Function:: DestroyPlayerObjects(playerid,bool:streamer = false){
 	return count;
 }
 
-StreamerSpec_Function:: RebuildDynamicObject(STREAMER_TAG_OBJECT objectid,modelid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid = -1,interiorid = -1,playerid = -1,Float:streamdistance = STREAMER_OBJECT_SD,Float:drawdistance = STREAMER_OBJECT_DD,areaid = -1,priority = 0){
+StreamerSpec::Function:: RebuildDynamicObject(STREAMER_TAG_OBJECT objectid,modelid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid = -1,interiorid = -1,playerid = -1,Float:streamdistance = STREAMER_OBJECT_SD,Float:drawdistance = STREAMER_OBJECT_DD,areaid = -1,priority = 0){
 	if(!IsValidDynamicObject(objectid)) return 0;
 	if(IsDynamicObjectMoving(objectid)) StopDynamicObject(objectid);
 	SetDynamicObjectPosAndRot(objectid,x,y,z,rx,ry,rz);
@@ -793,17 +794,17 @@ StreamerSpec_Function:: RebuildDynamicObject(STREAMER_TAG_OBJECT objectid,modeli
 	return 1;
 }
 
-StreamerSpec_Function:: bool:IsPointInArea(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
+StreamerSpec::Function:: bool:IsPointInArea(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
 	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz)) return true;
 	return false;
 }
 
-StreamerSpec_Function:: bool:IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,vw1 = -1,int1 = -1,vw2 = -1,int2 = -1){
+StreamerSpec::Function:: bool:IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,vw1 = -1,int1 = -1,vw2 = -1,int2 = -1){
 	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz) && (vw1 == vw2) && (int1 == int2)) return true;
 	return false;
 }
 
-StreamerSpec_Function:: DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
+StreamerSpec::Function:: DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
 	new count = 0,Float:piox,Float:pioy,Float:pioz,pioVW,pioINT;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
@@ -822,7 +823,7 @@ StreamerSpec_Function:: DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:
 	return count;
 }
 
-StreamerSpec_Function:: DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
+StreamerSpec::Function:: DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
 	new count = 0,Float:piox,Float:pioy,Float:pioz,pioVW,pioINT;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
@@ -841,7 +842,7 @@ StreamerSpec_Function:: DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:m
 	return count;
 }
 
-StreamerSpec_Function:: DestroyVehicleDynamicObject(vehicleid){
+StreamerSpec::Function:: DestroyVehicleDynamicObject(vehicleid){
 	new count = 0;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
@@ -854,7 +855,7 @@ StreamerSpec_Function:: DestroyVehicleDynamicObject(vehicleid){
 	return count;
 }
 
-StreamerSpec_Function:: DeattachVehicleDynamicObject(vehicleid){
+StreamerSpec::Function:: DeattachVehicleDynamicObject(vehicleid){
 	new count = 0;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
@@ -867,7 +868,7 @@ StreamerSpec_Function:: DeattachVehicleDynamicObject(vehicleid){
 	return count;
 }
 
-StreamerSpec_Function:: DeattachPlayerDynamicObject(playerid){
+StreamerSpec::Function:: DeattachPlayerDynamicObject(playerid){
 	new count = 0;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
@@ -880,7 +881,7 @@ StreamerSpec_Function:: DeattachPlayerDynamicObject(playerid){
 	return count;
 }
 
-StreamerSpec_Function:: DestroyPlayerDynamicObject(playerid){
+StreamerSpec::Function:: DestroyPlayerDynamicObject(playerid){
 	new count = 0;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
@@ -893,139 +894,139 @@ StreamerSpec_Function:: DestroyPlayerDynamicObject(playerid){
 	return count;
 }
 
-StreamerSpec_Function:: GetDynamicCPPos(STREAMER_TAG_CP checkpointid,&Float:x,&Float:y,&Float:z){
+StreamerSpec::Function:: GetDynamicCPPos(STREAMER_TAG_CP checkpointid,&Float:x,&Float:y,&Float:z){
 	Streamer_GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Y,y);
 	Streamer_GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: SetDynamicCPPos(STREAMER_TAG_CP checkpointid,Float:x,Float:y,Float:z){
+StreamerSpec::Function:: SetDynamicCPPos(STREAMER_TAG_CP checkpointid,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: GetDynamicRaceCPPos(STREAMER_TAG_RACE_CP checkpointid,&Float:x,&Float:y,&Float:z){
+StreamerSpec::Function:: GetDynamicRaceCPPos(STREAMER_TAG_RACE_CP checkpointid,&Float:x,&Float:y,&Float:z){
 	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Y,y);
 	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: SetDynamicRaceCPPos(STREAMER_TAG_RACE_CP checkpointid,Float:x,Float:y,Float:z){
+StreamerSpec::Function:: SetDynamicRaceCPPos(STREAMER_TAG_RACE_CP checkpointid,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: GetDynamicRaceCPNext(STREAMER_TAG_RACE_CP checkpointid,&Float:nextx,&Float:nexty,&Float:nextz){
+StreamerSpec::Function:: GetDynamicRaceCPNext(STREAMER_TAG_RACE_CP checkpointid,&Float:nextx,&Float:nexty,&Float:nextz){
 	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_X,nextx);
 	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Y,nexty);
 	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Z,nextz);
 }
 
-StreamerSpec_Function:: SetDynamicRaceCPNext(STREAMER_TAG_RACE_CP checkpointid,Float:nextx,Float:nexty,Float:nextz){
+StreamerSpec::Function:: SetDynamicRaceCPNext(STREAMER_TAG_RACE_CP checkpointid,Float:nextx,Float:nexty,Float:nextz){
 	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_X,nextx);
 	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Y,nexty);
 	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Z,nextz);
 }
 
-StreamerSpec_Function:: GetDynamicObjectMovePos(STREAMER_TAG_OBJECT objectid,&Float:x,&Float:y,&Float:z){
+StreamerSpec::Function:: GetDynamicObjectMovePos(STREAMER_TAG_OBJECT objectid,&Float:x,&Float:y,&Float:z){
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,y);
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,z);
 }
 
-StreamerSpec_Function:: GetDynamicObjectMoveRot(STREAMER_TAG_OBJECT objectid,&Float:rx,&Float:ry,&Float:rz){
+StreamerSpec::Function:: GetDynamicObjectMoveRot(STREAMER_TAG_OBJECT objectid,&Float:rx,&Float:ry,&Float:rz){
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
 	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
 }
 
-StreamerSpec_Function:: SetDynamicObjectMovePos(STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z){
+StreamerSpec::Function:: SetDynamicObjectMovePos(STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,z);
 }
 
-StreamerSpec_Function:: SetDynamicObjectMoveRot(STREAMER_TAG_OBJECT objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0){
+StreamerSpec::Function:: SetDynamicObjectMoveRot(STREAMER_TAG_OBJECT objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0){
 	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
 	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
 	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
 }
 
-StreamerSpec_Function:: GetDynamicPickupPos(STREAMER_TAG_PICKUP pickupid,&Float:x,&Float:y,&Float:z){
+StreamerSpec::Function:: GetDynamicPickupPos(STREAMER_TAG_PICKUP pickupid,&Float:x,&Float:y,&Float:z){
 	Streamer_GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Y,y);
 	Streamer_GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: SetDynamicPickupPos(STREAMER_TAG_PICKUP pickupid,Float:x,Float:y,Float:z){
+StreamerSpec::Function:: SetDynamicPickupPos(STREAMER_TAG_PICKUP pickupid,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: GetDynamicMapIconPos(STREAMER_TAG_MAP_ICON iconid,&Float:x,&Float:y,&Float:z){
+StreamerSpec::Function:: GetDynamicMapIconPos(STREAMER_TAG_MAP_ICON iconid,&Float:x,&Float:y,&Float:z){
 	Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Y,y);
 	Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: SetDynamicMapIconPos(STREAMER_TAG_MAP_ICON iconid,Float:x,Float:y,Float:z){
+StreamerSpec::Function:: SetDynamicMapIconPos(STREAMER_TAG_MAP_ICON iconid,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: GetDynamic3DTextPos(STREAMER_TAG_3D_TEXT_LABEL id,&Float:x,&Float:y,&Float:z){
+StreamerSpec::Function:: GetDynamic3DTextPos(STREAMER_TAG_3D_TEXT_LABEL id,&Float:x,&Float:y,&Float:z){
 	Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Y,y);
 	Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: SetDynamic3DTextPos(STREAMER_TAG_3D_TEXT_LABEL id,Float:x,Float:y,Float:z){
+StreamerSpec::Function:: SetDynamic3DTextPos(STREAMER_TAG_3D_TEXT_LABEL id,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: GetDynamicCirclePos(STREAMER_TAG_AREA areaid,&Float:x,&Float:y){
+StreamerSpec::Function:: GetDynamicCirclePos(STREAMER_TAG_AREA areaid,&Float:x,&Float:y){
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
 }
 
-StreamerSpec_Function:: SetDynamicCirclePos(STREAMER_TAG_AREA areaid,Float:x,Float:y){
+StreamerSpec::Function:: SetDynamicCirclePos(STREAMER_TAG_AREA areaid,Float:x,Float:y){
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
 }
 
-StreamerSpec_Function:: GetDynamicCylinderPos(STREAMER_TAG_AREA areaid,&Float:x,&Float:y,&Float:minz,&Float:maxz){
+StreamerSpec::Function:: GetDynamicCylinderPos(STREAMER_TAG_AREA areaid,&Float:x,&Float:y,&Float:minz,&Float:maxz){
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
 }
 
-StreamerSpec_Function:: SetDynamicCylinderPos(STREAMER_TAG_AREA areaid,Float:x,Float:y,Float:minz,Float:maxz){
+StreamerSpec::Function:: SetDynamicCylinderPos(STREAMER_TAG_AREA areaid,Float:x,Float:y,Float:minz,Float:maxz){
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
 }
 
-StreamerSpec_Function:: GetDynamicSpherePos(STREAMER_TAG_AREA areaid,&Float:x,&Float:y,&Float:z){
+StreamerSpec::Function:: GetDynamicSpherePos(STREAMER_TAG_AREA areaid,&Float:x,&Float:y,&Float:z){
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: SetDynamicSpherePos(STREAMER_TAG_AREA areaid,Float:x,Float:y,Float:z){
+StreamerSpec::Function:: SetDynamicSpherePos(STREAMER_TAG_AREA areaid,Float:x,Float:y,Float:z){
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Z,z);
 }
 
-StreamerSpec_Function:: GetDynamicCubePos(STREAMER_TAG_AREA areaid,&Float:minx,&Float:miny,&Float:minz,&Float:maxx,&Float:maxy,&Float:maxz){
+StreamerSpec::Function:: GetDynamicCubePos(STREAMER_TAG_AREA areaid,&Float:minx,&Float:miny,&Float:minz,&Float:maxx,&Float:maxy,&Float:maxz){
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
@@ -1034,7 +1035,7 @@ StreamerSpec_Function:: GetDynamicCubePos(STREAMER_TAG_AREA areaid,&Float:minx,&
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
 }
 
-StreamerSpec_Function:: SetDynamicCubePos(STREAMER_TAG_AREA areaid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
+StreamerSpec::Function:: SetDynamicCubePos(STREAMER_TAG_AREA areaid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
@@ -1043,21 +1044,21 @@ StreamerSpec_Function:: SetDynamicCubePos(STREAMER_TAG_AREA areaid,Float:minx,Fl
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
 }
 
-StreamerSpec_Function:: GetDynamicRectanglePos(STREAMER_TAG_AREA areaid,&Float:minx,&Float:miny,&Float:maxx,&Float:maxy){
+StreamerSpec::Function:: GetDynamicRectanglePos(STREAMER_TAG_AREA areaid,&Float:minx,&Float:miny,&Float:maxx,&Float:maxy){
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
 	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
 }
 
-StreamerSpec_Function:: SetDynamicRectanglePos(STREAMER_TAG_AREA areaid,Float:minx,Float:miny,Float:maxx,Float:maxy){
+StreamerSpec::Function:: SetDynamicRectanglePos(STREAMER_TAG_AREA areaid,Float:minx,Float:miny,Float:maxx,Float:maxy){
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
 	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
 }
 
-StreamerSpec_Function:: DestroyDynamicObjectComponent(STREAMER_TAG_OBJECT objectid,type){
+StreamerSpec::Function:: DestroyDynamicObjectComponent(STREAMER_TAG_OBJECT objectid,type){
 	new count = 0;
 	switch(type){
 		case STREAMER_TYPE_OBJECT: {
@@ -1081,7 +1082,7 @@ StreamerSpec_Function:: DestroyDynamicObjectComponent(STREAMER_TAG_OBJECT object
 	return count;
 }
 
-StreamerSpec_Function:: DeattachDynamicObjectComponent(STREAMER_TAG_OBJECT objectid,type){
+StreamerSpec::Function:: DeattachDynamicObjectComponent(STREAMER_TAG_OBJECT objectid,type){
 	new count = 0;
 	switch(type){
 		case STREAMER_TYPE_OBJECT: {
@@ -1105,7 +1106,7 @@ StreamerSpec_Function:: DeattachDynamicObjectComponent(STREAMER_TAG_OBJECT objec
 	return count;
 }
 
-StreamerSpec_Function:: GetDynamicObjectMoveTime(STREAMER_TAG_OBJECT objectid,&objstate,&rtime=0){
+StreamerSpec::Function:: GetDynamicObjectMoveTime(STREAMER_TAG_OBJECT objectid,&objstate,&rtime=0){
 	if(!IsValidDynamicObject(objectid)){
 		objstate = MOVE_OBJECT_STATE_INVALID;
 		rtime = 0;
@@ -1125,66 +1126,66 @@ StreamerSpec_Function:: GetDynamicObjectMoveTime(STREAMER_TAG_OBJECT objectid,&o
 	}
 }
 
-StreamerSpec_Function:: UpdateAllDynamicObjects(){
+StreamerSpec::Function:: UpdateAllDynamicObjects(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i,STREAMER_TYPE_OBJECT);
 	}
 }
 
-StreamerSpec_Function:: UpdateAllDynamicPickups(){
+StreamerSpec::Function:: UpdateAllDynamicPickups(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i,STREAMER_TYPE_PICKUP);
 	}
 }
 
-StreamerSpec_Function:: UpdateAllDynamicCPs(){
+StreamerSpec::Function:: UpdateAllDynamicCPs(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i,STREAMER_TYPE_CP);
 	}
 }
 
-StreamerSpec_Function:: UpdateAllDynamicRaceCPs(){
+StreamerSpec::Function:: UpdateAllDynamicRaceCPs(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i,STREAMER_TYPE_RACE_CP);
 	}
 }
 
-StreamerSpec_Function:: UpdateAllDynamicMapIcons(){
+StreamerSpec::Function:: UpdateAllDynamicMapIcons(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i,STREAMER_TYPE_MAP_ICON);
 	}
 }
 
-StreamerSpec_Function:: UpdateAllDynamic3DTextLabels(){
+StreamerSpec::Function:: UpdateAllDynamic3DTextLabels(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i,STREAMER_TYPE_3D_TEXT_LABEL);
 	}
 }
 
-StreamerSpec_Function:: UpdateAllDynamicAreas(){
+StreamerSpec::Function:: UpdateAllDynamicAreas(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i,STREAMER_TYPE_AREA);
 	}
 }
 
-StreamerSpec_Function:: UpdateAllDynamicActors(){
+StreamerSpec::Function:: UpdateAllDynamicActors(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i,STREAMER_TYPE_ACTOR);
 	}
 }
 
-StreamerSpec_Function:: UpdateAllDynamicElements(){
+StreamerSpec::Function:: UpdateAllDynamicElements(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i);
 	}
 }
 
-StreamerSpec_Function:: ResetDynamicObjectMaterial(STREAMER_TAG_OBJECT objectid,materialindex){
+StreamerSpec::Function:: ResetDynamicObjectMaterial(STREAMER_TAG_OBJECT objectid,materialindex){
 	SetDynamicObjectMaterial(objectid,materialindex,0,"","",0);
 	SetDynamicObjectModel(objectid,GetDynamicObjectModel(objectid));
 }
 
-StreamerSpec_Function:: ResetDynamicObjectMaterialAll(STREAMER_TAG_OBJECT objectid){
+StreamerSpec::Function:: ResetDynamicObjectMaterialAll(STREAMER_TAG_OBJECT objectid){
 	for(new i = 0; i < 16; i++){
 		if(IsDynamicObjectMaterialUsed(objectid,i)){
 			SetDynamicObjectMaterial(objectid,i,0,"","",0);
@@ -1193,7 +1194,7 @@ StreamerSpec_Function:: ResetDynamicObjectMaterialAll(STREAMER_TAG_OBJECT object
 	SetDynamicObjectModel(objectid,GetDynamicObjectModel(objectid));
 }
 
-StreamerSpec_Function:: CheckStreamerVersion(){
+StreamerSpec::Function:: CheckStreamerVersion(){
 	if(!IsValidStreamer(GetValidStreamerVersion())){
 		new str1[32], str2[32];
 		GetStreamerVersionName(str1,GetStreamerVersion());
@@ -1204,7 +1205,7 @@ StreamerSpec_Function:: CheckStreamerVersion(){
 	}
 }
 
-StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
+StreamerSpec::Function:: GetNearestVisibleItem(playerid,type){
 	new Float:x, Float:y, Float:z, max_element, tmp_item, itemid = INVALID_STREAMER_ID,
 		Float:min_radius = 20000.0, Float:distance, idx_max = 0, idx = 0;
 	
@@ -1267,7 +1268,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 
 #if !defined DISABLE_STREAMER_SPEC_FIXES
 	//Hook: DestroyDynamicObject
-	StreamerSpec_Function:: SF_DestroyDynamicObject(&STREAMER_TAG_OBJECT objectid){
+	StreamerSpec::Function:: SF_DestroyDynamicObject(&STREAMER_TAG_OBJECT objectid){
 		new dobj = DestroyDynamicObject(objectid);
 		objectid = INVALID_DYNAMIC_OBJECT_ID;
 		return dobj;
@@ -1281,7 +1282,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyDynamicObject SF_DestroyDynamicObject
 
 	//Hook: DestroyDynamicPickup
-	StreamerSpec_Function:: SF_DestroyDynamicPickup(&STREAMER_TAG_PICKUP pickupid){
+	StreamerSpec::Function:: SF_DestroyDynamicPickup(&STREAMER_TAG_PICKUP pickupid){
 		new dobj = DestroyDynamicPickup(pickupid);
 		pickupid = INVALID_DYNAMIC_PICKUP_ID;
 		return dobj;
@@ -1295,7 +1296,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyDynamicPickup SF_DestroyDynamicPickup
 
 	//Hook: DestroyDynamicCP
-	StreamerSpec_Function:: SF_DestroyDynamicCP(&STREAMER_TAG_CP checkpointid){
+	StreamerSpec::Function:: SF_DestroyDynamicCP(&STREAMER_TAG_CP checkpointid){
 		new dobj = DestroyDynamicCP(checkpointid);
 		checkpointid = INVALID_DYNAMIC_CP_ID;
 		return dobj;
@@ -1309,7 +1310,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyDynamicCP SF_DestroyDynamicCP
 
 	//Hook: DestroyDynamicRaceCP
-	StreamerSpec_Function:: SF_DestroyDynamicRaceCP(&STREAMER_TAG_RACE_CP checkpointid){
+	StreamerSpec::Function:: SF_DestroyDynamicRaceCP(&STREAMER_TAG_RACE_CP checkpointid){
 		new dobj = DestroyDynamicRaceCP(checkpointid);
 		checkpointid = INVALID_DYNAMIC_RACE_CP_ID;
 		return dobj;
@@ -1323,7 +1324,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyDynamicRaceCP SF_DestroyDynamicRaceCP
 
 	//Hook: DestroyDynamicMapIcon
-	StreamerSpec_Function:: SF_DestroyDynamicMapIcon(&STREAMER_TAG_MAP_ICON iconid){
+	StreamerSpec::Function:: SF_DestroyDynamicMapIcon(&STREAMER_TAG_MAP_ICON iconid){
 		new dobj = DestroyDynamicMapIcon(iconid);
 		iconid = INVALID_DYNAMIC_MAP_ICON_ID;
 		return dobj;
@@ -1337,7 +1338,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyDynamicMapIcon SF_DestroyDynamicMapIcon
 
 	//Hook: DestroyDynamic3DTextLabel
-	StreamerSpec_Function:: SF_DestroyDynamic3DTextLabel(&STREAMER_TAG_3D_TEXT_LABEL id){
+	StreamerSpec::Function:: SF_DestroyDynamic3DTextLabel(&STREAMER_TAG_3D_TEXT_LABEL id){
 		new dobj = DestroyDynamic3DTextLabel(id);
 		id = INVALID_DYNAMIC_3D_TEXT_ID;
 		return dobj;
@@ -1351,7 +1352,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyDynamic3DTextLabel SF_DestroyDynamic3DTextLabel
 
 	//Hook: DestroyDynamicArea
-	StreamerSpec_Function:: SF_DestroyDynamicArea(&STREAMER_TAG_AREA areaid){
+	StreamerSpec::Function:: SF_DestroyDynamicArea(&STREAMER_TAG_AREA areaid){
 		new dobj = DestroyDynamicArea(areaid);
 		areaid = INVALID_DYNAMIC_AREA_ID;
 		return dobj;
@@ -1365,7 +1366,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyDynamicArea SF_DestroyDynamicArea
 	
 	//Hook: DestroyDynamicActor
-	StreamerSpec_Function:: SF_DestroyDynamicActor(&STREAMER_TAG_ACTOR actorid){
+	StreamerSpec::Function:: SF_DestroyDynamicActor(&STREAMER_TAG_ACTOR actorid){
 		new dobj = DestroyDynamicActor(actorid);
 		actorid = INVALID_DYNAMIC_ACTOR_ID;
 		return dobj;
@@ -1379,7 +1380,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyDynamicActor SF_DestroyDynamicActor
 	
 	//Hook: AttachDynamicObjectToObject
-	StreamerSpec_Function:: SF_AttachDynamicObjectToObject(STREAMER_TAG_OBJECT objectid,attachtoid,Float:offsetx,Float:offsety,Float:offsetz,Float:rx,Float:ry,Float:rz,syncrotation = 1){
+	StreamerSpec::Function:: SF_AttachDynamicObjectToObject(STREAMER_TAG_OBJECT objectid,attachtoid,Float:offsetx,Float:offsety,Float:offsetz,Float:rx,Float:ry,Float:rz,syncrotation = 1){
 		new dobj = AttachDynamicObjectToObject(objectid,attachtoid,offsetx,offsety,offsetz,rx,ry,rz,syncrotation);
 		if(GetDynamicObjectPriority(attachtoid) <= GetDynamicObjectPriority(objectid)){
 			SetDynamicObjectPriority(attachtoid,GetDynamicObjectPriority(objectid)+1);
@@ -1395,7 +1396,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define AttachDynamicObjectToObject SF_AttachDynamicObjectToObject
 
 	//Hook: DestroyObject
-	StreamerSpec_Function:: SF_DestroyObject(&objectid){
+	StreamerSpec::Function:: SF_DestroyObject(&objectid){
 		new dobj = DestroyObject(objectid);
 		objectid = INVALID_OBJECT_ID;
 		return dobj;
@@ -1409,7 +1410,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyObject SF_DestroyObject
 
 	//Hook: DestroyPlayerObject
-	StreamerSpec_Function:: SF_DestroyPlayerObject(playerid,&objectid){
+	StreamerSpec::Function:: SF_DestroyPlayerObject(playerid,&objectid){
 		new dobj = DestroyPlayerObject(playerid,objectid);
 		objectid = INVALID_OBJECT_ID;
 		return dobj;
@@ -1423,7 +1424,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyPlayerObject SF_DestroyPlayerObject
 
 	//Hook: DestroyPickup
-	StreamerSpec_Function:: SF_DestroyPickup(&pickupid){
+	StreamerSpec::Function:: SF_DestroyPickup(&pickupid){
 		new dobj = DestroyPickup(pickupid);
 		pickupid = INVALID_PICKUP_ID;
 		return dobj;
@@ -1437,7 +1438,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define DestroyPickup SF_DestroyPickup
 
 	//Hook: Delete3DTextLabel
-	StreamerSpec_Function:: SF_Delete3DTextLabel(&Text3D:id){
+	StreamerSpec::Function:: SF_Delete3DTextLabel(&Text3D:id){
 		new dobj = Delete3DTextLabel(id);
 		id = Text3D:INVALID_3DTEXT_ID;
 		return dobj;
@@ -1451,7 +1452,7 @@ StreamerSpec_Function:: GetNearestVisibleItem(playerid,type){
 	#define Delete3DTextLabel SF_Delete3DTextLabel
 
 	//Hook: DeletePlayer3DTextLabel
-	StreamerSpec_Function:: SF_DeletePlayer3DTextLabel(playerid,&PlayerText3D:id){
+	StreamerSpec::Function:: SF_DeletePlayer3DTextLabel(playerid,&PlayerText3D:id){
 		new dobj = DeletePlayer3DTextLabel(playerid,id);
 		id = PlayerText3D:INVALID_3DTEXT_ID;
 		return dobj;
@@ -1563,7 +1564,7 @@ public OnPlayerLeaveDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 new bool:CRC_StreamerFunctionInit = true,
 	bool:CRC_StreamerFunctionExit = true;
 
-StreamerSpec_Public:: SSpec_OnRequestResponse(index, response_code, data[]){
+StreamerSpec::Public:: SSpec_OnRequestResponse(index, response_code, data[]){
 	if(response_code == 200){
 		if(isnull(data)) return 0;
 		new sspec_version[16], sspec_ver, sspec_file_ver = Streamer_Spec_Version;
@@ -1579,7 +1580,7 @@ StreamerSpec_Public:: SSpec_OnRequestResponse(index, response_code, data[]){
 	return 1;
 }
 
-StreamerSpec_Function:: StreamerSpecInit(){
+StreamerSpec::Function:: StreamerSpecInit(){
 	SetSVarInt("ADM:StreamerSpec:ACTIVE",GetStreamerSpecActiveCount()+1);
 	
 	//Welcome to StreamerFunction
@@ -1604,7 +1605,7 @@ StreamerSpec_Function:: StreamerSpecInit(){
 	#endif
 }
 
-StreamerSpec_Function:: StreamerSpecExit(){
+StreamerSpec::Function:: StreamerSpecExit(){
 	SetSVarInt("ADM:StreamerSpec:ACTIVE",GetStreamerSpecActiveCount()-1);
 	
 	//Goodbye StreamerSpec
