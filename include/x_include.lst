@@ -10,6 +10,7 @@ SAM/EVF.inc
 SAM/Logs.inc
 SAM/ATM.inc
 SAM/FoxForeach.inc
+SAM/vnpc.inc
 engine/EngineV6.inc
 engine/EngineX.inc
 engine/Knife.inc
