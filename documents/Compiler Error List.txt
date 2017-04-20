@@ -22,6 +22,7 @@ All Include:
 [ADM] Please include a_http.inc before ...
 
 SAM Include:
+[ADM] Please include EVF.inc after 3DTryg.inc for improvements
 [ADM] Please include FoxForeach before 3DTryg, for increase loop speed.
 [ADM] Invalid DestroyDynamicObject Hook version. Invalid definition INVALID_DYNAMIC_OBJECT_ID
 [ADM] Please remove deprecated file VehicleEx.inc

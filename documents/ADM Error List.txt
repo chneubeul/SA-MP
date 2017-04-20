@@ -45,6 +45,9 @@ This option is available in ATM.inc
 [ADM] Error: Failed to MissileLaunch limit ... exceeded, edit Missile.inc and change MAX_MISSILE
 
 
+//EVF.inc
+[ADM] Error: Your server have reached MAX_VEHICLES limit (%i).
+
 //EngineX.inc
 [ADM] Info: NGCM Mob Move Engine System ... loaded.
 [ADM] Info: NGCM Mob Move Engine System ... unloaded.
