@@ -46,6 +46,6 @@ Shiny,
 [RIDE2DAY](http://forum.sa-mp.com/member.php?u=262298)
 
 ### Beta Testers:
-banangame,
-[FerilanS](http://8.ct8.pl/ferilans),
-[MuchomoE](http://8.ct8.pl/muchomoe)
+* banangame
+* [FerilanS](http://8.ct8.pl/ferilans)
+* [MuchomoE](http://8.ct8.pl/muchomoe)
