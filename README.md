@@ -2,25 +2,25 @@
 
 
 ### Full script list and upcoming updates:
-http://8.ct8.pl
+* [My Website](http://8.ct8.pl)
 
 
 ### Read posts in forum samp to get more information:
-http://forum.sa-mp.com/showpost.php?p=3705791&postcount=140
+* [SA:MP Forum Threads](http://8.ct8.pl/1)
 
 
 ### Found a bug, please report it here:
-* https://github.com/AbyssMorgan/SA-MP/issues
-* http://forum.sa-mp.com/member.php?u=255806
-* http://8.ct8.pl/sendreport
+* [GitHub](https://github.com/AbyssMorgan/SA-MP/issues)
+* [SA:MP Forum](http://8.ct8.pl/22)
+* [My Website](http://8.ct8.pl/sendreport)
 
 
 ### Repository Scripts/Includes Support:
-https://github.com/AbyssMorgan/SA-MP/wiki/Support
+* [Support List](https://github.com/AbyssMorgan/SA-MP/wiki/Support)
 
 
 ### Repository developer:
-Abyss Morgan
+* [Abyss Morgan](http://8.ct8.pl/22)
 
 
 ### Contributors:
@@ -42,8 +42,8 @@ Shiny,
 [Sreyas](http://forum.sa-mp.com/member.php?u=268427),
 [Gammix](http://forum.sa-mp.com/member.php?u=249500),
 [Yashas](http://forum.sa-mp.com/member.php?u=169426),
-[Admigo](http://forum.sa-mp.com/member.php?u=108398)
-
+[Admigo](http://forum.sa-mp.com/member.php?u=108398),
+[RIDE2DAY](http://forum.sa-mp.com/member.php?u=262298)
 
 ### Beta Testers:
 banangame,
