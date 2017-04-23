@@ -24,7 +24,7 @@
 
 
 ### Beta Testers:
-* banangame
+* [Banan](http://8.ct8.pl/banan)
 * [FerilanS](http://8.ct8.pl/ferilans)
 * [MuchomoE](http://8.ct8.pl/muchomoe)
 
