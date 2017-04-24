@@ -70,19 +70,11 @@ public OnFilterScriptInit(){
 	
 	for(new i = 0; i < 10; i++){
 		CreateFighter(i, 0.0,0.0,50.0, 0,0, myarea);
-	}
-	
-	for(new i = 0; i < 10; i++){
 		CreateDragon(i, 0.0,0.0,50.0, 0,0, myarea);
-	}
-	
-	for(new i = 0; i < 10; i++){
 		CreateCommander(i, 0.0,0.0,50.0, 0,0, myarea);
-	}
-	
-	for(new i = 0; i < 10; i++){
 		CreateExcavator(i, 0.0,0.0,3.0, 0,0, myarea);
 	}
+	
 	return 1;
 }
 
