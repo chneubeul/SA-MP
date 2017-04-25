@@ -3,19 +3,20 @@
  *                                              )(   Extended Vehicle Functions   )(                                              *
  *                                                                                                                                *
  * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                            *
- * Contributors: Emmet_, Pottus, kvann, Hanger, Freaksken                                                                         *
+ * Contributors: Emmet_, Pottus, kvann, Hanger, Freaksken, Gammix, Yashas, Admigo                                                 *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=486060                                                                    *
  * Website: http://8.ct8.pl                                                                                                       *
  *                                                                                                                                *
- * Plugins: None                                                                                                                  *
+ * Plugins: Streamer                                                                                                              *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 2.1.0                                                                                                            *
+ * File Version: 3.0.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
+ * Streamer Version: 2.9.0                                                                                                        *
  *                                                                                                                                *
- * VehicleEx Functions (Abyss Morgan):                                                                                            *
+ * Functions:                                                                                                                     *
  * bool:IsValidVehicleModelID(modelid);                                                                                           *
  * GetVehiclePanels(vehicleid,&front_left,&front_right,&rear_left,&rear_right,&windshield,&front_bumper,&rear_bumper);            *
  * SetVehiclePanels(vehicleid,front_left,front_right,rear_left,rear_right,windshield,front_bumper,rear_bumper);                   *
@@ -30,7 +31,7 @@
  * GetVehicleDoorState(vehicleid,doorid);                                                                                         *
  * SetVehicleDoorState(vehicleid,doorid,door_state);                                                                              *
  * bool:IsValidVehicleDoor(vehicleid,doorid);                                                                                     *
- * GetVehicleDoorAmountByModelid(modelid);                                                                                        *
+ * GetVehicleModelDoorAmount(modelid);                                                                                            *
  * GetVehicleDoorAmount(vehicleid);                                                                                               *
  * SwitchVehicleEngine(vehicleid,bool:engine_status);                                                                             *
  * SwitchVehicleLight(vehicleid,bool:light_status);                                                                               *
@@ -39,44 +40,193 @@
  * SwitchVehicleBonnet(vehicleid,bool:bonnet_status);                                                                             *
  * SwitchVehicleBoot(vehicleid,bool:boot_status);                                                                                 *
  * SwitchVehicleObjective(vehicleid,bool:objective_status);                                                                       *
- *                                                                                                                                *
- * Functions:                                                                                                                     *
  * GetVehicleParams(vehicleid,type);                                                                                              *
  * SetVehicleParams(vehicleid,type,status,delay = 0);                                                                             *
  * GetVehicleBoot(vehicleid,&Float:x,&Float:y,&Float:z);                                                                          *
  * GetVehicleHood(vehicleid,&Float:x,&Float:y,&Float:z);                                                                          *
  * GetVehicleRoof(vehicleid,&Float:x,&Float:y,&Float:z);                                                                          *
  * GetVehicleRandomColors(modelid,&color1,&color2);                                                                               *
- * GetVehicleColor(vehicleid,&color1,&color2);                                                                                    *
  * GetNearestVehicle(vehicleid);                                                                                                  *
- * GetVehiclePaintjob(vehicleid);                                                                                                 *
  * GetVehicleDriver(vehicleid);                                                                                                   *
- * GetVehicleTopSpeed(vehicleid);                                                                                                 *
- * GetVehicleInterior(vehicleid);                                                                                                 *
+ * Float:GetVehicleModelTopSpeed(modelid);                                                                                        *
+ * Float:GetVehicleTopSpeed(vehicleid);                                                                                           *
  * SetVehicleInterior(vehicleid,interiorid);                                                                                      *
  * GetVehicleSeats(vehicleid);                                                                                                    *
  * GetVehicleModelSeats(modelid);                                                                                                 *
- * ResetVehiclePaintjob(vehicleid);                                                                                               *
  * IsVehicleSeatOccupied(vehicleid,seatid);                                                                                       *
  * IsValidVehicle(vehicleid);                                                                                                     *
+ * RemoveVehiclePaintjob(vehicleid);                                                                                              *
+ * SetVehicleHorn(vehicleid,soundid);                                                                                             *
+ * GetVehicleHorn(vehicleid);                                                                                                     *
+ * RestoreVehicleHorn(vehicleid);                                                                                                 *
+ * GetVehicleBomb(vehicleid);                                                                                                     *
+ * IsVehicleBombed(vehicleid);                                                                                                    *
+ * RemoveVehicleBomb(vehicleid);                                                                                                  *
+ * SetVehicleBomb(vehicleid,time = 1000);                                                                                         *
+ * IsVehicleBombActivated(vehicleid);                                                                                             *
+ * Float:EVF::GetVehicleSpeed(vehicleid,bool:kmh = true,Float:velx = 0.0,Float:vely = 0.0,Float:velz = 0.0);                      *
+ * SetVehicleSpeedCap(vehicleid, Float:maxspeed);                                                                                 *
+ * Float:GetVehicleSpeedCap(vehicleid);                                                                                           *
+ * DisableVehicleSpeedCap(vehicleid);                                                                                             *
+ * SetVehicleFuel(vehicleid,fuel);                                                                                                *
+ * GetVehicleFuel(vehicleid);                                                                                                     *
+ * ToggleVehicleFuel(vehicleid,bool:toggle);                                                                                      *
+ * IsVehicleFuelToggled(vehicleid);                                                                                               *
+ * ToggleVehicleSticky(vehicleid,bool:toggle);                                                                                    *
+ * IsVehicleSticky(vehicleid);                                                                                                    *
+ * ToggleUnoccupiedVehicleDamage(vehicleid,bool:toggle);                                                                          *
+ * IsUnoccupiedDamageToggled(vehicleid);                                                                                          *
+ * ToggleVehiclePetrolCapDestroy(vehicleid,bool:toggle);                                                                          *
+ * IsPetrolCapDestroyToggled(vehicleid);                                                                                          *
+ * IsVehicleDamageToggled(vehicleid,type);                                                                                        *
+ * ToggleVehicleDamageUpdate(vehicleid,type,toggle);                                                                              *
+ * GetVehicleOffset(vehicleid,EVF::OffsetTypes:type,&Float:x,&Float:y,&Float:z);                                                  *
+ * GetVehicleNextSeat(vehicleid,passenger = 1);                                                                                   *
+ * TeleportVehicle(vehicleid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1);                                   *
+ * GetVehicleSlotAttachedObject(vehicleid,slot);                                                                                  *
+ * IsObjectAttachedToVehicle(objectid,vehicleid);                                                                                 *
+ * EVF::UpdateVehicleDamage(vehicleid,type);                                                                                      *
+ * EVF::UpdateVehicleDamageStatus(vehicleid,type,update);                                                                         *
+ * EVF::GetVehicleDamageStatus(vehicleid,type);                                                                                   *
+ *                                                                                                                                *
+ * Compatible with YSF Functions:                                                                                                 *
+ * GetVehicleColor(vehicleid,&color1,&color2);                                                                                    *
+ * GetVehiclePaintjob(vehicleid);                                                                                                 *
+ * GetVehicleInterior(vehicleid);                                                                                                 *
+ * GetVehicleSpawnInfo(vehicleid,&Float:x,&Float:y,&Float:z,&Float:rotation,&worldid,&interiorid);                                *
+ * SetVehicleSpawnInfo(vehicleid,Float:x,Float:y,Float:z,Float:rotation,worldid,interiorid);                                      *
+ * IsVehicleOccupied(vehicleid);                                                                                                  *
  *                                                                                                                                *
  * Callbacks:                                                                                                                     *
  * OnVehicleCreated(vehicleid);                       //Called when a vehicle is created.                                         *
  * OnVehicleDestroyed(vehicleid);                     //Called when a vehicle is deleted.                                         *
  * OnTrailerHooked(playerid,vehicleid,trailerid);     //Called when a trailer is hooked.                                          *
  * OnTrailerUnhooked(playerid,vehicleid,trailerid);   //Called when a trailer is unhooked.                                        *
- * OnPlayerShootVehicle(playerid,vehicleid,weaponid); //Called when a player shoots at a vehicle.                                 *
+ * OnPlayerShotVehicle(playerid,vehicleid,weaponid,Float:amount,bodypart); //Called when a player shoots at a vehicle.            *
+ * OnVehiclePosChange(vehicleid,Float:newx,Float:newy,Float:newz,Float:newangle,Float:oldx,Float:oldy,Float:oldz,Float:oldangle); *
+ * OnVehicleVelocityChange(vehicleid,Float:newx,Float:newy,Float:newz,Float:oldx,Float:oldy,Float:oldz);                          *
+ * OnVehicleHealthChange(vehicleid,Float:newhealth,Float:oldhealth);                                                              *
+ * OnVehicleFuelChange(vehicleid,newfuel,oldfuel);                                                                                *
+ * OnVehicleBombDeactivate(vehicleid);                                                                                            *
+ * OnVehicleBombExplode(vehicleid);                                                                                               *
+ * OnPlayerShotVehicle(playerid,vehicleid,weaponid,Float:amount,bodypart);                                                        *
+ * OnPlayerEditVehicle(playerid,vehicleid,response,Float:fX,Float:fY,Float:fZ,Float:fRotZ);                                       *
+ * OnPlayerEditVehicleObject(playerid,vehicleid,response,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                     *
+ * OnPlayerReachSpeedCapLimit(playerid,vehicleid,Float:speed);                                                                    *
+ * OnVehicleBombActivate(vehicleid);                                                                                              *
+ *                                                                                                                                *
+ * Definitions:                                                                                                                   *
+ * INVALID_SEAT_ID                                                                                                                *
+ * INVALID_PAINTJOB_ID                                                                                                            *
+ * VEHICLE_UPDATE_INTERVAL                                                                                                        *
+ * MAX_VEHICLE_ATTACHED_OBJECTS                                                                                                   *
+ * RESET_PAINTJOB_ID                                                                                                              *
+ * MAX_VEHICLE_PARAMS                                                                                                             *
+ * MAX_VEHICLE_MODELS                                                                                                             *
+ * MAX_VEHICLE_FUEL                                                                                                               *
+ *                                                                                                                                *
+ * BONNET_HEALTHY_CLOSED                                                                                                          *
+ * BONNET_HEALTHY_OPENED                                                                                                          *
+ * BONNET_DAMAGED_CLOSED                                                                                                          *
+ * BONNET_DAMAGED_OPENED                                                                                                          *
+ * BONNET_MISSING                                                                                                                 *
+ *                                                                                                                                *
+ * BOOT_HEALTHY_CLOSED                                                                                                            *
+ * BOOT_HEALTHY_OPENED                                                                                                            *
+ * BOOT_DAMAGED_CLOSED                                                                                                            *
+ * BOOT_DAMAGED_OPENED                                                                                                            *
+ * BOOT_MISSING                                                                                                                   *
+ *                                                                                                                                *
+ * DOOR_HEALTHY_CLOSED                                                                                                            *
+ * DOOR_HEALTHY_OPENED                                                                                                            *
+ * DOOR_DAMAGED_CLOSED                                                                                                            *
+ * DOOR_DAMAGED_OPENED                                                                                                            *
+ * DOOR_MISSING                                                                                                                   *
+ *                                                                                                                                *
+ * BUMPER_HEALTHY                                                                                                                 *
+ * BUMPER_CRUSHED                                                                                                                 *
+ * BUMPER_HANGING                                                                                                                 *
+ * BUMPER_MISSING                                                                                                                 *
+ *                                                                                                                                *
+ * WINDSHIELD_HEALTHY                                                                                                             *
+ * WINDSHIELD_DAMAGED                                                                                                             *
+ * WINDSHIELD_MISSING                                                                                                             *
+ *                                                                                                                                *
+ * LIGHT_ENABLE                                                                                                                   *
+ * LIGHT_DISABLE                                                                                                                  *
+ *                                                                                                                                *
+ * TIRE_HEALTHY                                                                                                                   *
+ * TIRE_DAMAGED                                                                                                                   *
+ *                                                                                                                                *
+ * DOOR_DRIVER                                                                                                                    *
+ * DOOR_PASSENGER                                                                                                                 *
+ * DOOR_BACKLEFF                                                                                                                  *
+ * DOOR_BACKRIGHT                                                                                                                 *
+ *                                                                                                                                *
+ * VEHICLE_DAMAGE_PANELS                                                                                                          *
+ * VEHICLE_DAMAGE_DOORS                                                                                                           *
+ * VEHICLE_DAMAGE_LIGHTS                                                                                                          *
+ * VEHICLE_DAMAGE_TIRES                                                                                                           *
+ *                                                                                                                                *
+ * Enums:                                                                                                                         *
+ * enum 'EVF::VehicleProperties'                                                                                                  *
+ * # e_VEHICLE_PAINTJOB                                                                                                           *
+ * # e_VEHICLE_INTERIOR                                                                                                           *
+ * # e_VEHICLE_COLOR_1                                                                                                            *
+ * # e_VEHICLE_COLOR_2                                                                                                            *
+ * # e_VEHICLE_HORN                                                                                                               *
+ * # e_VEHICLE_SPAWN_X                                                                                                            *
+ * # e_VEHICLE_SPAWN_Y                                                                                                            *
+ * # e_VEHICLE_SPAWN_Z                                                                                                            *
+ * # e_VEHICLE_SPAWN_A                                                                                                            *
+ * # e_VEHICLE_SPAWN_VW                                                                                                           *
+ * # e_VEHICLE_SPAWN_INT                                                                                                          *
+ * # e_VEHICLE_SPEED_CAP                                                                                                          *
+ * # e_VEHICLE_FUEL_USE                                                                                                           *
+ * # e_VEHICLE_FUEL                                                                                                               *
+ * # e_VEHICLE_STICKY                                                                                                             *
+ * # e_VEHICLE_UNO_DAMAGE                                                                                                         *
+ * # e_VEHICLE_CAP_DAMAGE                                                                                                         *
+ * # e_VEHICLE_EDITOR                                                                                                             *
+ * # e_VEHICLE_DAMAGE_PANELS                                                                                                      *
+ * # e_VEHICLE_DAMAGE_DOORS                                                                                                       *
+ * # e_VEHICLE_DAMAGE_LIGHTS                                                                                                      *
+ * # e_VEHICLE_DAMAGE_TIRES                                                                                                       *
+ * # e_VEHICLE_BOMB                                                                                                               *
+ * # e_VEHICLE_BOMB_TIMER                                                                                                         *
+ *                                                                                                                                *
+ * enum 'EVF::VehicleBodyPart'                                                                                                    *
+ * # VEHICLE_BODYPART_UNKNOWN                                                                                                     *
+ * # VEHICLE_BODYPART_FL_WHEEL    - Front Left                                                                                    *
+ * # VEHICLE_BODYPART_FR_WHEEL    - Front Right                                                                                   *
+ * # VEHICLE_BODYPART_BL_WHEEL    - Back Left                                                                                     *
+ * # VEHICLE_BODYPART_BR_WHEEL    - Back Right                                                                                    *
+ * # VEHICLE_BODYPART_PETROLCAP                                                                                                   *
+ *                                                                                                                                *
+ * enum 'EVF::ParamTypes'                                                                                                         *
+ * # VEHICLE_TYPE_ENGINE                                                                                                          *
+ * # VEHICLE_TYPE_LIGHTS                                                                                                          *
+ * # VEHICLE_TYPE_ALARM                                                                                                           *
+ * # VEHICLE_TYPE_DOORS                                                                                                           *
+ * # VEHICLE_TYPE_BONNET                                                                                                          *
+ * # VEHICLE_TYPE_BOOT                                                                                                            *
+ * # VEHICLE_TYPE_OBJECTIVE                                                                                                       *
+ *                                                                                                                                *
+ * enum 'EVF::OffsetTypes'                                                                                                        *
+ * # VEHICLE_OFFSET_BOOT                                                                                                          *
+ * # VEHICLE_OFFSET_HOOD                                                                                                          *
+ * # VEHICLE_OFFSET_ROOF                                                                                                          *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
 //Check Version EVF.inc
 #if !defined _EVF_include
-	#error [ADM] You need EVF.inc v2.1.0
+	#error [ADM] You need EVF.inc v3.0.0
 #elseif !defined EVF_Version
-	#error [ADM] Update you EVF.inc to v2.1.0
-#elseif (EVF_Version < 20100)
-	#error [ADM] Update you EVF.inc to v2.1.0
+	#error [ADM] Update you EVF.inc to v3.0.0
+#elseif (EVF_Version < 30000)
+	#error [ADM] Update you EVF.inc to v3.0.0
 #endif
 */
 
@@ -93,68 +243,144 @@
 	#error [ADM] Please remove deprecated file VehicleEx.inc
 #endif
 
-#define EVF_Version											(20100) //a.b.c 10000*a+100*b+c
+#if ((defined EVF_VehicleData) && (defined gVehiclePetrolCapOffsets))
+	#error [ADM] Please remove deprecated file vehicleplus.inc
+#endif
+
+//Update Checker
+#if !defined HTTP
+	#tryinclude <a_http>
+#endif
+
+#if !defined HTTP
+	#tryinclude "a_http"
+#endif
+
+#if !defined HTTP
+	#error [ADM] Please include a_http.inc before EVF.inc
+#endif
+
+#define EVF_Version									(30000) //a.b.c 10000*a+100*b+c
+#define EVF_SAMP_Version							"0.3.7"
+
+#define EVF_Function::								stock
+#define EVF_Public::%0(%1)							forward %0(%1); public %0(%1)
+#define EVF::										EVF_ 
+
+//Detect Streamer Plugin
+#if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID))
+	#define EVF_Streamer
+#endif
 
 #if !defined IsValidVehicle
 	native IsValidVehicle(vehicleid);
 #endif
 
+#if !defined isnull
+	#define isnull(%1) 								((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+#endif
+
 #if !defined INVALID_SEAT_ID
-	#define INVALID_SEAT_ID 		-1
+	#define INVALID_SEAT_ID 						-1
 #endif
 
 #if !defined INVALID_PAINTJOB_ID
-	#define INVALID_PAINTJOB_ID		-1
+	#define INVALID_PAINTJOB_ID						-1
 #endif
 
-#define MAX_VEHICLE_MODEL			212
+#if !defined MAX_VEHICLE_ATTACHED_OBJECTS
+	#define MAX_VEHICLE_ATTACHED_OBJECTS			30
+#endif
 
-#define BONNET_HEALTHY_CLOSED		0
-#define BONNET_HEALTHY_OPENED		1
-#define BONNET_DAMAGED_CLOSED		2
-#define BONNET_DAMAGED_OPENED		3
-#define BONNET_MISSING				4
+#if !defined VEHICLE_UPDATE_INTERVAL
+	#define VEHICLE_UPDATE_INTERVAL					250
+#endif
 
-#define BOOT_HEALTHY_CLOSED			0
-#define BOOT_HEALTHY_OPENED			1
-#define BOOT_DAMAGED_CLOSED			2
-#define BOOT_DAMAGED_OPENED			3
-#define BOOT_MISSING				4
+#define RESET_PAINTJOB_ID							3
+#define MAX_VEHICLE_PARAMS							7
+#define MAX_VEHICLE_MODELS							212
+#define MAX_VEHICLE_FUEL							1000
 
-#define DOOR_HEALTHY_CLOSED			0
-#define DOOR_HEALTHY_OPENED			1
-#define DOOR_DAMAGED_CLOSED			2
-#define DOOR_DAMAGED_OPENED			3
-#define DOOR_MISSING				4
+#define BONNET_HEALTHY_CLOSED						0
+#define BONNET_HEALTHY_OPENED						1
+#define BONNET_DAMAGED_CLOSED						2
+#define BONNET_DAMAGED_OPENED						3
+#define BONNET_MISSING								4
 
-#define BUMPER_HEALTHY				0
-#define BUMPER_CRUSHED				1
-#define BUMPER_HANGING				2
-#define BUMPER_MISSING				3
+#define BOOT_HEALTHY_CLOSED							0
+#define BOOT_HEALTHY_OPENED							1
+#define BOOT_DAMAGED_CLOSED							2
+#define BOOT_DAMAGED_OPENED							3
+#define BOOT_MISSING								4
 
-#define WINDSHIELD_HEALTHY			0
-#define WINDSHIELD_DAMAGED			1
-#define WINDSHIELD_MISSING			2
+#define DOOR_HEALTHY_CLOSED							0
+#define DOOR_HEALTHY_OPENED							1
+#define DOOR_DAMAGED_CLOSED							2
+#define DOOR_DAMAGED_OPENED							3
+#define DOOR_MISSING								4
 
-#define LIGHT_ENABLE				0
-#define LIGHT_DISABLE				1
+#define BUMPER_HEALTHY								0
+#define BUMPER_CRUSHED								1
+#define BUMPER_HANGING								2
+#define BUMPER_MISSING								3
 
-#define TIRE_HEALTHY				0
-#define TIRE_DAMAGED				1
+#define WINDSHIELD_HEALTHY							0
+#define WINDSHIELD_DAMAGED							1
+#define WINDSHIELD_MISSING							2
 
-#define DOOR_DRIVER					1
-#define DOOR_PASSENGER				2
-#define DOOR_BACKLEFF				3
-#define DOOR_BACKRIGHT				4
+#define LIGHT_ENABLE								0
+#define LIGHT_DISABLE								1
 
-enum e_VehicleProperties {
+#define TIRE_HEALTHY								0
+#define TIRE_DAMAGED								1
+
+#define DOOR_DRIVER									1
+#define DOOR_PASSENGER								2
+#define DOOR_BACKLEFF								3
+#define DOOR_BACKRIGHT								4
+
+#define VEHICLE_DAMAGE_PANELS	   				0
+#define VEHICLE_DAMAGE_DOORS						1
+#define VEHICLE_DAMAGE_LIGHTS						2
+#define VEHICLE_DAMAGE_TIRES  						3
+
+enum EVF::VehicleProperties {
 	e_VEHICLE_PAINTJOB,
 	e_VEHICLE_INTERIOR,
 	e_VEHICLE_COLOR_1,
-	e_VEHICLE_COLOR_2
+	e_VEHICLE_COLOR_2,
+	e_VEHICLE_HORN,
+	e_VEHICLE_SPAWN_X,
+	e_VEHICLE_SPAWN_Y,
+	e_VEHICLE_SPAWN_Z,
+	e_VEHICLE_SPAWN_A,
+	e_VEHICLE_SPAWN_VW,
+	e_VEHICLE_SPAWN_INT,
+	e_VEHICLE_SPEED_CAP,
+	e_VEHICLE_FUEL_USE,
+	e_VEHICLE_FUEL,
+	e_VEHICLE_STICKY,
+	e_VEHICLE_UNO_DAMAGE,
+	e_VEHICLE_CAP_DAMAGE,
+	e_VEHICLE_EDITOR,
+	e_VEHICLE_DAMAGE_PANELS,
+	e_VEHICLE_DAMAGE_DOORS,
+	e_VEHICLE_DAMAGE_LIGHTS,
+	e_VEHICLE_DAMAGE_TIRES,
+	e_VEHICLE_BOMB,
+	e_VEHICLE_BOMB_TIMER
 };
 
-enum e_ParamTypes {
+enum EVF::VehicleBodyPart {
+	VEHICLE_BODYPART_UNKNOWN,
+	VEHICLE_BODYPART_FL_WHEEL,	//front left
+	VEHICLE_BODYPART_FR_WHEEL,	//front right
+	VEHICLE_BODYPART_BL_WHEEL,	//back left
+	VEHICLE_BODYPART_BR_WHEEL,	//back right
+	VEHICLE_BODYPART_PETROLCAP
+};
+
+enum EVF::ParamTypes {
 	VEHICLE_TYPE_ENGINE,
 	VEHICLE_TYPE_LIGHTS,
  	VEHICLE_TYPE_ALARM,
@@ -164,15 +390,40 @@ enum e_ParamTypes {
 	VEHICLE_TYPE_OBJECTIVE
 };
 
-enum e_OffsetTypes {
+enum EVF::OffsetTypes {
 	VEHICLE_OFFSET_BOOT,
 	VEHICLE_OFFSET_HOOD,
 	VEHICLE_OFFSET_ROOF
 };
 
-new s_VehicleTrailerID[MAX_VEHICLES];
+enum EVF::VehicleData {
+	#if defined EVF_Streamer
+	STREAMER_TAG_OBJECT e_attached_object[MAX_VEHICLE_ATTACHED_OBJECTS],
+	#endif
+	Float:e_vel_x,
+	Float:e_vel_y,
+	Float:e_vel_z,
+	Float:e_pos_x,
+	Float:e_pos_y,
+	Float:e_pos_z,
+	Float:e_pos_a,
+	Float:e_health,
+	e_uptime
+};
 
-new const Float:s_TopSpeed[MAX_VEHICLE_MODEL] = {
+enum EVF::PlayerData {
+	e_editor_vehicle
+	#if defined EVF_Streamer
+	,
+	STREAMER_TAG_OBJECT e_editor_object
+	#endif
+};
+
+new EVF::VehicleTrailerID[MAX_VEHICLES],
+	EVF::VehicleTempData[MAX_VEHICLES][EVF::VehicleData],
+	EVF::PlayerTempData[MAX_PLAYERS][EVF::PlayerData];
+
+new const Float:EVF::TopSpeed[MAX_VEHICLE_MODELS] = {
 	157.0, 147.0, 186.0, 110.0, 133.0, 164.0, 110.0, 148.0, 100.0, 158.0, 129.0, 221.0, 168.0, 110.0, 105.0, 192.0, 154.0, 270.0, 115.0, 149.0,
 	145.0, 154.0, 140.0, 99.0,  135.0, 270.0, 173.0, 165.0, 157.0, 201.0, 190.0, 130.0, 94.0,  110.0, 167.0, 0.0,   149.0, 158.0, 142.0, 168.0,
 	136.0, 145.0, 139.0, 126.0, 110.0, 164.0, 270.0, 270.0, 111.0, 0.0,   0.0,   193.0, 270.0, 60.0,  135.0, 157.0, 106.0, 95.0,  157.0, 136.0,
@@ -186,7 +437,7 @@ new const Float:s_TopSpeed[MAX_VEHICLE_MODEL] = {
 	151.0, 110.0, 169.0, 171.0, 148.0, 152.0, 0.0,   0.0,   0.0,   108.0, 0.0,   0.0
 };
 
-new const s_CarColors[][]={
+new const EVF::CarColors[][]={
 	{16, 004, 001, 123, 001, 113, 001, 101, 001, 075, 001, 062, 001, 040, 001, 036, 001},
 	{16, 041, 041, 047, 047, 052, 052, 066, 066, 074, 074, 087, 087, 091, 091, 113, 113},
 	{16, 010, 010, 013, 013, 022, 022, 030, 030, 039, 039, 090, 090, 098, 098, 110, 110},
@@ -401,57 +652,150 @@ new const s_CarColors[][]={
 	{0, 000, 000}
 };
 
-new const s_VehicleSeats[MAX_VEHICLE_MODEL] = {
+new const EVF::VehicleSeats[MAX_VEHICLE_MODELS] = {
 	4,2,2,2,4,4,1,2,2,4,2,2,2,4,2,2,4,2,4,2,4,4,2,2,2,1,4,4,4,2,1,7,1,2,2,0,2,7,4,2,4,1,2,2,2,4,1,2,1,0,0,2,1,1,1,2,2,2,4,4,
 	2,2,2,2,1,1,4,4,2,2,4,2,1,1,2,2,1,2,2,4,2,1,4,3,1,1,1,4,2,2,4,2,4,1,2,2,2,4,4,2,2,1,2,2,2,2,2,4,2,1,1,2,1,1,2,2,4,2,2,1,
 	1,2,2,2,2,2,2,2,2,4,1,1,1,2,2,2,2,7,7,1,4,2,2,2,2,2,4,4,2,2,4,4,2,1,2,2,2,2,2,2,4,4,2,2,1,2,4,4,1,0,0,1,1,2,1,2,2,1,2,4,
 	4,2,4,1,0,4,2,2,2,2,0,0,7,2,2,1,4,4,4,2,2,2,2,2,4,2,0,0,0,4,0,0
 };
 
-new const s_VehicleDoor[MAX_VEHICLE_MODEL] = {
+new const EVF::VehicleDoors[MAX_VEHICLE_MODELS] = {
 	4,2,2,2,4,4,2,2,2,4,2,2,2,2,2,2,2,2,4,2,4,4,2,2,0,1,4,2,2,0,0,0,0,2,2,0,2,0,4,0,2,0,2,2,2,4,0,2,0,0,0,2,0,0,0,2,2,0,4,2,
 	0,0,0,0,0,0,4,4,0,2,4,0,0,0,2,2,1,2,2,4,0,0,2,2,0,0,0,4,4,2,4,2,4,0,0,2,2,4,2,2,2,0,0,0,0,2,2,4,2,0,0,2,0,0,2,2,4,2,2,0,
 	1,0,0,0,2,2,2,2,2,4,0,0,0,0,2,2,0,0,0,0,4,2,2,2,2,2,4,4,0,2,4,4,2,0,2,0,2,2,2,2,4,4,2,2,0,2,4,0,0,0,0,0,0,2,2,0,2,0,2,4,
 	4,0,2,2,0,4,0,2,2,2,0,0,0,2,0,0,4,4,4,2,2,0,2,2,4,2,0,0,0,2,0,0
 };
 
-#define IsValidVehicleModelID(%0)		(400 <= (%0) <= 611)
-#define GetVehicleSeats(%0)				GetVehicleModelSeats(GetVehicleModel(%0))
-#define SetVehicleInterior(%0,%1)		LinkVehicleToInterior(%0,%1)
-#define GetVehicleBoot(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_BOOT,(%1),(%2),(%3))
-#define GetVehicleHood(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_HOOD,(%1),(%2),(%3))
-#define GetVehicleRoof(%0,%1,%2,%3)		GetVehicleOffset((%0),VEHICLE_OFFSET_ROOF,(%1),(%2),(%3))
-#define GetVehicleDoorAmount(%0)		GetVehicleDoorAmountByModelid(GetVehicleModel(%0))
+#if defined _3D_Tryg
+	#define EVF_WeaponDamage	Tryg3D_WeaponDamage
+#else
+	new const Float:EVF::WeaponDamage[] = {
+		1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,82.5,0.0,1.0,9.9,46.2,0.0,8.25,13.2,46.2,3.3,3.3,4.95,6.6,8.25,
+		9.9,9.9,6.6,24.75,41.25,82.5,82.5,1.0,46.2,82.5,0.0,0.33,0.33,0.0,0.0,0.0,0.0,0.0,2.64,9.9,330.0,82.5,1.0,1.0,165.0
+	};
+#endif
+
+#if !defined EVF_VehicleName
+	new const EVF::VehicleName[MAX_VEHICLE_MODELS][] = {
+		"Landstalker", "Bravura", "Buffalo", "Linerunner", "Perrenial", "Sentinel", "Dumper", "Firetruck", "Trashmaster", "Stretch",
+		"Manana", "Infernus", "Voodoo", "Pony", "Mule", "Cheetah", "Ambulance", "Leviathan", "Moonbeam", "Esperanto", "Taxi", 
+		"Washington", "Bobcat", "Mr Whoopee", "BF Injection", "Hunter", "Premier", "Enforcer", "Securicar", "Banshee", "Predator",
+		"Bus", "Rhino", "Barracks", "Hotknife", "Trailer 1", "Previon", "Coach", "Cabbie", "Stallion", "Rumpo", "RC Bandit", "Romero",
+		"Packer", "Monster", "Admiral", "Squalo", "Seasparrow", "Pizzaboy", "Tram", "Trailer 2", "Turismo", "Speeder", "Reefer", "Tropic",
+		"Flatbed", "Yankee", "Caddy", "Solair", "Berkley's RC Van", "Skimmer", "PCJ-600", "Faggio", "Freeway", "RC Baron", "RC Raider",
+		"Glendale", "Oceanic", "Sanchez", "Sparrow", "Patriot", "Quad", "Coastguard", "Dinghy", "Hermes", "Sabre", "Rustler", "ZR-350",
+		"Walton", "Regina", "Comet", "BMX", "Burrito", "Camper", "Marquis", "Baggage", "Dozer", "Maverick", "News Chopper", "Rancher",
+		"FBI Rancher", "Virgo", "Greenwood", "Jetmax", "Hotring", "Sandking", "Blista Compact", "Police Maverick", "Boxville", "Benson",
+		"Mesa", "RC Goblin", "Hotring Racer A", "Hotring Racer B", "Bloodring Banger", "Rancher", "Super GT", "Elegant", "Journey",
+		"Bike", "Mountain Bike", "Beagle", "Cropdust", "Stunt", "Tanker", "Roadtrain", "Nebula", "Majestic", "Buccaneer", "Shamal",
+		"Hydra", "FCR-900", "NRG-500", "HPV1000", "Cement Truck", "Tow Truck", "Fortune", "Cadrona", "FBI Truck", "Willard", "Forklift",
+		"Tractor", "Combine", "Feltzer", "Remington", "Slamvan", "Blade", "Freight", "Streak", "Vortex", "Vincent", "Bullet", "Clover",
+		"Sadler", "Firetruck LA", "Hustler", "Intruder", "Primo", "Cargobob", "Tampa", "Sunrise", "Merit", "Utility", "Nevada", "Yosemite",
+		"Windsor", "Monster A", "Monster B", "Uranus", "Jester", "Sultan", "Stratum", "Elegy", "Raindance", "RC Tiger", "Flash", "Tahoma",
+		"Savanna", "Bandito", "Freight Flat", "Streak Carriage", "Kart", "Mower", "Duneride", "Sweeper", "Broadway", "Tornado", "AT-400",
+		"DFT-30", "Huntley", "Stafford", "BF-400", "Newsvan", "Tug", "Trailer 3", "Emperor", "Wayfarer", "Euros", "Hotdog", "Club",
+		"Freight Carriage", "Trailer 3", "Andromada", "Dodo", "RC Cam", "Launch", "Police Car (LSPD)", "Police Car (SFPD)",
+		"Police Car (LVPD)", "Police Ranger", "Picador", "S.W.A.T. Tank", "Alpha", "Phoenix", "Glendale", "Sadler", "Luggage Trailer A",
+		"Luggage Trailer B", "Stair Trailer", "Boxville", "Farm Plow", "Utility Trailer"
+	};
+#endif
+
+#if (defined _FoX_Foreach)
+	#define EVF_Foreach(%0) 					FoxForeach(%0,Character)
+#elseif (defined _FOREACH_LOCAL_VERSION)
+	#define EVF_Foreach(%0)						foreach(new %0 : Character)
+#else
+	#define EVF_Foreach(%0)						for(new %0 = 0, p_%0 = GetPlayerPoolSize(); %0 <= p_%0; %0++) if(IsPlayerConnected(%0))
+#endif
+
+#define EVF_GetActiveCount() 					GetSVarInt("ADM:EVF:ACTIVE")
+#define IsValidVehicleModelID(%0)				(400 <= (%0) <= 611)
+#define SetVehicleInterior(%0,%1)				LinkVehicleToInterior(%0,%1)
+#define GetVehicleBoot(%0,%1,%2,%3)				GetVehicleOffset((%0),VEHICLE_OFFSET_BOOT,(%1),(%2),(%3))
+#define GetVehicleHood(%0,%1,%2,%3)				GetVehicleOffset((%0),VEHICLE_OFFSET_HOOD,(%1),(%2),(%3))
+#define GetVehicleRoof(%0,%1,%2,%3)				GetVehicleOffset((%0),VEHICLE_OFFSET_ROOF,(%1),(%2),(%3))
+#define IsVehiclePropertySet(%0,%1)				existproperty(4,!"",((%0) << 16) + (_:%1))
+#define IsValidVehicleDoor(%0,%1) 				!((%1) > EVF::VehicleDoors[(GetVehicleModel(%0)-400) & MAX_VEHICLE_MODELS])
+#define RemoveVehiclePaintjob(%0)				ChangeVehiclePaintjob((%0),RESET_PAINTJOB_ID)
+#define RestoreVehicleHorn(%0)					SetVehiclePropertyValue((%0),e_VEHICLE_HORN,0)
+#define GetVehicleModelSeats(%0)				EVF::VehicleSeats[((%0)-400) & MAX_VEHICLE_MODELS]
+#define GetVehicleSeats(%0)						GetVehicleModelSeats(GetVehicleModel(%0))
+#define GetVehicleModelName(%0)					EVF::VehicleName[((%0)-400) & MAX_VEHICLE_MODELS]
+#define GetVehicleName(%0)						GetVehicleModelName(GetVehicleModel(%0))
+#define GetVehicleModelTopSpeed(%0)				EVF::TopSpeed[((%0)-400) & MAX_VEHICLE_MODELS]
+#define GetVehicleTopSpeed(%0)					GetVehicleModelTopSpeed(GetVehicleModel(%0))
+#define GetVehicleModelDoorAmount(%0)			EVF::VehicleDoors[((%0)-400) & MAX_VEHICLE_MODELS]
+#define GetVehicleDoorAmount(%0)				GetVehicleModelDoorAmount(GetVehicleModel(%0))
+#define SetVehicleSpeedCap(%0,%1) 				SetVehiclePropertyValue((%0),e_VEHICLE_SPEED_CAP,(_:%1))
+#define GetVehicleSpeedCap(%0)	  				Float:GetVehiclePropertyValue((%0),e_VEHICLE_SPEED_CAP)
+#define DisableVehicleSpeedCap(%0)				SetVehicleSpeedCap((%0),0)
+#define SetVehicleHorn(%0,%1)					SetVehiclePropertyValue((%0),e_VEHICLE_HORN,(%1))
+#define GetVehicleHorn(%0)						GetVehiclePropertyValue((%0),e_VEHICLE_HORN)
+#define GetVehicleFuel(%0)						GetVehiclePropertyValue((%0),e_VEHICLE_FUEL)
+#define SetVehicleFuel(%0,%1)					SetVehiclePropertyValue((%0),e_VEHICLE_FUEL,(%1))
+#define IsVehicleFuelToggled(%0)				GetVehiclePropertyValue((%0),e_VEHICLE_FUEL_USE)
+#define ToggleVehicleFuel(%0,%1)				SetVehiclePropertyValue((%0),e_VEHICLE_FUEL_USE,(_:%1))
+#define IsVehicleSticky(%0)						GetVehiclePropertyValue((%0),e_VEHICLE_STICKY)
+#define ToggleVehicleSticky(%0,%1)				SetVehiclePropertyValue((%0),e_VEHICLE_STICKY,(_:%1))
+#define IsUnoccupiedDamageToggled(%0)			GetVehiclePropertyValue((%0),e_VEHICLE_UNO_DAMAGE)
+#define ToggleUnoccupiedVehicleDamage(%0,%1)	SetVehiclePropertyValue((%0),e_VEHICLE_UNO_DAMAGE,(_:%1))
+#define IsPetrolCapDestroyToggled(%0)			GetVehiclePropertyValue((%0),e_VEHICLE_CAP_DAMAGE)
+#define ToggleVehiclePetrolCapDestroy(%0,%1)	SetVehiclePropertyValue((%0),e_VEHICLE_CAP_DAMAGE,(_:%1))
+#define GetVehicleBomb(%0)						GetVehiclePropertyValue((%0),e_VEHICLE_BOMB)
+#define IsVehicleBombed(%0)						(GetVehicleBomb(%0) > 0)
+#define RemoveVehicleBomb(%0)					SetVehicleBomb((%0),0)
+
+//extra names:
+#define GetVehicleDoorAmountByModelid			GetVehicleModelDoorAmount
+#define ResetVehiclePaintjob					RemoveVehiclePaintjob
+#define GetVehicleDriverID						GetVehicleDriver
+#define SetVehicleColor 						ChangeVehicleColor
+#define MAX_VEHICLE_MODEL						MAX_VEHICLE_MODELS
+#define OnPlayerShootVehicle					OnPlayerShotVehicle
 
 forward OnVehicleCreated(vehicleid);
 forward OnVehicleDestroyed(vehicleid);
 forward OnTrailerHooked(playerid,vehicleid,trailerid);
 forward OnTrailerUnhooked(playerid,vehicleid,trailerid);
-forward OnPlayerShootVehicle(playerid,vehicleid,weaponid);
+forward OnVehiclePosChange(vehicleid,Float:newx,Float:newy,Float:newz,Float:newangle,Float:oldx,Float:oldy,Float:oldz,Float:oldangle);
+forward OnVehicleVelocityChange(vehicleid,Float:newx,Float:newy,Float:newz,Float:oldx,Float:oldy,Float:oldz);
+forward OnVehicleHealthChange(vehicleid,Float:newhealth,Float:oldhealth);
+forward OnVehicleFuelChange(vehicleid,newfuel,oldfuel);
+forward OnVehicleBombDeactivate(vehicleid);
+forward OnVehicleBombExplode(vehicleid);
+forward OnPlayerShotVehicle(playerid,vehicleid,weaponid,Float:amount,bodypart);
+forward OnPlayerEditVehicle(playerid,vehicleid,response,Float:fX,Float:fY,Float:fZ,Float:fRotZ);
+forward OnPlayerEditVehicleObject(playerid,vehicleid,response,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);
+forward OnPlayerReachSpeedCapLimit(playerid,vehicleid,Float:speed);
+forward OnVehicleBombActivate(vehicleid);
 
-stock SetVehiclePropertyValue(vehicleid,type,value){
+EVF::Function:: SetVehiclePropertyValue(vehicleid,EVF::VehicleProperties:type,value){
 	new evf_string[12];
 	format(evf_string,sizeof(evf_string),"%d",value);
-	setproperty(4,!"",((vehicleid << 2) + type),evf_string);
+	return setproperty(4,!"",((vehicleid << 16) + _:type),evf_string);
 }
 
-stock GetVehiclePropertyValue(vehicleid,type){
+EVF::Function:: GetVehiclePropertyValue(vehicleid,EVF::VehicleProperties:type){
+	if(!IsVehiclePropertySet(vehicleid,type)) return 0;
 	new evf_string[12];
-	getproperty(4,!"",((vehicleid << 2) + type),evf_string);
+	getproperty(4,!"",((vehicleid << 16) + _:type),evf_string);
 	return strval(evf_string);
 }
 
-stock IsVehiclePropertySet(vehicleid,type){
-	return existproperty(4,!"",(vehicleid << 2) + type);
+EVF::Function:: ResetVehicleProperties(vehicleid){
+	EVF::VehicleTrailerID[vehicleid] = INVALID_VEHICLE_ID;
+	for(new i = 0; i < _:(EVF::VehicleProperties); i++){
+		deleteproperty(4,!"",(vehicleid << 16) + i);
+	}
 }
 
+//Detect YSF.inc
 #if !defined _YSF_included
-	stock GetVehicleInterior(vehicleid){
-		if(IsValidVehicle(vehicleid)) return GetVehiclePropertyValue(vehicleid,e_VEHICLE_INTERIOR);
-		return 0;
-	}
+	
+	#define GetVehicleInterior(%0)	GetVehiclePropertyValue((%0),e_VEHICLE_INTERIOR)
+	#define GetVehiclePaintjob(%0)	GetVehiclePropertyValue((%0),e_VEHICLE_PAINTJOB)
 
-	stock GetVehicleColor(vehicleid,&color1,&color2){
+	EVF::Function:: GetVehicleColor(vehicleid,&color1,&color2){
 		if(IsValidVehicle(vehicleid)){
 			color1 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1);
 			color2 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2);
@@ -459,65 +803,132 @@ stock IsVehiclePropertySet(vehicleid,type){
 		}
 		return 0;
 	}
-
-	stock GetVehiclePaintjob(vehicleid){
-		if(IsValidVehicle(vehicleid)){
-			if(IsVehiclePropertySet(vehicleid,e_VEHICLE_PAINTJOB)) return GetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB);
+	
+	EVF::Function:: GetVehicleSpawnInfo(vehicleid,&Float:x,&Float:y,&Float:z,&Float:rotation,&worldid,&interiorid){
+		x = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_X);
+		y = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Y);
+		z = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Z);
+		rotation = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_A);
+		worldid = GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_VW);
+		interiorid = GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_INT);
+		return true;
+	}
+	
+	EVF::Function:: SetVehicleSpawnInfo(vehicleid,Float:x,Float:y,Float:z,Float:rotation,worldid,interiorid){
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_X,_:x);
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Y,_:y);
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Z,_:z);
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_A,_:rotation);
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_VW,worldid);
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_INT,interiorid);
+	}
+	
+	EVF::Function:: bool:IsVehicleOccupied(vehicleid){
+		EVF::Foreach(i){
+			if(IsPlayerInVehicle(i,vehicleid)){
+				return true;
+			}
 		}
-		return INVALID_PAINTJOB_ID;
+		return false;
 	}
 #endif
 
-stock GetVehicleDoorAmountByModelid(modelid){
-	if(!IsValidVehicleModelID(modelid)) return 0;
-	return s_VehicleDoor[modelid-400];
+EVF::Function:: SetVehicleBomb(vehicleid,time = 1000){
+	if(IsVehicleBombed(vehicleid)){
+		SetVehicleParams(vehicleid,VEHICLE_TYPE_ALARM,0);
+		if(GetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER) != -1){
+			KillTimer(GetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER));
+			SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER,-1);
+		}
+	}
+	return SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB,time);
 }
 
-stock bool:IsValidVehicleDoor(vehicleid,doorid){
-	new modelid = GetVehicleModel(vehicleid);
-	if(!IsValidVehicleModelID(modelid)) return false;
-	return !(doorid > s_VehicleDoor[modelid-400]);
+EVF::Function:: IsVehicleBombActivated(vehicleid){
+	if(IsVehicleBombed(vehicleid)){
+		if(GetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER) != -1){
+			return 1;
+		}
+	}
+	return 0;
 }
 
-stock ResetVehicleProperties(vehicleid){
-	s_VehicleTrailerID[vehicleid] = INVALID_VEHICLE_ID;
-	for(new i = 0; i < _:e_VehicleProperties; i++){
-		deleteproperty(4,!"",(vehicleid << 2) + i);
+EVF::Function:: EVF::UpdateVehicleDamage(vehicleid,type){
+	new panels, doors, lights, tires;
+	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
+	switch(type){
+ 		case VEHICLE_DAMAGE_PANELS: panels = 0x03331111;
+   		case VEHICLE_DAMAGE_DOORS: doors = 0x04040404;
+		case VEHICLE_DAMAGE_LIGHTS: lights = 0x0000000F;
+	}
+	UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
+	return 1;
+}
+
+EVF::Function:: EVF::UpdateVehicleDamageStatus(vehicleid,type,update){
+	new panels, doors, lights, tires;
+	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
+	switch(type){
+		case VEHICLE_DAMAGE_PANELS: return UpdateVehicleDamageStatus(vehicleid,update,doors,lights,tires);
+		case VEHICLE_DAMAGE_DOORS: return UpdateVehicleDamageStatus(vehicleid,panels,update,lights,tires);
+		case VEHICLE_DAMAGE_LIGHTS: return UpdateVehicleDamageStatus(vehicleid,panels,doors,update,tires);
+		case VEHICLE_DAMAGE_TIRES: return UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,update);
+	}
+	return false;
+}
+
+EVF::Function:: EVF::GetVehicleDamageStatus(vehicleid,type){
+	new panels,doors,lights,tires;
+	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
+	switch(type){
+		case VEHICLE_DAMAGE_PANELS: return panels;
+		case VEHICLE_DAMAGE_DOORS: return doors;
+		case VEHICLE_DAMAGE_LIGHTS: return lights;
+		case VEHICLE_DAMAGE_TIRES: return tires;
+	}
+	return -1;
+}
+
+EVF::Function:: Float:EVF::GetVehicleSpeed(vehicleid,bool:kmh = true,Float:velx = 0.0,Float:vely = 0.0,Float:velz = 0.0){
+	if(velx == 0.0 && vely == 0.0 && velz == 0.0) GetVehicleVelocity(vehicleid,velx,vely,velz);
+	if(kmh){
+		return floatsqroot(((velx * velx) + (vely * vely)) + (velz * velz)) * 136.666667;
+	} else {
+		return floatsqroot(((velx * velx) + (vely * vely)) + (velz * velz)) * 85.4166672;
 	}
 }
 
-stock GetVehicleRandomColors(modelid,&color1,&color2){
+EVF::Function:: GetVehicleRandomColors(modelid,&color1,&color2){
 	if(!IsValidVehicleModelID(modelid)) return 0;
 	new index = 0;
 	
-	color1 = 0, color2 = 0;
+	color1 = color2 = 0;
 	
 	modelid -= 400;
 	
-	if(!s_CarColors[modelid][0]) return 0;
+	if(!EVF::CarColors[modelid][0]) return 0;
 	
-	if(s_CarColors[modelid][0] == 2){
-		color1 = s_CarColors[modelid][1];
-		color2 = s_CarColors[modelid][2];
+	if(EVF::CarColors[modelid][0] == 2){
+		color1 = EVF::CarColors[modelid][1];
+		color2 = EVF::CarColors[modelid][2];
 	} else {
-		index = random(s_CarColors[modelid][0]) & -2;
-		color1 = s_CarColors[modelid][++index];
-		color2 = s_CarColors[modelid][++index];
+		index = random(EVF::CarColors[modelid][0]) & -2;
+		color1 = EVF::CarColors[modelid][++index];
+		color2 = EVF::CarColors[modelid][++index];
 	}
 	return 1;
 }
 
-stock GetVehicleParams(vehicleid,type){
-	new evf_params[7];
+EVF::Function:: GetVehicleParams(vehicleid,EVF::ParamTypes:type){
+	new evf_params[MAX_VEHICLE_PARAMS];
 	GetVehicleParamsEx(vehicleid,evf_params[0],evf_params[1],evf_params[2],evf_params[3],evf_params[4],evf_params[5],evf_params[6]);
-	return (!(evf_params[type] <= 0));
+	return (!(evf_params[_:type] <= 0));
 }
 
-stock SetVehicleParams(vehicleid,type,status,delay = 0){
-	new evf_params[7];
-
+EVF::Function:: SetVehicleParams(vehicleid,EVF::ParamTypes:type,status,delay = 0){
+	new evf_params[MAX_VEHICLE_PARAMS];
 	if(GetVehicleParamsEx(vehicleid,evf_params[0],evf_params[1],evf_params[2],evf_params[3],evf_params[4],evf_params[5],evf_params[6])){
-		evf_params[type] = status;
+		evf_params[_:type] = status;
 		if(delay > 0){
 			SetTimerEx("EVF_SetVehicleParamsEx",delay,false,"iiiiiiii",vehicleid,evf_params[0],evf_params[1],evf_params[2],evf_params[3],evf_params[4],evf_params[5],evf_params[6]);
 		} else {
@@ -528,7 +939,32 @@ stock SetVehicleParams(vehicleid,type,status,delay = 0){
 	return 0;
 }
 
-stock GetVehicleOffset(vehicleid,type,&Float:x,&Float:y,&Float:z){
+EVF::Function:: ToggleVehicleDamageUpdate(vehicleid,type,toggle){
+	if(!toggle){
+		if(GetVehicleParams(vehicleid,VEHICLE_TYPE_ENGINE)){
+			SetVehicleParams(vehicleid,VEHICLE_TYPE_ENGINE,0);
+		}
+	}
+	switch(type){
+		case VEHICLE_DAMAGE_PANELS:	return SetVehiclePropertyValue(vehicleid,e_VEHICLE_DAMAGE_PANELS,_:toggle);
+		case VEHICLE_DAMAGE_DOORS:	return SetVehiclePropertyValue(vehicleid,e_VEHICLE_DAMAGE_DOORS,_:toggle);
+		case VEHICLE_DAMAGE_LIGHTS:	return SetVehiclePropertyValue(vehicleid,e_VEHICLE_DAMAGE_LIGHTS,_:toggle);
+		case VEHICLE_DAMAGE_TIRES:	return SetVehiclePropertyValue(vehicleid,e_VEHICLE_DAMAGE_TIRES,_:toggle);
+	}
+	return 0;
+}
+
+EVF::Function:: IsVehicleDamageToggled(vehicleid,type){
+	switch(type){
+		case VEHICLE_DAMAGE_PANELS:	return GetVehiclePropertyValue(vehicleid,e_VEHICLE_DAMAGE_PANELS);
+		case VEHICLE_DAMAGE_DOORS:	return GetVehiclePropertyValue(vehicleid,e_VEHICLE_DAMAGE_DOORS);
+		case VEHICLE_DAMAGE_LIGHTS:	return GetVehiclePropertyValue(vehicleid,e_VEHICLE_DAMAGE_LIGHTS);
+		case VEHICLE_DAMAGE_TIRES:	return GetVehiclePropertyValue(vehicleid,e_VEHICLE_DAMAGE_TIRES);
+	}
+	return 0;
+}
+
+EVF::Function:: GetVehicleOffset(vehicleid,EVF::OffsetTypes:type,&Float:x,&Float:y,&Float:z){
 	new Float:fPos[4],Float:fSize[3];
 
 	if(!IsValidVehicle(vehicleid)){
@@ -560,7 +996,7 @@ stock GetVehicleOffset(vehicleid,type,&Float:x,&Float:y,&Float:z){
 	return 1;
 }
 
-stock GetNearestVehicle(playerid){
+EVF::Function:: GetNearestVehicle(playerid){
 	new Float:fX, Float:fY, Float:fZ,
 		Float:fSX, Float:fSY, Float:fSZ,
 		Float:fRadius;
@@ -580,30 +1016,26 @@ stock GetNearestVehicle(playerid){
 	return INVALID_VEHICLE_ID;
 }
 
-stock GetVehicleDriver(vehicleid){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		if(IsPlayerConnected(i)){
-			if(GetPlayerState(i) == PLAYER_STATE_DRIVER && IsPlayerInVehicle(i,vehicleid)){
-				return i;
-			}
+EVF::Function:: GetVehicleDriver(vehicleid){
+	EVF::Foreach(i){
+		if(GetPlayerState(i) == PLAYER_STATE_DRIVER && IsPlayerInVehicle(i,vehicleid)){
+			return i;
 		}
 	}
 	return INVALID_PLAYER_ID;
 }
 
-stock IsVehicleSeatOccupied(vehicleid,seatid){
+EVF::Function:: IsVehicleSeatOccupied(vehicleid,seatid){
 	if(!GetVehicleModel(vehicleid)) return 0;
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		if(IsPlayerConnected(i)){
-			if(IsPlayerInVehicle(i,vehicleid) && GetPlayerVehicleSeat(i) == seatid){
-				return 1;
-			}
+	EVF::Foreach(i){
+		if(IsPlayerInVehicle(i,vehicleid) && GetPlayerVehicleSeat(i) == seatid){
+			return 1;
 		}
 	}
 	return 0;
 }
 
-stock GetVehicleNextSeat(vehicleid,passenger = 1){
+EVF::Function:: GetVehicleNextSeat(vehicleid,passenger = 1){
 	new seats = GetVehicleSeats(vehicleid);
 	if(seats > 1){
 		for(new i = passenger; i < seats; i++){
@@ -615,27 +1047,92 @@ stock GetVehicleNextSeat(vehicleid,passenger = 1){
 	return INVALID_SEAT_ID;
 }
 
-stock GetVehicleModelSeats(modelid){
-	if(!IsValidVehicleModelID(modelid)) return 0;
-	return (s_VehicleSeats[(modelid-400)]);
-}
-
-stock Float:GetVehicleTopSpeed(vehicleid){
-	new model = GetVehicleModel(vehicleid);
-	if(model) return s_TopSpeed[(model-400)];
- 	return 0.0;
-}
-
-stock ResetVehiclePaintjob(vehicleid){
-	if(IsValidVehicle(vehicleid)){
-		ChangeVehiclePaintjob(vehicleid,INVALID_PAINTJOB_ID);
-		SetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB,INVALID_PAINTJOB_ID);
-		return 1;
+#if defined EVF_Streamer
+	EVF::Function:: STREAMER_TAG_OBJECT GetVehicleSlotAttachedObject(vehicleid,slot){
+		if(!IsValidDynamicObject(EVF::VehicleTempData[vehicleid][e_attached_object][slot])) return STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
+		return EVF::VehicleTempData[vehicleid][e_attached_object][slot];
 	}
-	return 0;
+
+	EVF::Function:: IsObjectAttachedToVehicle(STREAMER_TAG_OBJECT objectid,vehicleid){
+		for(new i = 0; i < MAX_VEHICLE_ATTACHED_OBJECTS; i++){
+			if(IsValidDynamicObject(EVF::VehicleTempData[vehicleid][e_attached_object][i])){
+				if(EVF::VehicleTempData[vehicleid][e_attached_object][i] == objectid) return 1;
+			}
+		}
+		return 0;
+	}
+	
+	EVF::Function:: EditVehicle(playerid,vehicleid){
+		if(IsValidDynamicObject(STREAMER_TAG_OBJECT GetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR))) return false;
+
+		new Float:pos[3];
+		GetVehiclePos(vehicleid,pos[0],pos[1],pos[2]);
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR,_:CreateDynamicObject(19300,pos[0],pos[1],pos[2],0.0,0.0,0.0));
+
+		EditDynamicObject(playerid,STREAMER_TAG_OBJECT GetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR));
+
+		EVF::PlayerTempData[playerid][e_editor_vehicle] = vehicleid;
+		EVF::PlayerTempData[playerid][e_editor_object] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
+		return true;
+	}
+
+	EVF::Function:: EditVehicleObject(playerid,vehicleid,STREAMER_TAG_OBJECT objectid){
+		if(IsValidDynamicObject(STREAMER_TAG_OBJECT GetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR))) return false;
+
+		if(!IsValidDynamicObject(objectid)) return false;
+
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR,_:objectid);
+
+		new Float:pos[3];
+		GetVehiclePos(vehicleid,pos[0],pos[1],pos[2]);
+
+		new Float:angle;
+		GetVehicleZAngle(vehicleid,angle);
+
+		new model = Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MODEL_ID);
+
+		DestroyDynamicObject(objectid);
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR,_:CreateDynamicObject(model,pos[0],pos[1],pos[2],angle,0.0,0.0));
+
+		EditDynamicObject(playerid,STREAMER_TAG_OBJECT GetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR));
+
+		SetVehicleZAngle(vehicleid,0.0);
+
+		EVF::PlayerTempData[playerid][e_editor_vehicle] = vehicleid;
+		EVF::PlayerTempData[playerid][e_editor_object] = objectid;
+		return true;
+	}
+#endif
+
+EVF::Function:: TeleportVehicle(vehicleid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1){
+	EVF::Foreach(i){
+		if(GetPlayerVehicleID(i) == vehicleid){
+			if(worldid != -1){
+				SetPlayerVirtualWorld(i,worldid);
+			} else {
+				SetPlayerVirtualWorld(i,GetVehicleVirtualWorld(vehicleid));
+			}
+			if(interiorid != -1){
+				SetPlayerInterior(i,interiorid);
+			} else {
+				SetPlayerInterior(i,GetVehicleInterior(vehicleid));
+			}
+		}
+	}
+
+ 	if(worldid != -1){
+		SetVehicleVirtualWorld(vehicleid,worldid);
+	}
+	if(interiorid != -1){
+		SetVehicleInterior(vehicleid,interiorid);
+	}
+
+	SetVehiclePos(vehicleid,x,y,z);
+	SetVehicleZAngle(vehicleid,angle);
+	return 1;
 }
 
-stock GetVehiclePanels(vehicleid,&front_left,&front_right,&rear_left,&rear_right,&windshield,&front_bumper,&rear_bumper){
+EVF::Function:: GetVehiclePanels(vehicleid,&front_left,&front_right,&rear_left,&rear_right,&windshield,&front_bumper,&rear_bumper){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 	front_left = (panels & 0xF);
@@ -647,7 +1144,7 @@ stock GetVehiclePanels(vehicleid,&front_left,&front_right,&rear_left,&rear_right
 	rear_bumper = (panels >> 24) & 0xF;
 }
 
-stock SetVehiclePanels(vehicleid,front_left,front_right,rear_left,rear_right,windshield,front_bumper,rear_bumper){
+EVF::Function:: SetVehiclePanels(vehicleid,front_left,front_right,rear_left,rear_right,windshield,front_bumper,rear_bumper){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 	panels = (front_left | (front_right << 4) | (rear_left << 8) | (rear_right << 12) | (windshield << 16) | (front_bumper << 20) | (rear_bumper << 24));
@@ -655,23 +1152,23 @@ stock SetVehiclePanels(vehicleid,front_left,front_right,rear_left,rear_right,win
 }
 
 //Update by Freaksken
-stock GetVehicleLights(vehicleid,&front_left_light,&front_right_light,&back_lights){
+EVF::Function:: GetVehicleLights(vehicleid,&front_left_light,&front_right_light,&back_lights){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 	front_left_light = (lights & 0x1);
-    front_right_light = (lights >> 2 & 0x1);
-    back_lights = (lights >> 6 & 0x1);
+	front_right_light = (lights >> 2 & 0x1);
+	back_lights = (lights >> 6 & 0x1);
 }
 
 //Update by Freaksken
-stock SetVehicleLights(vehicleid,front_left_light,front_right_light,back_lights){
+EVF::Function:: SetVehicleLights(vehicleid,front_left_light,front_right_light,back_lights){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 	lights = (front_left_light | (front_right_light << 2) | (back_lights << 6));
 	UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 }
 
-stock GetVehicleDoors(vehicleid,&bonnet,&boot,&driver_door,&passenger_door){
+EVF::Function:: GetVehicleDoors(vehicleid,&bonnet,&boot,&driver_door,&passenger_door){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 	bonnet = (doors & 0x7);
@@ -680,14 +1177,14 @@ stock GetVehicleDoors(vehicleid,&bonnet,&boot,&driver_door,&passenger_door){
 	passenger_door = ((doors >> 24) & 0x7);
 }
 
-stock SetVehicleDoors(vehicleid,bonnet,boot,driver_door,passenger_door){
+EVF::Function:: SetVehicleDoors(vehicleid,bonnet,boot,driver_door,passenger_door){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 	doors = (bonnet | (boot << 8) | (driver_door << 16) | (passenger_door << 24));
 	UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 }
 
-stock GetVehicleTires(vehicleid,&front_left,&front_right,&rear_left,&rear_right){
+EVF::Function:: GetVehicleTires(vehicleid,&front_left,&front_right,&rear_left,&rear_right){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 	rear_right = (tires & 0x1);
@@ -696,56 +1193,56 @@ stock GetVehicleTires(vehicleid,&front_left,&front_right,&rear_left,&rear_right)
 	front_left = (tires >> 3 & 0x1);
 }
 
-stock SetVehicleTires(vehicleid,front_left,front_right,rear_left,rear_right){
+EVF::Function:: SetVehicleTires(vehicleid,front_left,front_right,rear_left,rear_right){
 	new panels,doors,lights,tires;
 	GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 	tires = (rear_right | (front_right << 1) | (rear_left << 2) | (front_left << 3));
 	UpdateVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
 }
 
-stock SwitchVehicleEngine(vehicleid,bool:engine_status){
+EVF::Function:: SwitchVehicleEngine(vehicleid,bool:engine_status){
 	new engine,lights,alarm,doors,bonnet,boot,objective;
 	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
 	SetVehicleParamsEx(vehicleid,_:engine_status,lights,alarm,doors,bonnet,boot,objective);
 }
 
-stock SwitchVehicleLight(vehicleid,bool:light_status){
+EVF::Function:: SwitchVehicleLight(vehicleid,bool:light_status){
 	new engine,lights,alarm,doors,bonnet,boot,objective;
 	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
 	SetVehicleParamsEx(vehicleid,engine,_:light_status,alarm,doors,bonnet,boot,objective);
 }
 
-stock SwitchVehicleAlarm(vehicleid,bool:alarm_status){
+EVF::Function:: SwitchVehicleAlarm(vehicleid,bool:alarm_status){
 	new engine,lights,alarm,doors,bonnet,boot,objective;
 	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
 	SetVehicleParamsEx(vehicleid,engine,lights,_:alarm_status,doors,bonnet,boot,objective);
 }
 
-stock SwitchVehicleDoors(vehicleid,bool:doors_status){
+EVF::Function:: SwitchVehicleDoors(vehicleid,bool:doors_status){
 	new engine,lights,alarm,doors,bonnet,boot,objective;
 	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
 	SetVehicleParamsEx(vehicleid,engine,lights,alarm,_:doors_status,bonnet,boot,objective);
 }
 
-stock SwitchVehicleBonnet(vehicleid,bool:bonnet_status){
+EVF::Function:: SwitchVehicleBonnet(vehicleid,bool:bonnet_status){
 	new engine,lights,alarm,doors,bonnet,boot,objective;
 	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
 	SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,_:bonnet_status,boot,objective);
 }
 
-stock SwitchVehicleBoot(vehicleid,bool:boot_status){
+EVF::Function:: SwitchVehicleBoot(vehicleid,bool:boot_status){
 	new engine,lights,alarm,doors,bonnet,boot,objective;
 	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
 	SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,_:boot_status,objective);
 }
 
-stock SwitchVehicleObjective(vehicleid,bool:objective_status){
+EVF::Function:: SwitchVehicleObjective(vehicleid,bool:objective_status){
 	new engine,lights,alarm,doors,bonnet,boot,objective;
 	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
 	SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,_:objective_status);
 }
 
-stock GetVehicleWindowState(vehicleid,doorid){
+EVF::Function:: GetVehicleWindowState(vehicleid,doorid){
 	new driver,passenger,backleft,backright;
 	GetVehicleParamsCarWindows(vehicleid,driver,passenger,backleft,backright);
 	switch(doorid){
@@ -757,7 +1254,7 @@ stock GetVehicleWindowState(vehicleid,doorid){
 	return 0;
 }
 
-stock SetVehicleWindowState(vehicleid,doorid,window_state){
+EVF::Function:: SetVehicleWindowState(vehicleid,doorid,window_state){
 	if(!IsValidVehicleDoor(vehicleid,doorid)) return 0;
 	new driver,passenger,backleft,backright;
 	GetVehicleParamsCarWindows(vehicleid,driver,passenger,backleft,backright);
@@ -770,7 +1267,7 @@ stock SetVehicleWindowState(vehicleid,doorid,window_state){
 	return 1;
 }
 
-stock GetVehicleDoorState(vehicleid,doorid){
+EVF::Function:: GetVehicleDoorState(vehicleid,doorid){
 	new driver,passenger,backleft,backright;
 	GetVehicleParamsCarDoors(vehicleid,driver,passenger,backleft,backright);
 	switch(doorid){
@@ -782,7 +1279,7 @@ stock GetVehicleDoorState(vehicleid,doorid){
 	return 0;
 }
 
-stock SetVehicleDoorState(vehicleid,doorid,door_state){
+EVF::Function:: SetVehicleDoorState(vehicleid,doorid,door_state){
 	if(!IsValidVehicleDoor(vehicleid,doorid)) return 0;
 	new driver,passenger,backleft,backright;
 	GetVehicleParamsCarDoors(vehicleid,driver,passenger,backleft,backright);
@@ -795,11 +1292,183 @@ stock SetVehicleDoorState(vehicleid,doorid,door_state){
 	return 1;
 }
 
+EVF::Public:: OnVehicleTimeUpdate(){
+	new Float:EVF::Vec[4];
+	for(new vehicleid = 1, v_upp = GetVehiclePoolSize(); vehicleid <= v_upp; vehicleid++){
+		GetVehiclePos(vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2]);
+		GetVehicleZAngle(vehicleid,EVF::Vec[3]);
+		if(IsVehicleSticky(vehicleid)){
+			if(VectorSize(EVF::Vec[0]-EVF::VehicleTempData[vehicleid][e_pos_x],EVF::Vec[1]-EVF::VehicleTempData[vehicleid][e_pos_y],EVF::Vec[2]-EVF::VehicleTempData[vehicleid][e_pos_z]) >= 1.0 || VectorSize(EVF::Vec[3]-EVF::VehicleTempData[vehicleid][e_pos_a],0.0,0.0) >= 1.0){
+				return TeleportVehicle(vehicleid,EVF::VehicleTempData[vehicleid][e_pos_x],EVF::VehicleTempData[vehicleid][e_pos_y],EVF::VehicleTempData[vehicleid][e_pos_z],EVF::VehicleTempData[vehicleid][e_pos_a],GetVehicleInterior(vehicleid),GetVehicleVirtualWorld(vehicleid));
+			}
+		}
+		#if defined OnVehiclePosChange
+			if(EVF::Vec[0] != EVF::VehicleTempData[vehicleid][e_pos_x] || EVF::Vec[1] != EVF::VehicleTempData[vehicleid][e_pos_y] || EVF::Vec[2] != EVF::VehicleTempData[vehicleid][e_pos_z] || EVF::Vec[3] != EVF::VehicleTempData[vehicleid][e_pos_a]){
+				if(CallRemoteFunction("OnVehiclePosChange","iffffffff",vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2],EVF::Vec[3],EVF::VehicleTempData[vehicleid][e_pos_x],EVF::VehicleTempData[vehicleid][e_pos_y],EVF::VehicleTempData[vehicleid][e_pos_z],EVF::VehicleTempData[vehicleid][e_pos_a])){
+					EVF::VehicleTempData[vehicleid][e_pos_x] = EVF::Vec[0];
+					EVF::VehicleTempData[vehicleid][e_pos_y] = EVF::Vec[1];
+					EVF::VehicleTempData[vehicleid][e_pos_z] = EVF::Vec[2];
+					EVF::VehicleTempData[vehicleid][e_pos_a] = EVF::Vec[3];
+				} else {
+					return TeleportVehicle(vehicleid,EVF::VehicleTempData[vehicleid][e_pos_x],EVF::VehicleTempData[vehicleid][e_pos_y],EVF::VehicleTempData[vehicleid][e_pos_z],EVF::VehicleTempData[vehicleid][e_pos_a],GetVehicleInterior(vehicleid),GetVehicleVirtualWorld(vehicleid));
+				}
+			}
+		#endif
+
+		GetVehicleVelocity(vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2]);
+		#if defined OnVehicleVelocityChange
+			if(IsVehicleFuelToggled(vehicleid)){
+				if(EVF::Vec[0] != EVF::VehicleTempData[vehicleid][e_vel_x] || EVF::Vec[1] != EVF::VehicleTempData[vehicleid][e_vel_y] || EVF::Vec[2] != EVF::VehicleTempData[vehicleid][e_vel_z]){
+					//fuel system
+					new vehicle_speed = floatround(EVF::GetVehicleSpeed(vehicleid,true,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2]));
+					if(vehicle_speed > 0.0){
+						//if vehicle out of fuel
+						if(GetVehicleFuel(vehicleid) <= 0){
+							SetVehicleParams(vehicleid,VEHICLE_TYPE_ENGINE,0);
+							new vehicle_driver = GetVehicleDriverID(vehicleid);
+							if(IsPlayerConnected(vehicle_driver)){
+								GameTextForPlayer(vehicle_driver,"~r~Vehicle out of fuel !",5000,3);
+							}
+						} else {
+							//if vehicle has some EVF::Vecitive fuel
+							EVF::VehicleTempData[vehicleid][e_uptime] += 1;
+
+							//if the vehicle speed is quiet high
+							new fuel_consumption_level = 0;
+							for(new i = 20, j = floatround(GetVehicleTopSpeed(vehicleid)); i <= j; i += 20){
+								if(vehicle_speed > i){
+									fuel_consumption_level += 1;
+								}
+							}
+
+							EVF::VehicleTempData[vehicleid][e_uptime] += 1;
+							if(EVF::VehicleTempData[vehicleid][e_uptime] > 20){ // 250 ms * 20 = 5 seconds
+								EVF::VehicleTempData[vehicleid][e_uptime] = 0;
+								new old_fuel = GetVehicleFuel(vehicleid), new_fuel = (old_fuel - fuel_consumption_level - 1);
+								#if defined OnVehicleFuelChange
+									CallRemoteFunction("OnVehicleFuelChange","iii",vehicleid,new_fuel,old_fuel);
+								#else
+									SetVehiclePropertyValue(vehicleid,v_fuel,new_fuel);
+								#endif
+							}
+						}
+					}
+					
+					if(CallRemoteFunction("OnVehicleVelocityChange","iffffff",vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2],EVF::VehicleTempData[vehicleid][e_vel_x],EVF::VehicleTempData[vehicleid][e_vel_y],EVF::VehicleTempData[vehicleid][e_vel_z])){
+						EVF::VehicleTempData[vehicleid][e_vel_x] = EVF::Vec[0];
+						EVF::VehicleTempData[vehicleid][e_vel_y] = EVF::Vec[1];
+						EVF::VehicleTempData[vehicleid][e_vel_z] = EVF::Vec[2];
+					} else {
+						return SetVehicleVelocity(vehicleid,EVF::VehicleTempData[vehicleid][e_vel_x],EVF::VehicleTempData[vehicleid][e_vel_y],EVF::VehicleTempData[vehicleid][e_vel_z]);
+					}
+				}
+			}
+		#endif
+
+		GetVehicleHealth(vehicleid,EVF::Vec[0]);
+		#if defined OnVehicleHealthChange
+			if(EVF::Vec[0] != EVF::VehicleTempData[vehicleid][e_health]){
+				if(CallRemoteFunction("OnVehicleHealthChange","iff",vehicleid,EVF::Vec[0],EVF::VehicleTempData[vehicleid][e_health])){
+					EVF::VehicleTempData[vehicleid][e_health] = EVF::Vec[0];
+				} else {
+					return SetVehicleHealth(vehicleid,EVF::VehicleTempData[vehicleid][e_health]);
+				}
+			}
+		#endif
+	}
+	return 1;
+}
+
+EVF::Public:: EVF_SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective){
+	SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+}
+
+EVF::Public:: EVF::OnVehicleBombActivate(playerid,vehicleid){
+	SetVehicleParams(vehicleid,VEHICLE_TYPE_ALARM,1);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER,SetTimerEx("EVF_OnVehicleBombExplode",1750,false,"ii",playerid,vehicleid));
+	return 1;
+}
+
+EVF::Public:: EVF::OnVehicleBombExplode(playerid,vehicleid){
+	if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER){
+		if(!CallRemoteFunction("OnVehicleBombDeactivate","i",vehicleid)){
+			return SetVehicleParams(vehicleid,VEHICLE_TYPE_ALARM,0);
+		}
+	}
+	CallRemoteFunction("OnVehicleBombExplode","i",vehicleid);
+	SetVehicleParams(vehicleid,VEHICLE_TYPE_ALARM,0);
+	new Float:pos[3];
+	GetVehiclePos(vehicleid,pos[0],pos[1],pos[2]);
+	#if defined _3D_Tryg
+		CreateDynamicExplosion(pos[0],pos[1],pos[2],3,30.0,GetVehicleVirtualWorld(vehicleid),GetVehicleInterior(vehicleid),-1,200.0);
+	#else
+		CreateExplosion(pos[0],pos[1],pos[2],3,30.0);
+	#endif
+	SetVehicleToRespawn(vehicleid);
+	if(GetPlayerVehicleID(playerid) == vehicleid){
+		SetPlayerHealth(playerid,0.0);
+		GameTextForPlayer(playerid,"~r~Bombed !",3500,3);
+	}
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER,-1);
+	return 1;
+}
+
+//Hook: SetVehicleHealth
+EVF::Function:: EVF::SetVehicleHealth(vehicleid,Float:health){
+	if(SetVehicleHealth(vehicleid,health)){
+		EVF::VehicleTempData[vehicleid][e_health] = health;
+		return 1;
+	}
+	return 0;
+}
+#if defined _ALS_SetVehicleHealth
+	#undef SetVehicleHealth
+#else
+	#define _ALS_SetVehicleHealth
+#endif
+#define SetVehicleHealth EVF_SetVehicleHealth
+
+//Hook: SetVehiclePos
+EVF::Function:: EVF::SetVehiclePos(vehicleid,Float:x,Float:y,Float:z){
+	if(SetVehiclePos(vehicleid,Float:x,Float:y,Float:z)){
+		EVF::VehicleTempData[vehicleid][e_pos_x] = x;
+		EVF::VehicleTempData[vehicleid][e_pos_y] = y;
+		EVF::VehicleTempData[vehicleid][e_pos_z] = z;
+		return 1;
+	}
+	return 0;
+}
+
+#if defined _ALS_SetVehiclePos
+	#undef SetVehiclePos
+#else
+	#define _ALS_SetVehiclePos
+#endif
+#define SetVehiclePos EVF_SetVehiclePos
+
+//Hook: SetVehicleZAngle
+EVF::Function:: EVF::SetVehicleZAngle(vehicleid,Float:angle){
+	if(SetVehicleZAngle(vehicleid,angle)){
+		EVF::VehicleTempData[vehicleid][e_pos_a] = angle;
+		return 1;
+	}
+	return 0;
+}
+
+#if defined _ALS_SetVehicleZAngle
+	#undef SetVehicleZAngle
+#else
+	#define _ALS_SetVehicleZAngle
+#endif
+#define SetVehicleZAngle EVF_SetVehicleZAngle
+
 //Hook: LinkVehicleToInterior
-stock EVF_LinkVehicleToInterior(vehicleid,interiorid){
-	new ret = LinkVehicleToInterior(vehicleid,interiorid);
-	if(ret) SetVehiclePropertyValue(vehicleid,e_VEHICLE_INTERIOR,interiorid);
-	return ret;
+EVF::Function:: EVF::LinkVehicleToInterior(vehicleid,interiorid){
+	if(LinkVehicleToInterior(vehicleid,interiorid)){
+		SetVehiclePropertyValue(vehicleid,e_VEHICLE_INTERIOR,interiorid);
+		return 1;
+	}
+	return 0;
 }
 
 #if defined _ALS_LinkVehicleToInterior
@@ -809,127 +1478,19 @@ stock EVF_LinkVehicleToInterior(vehicleid,interiorid){
 #endif
 #define LinkVehicleToInterior EVF_LinkVehicleToInterior
 
-//Hook: CreateVehicle
-stock EVF_CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,respawn_delay,addsiren = 0){
-	new vehicleid = INVALID_VEHICLE_ID;
-
-	if(IsValidVehicleModelID(modelid)){
-		new randcolor1, randcolor2;
-
-		if(GetVehicleRandomColors(modelid,randcolor1,randcolor2)){
-			if(color1 == -1) color1 = randcolor1;
-			if(color2 == -1) color2 = randcolor2;
-		}
-		vehicleid = CreateVehicle(modelid,x,y,z,angle,color1,color2,respawn_delay,addsiren);
-
-		if(vehicleid != INVALID_VEHICLE_ID){
-			ResetVehicleProperties(vehicleid);
-
-			SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1,color1);
-			SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2,color2);
-
-			CallLocalFunction("OnVehicleCreated","i",vehicleid);
-		}
-	}
-	return vehicleid;
-}
-
-#if defined _ALS_CreateVehicle
-	#undef CreateVehicle
-#else
-	#define _ALS_CreateVehicle
-#endif
-#define CreateVehicle EVF_CreateVehicle
-
-//Hook: DestroyVehicle
-stock EVF_DestroyVehicle(vehicleid){
-	if(IsValidVehicle(vehicleid)){
-		if(CallLocalFunction("OnVehicleDestroyed","i",vehicleid) > 0 || funcidx("OnVehicleDestroyed") == -1){
-			ResetVehicleProperties(vehicleid);
-			return DestroyVehicle(vehicleid);
-		}
-	}
-	return 0;
-}
-
-#if defined _ALS_DestroyVehicle
-	#undef DestroyVehicle
-#else
-	#define _ALS_DestroyVehicle
-#endif
-#define DestroyVehicle EVF_DestroyVehicle
-
-//Hook: AddStaticVehicle
-stock EVF_AddStaticVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2){
-	new vehicleid = INVALID_VEHICLE_ID;
-
-	if(IsValidVehicleModelID(modelid)){
-		new randcolor1, randcolor2;
-
-		if(GetVehicleRandomColors(modelid,randcolor1,randcolor2)){
-			if(color1 == -1) color1 = randcolor1;
-			if(color2 == -1) color2 = randcolor2;
-		}
-		vehicleid = AddStaticVehicle(modelid,x,y,z,angle,color1,color2);
-
-		if(vehicleid != INVALID_VEHICLE_ID){
-			ResetVehicleProperties(vehicleid);
-
-			SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1,color1);
-			SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2,color2);
-
-			CallLocalFunction("OnVehicleCreated","i",vehicleid);
-		}
-	}
-	return vehicleid;
-}
-
-#if defined _ALS_AddStaticVehicle
-	#undef AddStaticVehicle
-#else
-	#define _ALS_AddStaticVehicle
-#endif
-#define AddStaticVehicle EVF_AddStaticVehicle
-
-//Hook: AddStaticVehicleEx
-stock EVF_AddStaticVehicleEx(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,respawn_delay,addsiren = 0){
-	new vehicleid = INVALID_VEHICLE_ID;
-
-	if(IsValidVehicleModelID(modelid)){
-		new randcolor1, randcolor2;
-
-		if(GetVehicleRandomColors(modelid,randcolor1,randcolor2)){
-			if(color1 == -1) color1 = randcolor1;
-			if(color2 == -1) color2 = randcolor2;
-		}
-		vehicleid = AddStaticVehicleEx(modelid,x,y,z,angle,color1,color2,respawn_delay,addsiren);
-
-		if(vehicleid != INVALID_VEHICLE_ID){
-			ResetVehicleProperties(vehicleid);
-			SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1,color1);
-			SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2,color2);
-			CallLocalFunction("OnVehicleCreated","i",vehicleid);
-		}
-	}
-	return vehicleid;
-}
-
-#if defined _ALS_AddStaticVehicleEx
-	#undef AddStaticVehicleEx
-#else
-	#define _ALS_AddStaticVehicleEx
-#endif
-#define AddStaticVehicleEx EVF_AddStaticVehicleEx
-
 //Hook: ChangeVehicleColor
-stock EVF_ChangeVehicleColor(vehicleid,color1,color2){
-	new ret = ChangeVehicleColor(vehicleid,color1,color2);
-
-	if(ret){
+EVF::Function:: EVF::ChangeVehicleColor(vehicleid,color1,color2){
+	new randcolor1, randcolor2;
+	if(GetVehicleRandomColors(GetVehicleModel(vehicleid),randcolor1,randcolor2)){
+		if(color1 == -1) color1 = randcolor1;
+		if(color2 == -1) color2 = randcolor2;
+	}
+	if(ChangeVehicleColor(vehicleid,color1,color2)){
 		SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1,color1);
 		SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2,color2);
+		return 1;
 	}
-	return ret;
+	return 0;
 }
 
 #if defined _ALS_ChangeVehicleColor
@@ -940,13 +1501,17 @@ stock EVF_ChangeVehicleColor(vehicleid,color1,color2){
 #define ChangeVehicleColor EVF_ChangeVehicleColor
 
 //Hook: ChangeVehiclePaintjob
-stock EVF_ChangeVehiclePaintjob(vehicleid,paintjobid){
-	new ret = ChangeVehiclePaintjob(vehicleid,paintjobid);
-
-	if(ret){
+EVF::Function:: EVF::ChangeVehiclePaintjob(vehicleid,paintjobid){
+	if(ChangeVehiclePaintjob(vehicleid,paintjobid)){
 		SetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB,paintjobid);
+		if(paintjobid == RESET_PAINTJOB_ID){
+			new color1,color2;
+			GetVehicleColor(vehicleid,color1,color2);
+			ChangeVehicleColor(vehicleid,color1,color2);
+		}
+		return 1;
 	}
-	return ret;
+	return 0;
 }
 
 #if defined _ALS_ChangeVehiclePaintjob
@@ -955,57 +1520,6 @@ stock EVF_ChangeVehiclePaintjob(vehicleid,paintjobid){
 	#define _ALS_ChangeVehiclePaintjob
 #endif
 #define ChangeVehiclePaintjob EVF_ChangeVehiclePaintjob
-
-//Hook: OnPlayerUpdate
-public OnPlayerUpdate(playerid){
-	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER){
-		new vehicleid = GetPlayerVehicleID(playerid), trailerid = GetVehicleTrailer(vehicleid);
-
-		if(s_VehicleTrailerID[vehicleid] != trailerid){
-			if(trailerid != 0){
-				CallLocalFunction("OnTrailerHooked","iii",playerid,vehicleid,trailerid);
-			} else {
-				CallLocalFunction("OnTrailerUnhooked","iii",playerid,vehicleid,s_VehicleTrailerID[vehicleid]);
-			}
-			s_VehicleTrailerID[vehicleid] = trailerid;
-		}
-	}
-	#if defined EVF_OnPlayerUpdate
-		EVF_OnPlayerUpdate(playerid);
-	#endif
-	return 1;
-}
-
-#if defined _ALS_OnPlayerUpdate
-	#undef OnPlayerUpdate
-#else
-	#define _ALS_OnPlayerUpdate
-#endif
-#define OnPlayerUpdate EVF_OnPlayerUpdate
-#if defined EVF_OnPlayerUpdate
-	forward EVF_OnPlayerUpdate(playerid);
-#endif
-
-//Hook: OnPlayerWeaponShot
-public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Float:fZ){
-	if((hittype == BULLET_HIT_TYPE_VEHICLE) && (22 <= weaponid <= 38)){
-		CallLocalFunction("OnPlayerShootVehicle","ddd",playerid,hitid,weaponid);
-	}
-	#if defined EVF_OnPlayerWeaponShot
-		EVF_OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,fX,fY,fZ);
-	#endif
-	return 1;
-}
-
-#if defined _ALS_OnPlayerWeaponShot
-	#undef OnPlayerWeaponShot
-#else
-	#define _ALS_OnPlayerWeaponShot
-#endif
-#define OnPlayerWeaponShot EVF_OnPlayerWeaponShot
-#if defined EVF_OnPlayerWeaponShot
-	forward EVF_OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Float:fZ);
-#endif
 
 //Hook: OnVehicleRespray
 public OnVehicleRespray(playerid,vehicleid,color1,color2){
@@ -1046,9 +1560,663 @@ public OnVehiclePaintjob(playerid,vehicleid,paintjobid){
 	forward EVF_OnVehiclePaintjob(playerid,vehicleid,paintjobid);
 #endif
 
-forward EVF_SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
-public EVF_SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective){
-	SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+//Hook: CreateVehicle
+EVF::Function:: EVF::CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,respawn_delay,addsiren = 0,worldid = 0,interiorid = 0,bool:unoccupied_damage = false){
+	if(!IsValidVehicleModelID(modelid)) return INVALID_VEHICLE_ID;
+	new vehicleid = INVALID_VEHICLE_ID, randcolor1, randcolor2;
+	if(GetVehicleRandomColors(modelid,randcolor1,randcolor2)){
+		if(color1 == -1) color1 = randcolor1;
+		if(color2 == -1) color2 = randcolor2;
+	}
+	switch(modelid){
+		case 569, 570, 537, 538: 	vehicleid = AddStaticVehicleEx(modelid,x,y,z,angle,color1,color2,respawn_delay,addsiren);
+		default: 					vehicleid = CreateVehicle(modelid,x,y,z,angle,color1,color2,respawn_delay,addsiren);
+	}
+	if(vehicleid == INVALID_VEHICLE_ID || !IsValidVehicle(vehicleid)){
+		printf("[ADM] Error: Your server have reached MAX_VEHICLES limit (%i).",MAX_VEHICLES);
+		return INVALID_VEHICLE_ID;
+	}
+	
+	ResetVehicleProperties(vehicleid);
+	
+	#if defined EVF_Streamer
+		for(new i = 0; i < MAX_VEHICLE_ATTACHED_OBJECTS; i++){
+			EVF::VehicleTempData[vehicleid][e_attached_object][i] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
+		}
+	#endif
+	EVF::VehicleTempData[vehicleid][e_pos_x] = x;
+	EVF::VehicleTempData[vehicleid][e_pos_y] = y;
+	EVF::VehicleTempData[vehicleid][e_pos_z] = z;
+	EVF::VehicleTempData[vehicleid][e_pos_a] = angle;
+
+	EVF::VehicleTempData[vehicleid][e_vel_x] = 0.0;
+	EVF::VehicleTempData[vehicleid][e_vel_y] = 0.0;
+	EVF::VehicleTempData[vehicleid][e_vel_z] = 0.0;
+
+	EVF::VehicleTempData[vehicleid][e_health] = 1000.0;
+	
+	EVF::VehicleTempData[vehicleid][e_uptime] = 0;
+	
+	LinkVehicleToInterior(vehicleid,interiorid);
+	SetVehicleVirtualWorld(vehicleid,worldid);
+	
+	SetVehicleHorn(vehicleid,0);
+	SetVehicleFuel(vehicleid,MAX_VEHICLE_FUEL);
+	SetVehicleSpeedCap(vehicleid,0.0);
+	
+	ToggleUnoccupiedVehicleDamage(vehicleid,unoccupied_damage);
+	ToggleVehicleSticky(vehicleid,false);
+	ToggleVehiclePetrolCapDestroy(vehicleid,false);
+	ToggleVehicleFuel(vehicleid,false);
+	
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1,color1);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2,color2);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB,RESET_PAINTJOB_ID);
+	
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_X,_:x);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Y,_:y);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Z,_:z);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_A,_:angle);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_VW,worldid);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_INT,interiorid);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR,0);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB,0);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER,-1);
+	
+	for(new i = 0; i < 4; i++) ToggleVehicleDamageUpdate(vehicleid,i,0);
+	
+	CallRemoteFunction("OnVehicleCreated","i",vehicleid);
+	return vehicleid;
 }
+
+#if defined _ALS_CreateVehicle
+	#undef CreateVehicle
+#else
+	#define _ALS_CreateVehicle
+#endif
+#define CreateVehicle EVF_CreateVehicle
+
+//Hook: AddStaticVehicle
+EVF::Function:: EVF::AddStaticVehicle(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Float:z_angle,color1,color2){
+	return EVF::CreateVehicle(modelid,spawn_x,spawn_y,spawn_z,z_angle,color1,color2,-1);
+}
+
+#if defined _ALS_AddStaticVehicle
+	#undef AddStaticVehicle
+#else
+	#define _ALS_AddStaticVehicle
+#endif
+#define AddStaticVehicle 	EVF_AddStaticVehicle
+
+//Hook: AddStaticVehicleEx
+EVF::Function:: EVF::AddStaticVehicleEx(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Float:z_angle,color1,color2,respawn_delay,addsiren=0){
+	return EVF::CreateVehicle(modelid,spawn_x,spawn_y,spawn_z,z_angle,color1,color2,respawn_delay,addsiren);
+}
+
+#if defined _ALS_AddStaticVehicleEx
+	#undef AddStaticVehicleEx
+#else
+	#define _ALS_AddStaticVehicleEx
+#endif
+#define AddStaticVehicleEx EVF_CreateVehicle
+
+//Hook: DestroyVehicle
+EVF::Function:: EVF::DestroyVehicle(vehicleid){
+	if(!IsValidVehicle(vehicleid)) return 0;
+	EVF::Foreach(i){
+		if(EVF::PlayerTempData[i][e_editor_vehicle] == GetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR)){
+			CancelEdit(i);
+		}
+	}
+	#if defined EVF_Streamer
+		new objectid = GetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR);
+		DestroyDynamicObject(STREAMER_TAG_OBJECT objectid);
+		for(new i = 0; i < MAX_VEHICLE_ATTACHED_OBJECTS; i++){
+			if(IsValidDynamicObject(EVF::VehicleTempData[vehicleid][e_attached_object][i])){
+				DestroyDynamicObject(EVF::VehicleTempData[vehicleid][e_attached_object][i]);
+				EVF::VehicleTempData[vehicleid][e_attached_object][i] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
+			}
+		}
+	#endif
+	EVF::VehicleTempData[vehicleid][e_uptime] = 0;
+	CallRemoteFunction("OnVehicleDestroyed","i",vehicleid);
+	ResetVehicleProperties(vehicleid);
+	return DestroyVehicle(vehicleid);
+}
+
+#if defined _ALS_DestroyVehicle
+	#undef DestroyVehicle
+#else
+	#define _ALS_DestroyVehicle
+#endif
+#define DestroyVehicle EVF_DestroyVehicle
+
+//Hook: OnPlayerWeaponShot
+public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Float:fZ){
+	if(hittype == BULLET_HIT_TYPE_VEHICLE){
+		new Float:fHealth, bodypart = _:VEHICLE_BODYPART_UNKNOWN, Float:fDamage = EVF::WeaponDamage[GetPlayerWeapon(playerid)];
+		GetVehicleHealth(hitid,fHealth);
+		if(fHealth > 249.0){
+			new fModelid = GetVehicleModel(hitid), Float:fOffSet[3], fUpdate;
+			
+			if(IsUnoccupiedDamageToggled(hitid)){
+				//front wheels
+				GetVehicleModelInfo(fModelid,VEHICLE_MODEL_INFO_WHEELSFRONT,fOffSet[0],fOffSet[1],fOffSet[2]);
+				
+				if(VectorSize(fX+fOffSet[0],fY-fOffSet[1],fZ-fOffSet[2]) <= 0.4){
+					//left
+					fUpdate = EVF::GetVehicleDamageStatus(hitid,VEHICLE_DAMAGE_TIRES) + 8;
+					if(fUpdate > 15){
+						EVF::UpdateVehicleDamageStatus(hitid,VEHICLE_DAMAGE_TIRES,fUpdate);
+					}
+					bodypart = _:VEHICLE_BODYPART_FL_WHEEL;
+				} else if(VectorSize(fX-fOffSet[0],fY-fOffSet[1],fZ-fOffSet[2]) <= 0.4){
+					//right
+					fUpdate = EVF::GetVehicleDamageStatus(hitid,VEHICLE_DAMAGE_TIRES) + 2;
+					if(fUpdate > 15){
+						EVF::UpdateVehicleDamageStatus(hitid,VEHICLE_DAMAGE_TIRES,fUpdate);
+					}
+					bodypart = _:VEHICLE_BODYPART_FR_WHEEL;
+				} else {
+					//back wheels
+					GetVehicleModelInfo(fModelid,VEHICLE_MODEL_INFO_WHEELSREAR,fOffSet[0],fOffSet[1],fOffSet[2]);
+					if(VectorSize(fX+fOffSet[0],fY-fOffSet[1],fZ-fOffSet[2]) <= 0.4){
+						//left
+						fUpdate = EVF::GetVehicleDamageStatus(hitid,VEHICLE_DAMAGE_TIRES) + 4;
+						if(fUpdate > 15){
+							EVF::UpdateVehicleDamageStatus(hitid,VEHICLE_DAMAGE_TIRES,fUpdate);
+						}
+						bodypart = _:VEHICLE_BODYPART_BL_WHEEL;
+					} else if(VectorSize(fX-fOffSet[0],fY-fOffSet[1],fZ-fOffSet[2]) <= 0.4){
+						//right
+						fUpdate = EVF::GetVehicleDamageStatus(hitid,VEHICLE_DAMAGE_TIRES) + 1;
+						if(fUpdate > 15){
+							EVF::UpdateVehicleDamageStatus(hitid,VEHICLE_DAMAGE_TIRES,fUpdate);
+						}
+						bodypart = _:VEHICLE_BODYPART_BR_WHEEL;
+					}
+				}
+			}
+			
+			if(!bodypart){
+				//petrolcap
+				GetVehicleModelInfo(fModelid,VEHICLE_MODEL_INFO_PETROLCAP,fOffSet[0],fOffSet[1],fOffSet[2]);
+				if(VectorSize(fX-fOffSet[0],fY-fOffSet[1],fZ-fOffSet[2]) <= 0.2){
+					if(IsPetrolCapDestroyToggled(hitid)){
+						if(IsUnoccupiedDamageToggled(hitid) || IsVehicleOccupied(hitid)){
+							bodypart = _:VEHICLE_BODYPART_PETROLCAP;
+							new Float:pos[3];
+							GetVehiclePos(hitid,pos[0],pos[1],pos[2]);
+							#if defined _3D_Tryg
+								CreateDynamicExplosion(pos[0],pos[1],pos[2],3,25.0,GetVehicleVirtualWorld(hitid),GetVehicleInterior(hitid),-1,200.0);
+							#else
+								CreateExplosion(pos[0],pos[1],pos[2],3,25.0);
+							#endif
+							return SetVehicleToRespawn(hitid);
+						}
+					} else {
+						fHealth -= fDamage;
+						SetVehicleHealth(hitid,fHealth);
+						switch(floatround(fHealth)){
+							case 251..399: return EVF::UpdateVehicleDamage(hitid,VEHICLE_DAMAGE_DOORS);
+							case 400..599: return EVF::UpdateVehicleDamage(hitid,VEHICLE_DAMAGE_PANELS);
+							case 600..700: return EVF::UpdateVehicleDamage(hitid,VEHICLE_DAMAGE_LIGHTS);
+						}
+					}
+				}
+			}
+			if(!bodypart){
+				if(IsUnoccupiedDamageToggled(hitid)){
+					fHealth -= fDamage;
+					SetVehicleHealth(hitid,fHealth);
+					switch(floatround(fHealth)){
+						case 251..399: return EVF::UpdateVehicleDamage(hitid,VEHICLE_DAMAGE_DOORS);
+						case 400..599: return EVF::UpdateVehicleDamage(hitid,VEHICLE_DAMAGE_PANELS);
+						case 600..700: return EVF::UpdateVehicleDamage(hitid,VEHICLE_DAMAGE_LIGHTS);
+					}
+				}
+			}
+		}
+		CallRemoteFunction("OnPlayerShotVehicle","dddfd",playerid,hitid,weaponid,fDamage,bodypart);
+	}
+	#if defined EVF_OnPlayerWeaponShot
+		EVF_OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,fX,fY,fZ);
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnPlayerWeaponShot
+	#undef OnPlayerWeaponShot
+#else
+	#define _ALS_OnPlayerWeaponShot
+#endif
+#define OnPlayerWeaponShot EVF_OnPlayerWeaponShot
+#if defined EVF_OnPlayerWeaponShot
+	forward EVF_OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Float:fZ);
+#endif
+
+#if defined EVF_Streamer
+	EVF::Function:: EVF::AttachObjectToVehicle(STREAMER_TAG_OBJECT objectid,vehicleid,Float:OffsetX,Float:OffsetY,Float:OffsetZ,Float:RotX,Float:RotY,Float:RotZ){
+		for(new i = 0; i < MAX_VEHICLE_ATTACHED_OBJECTS; i++){
+			if(!IsValidDynamicObject(EVF::VehicleTempData[vehicleid][e_attached_object][i])){
+				if(AttachDynamicObjectToVehicle(objectid,vehicleid,OffsetX,OffsetY,OffsetZ,RotX,RotY,RotZ)){
+					EVF::VehicleTempData[vehicleid][e_attached_object][i] = objectid;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	#if defined _ALS_AttachDynamicObjectToV
+		#undef AttachDynamicObjectToVehicle
+	#else
+		#define _ALS_AttachDynamicObjectToV
+	#endif
+	#define AttachDynamicObjectToVehicle EVF_AttachObjectToVehicle
+	
+	//Hook: OnPlayerEditDynamicObject
+	public OnPlayerEditDynamicObject(playerid,STREAMER_TAG_OBJECT objectid,response,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz){
+		if(IsValidVehicle(EVF::PlayerTempData[playerid][e_editor_vehicle])){
+			if(EVF::PlayerTempData[playerid][e_editor_object] == STREAMER_TAG_OBJECT INVALID_STREAMER_ID){
+				if(GetVehiclePropertyValue(EVF::PlayerTempData[playerid][e_editor_vehicle],e_VEHICLE_EDITOR) == _:objectid){
+					SetVehiclePos(EVF::PlayerTempData[playerid][e_editor_vehicle],x,y,z);
+					SetVehicleZAngle(EVF::PlayerTempData[playerid][e_editor_vehicle],rz);
+
+					CallLocalFunction("OnPlayerEditVehicle","iiiffff",playerid,EVF::PlayerTempData[playerid][e_editor_vehicle],response,x,y,z,rz);
+
+					switch(response){
+						case EDIT_RESPONSE_CANCEL, EDIT_RESPONSE_FINAL:{
+							DestroyDynamicObject(objectid);
+							SetVehiclePropertyValue(EVF::PlayerTempData[playerid][e_editor_vehicle],e_VEHICLE_EDITOR,INVALID_STREAMER_ID);
+
+							SetVehicleVelocity(EVF::PlayerTempData[playerid][e_editor_vehicle],0.0,0.0,0.0);
+
+							EVF::PlayerTempData[playerid][e_editor_vehicle] = INVALID_VEHICLE_ID;
+							EVF::PlayerTempData[playerid][e_editor_object] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
+						}
+					}
+				}
+			} else {
+				if(GetVehiclePropertyValue(EVF::PlayerTempData[playerid][e_editor_vehicle],e_VEHICLE_EDITOR) == _:objectid){
+					switch(response){
+						case EDIT_RESPONSE_CANCEL, EDIT_RESPONSE_FINAL:{
+							new Float:pos[4];
+							GetVehiclePos(EVF::PlayerTempData[playerid][e_editor_vehicle],pos[0],pos[1],pos[2]);
+							GetVehicleZAngle(EVF::PlayerTempData[playerid][e_editor_vehicle],pos[3]);
+
+							new Float:new_pos[4];
+							new_pos[0] = x - pos[0];
+							new_pos[1] = y - pos[1];
+							new_pos[2] = z - pos[2];
+							new_pos[3] = rz - pos[3];
+
+							new Float:final_pos[2];
+							final_pos[0] = (new_pos[0] * floatcos(new_pos[3],degrees)) + (new_pos[1] * floatsin(new_pos[3],degrees));
+							final_pos[1] = (new_pos[1] * floatcos(new_pos[3],degrees)) - (new_pos[0] * floatsin(new_pos[3],degrees));
+
+							AttachDynamicObjectToVehicle(EVF::PlayerTempData[playerid][e_editor_object],EVF::PlayerTempData[playerid][e_editor_vehicle],final_pos[0],final_pos[1],new_pos[2],rx,ry,new_pos[3]);
+
+							SetVehiclePropertyValue(EVF::PlayerTempData[playerid][e_editor_vehicle],e_VEHICLE_EDITOR,0);
+
+							EVF::PlayerTempData[playerid][e_editor_vehicle] = INVALID_VEHICLE_ID;
+							EVF::PlayerTempData[playerid][e_editor_object] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
+
+							return CallLocalFunction("OnPlayerEditVehicleObject","iiiffffff",playerid,EVF::PlayerTempData[playerid][e_editor_vehicle],response,final_pos[0],final_pos[1],new_pos[2],rx,ry,new_pos[3]);
+						}
+					}
+
+					CallLocalFunction("OnPlayerEditVehicleObject","iiiffffff",playerid,EVF::PlayerTempData[playerid][e_editor_vehicle],response,x,y,z,rx,ry,rz);
+				}
+			}
+		}
+		#if defined EVF_OnPlayerEditDynamicObject
+			OnPlayerEditDynamicObject(playerid,objectid,response,x,y,z,rx,ry,rz)
+		#endif
+		return 1;
+	}
+
+	#if defined _ALS_OnPlayerEditDynamicObject
+		#undef OnPlayerEditDynamicObject
+	#else
+		#define _ALS_OnPlayerEditDynamicObject
+	#endif
+	#define OnPlayerEditDynamicObject EVF_OnPlayerEditDynamicObject
+	#if defined EVF_OnPlayerEditDynamicObject
+		forward EVF_OnPlayerEditDynamicObject(playerid,STREAMER_TAG_OBJECT objectid,response,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);
+	#endif
+#endif
+
+//Hook: OnPlayerUpdate
+public OnPlayerUpdate(playerid){
+ 	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER){
+		new vehicleid = GetPlayerVehicleID(playerid), Float:speedcap = GetVehicleSpeedCap(vehicleid);
+		if(speedcap != 0.0){
+			new Float:vel[3], Float:speed;
+			GetVehicleVelocity(vehicleid,vel[0],vel[1],vel[2]);
+			speed = EVF::GetVehicleSpeed(vehicleid,true,vel[0],vel[1],vel[2]);
+			if(speed > speedcap){
+				CallRemoteFunction("OnPlayerReachSpeedCapLimit","iif",playerid,vehicleid,speed);
+				vel[0] = (vel[0] / speed) * speedcap;
+				vel[1] = (vel[1] / speed) * speedcap;
+				vel[2] = (vel[2] / speed) * speedcap;
+				SetVehicleVelocity(vehicleid,vel[0],vel[1],vel[2]);
+			}
+		}
+		new trailerid = GetVehicleTrailer(vehicleid);
+		if(EVF::VehicleTrailerID[vehicleid] != trailerid){
+			if(trailerid != 0){
+				CallRemoteFunction("OnTrailerHooked","iii",playerid,vehicleid,trailerid);
+			} else {
+				CallRemoteFunction("OnTrailerUnhooked","iii",playerid,vehicleid,EVF::VehicleTrailerID[vehicleid]);
+			}
+			EVF::VehicleTrailerID[vehicleid] = trailerid;
+		}
+	}
+	#if defined EVF_OnPlayerUpdate
+		EVF_OnPlayerUpdate(playerid);
+	#endif
+	return 1;
+}
+
+#if defined EVF_OnPlayerUpdate
+	forward EVF_OnPlayerUpdate(playerid);
+#endif
+#if defined _ALS_OnPlayerUpdate
+	#undef OnPlayerUpdate
+#else
+	#define _ALS_OnPlayerUpdate
+#endif
+#define OnPlayerUpdate EVF_OnPlayerUpdate
+
+//Hook: OnPlayerStateChange
+public OnPlayerStateChange(playerid,newstate,oldstate){
+	if(newstate == PLAYER_STATE_DRIVER){
+		new vehicleid = GetPlayerVehicleID(playerid);
+		if(IsVehicleBombed(vehicleid)){
+			if(!IsVehicleBombActivated(vehicleid)){
+				CallRemoteFunction("OnVehicleBombActivate","i",vehicleid);
+				new interval = (GetVehicleBomb(vehicleid) - 1750);
+				if(interval < 1750){
+					SetVehicleParams(vehicleid,VEHICLE_TYPE_ALARM,1);
+					SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER,SetTimerEx("EVF_OnVehicleBombExplode",GetVehicleBomb(vehicleid),false,"ii",playerid,vehicleid));
+				} else {
+					SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER,SetTimerEx("EVF_OnVehicleBombActivate",interval,false,"ii",playerid,vehicleid));
+				}
+			}
+		}
+		if(IsVehicleSticky(vehicleid)){
+			SetVehicleParams(vehicleid,VEHICLE_TYPE_ENGINE,0);
+		}
+	}
+	if(oldstate == PLAYER_STATE_DRIVER){
+		new vehicleid = GetPlayerVehicleID(playerid);
+		if(IsVehicleSticky(vehicleid)){
+			SetVehicleParams(vehicleid,VEHICLE_TYPE_ENGINE,1);
+		}
+	}
+	#if defined EVF_OnPlayerStateChange
+		EVF_OnPlayerStateChange(playerid,newstate,oldstate);
+	#endif
+	return 1;
+}
+#if defined EVF_OnPlayerStateChange
+	forward EVF_OnPlayerStateChange(playerid,newstate,oldstate);
+#endif
+#if defined _ALS_OnPlayerStateChange
+	#undef OnPlayerStateChange
+#else
+	#define _ALS_OnPlayerStateChange
+#endif
+#define OnPlayerStateChange EVF_OnPlayerStateChange
+
+//Hook: OnPlayerKeyStateChange
+public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
+	if(newkeys & KEY_CROUCH){
+		if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER){
+			new horn = GetVehicleHorn(GetPlayerVehicleID(playerid));
+			if(horn != 0){
+				new Float:pos[3];
+				GetPlayerPos(playerid,pos[0],pos[1],pos[2]);
+				EVF_Foreach(i){
+					if(IsPlayerInRangeOfPoint(i,35.0,pos[0],pos[1],pos[2])){
+						PlayerPlaySound(playerid,horn,pos[0],pos[1],pos[2]);
+					}
+				}
+			}
+		}
+	}
+	#if defined EVF_OnPlayerKeyStateChange
+		EVF_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+	#endif
+	return 1;
+}
+
+#if defined EVF_OnPlayerKeyStateChange
+	forward EVF_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+#endif
+#if defined _ALS_OnPlayerKeyStateChange
+	#undef OnPlayerKeyStateChange
+#else
+	#define _ALS_OnPlayerKeyStateChange
+#endif
+#define OnPlayerKeyStateChange EVF_OnPlayerKeyStateChange
+
+//Hook: OnVehicleDamageStatusUpdate
+public OnVehicleDamageStatusUpdate(vehicleid, playerid){
+	new panels, doors, lights, tires;
+	GetVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
+
+	if(!IsVehicleDamageToggled(vehicleid,VEHICLE_DAMAGE_PANELS)) EVF::UpdateVehicleDamageStatus(vehicleid,VEHICLE_DAMAGE_PANELS,0);
+	if(!IsVehicleDamageToggled(vehicleid,VEHICLE_DAMAGE_DOORS)) EVF::UpdateVehicleDamageStatus(vehicleid,VEHICLE_DAMAGE_DOORS,0);
+	if(!IsVehicleDamageToggled(vehicleid,VEHICLE_DAMAGE_LIGHTS)) EVF::UpdateVehicleDamageStatus(vehicleid,VEHICLE_DAMAGE_LIGHTS,0);
+	if(!IsVehicleDamageToggled(vehicleid,VEHICLE_DAMAGE_TIRES)) EVF::UpdateVehicleDamageStatus(vehicleid,VEHICLE_DAMAGE_TIRES,0);
+
+	#if defined EVF_OVDSU
+		EVF_OVDSU(vehicleid,playerid);
+	#endif
+	return 1;
+}
+#if defined EVF_OVDSU
+	forward EVF_OVDSU(vehicleid, playerid);
+#endif
+#if defined _ALS_OnVehicleDamageStatusU
+	#undef OnVehicleDamageStatusUpdate
+#else
+	#define _ALS_OnVehicleDamageStatusU
+#endif
+#define OnVehicleDamageStatusUpdate EVF_OVDSU
+
+//Hook: OnVehicleSpawn
+public OnVehicleSpawn(vehicleid){
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB,RESET_PAINTJOB_ID);
+
+	new color1 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1),
+		color2 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2);
+	ChangeVehicleColor(vehicleid,color1,color2);
+
+	new Float:pos[3];
+	GetVehiclePos(vehicleid,pos[0],pos[1],pos[2]);
+
+	new Float:angle;
+	GetVehicleZAngle(vehicleid,angle);
+
+	new Float:vehicle_pos[3],Float:vehicle_angle,vehicle_worldid,vehicle_interiorid;
+	GetVehicleSpawnInfo(vehicleid,vehicle_pos[0],vehicle_pos[1],vehicle_pos[2],vehicle_angle,vehicle_worldid,vehicle_interiorid);
+
+ 	if(pos[0] != vehicle_pos[0] || pos[1] != vehicle_pos[1] || pos[2] != vehicle_pos[2] || angle != vehicle_angle || vehicle_worldid != GetVehicleVirtualWorld(vehicleid) || vehicle_interiorid != GetVehicleInterior(vehicleid)){
+		TeleportVehicle(vehicleid,vehicle_pos[0],vehicle_pos[1],vehicle_pos[2],vehicle_angle,vehicle_worldid,vehicle_interiorid);
+	}
+
+	#if defined EVF_OnVehicleSpawn
+		EVF_OnVehicleSpawn(vehicleid);
+	#endif
+	return 1;
+}
+
+#if defined EVF_OnVehicleSpawn
+	forward EVF_OnVehicleSpawn(vehicleid);
+#endif
+#if defined _ALS_OnVehicleSpawn
+	#undef OnVehicleSpawn
+#else
+	#define _ALS_OnVehicleSpawn
+#endif
+#define OnVehicleSpawn EVF_OnVehicleSpawn
+
+EVF::Public:: EVF::OnRequestResponse(index, response_code, data[]){
+	if(response_code == 200){
+		if(isnull(data)) return 0;
+		new EVF::version[16], EVF::ver, EVF::file_ver = EVF_Version;
+		strmid(EVF::version,data,0,strlen(data));
+		EVF::ver = strval(EVF::version);
+		if(EVF::ver != EVF::file_ver){
+			print(" ");
+			printf("[ADM] Info: Please update your EVF include to v%d.%d.%d from here:",(EVF::ver / 10000),((EVF::ver % 10000) / 100),((EVF::ver % 10000) % 100));
+			print("https://github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/EVF.inc");
+			print(" ");
+		}
+	}
+	return 1;
+}
+
+new EVF::UpdateTimer = -1;
+
+EVF::Function:: EVF::Init(){
+	SetSVarInt("ADM:EVF:ACTIVE",EVF::GetActiveCount()+1);
+	
+	//Welcome to EVF
+	new EVF::ver_name[16];
+	format(EVF::ver_name,sizeof(EVF::ver_name),"%d.%d.%d",(EVF_Version / 10000),((EVF_Version % 10000) / 100),((EVF_Version % 10000) % 100));
+	if(GetSVarInt("ADM:EVF:INIT") == 0){
+		SetSVarInt("ADM:EVF:INIT",1);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Info: Load EVF v%s for SA:MP %s by Abyss Morgan",EVF::ver_name,EVF_SAMP_Version);
+		}
+	}
+	
+	if(GetSVarInt("ADM:EVF:VERCHECK") == 0){
+		SetSVarInt("ADM:EVF:VERCHECK",1);
+		new EVF::send_data[50];
+		format(EVF::send_data,sizeof(EVF::send_data),"8.ct8.pl/evf/check.php?version=%d",EVF_Version);
+		HTTP(0,HTTP_GET,EVF::send_data,"","EVF_OnRequestResponse");
+	}
+	
+	EVF::UpdateTimer = SetTimerEx("OnVehicleTimeUpdate",VEHICLE_UPDATE_INTERVAL,true,"");
+}
+
+EVF::Function:: EVF::Exit(){
+	SetSVarInt("ADM:EVF:ACTIVE",EVF::GetActiveCount()-1);
+	
+	//Goodbye EVF
+	new EVF::ver_name[16];
+	format(EVF::ver_name,sizeof(EVF::ver_name),"%d.%d.%d",(EVF_Version / 10000),((EVF_Version % 10000) / 100),((EVF_Version % 10000) % 100));
+	if(EVF::GetActiveCount() == 0){
+		SetSVarInt("ADM:EVF:INIT",0);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Info: Unload EVF v%s for SA:MP %s by Abyss Morgan",EVF::ver_name,EVF_SAMP_Version);
+		}
+	}
+	if(EVF::UpdateTimer != -1) KillTimer(EVF::UpdateTimer);
+}
+
+new bool:CRC_EVFInit = true,
+	bool:CRC_EVFExit = true;
+	
+//Hook: OnFilterScriptInit
+public OnFilterScriptInit(){
+	if(CRC_EVFInit){
+		CRC_EVFInit = false;
+		EVF::Init();
+	}
+	#if defined EVF_OnFilterScriptInit
+		EVF_OnFilterScriptInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptInit
+	#undef OnFilterScriptInit
+#else
+	#define _ALS_OnFilterScriptInit
+#endif
+#define OnFilterScriptInit EVF_OnFilterScriptInit
+#if defined EVF_OnFilterScriptInit
+	forward EVF_OnFilterScriptInit();
+#endif
+
+//Hook: OnGameModeInit
+public OnGameModeInit(){
+	if(CRC_EVFInit){
+		CRC_EVFInit = false;
+		EVF::Init();
+	}
+	#if defined EVF_OnGameModeInit
+		EVF_OnGameModeInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+#else
+	#define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit EVF_OnGameModeInit
+#if defined EVF_OnGameModeInit
+	forward EVF_OnGameModeInit();
+#endif
+
+//Hook: OnFilterScriptExit
+public OnFilterScriptExit(){
+	if(CRC_EVFExit){
+		CRC_EVFExit = false;
+		EVF::Exit();
+	}
+	#if defined EVF_OnFilterScriptExit
+		EVF_OnFilterScriptExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit EVF_OnFilterScriptExit
+#if defined EVF_OnFilterScriptExit
+	forward EVF_OnFilterScriptExit();
+#endif
+
+//Hook: OnGameModeExit
+public OnGameModeExit(){
+	if(CRC_EVFExit){
+		CRC_EVFExit = false;
+		EVF::Exit();
+	}
+	#if defined EVF_OnGameModeExit
+		EVF_OnGameModeExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeExit
+	#undef OnGameModeExit
+#else
+	#define _ALS_OnGameModeExit
+#endif
+#define OnGameModeExit EVF_OnGameModeExit
+#if defined EVF_OnGameModeExit
+	forward EVF_OnGameModeExit();
+#endif
+
+#pragma unused EVF_VehicleName
+#pragma unused EVF_TopSpeed
+#pragma unused EVF_PlayerTempData
+
+#if !defined _3D_Tryg
+	#pragma unused EVF_WeaponDamage
+#endif
 
 //EOF
