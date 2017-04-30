@@ -6,7 +6,7 @@
  * Contributors: Emmet_, Pottus, kvann, Hanger, Freaksken, Gammix, Yashas, Admigo                                                 *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
- * Publication: http://forum.sa-mp.com/showthread.php?t=486060                                                                    *
+ * Publication: http://forum.sa-mp.com/showthread.php?t=611142                                                                    *
  * Website: http://8.ct8.pl                                                                                                       *
  *                                                                                                                                *
  * Plugins: Streamer                                                                                                              *
