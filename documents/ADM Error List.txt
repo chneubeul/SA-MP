@@ -7,6 +7,7 @@ This option is available in ATM.inc
 [ADM] Info: Load Streamer Functions v... for SA:MP ... by Abyss Morgan
 [ADM] Info: Unload Streamer Functions v... for SA:MP ... by Abyss Morgan
 
+
 //3DTryg.inc
 [ADM] Info: Please update your 3DTryg include to ... from here:
 [ADM] Info: Load 3DTryg v... for SA:MP ... by Abyss Morgan
@@ -38,15 +39,20 @@ This option is available in ATM.inc
 
 
 //Mines.inc
-[ADM] Error: Failed to CreateDynamicMine limit ... exceeded, edit Mines.inc and change MAX_MINES
+[ADM] Error: Failed to CreateDynamicMine limit ... exceeded, add #define MAX_MINES before Mines.inc
 
 
 //Missile.inc
-[ADM] Error: Failed to MissileLaunch limit ... exceeded, edit Missile.inc and change MAX_MISSILE
+[ADM] Error: Failed to MissileLaunch limit ... exceeded, add #define MAX_MISSILE before Missile.inc
+
+
+//Stingers.inc
+[ADM] Error: Failed to CreateDynamicStinger limit ... exceeded, add #define MAX_STINGERS before Stingers.inc
 
 
 //EVF.inc
 [ADM] Error: Your server have reached MAX_VEHICLES limit (%i).
+
 
 //EngineX.inc
 [ADM] Info: NGCM Mob Move Engine System ... loaded.
@@ -64,6 +70,7 @@ This option is available in ATM.inc
 [ADM] Error: This SAOI file is protected.
 [ADM] Info: SAOI has been attached to ...
 [ADM] Info: SAOI has been detached from ...
+
 
 //Global
 [ADM] Error: Invalid MapAndreas Memory.

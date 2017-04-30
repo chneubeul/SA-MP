@@ -13,7 +13,7 @@
  * Modules: FoxForeach, Foreach                                                                                                      *
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                             *
  *                                                                                                                                   *
- * File Version: 4.2.0                                                                                                               *
+ * File Version: 4.2.1                                                                                                               *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                    *
  * MapAndreas Version: 1.2.1                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                         *

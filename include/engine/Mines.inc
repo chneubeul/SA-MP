@@ -14,7 +14,7 @@
  * File Version: 2.0.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.0                                                                                                        *
- * 3DTryg Version: 4.1.2                                                                                                          *
+ * 3DTryg Version: 4.2.1                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,            *
@@ -68,11 +68,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.1.2
+	#error [ADM] You need 3DTryg.inc v4.2.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.1.2
-#elseif (Tryg3D_Version < 40102)
-	#error [ADM] Update you 3DTryg.inc to v4.1.2
+	#error [ADM] Update you 3DTryg.inc to v4.2.1
+#elseif (Tryg3D_Version < 40201)
+	#error [ADM] Update you 3DTryg.inc to v4.2.1
 #endif
 
 #if defined _dynamic_mine_system
@@ -325,7 +325,7 @@ stock CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:he
 	new mobid = FindFreeMineID();
 	if(mobid == INVALID_MINE_ID){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Error: Failed to CreateDynamicMine limit %d exceeded, edit Mines.inc and change MAX_MINES",MAX_MINES);
+			printf("[ADM] Error: Failed to CreateDynamicMine limit %d exceeded, add #define MAX_MINES before Mines.inc",MAX_MINES);
 		}
 		return INVALID_MINE_ID;
 	}
@@ -362,7 +362,7 @@ stock CreateDynamicMineEx(objectid,type,Float:detection_range,Float:explode_radi
 	new mobid = FindFreeMineID();
 	if(mobid == INVALID_MINE_ID){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Error: Failed to CreateDynamicMine limit %d exceeded, edit Mines.inc and change MAX_MINES",MAX_MINES);
+			printf("[ADM] Error: Failed to CreateDynamicMine limit %d exceeded, add #define MAX_MINES before Mines.inc",MAX_MINES);
 		}
 		return INVALID_MINE_ID;
 	}
