@@ -1890,7 +1890,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 			}
 		}
 		#if defined EVF_OnPlayerEditDynamicObject
-			OnPlayerEditDynamicObject(playerid,objectid,response,x,y,z,rx,ry,rz)
+			OnPlayerEditDynamicObject(playerid,objectid,response,x,y,z,rx,ry,rz);
 		#endif
 		return 1;
 	}
