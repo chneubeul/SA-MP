@@ -12,7 +12,7 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 3.0.0                                                                                                            *
+ * File Version: 3.0.1                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.0                                                                                                        *
  *                                                                                                                                *
@@ -222,11 +222,11 @@
 /*
 //Check Version EVF.inc
 #if !defined _EVF_include
-	#error [ADM] You need EVF.inc v3.0.0
+	#error [ADM] You need EVF.inc v3.0.1
 #elseif !defined EVF_Version
-	#error [ADM] Update you EVF.inc to v3.0.0
-#elseif (EVF_Version < 30000)
-	#error [ADM] Update you EVF.inc to v3.0.0
+	#error [ADM] Update you EVF.inc to v3.0.1
+#elseif (EVF_Version < 30001)
+	#error [ADM] Update you EVF.inc to v3.0.1
 #endif
 */
 
@@ -260,7 +260,7 @@
 	#error [ADM] Please include a_http.inc before EVF.inc
 #endif
 
-#define EVF_Version									(30000) //a.b.c 10000*a+100*b+c
+#define EVF_Version									(30001) //a.b.c 10000*a+100*b+c
 #define EVF_SAMP_Version							"0.3.7"
 
 #define EVF_Function::								stock
@@ -714,7 +714,6 @@ new const EVF::VehicleDoors[MAX_VEHICLE_MODELS] = {
 #define GetVehicleBoot(%0,%1,%2,%3)				GetVehicleOffset((%0),VEHICLE_OFFSET_BOOT,(%1),(%2),(%3))
 #define GetVehicleHood(%0,%1,%2,%3)				GetVehicleOffset((%0),VEHICLE_OFFSET_HOOD,(%1),(%2),(%3))
 #define GetVehicleRoof(%0,%1,%2,%3)				GetVehicleOffset((%0),VEHICLE_OFFSET_ROOF,(%1),(%2),(%3))
-#define IsVehiclePropertySet(%0,%1)				existproperty(4,!"",((%0) << 16) + (_:%1))
 #define IsValidVehicleDoor(%0,%1) 				!((%1) > EVF::VehicleDoors[(GetVehicleModel(%0)-400) & MAX_VEHICLE_MODELS])
 #define RemoveVehiclePaintjob(%0)				ChangeVehiclePaintjob((%0),RESET_PAINTJOB_ID)
 #define RestoreVehicleHorn(%0)					SetVehiclePropertyValue((%0),e_VEHICLE_HORN,0)
@@ -757,10 +756,6 @@ forward OnVehicleCreated(vehicleid);
 forward OnVehicleDestroyed(vehicleid);
 forward OnTrailerHooked(playerid,vehicleid,trailerid);
 forward OnTrailerUnhooked(playerid,vehicleid,trailerid);
-forward OnVehiclePosChange(vehicleid,Float:newx,Float:newy,Float:newz,Float:newangle,Float:oldx,Float:oldy,Float:oldz,Float:oldangle);
-forward OnVehicleVelocityChange(vehicleid,Float:newx,Float:newy,Float:newz,Float:oldx,Float:oldy,Float:oldz);
-forward OnVehicleHealthChange(vehicleid,Float:newhealth,Float:oldhealth);
-forward OnVehicleFuelChange(vehicleid,newfuel,oldfuel);
 forward OnVehicleBombDeactivate(vehicleid);
 forward OnVehicleBombExplode(vehicleid);
 forward OnPlayerShotVehicle(playerid,vehicleid,weaponid,Float:amount,bodypart);
@@ -769,23 +764,47 @@ forward OnPlayerEditVehicleObject(playerid,vehicleid,response,Float:x,Float:y,Fl
 forward OnPlayerReachSpeedCapLimit(playerid,vehicleid,Float:speed);
 forward OnVehicleBombActivate(vehicleid);
 
+#if defined OnVehicleFuelChange
+	forward OnVehicleFuelChange(vehicleid,newfuel,oldfuel);
+#endif
+
+#if defined OnVehiclePosChange
+	forward OnVehiclePosChange(vehicleid,Float:newx,Float:newy,Float:newz,Float:newangle,Float:oldx,Float:oldy,Float:oldz,Float:oldangle);
+#endif
+
+#if defined OnVehicleVelocityChange
+	forward OnVehicleVelocityChange(vehicleid,Float:newx,Float:newy,Float:newz,Float:oldx,Float:oldy,Float:oldz);
+#endif
+
+#if defined OnVehicleHealthChange
+	forward OnVehicleHealthChange(vehicleid,Float:newhealth,Float:oldhealth);
+#endif
+
+EVF::Function:: IsVehiclePropertySet(vehicleid,EVF::VehicleProperties:type){
+	new evf_string[12];
+	format(evf_string,sizeof(evf_string),"%d_%d",vehicleid,_:type);
+	return existproperty(_,evf_string);
+}
+
 EVF::Function:: SetVehiclePropertyValue(vehicleid,EVF::VehicleProperties:type,value){
 	new evf_string[12];
-	format(evf_string,sizeof(evf_string),"%d",value);
-	return setproperty(4,!"",((vehicleid << 16) + _:type),evf_string);
+	format(evf_string,sizeof(evf_string),"%d_%d",vehicleid,_:type);
+	return setproperty(_,evf_string,value);
 }
 
 EVF::Function:: GetVehiclePropertyValue(vehicleid,EVF::VehicleProperties:type){
 	if(!IsVehiclePropertySet(vehicleid,type)) return 0;
 	new evf_string[12];
-	getproperty(4,!"",((vehicleid << 16) + _:type),evf_string);
-	return strval(evf_string);
+	format(evf_string,sizeof(evf_string),"%d_%d",vehicleid,_:type);
+	return getproperty(_,evf_string);
 }
 
 EVF::Function:: ResetVehicleProperties(vehicleid){
 	EVF::VehicleTrailerID[vehicleid] = INVALID_VEHICLE_ID;
+	new evf_string[12];
 	for(new i = 0; i < _:(EVF::VehicleProperties); i++){
-		deleteproperty(4,!"",(vehicleid << 16) + i);
+		format(evf_string,sizeof(evf_string),"%d_%d",vehicleid,i);
+		deleteproperty(_,evf_string);
 	}
 }
 
@@ -1298,12 +1317,12 @@ EVF::Public:: OnVehicleTimeUpdate(){
 		GetVehiclePos(vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2]);
 		GetVehicleZAngle(vehicleid,EVF::Vec[3]);
 		if(IsVehicleSticky(vehicleid)){
-			if(VectorSize(EVF::Vec[0]-EVF::VehicleTempData[vehicleid][e_pos_x],EVF::Vec[1]-EVF::VehicleTempData[vehicleid][e_pos_y],EVF::Vec[2]-EVF::VehicleTempData[vehicleid][e_pos_z]) >= 1.0 || VectorSize(EVF::Vec[3]-EVF::VehicleTempData[vehicleid][e_pos_a],0.0,0.0) >= 1.0){
+			if(VectorSize(EVF::Vec[0]-EVF::VehicleTempData[vehicleid][e_pos_x],EVF::Vec[1]-EVF::VehicleTempData[vehicleid][e_pos_y],EVF::Vec[2]-EVF::VehicleTempData[vehicleid][e_pos_z]) >= 2.0 || VectorSize(EVF::Vec[3]-EVF::VehicleTempData[vehicleid][e_pos_a],0.0,0.0) >= 1.0){
 				return TeleportVehicle(vehicleid,EVF::VehicleTempData[vehicleid][e_pos_x],EVF::VehicleTempData[vehicleid][e_pos_y],EVF::VehicleTempData[vehicleid][e_pos_z],EVF::VehicleTempData[vehicleid][e_pos_a],GetVehicleInterior(vehicleid),GetVehicleVirtualWorld(vehicleid));
 			}
 		}
 		#if defined OnVehiclePosChange
-			if(EVF::Vec[0] != EVF::VehicleTempData[vehicleid][e_pos_x] || EVF::Vec[1] != EVF::VehicleTempData[vehicleid][e_pos_y] || EVF::Vec[2] != EVF::VehicleTempData[vehicleid][e_pos_z] || EVF::Vec[3] != EVF::VehicleTempData[vehicleid][e_pos_a]){
+			if(VectorSize(EVF::Vec[0]-EVF::VehicleTempData[vehicleid][e_pos_x],EVF::Vec[1]-EVF::VehicleTempData[vehicleid][e_pos_y],EVF::Vec[2]-EVF::VehicleTempData[vehicleid][e_pos_z]) >= 2.0){
 				if(CallRemoteFunction("OnVehiclePosChange","iffffffff",vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2],EVF::Vec[3],EVF::VehicleTempData[vehicleid][e_pos_x],EVF::VehicleTempData[vehicleid][e_pos_y],EVF::VehicleTempData[vehicleid][e_pos_z],EVF::VehicleTempData[vehicleid][e_pos_a])){
 					EVF::VehicleTempData[vehicleid][e_pos_x] = EVF::Vec[0];
 					EVF::VehicleTempData[vehicleid][e_pos_y] = EVF::Vec[1];
@@ -1605,9 +1624,9 @@ EVF::Function:: EVF::CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,c
 	SetVehicleSpeedCap(vehicleid,0.0);
 	
 	ToggleUnoccupiedVehicleDamage(vehicleid,unoccupied_damage);
-	ToggleVehicleSticky(vehicleid,false);
-	ToggleVehiclePetrolCapDestroy(vehicleid,false);
-	ToggleVehicleFuel(vehicleid,false);
+	ToggleVehicleSticky(vehicleid,0);
+	ToggleVehiclePetrolCapDestroy(vehicleid,0);
+	ToggleVehicleFuel(vehicleid,0);
 	
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1,color1);
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2,color2);
