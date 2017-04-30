@@ -5,7 +5,7 @@
  * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                        *
- * Publication: http://forum.sa-mp.com/showthread.php?p=3846263                                     *
+ * Publication: http://forum.sa-mp.com/showthread.php?t=629050                                      *
  * Website: http://8.ct8.pl                                                                         *
  *                                                                                                  *
  * Plugins: Streamer, ColAndreas                                                                    *
