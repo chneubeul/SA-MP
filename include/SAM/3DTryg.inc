@@ -676,20 +676,19 @@
  * GetVehiclesDistance        -> GetDistanceBetweenVehicles                                                                          *
  * GetObjectsDistance         -> GetDistanceBetweenObjects                                                                           *
  *                                                                                                                                   *
- *************************************************************************************************************************************/
-
+ *************************************************************************************************************************************/ 
+ 
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.2.0
+	#error [ADM] You need 3DTryg.inc v4.2.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.2.0
-#elseif (Tryg3D_Version < 40200)
-	#error [ADM] Update you 3DTryg.inc to v4.2.0
+	#error [ADM] Update you 3DTryg.inc to v4.2.1
+#elseif (Tryg3D_Version < 40201)
+	#error [ADM] Update you 3DTryg.inc to v4.2.1
 #endif
 */
- 
- 
+
 /************************************************************************************************************************************
  *                                                                                                                                  *
  * Version                                                                                                                          *
@@ -701,7 +700,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40200) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40201) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize)
@@ -729,7 +728,9 @@
 	#error [ADM] Please include a_http.inc before 3DTryg.inc
 #endif
 
- 
+#if defined _EVF_include
+	#error [ADM] Please include EVF.inc after 3DTryg.inc for improvements
+#endif 
  
 /************************************************************************************************************************************
  *                                                                                                                                  *
@@ -1785,21 +1786,15 @@ Tryg3D::Function:: Tryg3D::QuatToEuler(&Float:rx,&Float:ry,&Float:rz,Float:qw,Fl
 	CompRotationFloat(-atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz),rz);
 } 
  
+//GetVehicleRotation Created by IllidanS4
+Tryg3D::Function:: Tryg3D::GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
+	new Float:qw,Float:qx,Float:qy,Float:qz;
+	GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
+	Tryg3D::QuatToEuler(rx,ry,rz,qw,qx,qy,qz);
+}
+
 #if !defined Tryg3D_i_quat
-	//GetVehicleRotation Created by IllidanS4
-	Tryg3D::Function:: GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
-		new Float:qw,Float:qx,Float:qy,Float:qz;
-		GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
-		Tryg3D::QuatToEuler(rx,ry,rz,qw,qx,qy,qz);
-	}
-	
-	#define Tryg3D_GetVehicleRotation			GetVehicleRotation
-#else	
-	Tryg3D::Function:: Tryg3D::GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
-		new Float:qw,Float:qx,Float:qy,Float:qz;
-		GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz);
-		Tryg3D::QuatToEuler(rx,ry,rz,qw,qx,qy,qz);
-	}
+	#define GetVehicleRotation			Tryg3D_GetVehicleRotation
 #endif 
  
 Tryg3D::Function:: Float:GetEllipseRadius(Float:x,Float:y,Float:angle){

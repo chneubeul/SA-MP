@@ -144,7 +144,7 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 	new mobid = FindFreeMissileID();
 	if(mobid == INVALID_MISSILE_ID){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Error: Failed to MissileLaunch limit %d exceeded, edit Missile.inc and change MAX_MISSILE",MAX_MISSILE);
+			printf("[ADM] Error: Failed to MissileLaunch limit %d exceeded, add #define MAX_MISSILE before Missile.inc",MAX_MISSILE);
 		}
 		return INVALID_MISSILE_ID;
 	}
@@ -250,7 +250,7 @@ stock MissileLaunchAimPlayer(targetid,type,Float:detection_range,Float:explode_r
 	new mobid = FindFreeMissileID();
 	if(mobid == INVALID_MISSILE_ID){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Error: Failed to MissileLaunch limit %d exceeded, edit Missile.inc and change MAX_MISSILE",MAX_MISSILE);
+			printf("[ADM] Error: Failed to MissileLaunch limit %d exceeded, add #define MAX_MISSILE before Missile.inc",MAX_MISSILE);
 		}
 		return INVALID_MISSILE_ID;
 	}
