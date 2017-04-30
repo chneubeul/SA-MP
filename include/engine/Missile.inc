@@ -169,7 +169,6 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 		}
 	}
 	MissileComponent[mobid][missile_explode] = explode_radius;
-	MissileComponent[mobid][missile_active] = true;
 	MissileComponent[mobid][missile_playerid] = byplayerid;
 	MissileComponent[mobid][missile_teamid] = teamid;
 	MissileComponent[mobid][missile_speed] = speed;
@@ -241,6 +240,7 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 			MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,0.0,rx,rz);
 		}
 	}
+	MissileComponent[mobid][missile_active] = true;
 	return mobid;
 }
 
@@ -275,7 +275,6 @@ stock MissileLaunchAimPlayer(targetid,type,Float:detection_range,Float:explode_r
 		}
 	}
 	MissileComponent[mobid][missile_explode] = explode_radius;
-	MissileComponent[mobid][missile_active] = true;
 	MissileComponent[mobid][missile_playerid] = byplayerid;
 	MissileComponent[mobid][missile_teamid] = teamid;
 	MissileComponent[mobid][missile_speed] = speed;
@@ -304,6 +303,7 @@ stock MissileLaunchAimPlayer(targetid,type,Float:detection_range,Float:explode_r
 			MoveDynamicObject(MissileComponent[mobid][missile_objectid],tx,ty,tz,speed,0.0,rx,rz);
 		}
 	}
+	MissileComponent[mobid][missile_active] = true;
 	return mobid;
 }
 
