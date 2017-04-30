@@ -54,6 +54,9 @@
 │   │   ├───3DTryg
 │   │   ├───ColAndreas
 │   │   └───Streamer
+│   ├───Stingers
+│   │   ├───3DTryg
+│   │   └───Streamer
 │   ├───Mines
 │   │   ├───3DTryg
 │   │   └───Streamer
