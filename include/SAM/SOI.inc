@@ -274,30 +274,19 @@ SOI::Function:: SOI::GetSkinOffset(modelid,skinid,&bone,&Float:x,&Float:y,&Float
 		return 0;
 	}
 
-	//Get Header
-	new h_len = strlen(SOI_HEADER_KEY), h_key[32];
-	for(new i = 0; i < h_len; i++){
-		h_key[i] = fgetchar(inpf,0,false);
-	}
-	h_key[h_len] = EOS;
-	if(!strcmp(h_key,SOI_HEADER_KEY,true)){
-		fseek(inpf,h_len+(skinid*37),seek_start);
-		SOI_MergeValue(bone,0,0,0,fgetchar(inpf,0,false));
-		SOI_MergeFloat(x,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
-		SOI_MergeFloat(y,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
-		SOI_MergeFloat(z,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
-		SOI_MergeFloat(rx,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
-		SOI_MergeFloat(ry,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
-		SOI_MergeFloat(rz,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
-		SOI_MergeFloat(sx,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
-		SOI_MergeFloat(sy,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
-		SOI_MergeFloat(sz,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
-		fclose(inpf);
-		return 1;
-	} else {
-		fclose(inpf);
-		return 0;
-	}
+	fseek(inpf,11+(skinid*37),seek_start);
+	SOI_MergeValue(bone,0,0,0,fgetchar(inpf,0,false));
+	SOI_MergeFloat(x,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+	SOI_MergeFloat(y,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+	SOI_MergeFloat(z,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+	SOI_MergeFloat(rx,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+	SOI_MergeFloat(ry,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+	SOI_MergeFloat(rz,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+	SOI_MergeFloat(sx,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+	SOI_MergeFloat(sy,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+	SOI_MergeFloat(sz,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
+	fclose(inpf);
+	return 1;
 }
 
 //EOF
