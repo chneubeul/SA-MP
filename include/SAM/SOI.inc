@@ -164,6 +164,19 @@
 		new file_name[64];
 		format(file_name,sizeof(file_name),"/SOI/%d.soi",modelid);
 		if(!fexist(file_name)){
+			for(new skinid = 0; skinid < MAX_SKINS; skinid++){
+				SOI::TempSkinsData[skinid][SOI::set] = false;
+				SOI::TempSkinsData[skinid][SOI::bone] = 0;
+				SOI::TempSkinsData[skinid][SOI::x] = 0.0;
+				SOI::TempSkinsData[skinid][SOI::y] = 0.0;
+				SOI::TempSkinsData[skinid][SOI::z] = 0.0;
+				SOI::TempSkinsData[skinid][SOI::rx] = 0.0;
+				SOI::TempSkinsData[skinid][SOI::ry] = 0.0;
+				SOI::TempSkinsData[skinid][SOI::rz] = 0.0;
+				SOI::TempSkinsData[skinid][SOI::sx] = 0.0;
+				SOI::TempSkinsData[skinid][SOI::sy] = 0.0;
+				SOI::TempSkinsData[skinid][SOI::sz] = 0.0;
+			}
 			SOI::TempFileData[SOI::active] = true;
 			SOI::TempFileData[SOI::modelid] = modelid;
 			return 1;
