@@ -44,7 +44,7 @@
 	#error You need SOI.inc v1.0.0
 #elseif !defined SOI_FILES_VERSION
 	#error Update you SOI.inc to v1.0.0
-#elseif (SOI_FILES_VERSION < 10900)
+#elseif (SOI_FILES_VERSION < 10000)
 	#error Update you SOI.inc to v1.0.0
 #endif
 */
@@ -54,7 +54,7 @@
 #endif
 #define _SOI_FILES
 
-#define SOI_FILES_VERSION 					(10900)			//a.b[c] 10000*a+100*b+c
+#define SOI_FILES_VERSION 					(10000)			//a.b[c] 10000*a+100*b+c
 
 #define SOI_HEADER_KEY						"SOI 1.0 ADM"	//You can never change !!!
 
