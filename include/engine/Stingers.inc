@@ -162,7 +162,7 @@ stock CreateDynamicStinger(type,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:
 
 stock DestroyDynamicStinger(mobid){
 	if(mobid <= 0 || mobid >= MAX_STINGERS) return 0;
-	if(IsStingerActive(mobid)) return 0;
+	if(!IsDynamicStingerActive(mobid)) return 0;
 	DestroyDynamicObject(Stingers[mobid][stin_objectid]);
 	DestroyDynamicArea(Stingers[mobid][stin_areaid]);
 	Stingers[mobid] = STIN_ConstructData();
