@@ -18,7 +18,7 @@
  * MapAndreas Version: 1.2.1                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                         *
  * YSF Version: R18-2 (kurta999)                                                                                                     *
- * Streamer Version: 2.9.0                                                                                                           *
+ * Streamer Version: 2.9.1                                                                                                           *
  * FCNPC Version: 1.7.0                                                                                                              *
  *                                                                                                                                   *
  * 3DTryg FindZ Precision:                                                                                                           *
@@ -791,10 +791,10 @@
 //Detect Streamer Plugin [Slot: 4]
 #if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined DISABLE_3D_TRYG_STREAMER))
 	#define Tryg3D_Streamer
-	#define Tryg3D_StreamerVersion						(0x290)
+	#define Tryg3D_StreamerVersion						(0x291)
 	#define Tryg3D_Module_Streamer						(true)
 	#if (!defined STREAMER_TYPE_ACTOR)
-		#error [ADM] Update you streamer.inc to v2.9.0
+		#error [ADM] Update you streamer.inc to v2.9.1
 	#endif
 #else
 	#define Tryg3D_Module_Streamer						(false)
