@@ -55,8 +55,8 @@
  * SetDynamicObjectDatagram(objectid,data[]);                                                                                              *
  * RemoveDynamicObjectDatagram(objectid);                                                                                                  *
  * bool:IsSetDynamicObjectDatagram(objectid);                                                                                              *
- GetDynamicObjectInvertArea(objectid);                                                                                                     *
-SetDynamicObjectInvertArea(objectid,toggle);                                                                                               *
+ * GetDynamicObjectInvertArea(objectid);                                                                                                   *
+ * SetDynamicObjectInvertArea(objectid,toggle);                                                                                            *
  *                                                                                                                                         *
  * SAMP Functions:                                                                                                                         *
  * GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                                  *
@@ -374,6 +374,7 @@ SetDynamicObjectInvertArea(objectid,toggle);                                    
  * DestroyDynamic3DTextLabel    -> Resets the variable after the destruction of the Dynamic3DTextLabel.                                    *
  * DestroyDynamicArea           -> Resets the variable after the destruction of the DynamicArea.                                           *
  * DestroyDynamicActor          -> Resets the variable after the destruction of the DynamicActor.                                          *
+ * DestroyDynamicVehicle        -> Resets the variable after the destruction of the DynamicVehicle.                                        *
  * DestroyObject                -> Resets the variable after the destruction of the Object.                                                *
  * DestroyPlayerObject          -> Resets the variable after the destruction of the PlayerObject.                                          *
  * DestroyPickup                -> Resets the variable after the destruction of the Pickup.                                                *
