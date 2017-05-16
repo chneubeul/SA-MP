@@ -442,7 +442,7 @@ enum EVF::NeonOffset {
     Float:EVF::NeonZ
 }
 
-new const EVF::NeonOffsetData[212][EVF::NeonOffset] = {
+new const EVF::NeonOffsetData[MAX_VEHICLE_MODELS][EVF::NeonOffset] = {
 	{-0.924999,0.009999,-0.674999},
 	{-0.979999,0.074999,-0.489999},
 	{-1.034999,-0.029999,-0.579999},

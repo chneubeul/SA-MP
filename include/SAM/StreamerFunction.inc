@@ -11,7 +11,7 @@
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
  *                                                                                                                                         *
- * File Version: 2.7.0                                                                                                                     *
+ * File Version: 2.8.0                                                                                                                     *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *
  * Streamer Version: 2.9.1                                                                                                                 *
  *                                                                                                                                         *
@@ -41,8 +41,8 @@
  * SetDynamicObjectMoveRot(objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0);                                             *
  * GetDynamicObjectMoveTime(objectid,&objstate,&rtime=0);                                                                                  *
  * SetDynamicObjectAttachSync(objectid,syncrotation);                                                                                      *
- * ResetDynamicObjectMaterial(objectid,materialindex);                                                                                     *
- * ResetDynamicObjectMaterialAll(objectid);                                                                                                *
+ * RemoveDynamicObjectMaterial(objectid,materialindex);                                                                                    *
+ * RemoveDynamicObjectMaterialAll(objectid);                                                                                               *
  * DeattachObjectDynamicObject(objectid);                                                                                                  *
  * DeattachDynamicObjectComponent(objectid,type);                                                                                          *
  * DestroyDynamicObjectComponent(objectid,type);                                                                                           *
@@ -55,6 +55,8 @@
  * SetDynamicObjectDatagram(objectid,data[]);                                                                                              *
  * RemoveDynamicObjectDatagram(objectid);                                                                                                  *
  * bool:IsSetDynamicObjectDatagram(objectid);                                                                                              *
+ GetDynamicObjectInvertArea(objectid);                                                                                                     *
+SetDynamicObjectInvertArea(objectid,toggle);                                                                                               *
  *                                                                                                                                         *
  * SAMP Functions:                                                                                                                         *
  * GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,&Float:rx,&Float:ry,&Float:rz);                                                  *
@@ -100,6 +102,8 @@
  * SetDynamicCPDatagram(checkpointid,data[]);                                                                                              *
  * RemoveDynamicCPDatagram(checkpointid);                                                                                                  *
  * bool:IsSetDynamicCPDatagram(checkpointid);                                                                                              *
+ * GetDynamicCPInvertArea(checkpointid);                                                                                                   *
+ * SetDynamicCPInvertArea(checkpointid,toggle);                                                                                            *
  *                                                                                                                                         *
  * Race Check Point Functions:                                                                                                             *
  * GetDynamicRaceCPPos(checkpointid,&Float:x,&Float:y,&Float:z);                                                                           *
@@ -124,6 +128,8 @@
  * SetDynamicRaceCPDatagram(checkpointid,data[]);                                                                                          *
  * RemoveDynamicRaceCPDatagram(checkpointid);                                                                                              *
  * bool:IsSetDynamicRaceCPDatagram(checkpointid);                                                                                          *
+ * GetDynamicRaceCPInvertArea(checkpointid);                                                                                               *
+ * SetDynamicRaceCPInvertArea(checkpointid,toggle);                                                                                        *
  *                                                                                                                                         *
  * Player Functions:                                                                                                                       *
  * DestroyPlayerDynamicObject(playerid);                                                                                                   *
@@ -152,6 +158,8 @@
  * SetDynamicMapIconDatagram(iconid,data[]);                                                                                               *
  * RemoveDynamicMapIconDatagram(iconid);                                                                                                   *
  * bool:IsSetDynamicMapIconDatagram(iconid);                                                                                               *
+ * GetDynamicMapIconInvertArea(iconid);                                                                                                    *
+ * SetDynamicMapIconInvertArea(iconid,toggle);                                                                                             *
  *                                                                                                                                         *
  * Pickup Functions:                                                                                                                       *
  * GetDynamicPickupPos(pickupid,&Float:x,&Float:y,&Float:z);                                                                               *
@@ -174,6 +182,8 @@
  * SetDynamicPickupDatagram(pickupid,data[]);                                                                                              *
  * RemoveDynamicPickupDatagram(pickupid);                                                                                                  *
  * bool:IsSetDynamicPickupDatagram(pickupid);                                                                                              *
+ * GetDynamicPickupInvertArea(pickupid);                                                                                                   *
+ * SetDynamicPickupInvertArea(pickupid,toggle);                                                                                            *
  *                                                                                                                                         *
  * 3DText Functions:                                                                                                                       *
  * GetDynamic3DTextPos(id,&Float:x,&Float:y,&Float:z);                                                                                     *
@@ -193,12 +203,14 @@
  * GetDynamic3DTextPriority(id);                                                                                                           *
  * SetDynamic3DTextPriority(id,priority);                                                                                                  *
  * SetDynamic3DTextTestLos(id,testlos);                                                                                                    *
- * SetDynamic3DTextAttachPlayer(id,attachedplayer);                                                                                        *
- * SetDynamic3DTextAttachVehicle(id,attachedvehicle);                                                                                      *
+ * AttachDynamic3DTextToPlayer(id,attachedplayer);                                                                                         *
+ * AttachDynamic3DTextToVehicle(id,attachedvehicle);                                                                                       *
  * GetDynamic3DTextDatagram(id,data[]);                                                                                                    *
  * SetDynamic3DTextDatagram(id,data[]);                                                                                                    *
  * RemoveDynamic3DTextDatagram(id);                                                                                                        *
  * bool:IsSetDynamic3DTextDatagram(id);                                                                                                    *
+ * GetDynamic3DTextInvertArea(id);                                                                                                         *
+ * SetDynamic3DTextInvertArea(id,toggle);                                                                                                  *
  *                                                                                                                                         *
  * Area Functions:                                                                                                                         *
  * GetDynamicCirclePos(areaid,&Float:x,&Float:y);                                                                                          *
@@ -241,6 +253,29 @@
  * SetDynamicActorInterior(actorid,interiorid);                                                                                            *
  * DestroyAllDynamicActors();                                                                                                              *
  * CountDynamicActors();                                                                                                                   *
+ * GetDynamicActorInvertArea(actorid);                                                                                                     *
+ * SetDynamicActorInvertArea(actorid,toggle);                                                                                              *
+ *                                                                                                                                         *
+ * Dynamic Vehicle Functions:                                                                                                              *
+ * SetDynamicVehicleModel(vehicleid,modelid);                                                                                              *
+ * GetDynamicVehicleSiren(vehicleid);                                                                                                      *
+ * SetDynamicVehicleSiren(vehicleid,siren);                                                                                                *
+ * GetDynamicVehicleRespawnTime(vehicleid);                                                                                                *
+ * SetDynamicVehicleRespawnTime(vehicleid,respawndelay);                                                                                   *
+ * GetDynamicVehicleArea(vehicleid);                                                                                                       *
+ * SetDynamicVehicleArea(vehicleid,areaid);                                                                                                *
+ * GetDynamicVehiclePriority(vehicleid);                                                                                                   *
+ * SetDynamicVehiclePriority(vehicleid,priority);                                                                                          *
+ * GetDynamicVehicleSD(vehicleid,&Float:streamdistance);                                                                                   *
+ * SetDynamicVehicleSD(vehicleid,Float:streamdistance);                                                                                    *
+ * GetDynamicVehicleInvertArea(vehicleid);                                                                                                 *
+ * SetDynamicVehicleInvertArea(vehicleid,toggle);                                                                                          *
+ * GetDynamicVehicleDatagram(vehicleid,data[]);                                                                                            *
+ * SetDynamicVehicleDatagram(vehicleid,data[]);                                                                                            *
+ * RemoveDynamicVehicleDatagram(vehicleid);                                                                                                *
+ * IsSetDynamicVehicleDatagram(vehicleid);                                                                                                 *
+ * DestroyAllDynamicVehicles();                                                                                                            *
+ * CountDynamicVehicles();                                                                                                                 *
  *                                                                                                                                         *
  * Anti Area Functions:                                                                                                                    *
  * IsPointInAntiArea(areaid,Float:x,Float:y,Float:z);                                                                                      *
@@ -262,6 +297,7 @@
  * GetDynamic3DTextPoolSize();                                                                                                             *
  * GetDynamicAreaPoolSize();                                                                                                               *
  * GetDynamicActorPoolSize();                                                                                                              *
+ * GetDynamicVehiclePoolSize();                                                                                                            *
  *                                                                                                                                         *
  * Update Functions:                                                                                                                       *
  * UpdateAllDynamicElements();                                                                                                             *
@@ -273,6 +309,7 @@
  * UpdateAllDynamic3DTextLabels();                                                                                                         *
  * UpdateAllDynamicAreas();                                                                                                                *
  * UpdateAllDynamicActors();                                                                                                               *
+ * UpdateAllDynamicVehicles();                                                                                                             *
  *                                                                                                                                         *
  * Foreach Functions:                                                                                                                      *
  * ForDynamicObjects(variable);                                                                                                            *
@@ -283,6 +320,7 @@
  * ForDynamic3DTextLabels(variable);                                                                                                       *
  * ForDynamicAreas(variable);                                                                                                              *
  * ForDynamicActors(variable);                                                                                                             *
+ * ForDynamicVehicles(variable);                                                                                                           *
  *                                                                                                                                         *
  * Nearest Item Functions:                                                                                                                 *
  * GetNearestVisibleItem(playerid,type);                                                                                                   *
@@ -294,6 +332,7 @@
  * GetNearestVisible3DText(playerid);                                                                                                      *
  * GetNearestVisibleArea(playerid);                                                                                                        *
  * GetNearestVisibleActor(playerid);                                                                                                       *
+ * GetNearestVisibleVehicle(playerid);                                                                                                     *
  *                                                                                                                                         *
  * Extended Functions:                                                                                                                     *
  * bool:IsValidStreamer(version);                                                                                                          *
@@ -321,6 +360,7 @@
  * INVALID_DYNAMIC_3D_TEXT_ID                                                                                                              *
  * INVALID_DYNAMIC_AREA_ID                                                                                                                 *
  * INVALID_DYNAMIC_ACTOR_ID                                                                                                                *
+ * INVALID_DYNAMIC_VEHICLE_ID                                                                                                              *
  * INVALID_PICKUP_ID                                                                                                                       *
  * INVALID_STREAMER_COMPONENT                                                                                                              *
  * MAX_STREAM_SIZE                                                                                                                         *
@@ -346,11 +386,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.7.0
+	#error [ADM] You need StreamerFunction.inc v2.8.0
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.7.0
-#elseif (Streamer_Spec_Version < 20700)
-	#error [ADM] Update you StreamerFunction.inc to v2.7.0
+	#error [ADM] Update you StreamerFunction.inc to v2.8.0
+#elseif (Streamer_Spec_Version < 20800)
+	#error [ADM] Update you StreamerFunction.inc to v2.8.0
 #endif
 */
 
@@ -367,7 +407,11 @@
 	#error [ADM] You need Streamer v2.9.1
 #endif
 
-#define Streamer_Spec_Version 					(20700) //a.b.c 10000*a+100*b+c
+#if defined STREAMER_TYPE_VEHICLE
+	#define SSpec_StreamerVehicle
+#endif
+
+#define Streamer_Spec_Version 					(20800) //a.b.c 10000*a+100*b+c
 #define Streamer_Spec_SAMP_Version				"0.3.7"
 #define Valid_Streamer_Version 					(0x291)
 
@@ -400,11 +444,19 @@
 #define INVALID_DYNAMIC_AREA_ID					STREAMER_TAG_AREA			INVALID_STREAMER_ID
 #define INVALID_DYNAMIC_ACTOR_ID				STREAMER_TAG_ACTOR			INVALID_STREAMER_ID
 
+#if defined SSpec_StreamerVehicle
+	#define INVALID_DYNAMIC_VEHICLE_ID			STREAMER_TAG_VEHICLE		INVALID_STREAMER_ID
+#endif
+
 #define DEFAULT_VISIBLE_OBJECT					500
 #define DEFAULT_VISIBLE_PICKUP					4096
 #define DEFAULT_VISIBLE_MAP_ICON				100
 #define DEFAULT_VISIBLE_3D_TEXT					1024
 #define DEFAULT_VISIBLE_ACTOR					1000
+
+#if defined SSpec_StreamerVehicle
+	#define DEFAULT_VISIBLE_VEHICLE				2000
+#endif
 
 #if !defined INVALID_PICKUP_ID
 	#define INVALID_PICKUP_ID					-1
@@ -458,6 +510,8 @@
 #define SetDynamicObjectArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_AREA_ID,(_:%2))
 #define GetDynamicObjectPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_PRIORITY)
 #define SetDynamicObjectPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicObjectInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_OBJECT,(%1))
+#define SetDynamicObjectInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_OBJECT,(%1),(%2))
 #define GetDynamicObjectDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_OBJECT,(%1),(%2))
 #define SetDynamicObjectDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_OBJECT,(%1),(%2))
 #define RemoveDynamicObjectDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_OBJECT,(%1))
@@ -478,6 +532,8 @@
 #define SetDynamicPickupArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_AREA_ID,(_:%2))
 #define GetDynamicPickupPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_PRIORITY)
 #define SetDynamicPickupPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicPickupInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_PICKUP,(%1))
+#define SetDynamicPickupInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_PICKUP,(%1),(%2))
 #define GetDynamicPickupDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_PICKUP,(%1),(%2))
 #define SetDynamicPickupDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_PICKUP,(%1),(%2))
 #define RemoveDynamicPickupDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_PICKUP,(%1))
@@ -496,6 +552,8 @@
 #define SetDynamicCPVW(%1,%2)					Streamer_SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_WORLD_ID,(%2))
 #define GetDynamicCPINT(%1)						Streamer_GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_INTERIOR_ID)
 #define SetDynamicCPINT(%1,%2)					Streamer_SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicCPInvertArea(%1)				Streamer_IsToggleItemInvAreas(STREAMER_TYPE_CP,(%1))
+#define SetDynamicCPInvertArea(%1,%2)			Streamer_ToggleItemInvAreas(STREAMER_TYPE_CP,(%1),(%2))
 #define GetDynamicCPDatagram(%1,%2)				GetStreamerDatagram(STREAMER_TYPE_CP,(%1),(%2))
 #define SetDynamicCPDatagram(%1,%2)				SetStreamerDatagram(STREAMER_TYPE_CP,(%1),(%2))
 #define RemoveDynamicCPDatagram(%1)				RemoveStreamDatagram(STREAMER_TYPE_CP,(%1))
@@ -516,6 +574,8 @@
 #define SetDynamicRaceCPVW(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_WORLD_ID,(%2))
 #define GetDynamicRaceCPINT(%1)					Streamer_GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_INTERIOR_ID)
 #define SetDynamicRaceCPINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicRaceCPInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_RACE_CP,(%1))
+#define SetDynamicRaceCPInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_RACE_CP,(%1),(%2))
 #define GetDynamicRaceCPDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_RACE_CP,(%1),(%2))
 #define SetDynamicRaceCPDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_RACE_CP,(%1),(%2))
 #define RemoveDynamicRaceCPDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_RACE_CP,(%1))
@@ -540,6 +600,8 @@
 #define SetDynamicMapIconStyle(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STYLE,(%2))
 #define GetDynamicMapIconDatagram(%1,%2)		GetStreamerDatagram(STREAMER_TYPE_MAP_ICON,(%1),(%2))
 #define SetDynamicMapIconDatagram(%1,%2)		SetStreamerDatagram(STREAMER_TYPE_MAP_ICON,(%1),(%2))
+#define GetDynamicMapIconInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_MAP_ICON,(%1))
+#define SetDynamicMapIconInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_MAP_ICON,(%1),(%2))
 #define RemoveDynamicMapIconDatagram(%1)		RemoveStreamDatagram(STREAMER_TYPE_MAP_ICON,(%1))
 #define IsSetDynamicMapIconDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_MAP_ICON,(%1))
 
@@ -555,12 +617,14 @@
 #define GetDynamic3DTextColor(%1)				Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_COLOR)
 #define SetDynamic3DTextColor(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_COLOR,(%2))
 #define SetDynamic3DTextTestLos(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_TEST_LOS,(%2))
-#define SetDynamic3DTextAttachPlayer(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_ATTACHED_PLAYER,(%2))
-#define SetDynamic3DTextAttachVehicle(%1,%2)	Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_ATTACHED_VEHICLE,(%2))
+#define AttachDynamic3DTextToPlayer(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_ATTACHED_PLAYER,(%2))
+#define AttachDynamic3DTextToVehicle(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_ATTACHED_VEHICLE,(%2))
 #define GetDynamic3DTextArea(%1)				STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_AREA_ID)
 #define SetDynamic3DTextArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_AREA_ID,(_:%2))
 #define GetDynamic3DTextPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_PRIORITY)
 #define SetDynamic3DTextPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamic3DTextInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_3D_TEXT_LABEL,(%1))
+#define SetDynamic3DTextInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_3D_TEXT_LABEL,(%1),(%2))
 #define GetDynamic3DTextDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1),(%2))
 #define SetDynamic3DTextDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1),(%2))
 #define RemoveDynamic3DTextDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1))
@@ -589,12 +653,43 @@
 #define SetDynamicActorPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_PRIORITY,(%2))
 #define GetDynamicActorSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
 #define SetDynamicActorSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define GetDynamicActorInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_ACTOR,(%1))
+#define SetDynamicActorInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_ACTOR,(%1),(%2))
 #define GetDynamicActorDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1),(%2))
 #define SetDynamicActorDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1),(%2))
 #define RemoveDynamicActorDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_ACTOR,(%1))
 #define IsSetDynamicActorDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1))
 #define DestroyAllDynamicActors()				Streamer_DestroyAllItems(STREAMER_TYPE_ACTOR,1)
 #define CountDynamicActors()					Streamer_CountItems(STREAMER_TYPE_ACTOR,1)
+
+//DynamicVehicle
+#if defined SSpec_StreamerVehicle
+
+	#define SetDynamicVehicleModel(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_MODEL_ID,(%2))
+	#define GetDynamicVehicleSiren(%1)				Streamer_GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_SIREN)
+	#define SetDynamicVehicleSiren(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_SIREN,(%2))
+	#define GetDynamicVehicleRespawnTime(%1)		Streamer_GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_RESPAWN_TIME)
+	#define SetDynamicVehicleRespawnTime(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_RESPAWN_TIME,(%2))
+	#define GetDynamicVehicleArea(%1)				STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_AREA_ID)
+	#define SetDynamicVehicleArea(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_AREA_ID,(_:%2))
+	#define GetDynamicVehiclePriority(%1)			Streamer_GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_PRIORITY)
+	#define SetDynamicVehiclePriority(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_PRIORITY,(%2))
+	#define GetDynamicVehicleSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+	#define SetDynamicVehicleSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+	#define GetDynamicVehicleInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_VEHICLE,(%1))
+	#define SetDynamicVehicleInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_VEHICLE,(%1),(%2))
+	#define GetDynamicVehicleDatagram(%1,%2)		GetStreamerDatagram(STREAMER_TYPE_VEHICLE,(%1),(%2))
+	#define SetDynamicVehicleDatagram(%1,%2)		SetStreamerDatagram(STREAMER_TYPE_VEHICLE,(%1),(%2))
+	#define RemoveDynamicVehicleDatagram(%1)		RemoveStreamDatagram(STREAMER_TYPE_VEHICLE,(%1))
+	#define IsSetDynamicVehicleDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_VEHICLE,(%1))
+	#define DestroyAllDynamicVehicles()				Streamer_DestroyAllItems(STREAMER_TYPE_VEHICLE,1)
+	#define CountDynamicVehicles()					Streamer_CountItems(STREAMER_TYPE_VEHICLE,1)
+
+	#define GetDynamicVehiclePoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_VEHICLE)
+	#define ForDynamicVehicles(%1)					for(new STREAMER_TAG_VEHICLE %1 = STREAMER_TAG_VEHICLE 1, STREAMER_TAG_VEHICLE p_%1 = STREAMER_TAG_VEHICLE GetDynamicVehiclePoolSize(); _:%1 <= _:p_%1; STREAMER_TAG_VEHICLE ((_:%1)+=1))
+	#define GetNearestVisibleVehicle(%0)			GetNearestVisibleItem((%0),STREAMER_TYPE_VEHICLE)
+	
+#endif
 
 //DynamicAntiArea
 #define IsPlayerInAntiArea(%0,%1,%2)			(!IsPlayerInDynamicArea(%0,%1,%2))
@@ -640,6 +735,12 @@
 #define GetNearestVisibleActor(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_ACTOR)
 
 #define GetStreamerSpecActiveCount() 			GetSVarInt("ADM:StreamerSpec:ACTIVE")
+
+//extra names
+#define SetDynamic3DTextAttachPlayer			AttachDynamic3DTextToPlayer
+#define SetDynamic3DTextAttachVehicle			AttachDynamic3DTextToVehicle
+#define ResetDynamicObjectMaterial				RemoveDynamicObjectMaterial
+#define ResetDynamicObjectMaterialAll			RemoveDynamicObjectMaterialAll
 
 //Datagram
 StreamerSpec::Function:: GetStreamerDatagram(type,STREAMER_ALL_TAGS itemid,data[]){
@@ -700,7 +801,7 @@ StreamerSpec::Function:: GetObjectPosAndRot(objectid,&Float:x,&Float:y,&Float:z,
 
 StreamerSpec::Function:: CountObjects(){
 	new count = 0;
-	for(new i = 0; i <= MAX_OBJECTS; i++){
+	for(new i = 0; i < MAX_OBJECTS; i++){
 		if(IsValidObject(i)) count++;
 	}
 	return count;
@@ -708,7 +809,7 @@ StreamerSpec::Function:: CountObjects(){
 
 StreamerSpec::Function:: DestroyObjects(){
 	new count = 0;
-	for(new i = 0; i <= MAX_OBJECTS; i++){
+	for(new i = 0; i < MAX_OBJECTS; i++){
 		if(IsValidObject(i)){
 			DestroyObject(i);
 			count++;
@@ -737,14 +838,14 @@ StreamerSpec::Function:: DestroyVehicles(){
 }
 
 StreamerSpec::Function:: GangZoneDestroyAll(){
-	for(new i = 0; i <= MAX_GANG_ZONES; i++){
+	for(new i = 0; i < MAX_GANG_ZONES; i++){
 		GangZoneDestroy(i);
 	}
 }
 
 StreamerSpec::Function:: CountPlayerObjects(playerid,bool:streamer = false){
 	new count = 0;
-	for(new i = 0; i <= MAX_OBJECTS; i++){
+	for(new i = 0; i < MAX_OBJECTS; i++){
 		if(streamer){
 			if(IsValidPlayerObject(playerid,i)){
 				count++;
@@ -762,7 +863,7 @@ StreamerSpec::Function:: CountPlayerObjects(playerid,bool:streamer = false){
 
 StreamerSpec::Function:: DestroyPlayerObjects(playerid,bool:streamer = false){
 	new count = 0;
-	for(new i = 0; i <= MAX_OBJECTS; i++){
+	for(new i = 0; i < MAX_OBJECTS; i++){
 		if(streamer){
 			if(IsValidPlayerObject(playerid,i)){
 				DestroyPlayerObject(playerid,i);
@@ -1174,18 +1275,26 @@ StreamerSpec::Function:: UpdateAllDynamicActors(){
 	}
 }
 
+#if defined SSpec_StreamerVehicle
+	StreamerSpec::Function:: UpdateAllDynamicVehicles(){
+		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
+			Streamer_Update(i,STREAMER_TYPE_VEHICLE);
+		}
+	}
+#endif
+
 StreamerSpec::Function:: UpdateAllDynamicElements(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 		Streamer_Update(i);
 	}
 }
 
-StreamerSpec::Function:: ResetDynamicObjectMaterial(STREAMER_TAG_OBJECT objectid,materialindex){
+StreamerSpec::Function:: RemoveDynamicObjectMaterial(STREAMER_TAG_OBJECT objectid,materialindex){
 	SetDynamicObjectMaterial(objectid,materialindex,0,"","",0);
 	SetDynamicObjectModel(objectid,GetDynamicObjectModel(objectid));
 }
 
-StreamerSpec::Function:: ResetDynamicObjectMaterialAll(STREAMER_TAG_OBJECT objectid){
+StreamerSpec::Function:: RemoveDynamicObjectMaterialAll(STREAMER_TAG_OBJECT objectid){
 	for(new i = 0; i < 16; i++){
 		if(IsDynamicObjectMaterialUsed(objectid,i)){
 			SetDynamicObjectMaterial(objectid,i,0,"","",0);
@@ -1226,6 +1335,23 @@ StreamerSpec::Function:: GetNearestVisibleItem(playerid,type){
 				idx++;
 			}
 		}
+		
+		#if defined SSpec_StreamerVehicle
+			case STREAMER_TYPE_VEHICLE: {
+				max_element = Streamer_GetVisibleItems(type,playerid);
+				while(idx <= max_element && idx_max > 0){
+					if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
+						idx_max--;
+						Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+						if(distance < min_radius){
+							itemid = tmp_item;
+							min_radius = distance;
+						}
+					}
+					idx++;
+				}
+			}
+		#endif
 
 		case STREAMER_TYPE_CP: {
 			itemid = GetPlayerVisibleDynamicCP(playerid);
@@ -1464,6 +1590,23 @@ StreamerSpec::Function:: GetNearestVisibleItem(playerid,type){
 		#define _ALS_DeletePlayer3DTextLabel
 	#endif
 	#define DeletePlayer3DTextLabel SF_DeletePlayer3DTextLabel
+	
+	
+	#if defined SSpec_StreamerVehicle
+		//Hook: DestroyDynamicVehicle
+		StreamerSpec::Function:: SF_DestroyDynamicVehicle(&STREAMER_TAG_VEHICLE vehicleid){
+			new dobj = DestroyDynamicVehicle(vehicleid);
+			vehicleid = INVALID_DYNAMIC_VEHICLE_ID;
+			return dobj;
+		}
+
+		#if defined _ALS_DestroyDynamicVehicle
+			#undef DestroyDynamicVehicle
+		#else
+			#define _ALS_DestroyDynamicVehicle
+		#endif
+		#define DestroyDynamicVehicle SF_DestroyDynamicVehicle
+	#endif
 	
 #endif
 
