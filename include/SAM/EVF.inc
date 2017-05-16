@@ -3,7 +3,7 @@
  *                                              )(   Extended Vehicle Functions   )(                                              *
  *                                                                                                                                *
  * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                            *
- * Contributors: Emmet_, Pottus, kvann, Hanger, Freaksken, Gammix, Yashas, Admigo                                                 *
+ * Contributors: Emmet_, Pottus, kvann, Hanger, Freaksken, Gammix, Yashas, Admigo, RIDE2DAY                                       *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=611142                                                                    *
@@ -12,7 +12,7 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 3.0.1                                                                                                            *
+ * File Version: 3.0.2                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.0                                                                                                        *
  *                                                                                                                                *
@@ -88,6 +88,9 @@
  * EVF::UpdateVehicleDamage(vehicleid,type);                                                                                      *
  * EVF::UpdateVehicleDamageStatus(vehicleid,type,update);                                                                         *
  * EVF::GetVehicleDamageStatus(vehicleid,type);                                                                                   *
+ * SetVehicleNeonLights(vehicleid,bool:enable = true,color = RED_NEON);                                                           *
+ * VehicleSupportsNeonLights(modelid);                                                                                            *
+ * GetVehicleNeonLightsState(vehicleid);                                                                                          *
  *                                                                                                                                *
  * Compatible with YSF Functions:                                                                                                 *
  * GetVehicleColor(vehicleid,&color1,&color2);                                                                                    *
@@ -168,6 +171,13 @@
  * VEHICLE_DAMAGE_LIGHTS                                                                                                          *
  * VEHICLE_DAMAGE_TIRES                                                                                                           *
  *                                                                                                                                *
+ * RED_NEON                                                                                                                       *
+ * BLUE_NEON                                                                                                                      *
+ * GREEN_NEON                                                                                                                     *
+ * YELLOW_NEON                                                                                                                    *
+ * PINK_NEON                                                                                                                      *
+ * WHITE_NEON                                                                                                                     *
+ *                                                                                                                                *
  * Enums:                                                                                                                         *
  * enum 'EVF::VehicleProperties'                                                                                                  *
  * # e_VEHICLE_PAINTJOB                                                                                                           *
@@ -222,11 +232,11 @@
 /*
 //Check Version EVF.inc
 #if !defined _EVF_include
-	#error [ADM] You need EVF.inc v3.0.1
+	#error [ADM] You need EVF.inc v3.0.2
 #elseif !defined EVF_Version
-	#error [ADM] Update you EVF.inc to v3.0.1
-#elseif (EVF_Version < 30001)
-	#error [ADM] Update you EVF.inc to v3.0.1
+	#error [ADM] Update you EVF.inc to v3.0.2
+#elseif (EVF_Version < 30002)
+	#error [ADM] Update you EVF.inc to v3.0.2
 #endif
 */
 
@@ -260,7 +270,7 @@
 	#error [ADM] Please include a_http.inc before EVF.inc
 #endif
 
-#define EVF_Version									(30001) //a.b.c 10000*a+100*b+c
+#define EVF_Version									(30002) //a.b.c 10000*a+100*b+c
 #define EVF_SAMP_Version							"0.3.7"
 
 #define EVF_Function::								stock
@@ -339,10 +349,17 @@
 #define DOOR_BACKLEFF								3
 #define DOOR_BACKRIGHT								4
 
-#define VEHICLE_DAMAGE_PANELS	   				0
+#define VEHICLE_DAMAGE_PANELS	   					0
 #define VEHICLE_DAMAGE_DOORS						1
 #define VEHICLE_DAMAGE_LIGHTS						2
 #define VEHICLE_DAMAGE_TIRES  						3
+
+#define RED_NEON									18647
+#define BLUE_NEON									18648
+#define GREEN_NEON									18649
+#define YELLOW_NEON									18650
+#define PINK_NEON 									18651
+#define WHITE_NEON									18652
 
 enum EVF::VehicleProperties {
 	e_VEHICLE_PAINTJOB,
@@ -419,8 +436,230 @@ enum EVF::PlayerData {
 	#endif
 };
 
+enum EVF::NeonOffset {
+	Float:EVF::NeonX,
+	Float:EVF::NeonY,
+    Float:EVF::NeonZ
+}
+
+new const EVF::NeonOffsetData[212][EVF::NeonOffset] = {
+	{-0.924999,0.009999,-0.674999},
+	{-0.979999,0.074999,-0.489999},
+	{-1.034999,-0.029999,-0.579999},
+	{-0.884999,1.834998,-1.099999},
+	{-0.839999,-0.064999,-0.419999},
+	{-0.914999,0.000000,-0.534999},
+	{-1.129999,0.354999,-1.219999},
+	{-1.214999,0.125000,-0.759999},
+	{-0.664999,0.709999,-0.889999},
+	{-0.914999,-0.294999,-0.474999},
+	{-0.879999,0.000000,-0.389999},
+	{-0.969999,0.004999,-0.559999},
+	{-0.994999,-0.154999,-0.569999},
+	{-0.919999,-0.069999,-0.719999},
+	{-0.759999,-0.469999,-0.524999},
+	{-0.949999,-0.009999,-0.524999},
+	{-1.259999,-0.604999,-0.664999},
+	{-2.255004,0.859999,-0.124999},
+	{-1.004999,0.089999,-0.829999},
+	{-0.934999,-0.009999,-0.584999},
+	{-0.954999,-0.009999,-0.444999},
+	{-0.929999,-0.029999,-0.589999},
+	{-0.889999,0.009999,-0.609999},
+	{-0.999999,0.164999,-0.714999},
+	{-0.739999,0.039999,-0.234999},
+	{-0.639999,2.475009,-0.789999},
+	{-0.969999,0.000000,-0.464999},
+	{-1.124999,-0.714999,-0.734999},
+	{-1.124999,0.054999,-0.759999},
+	{-0.844999,0.004999,-0.474999},
+	{0.0,0.0,0.0},
+	{-1.304998,2.300005,-0.714999},
+	{0.0,0.0,0.0},
+	{-0.579999,0.994999,-0.874999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.859999,-0.024999,-0.489999},
+	{-1.314998,2.245003,-0.724999},
+	{-0.969999,-0.034999,-0.674999},
+	{-0.884999,0.034999,-0.644999},
+	{-0.914999,-0.045000,-0.899999},
+	{0.0,0.0,0.0},
+	{-1.004999,-0.074999,-0.604999},
+	{-0.809999,2.770015,-1.174999},
+	{-1.064999,0.000000,0.135000},
+	{-0.949999,0.000000,-0.519999},
+	{0.0,0.0,0.0},
+	{-1.004999,0.259999,-0.769999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.984999,-0.194999,-0.519999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.579999,0.979999,-0.859999},
+	{-0.764999,-0.179999,-0.464999},
+	{0.0,0.0,0.0},
+	{-0.959999,-0.039999,-0.594999},
+	{-0.919999,-0.069999,-0.719999},
+	{-1.399998,0.554999,-1.819998},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.989999,-0.064999,-0.489999},
+	{-0.989999,-0.044999,-0.484999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-1.119999,-0.149999,-0.359999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.994999,-0.064999,-0.544999},
+	{-0.904999,-0.054999,-0.549999},
+	{0.0,0.0,0.0},
+	{-0.979999,0.019999,-0.514999},
+	{-0.804999,0.064999,-0.519999},
+	{-0.854999,0.090000,-0.454999},
+	{-0.879999,0.000000,-0.489999},
+	{0.0,0.0,0.0},
+	{-0.989999,0.000000,-0.759999},
+	{-0.834999,-0.149999,-0.744999},
+	{0.0,0.0,0.0},
+	{-0.629999,0.164999,-0.374999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-1.019999,0.110000,-0.679999},
+	{-1.054999,0.125000,-0.604999},
+	{-0.874999,-0.009999,-0.569999},
+	{-0.909999,0.000000,-0.459999},
+	{0.0,0.0,0.0},
+	{-0.909999,-0.199999,-0.639999},
+	{-1.024999,0.184999,-0.809999},
+	{-0.854999,0.029999,-0.469999},
+	{0.0,0.0,0.0},
+	{-1.149999,0.269999,-0.654999},
+	{-0.969999,-1.404998,-0.199999},
+	{-0.969999,0.189999,-0.574999},
+	{0.0,0.0,0.0},
+	{-0.909999,0.029999,-0.639999},
+	{-0.909999,-0.184999,-0.639999},
+	{-0.989999,-0.059999,-0.494999},
+	{-1.019999,0.110000,-0.679999},
+	{-0.904999,-0.249999,-0.509999},
+	{-1.084999,-0.024999,-0.589999},
+	{-1.334998,-0.424999,-0.979999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.969999,1.669998,-1.174999},
+	{-1.454998,0.439999,-1.854998},
+	{-0.989999,0.024999,-0.584999},
+	{-0.959999,0.004999,-0.554999},
+	{-1.049999,0.110000,-0.439999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.689999,1.489998,-1.319998},
+	{-1.054999,0.499999,-0.329999},
+	{-0.899999,0.000000,-0.564999},
+	{-0.944999,0.154999,-0.419999},
+	{-0.924999,0.059999,-0.529999},
+	{-0.934999,-0.110000,-0.429999},
+	{0.0,0.0,0.0},
+	{-0.144999,0.314999,-0.444999},
+	{0.0,0.0,0.0},
+	{-0.924999,-0.034999,-0.479999},
+	{-0.984999,0.164999,-0.564999},
+	{-1.069999,-0.034999,-0.569999},
+	{-0.954999,-0.019999,-0.579999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-1.004999,-0.049999,-0.019999},
+	{-1.024999,-0.090000,-0.639999},
+	{-0.904999,0.000000,-0.414999},
+	{-0.894999,0.014999,-0.539999},
+	{-0.904999,0.009999,-0.409999},
+	{-1.089999,0.000000,-0.709999},
+	{-0.939999,-0.029999,-0.564999},
+	{-1.039999,-0.100000,-0.474999},
+	{-0.884999,0.059999,-0.479999},
+	{-1.769998,1.484998,-1.774998},
+	{-0.949999,0.105000,-0.439999},
+	{-1.089999,-0.059999,-0.554999},
+	{-0.964999,0.004999,-0.564999},
+	{-1.034999,0.749999,-0.254999},
+	{0.0,0.0,0.0},
+	{-1.109999,0.009999,-0.534999},
+	{-0.754999,0.000000,-0.464999},
+	{-1.119999,0.000000,0.184999},
+	{-1.129999,0.044999,0.074999},
+	{-0.894999,-0.089999,-0.374999},
+	{-0.964999,0.000000,-0.444999},
+	{-1.004999,0.054999,-0.414999},
+	{-0.919999,0.130000,-0.574999},
+	{-0.909999,0.120000,-0.404999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.824999,0.000000,-0.414999},
+	{-0.989999,-0.049999,-0.479999},
+	{-1.089999,0.309999,-0.609999},
+	{-0.334999,0.100000,-0.374999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.924999,0.004999,-0.334999},
+	{-1.019999,-0.140000,-0.419999},
+	{0.0,0.0,0.0},
+	{-1.429998,-0.649999,-0.879999},
+	{-1.014999,0.000000,-0.484999},
+	{-1.089999,0.014999,-0.474999},
+	{0.0,0.0,0.0},
+	{-0.984999,-0.194999,-0.709999},
+	{-0.674999,0.259999,0.130000},
+	{0.0,0.0,0.0},
+	{-1.019999,-0.009999,-0.354999},
+	{0.0,0.0,0.0},
+	{-1.009999,-0.064999,-0.534999},
+	{-1.374998,0.000000,-0.664999},
+	{-0.909999,0.000000,-0.359999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-0.974999,0.000000,-0.469999},
+	{-0.969999,0.000000,-0.464999},
+	{-1.004999,-0.014999,-0.414999},
+	{-1.019999,0.115000,-0.684999},
+	{-0.959999,0.204999,-0.499999},
+	{0.0,0.0,0.0},
+	{-1.024999,0.000000,-0.549999},
+	{-0.954999,0.034999,-0.629999},
+	{-0.989999,-0.064999,-0.489999},
+	{-0.904999,0.009999,-0.409999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0},
+	{-1.149999,0.269999,-0.654999},
+	{0.0,0.0,0.0},
+	{0.0,0.0,0.0}
+};
+
 new EVF::VehicleTrailerID[MAX_VEHICLES],
 	EVF::VehicleTempData[MAX_VEHICLES][EVF::VehicleData],
+	EVF::VehicleNeon[MAX_VEHICLES][2],
 	EVF::PlayerTempData[MAX_PLAYERS][EVF::PlayerData];
 
 new const Float:EVF::TopSpeed[MAX_VEHICLE_MODELS] = {
@@ -807,6 +1046,40 @@ EVF::Function:: ResetVehicleProperties(vehicleid){
 		deleteproperty(_,evf_string);
 	}
 }
+
+#if defined EVF_Streamer
+	EVF::Function:: SetVehicleNeonLights(vehicleid,bool:enable = true,color = RED_NEON){
+		if(!IsValidVehicle(vehicleid)) return 0;
+		new modelid = GetVehicleModel(vehicleid);
+		if(!IsValidVehicleModelID(modelid)) return 0;
+		modelid -= 400;
+		
+		if(IsValidDynamicObject(EVF::VehicleNeon[vehicleid][0])) DestroyDynamicObject(EVF::VehicleNeon[vehicleid][0]);
+		if(IsValidDynamicObject(EVF::VehicleNeon[vehicleid][1])) DestroyDynamicObject(EVF::VehicleNeon[vehicleid][1]);
+		EVF::VehicleNeon[vehicleid][0] = EVF::VehicleNeon[vehicleid][1] = INVALID_STREAMER_ID;
+		
+		if(!enable) return 1;
+		if(18647 <= color <= 18652){
+			EVF::VehicleNeon[vehicleid][0] = CreateDynamicObject(color,0.0,0.0,0.0,0.0,0.0,0.0);
+			EVF::VehicleNeon[vehicleid][1] = CreateDynamicObject(color,0.0,0.0,0.0,0.0,0.0,0.0);
+			AttachDynamicObjectToVehicle(EVF::VehicleNeon[vehicleid][0],vehicleid,EVF::NeonOffsetData[modelid][EVF::NeonX], EVF::NeonOffsetData[modelid][EVF::NeonY],EVF::NeonOffsetData[modelid][EVF::NeonZ],0.0,0.0,0.0);
+			AttachDynamicObjectToVehicle(EVF::VehicleNeon[vehicleid][1],vehicleid,-EVF::NeonOffsetData[modelid][EVF::NeonX], EVF::NeonOffsetData[modelid][EVF::NeonY],EVF::NeonOffsetData[modelid][EVF::NeonZ],0.0,0.0,0.0);
+			return 1;
+		}
+		return 0;
+	}
+
+	EVF::Function:: VehicleSupportsNeonLights(modelid){
+		if(!IsValidVehicleModelID(modelid)) return 0;
+		modelid -= 400;
+		return !(EVF::NeonOffsetData[modelid][EVF::NeonX] == 0.0 && EVF::NeonOffsetData[modelid][EVF::NeonY] == 0.0 && EVF::NeonOffsetData[modelid][EVF::NeonZ] == 0.0);
+	}
+
+	EVF::Function:: GetVehicleNeonLightsState(vehicleid){
+		if(!IsValidVehicle(vehicleid)) return 0;
+		return (IsValidDynamicObject(EVF::VehicleNeon[vehicleid][0]) && IsValidDynamicObject(EVF::VehicleNeon[vehicleid][1]));
+	}
+#endif
 
 //Detect YSF.inc
 #if !defined _YSF_included
@@ -1697,6 +1970,7 @@ EVF::Function:: EVF::DestroyVehicle(vehicleid){
 			}
 		}
 	#endif
+	SetVehicleNeonLights(vehicleid,false);
 	EVF::VehicleTempData[vehicleid][e_uptime] = 0;
 	CallRemoteFunction("OnVehicleDestroyed","i",vehicleid);
 	ResetVehicleProperties(vehicleid);
