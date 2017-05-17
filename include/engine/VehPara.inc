@@ -162,15 +162,12 @@ public OnPlayerUpdate(playerid){
 			StopVehicleParachuteAction(playerid);
 			GameTextForPlayer(playerid,VP_LANG_01,2500,3);
 		} else {
-			static T3D:vid;
+			static T3D:vid, Float:T3D:rx, Float:T3D:ry, Float:T3D:rz, Float:T3D:tx, Float:T3D:ty, Float:T3D:tz;
 			T3D:vid = GetPlayerVehicleID(playerid);
-			if(GetVehicleSpeed(T3D:vid) > 0.0){
-				static Float:T3D:rx, Float:T3D:ry, Float:T3D:rz, Float:T3D:tx, Float:T3D:ty, Float:T3D:tz;
-				T3D:tx = T3D:ty = 0.0;
-				GetVehicleRotation(T3D:vid,T3D:rx,T3D:ry,T3D:rz);
-				ShiftVectorRotation((DeCompRotationFloat(T3D:ry)/180.0),(DeCompRotationFloat(-T3D:rx)/180.0),0.0,	0.0,0.0,T3D:rz, T3D:tx,T3D:ty,T3D:tz);
-				SetVehicleVelocity(T3D:vid,(T3D:tx/10.0),(T3D:ty/10.0),-0.2);
-			}
+			T3D:tx = T3D:ty = 0.0;
+			GetVehicleRotation(T3D:vid,T3D:rx,T3D:ry,T3D:rz);
+			ShiftVectorRotation((DeCompRotationFloat(T3D:ry)/180.0),(DeCompRotationFloat(-T3D:rx)/180.0),0.0,	0.0,0.0,T3D:rz, T3D:tx,T3D:ty,T3D:tz);
+			SetVehicleVelocity(T3D:vid,(T3D:tx/10.0),(T3D:ty/10.0),-0.2);
 		}
 	}
 	#if defined VP_OnPlayerUpdate
@@ -283,7 +280,7 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 					StopVehicleParachuteAction(playerid);
 					GameTextForPlayer(playerid,VP_LANG_01,2500,3);
 				} else {
-					if(IsCollisionFlag(GetElementCollisionFlags(vid,item_vehicle),POSITION_FLAG_AIR)){
+					if(IsCollisionFlag(GetElementCollisionFlags(vid,item_vehicle),POSITION_FLAG_AIR) && GetVehicleSpeed(vid) > 0.0){
 						StartVehicleParachuteAction(playerid);
 						GameTextForPlayer(playerid,VP_LANG_02,2500,3);
 					} else {
