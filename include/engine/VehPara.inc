@@ -11,7 +11,7 @@
  * Plugins: Streamer, ColAndreas                                                                    *
  * Modules: 3DTryg                                                                                  *
  *                                                                                                  *
- * File Version: 1.0.1                                                                              *
+ * File Version: 1.1.0                                                                              *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.0                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
@@ -21,6 +21,7 @@
  * bool:IsPlayerUsingVehPara(playerid);                                                             *
  * bool:IsToggleVehicleParachute(vehicleid);                                                        *
  * ToggleVehicleParachute(vehicleid,bool:toggle);                                                   *
+ * SetVehicleParachuteKey(key);                                                                     *
  *                                                                                                  *
  ****************************************************************************************************/
  
@@ -50,9 +51,23 @@
 	#error [ADM] Update you 3DTryg.inc to v4.2.1
 #endif
 
+//Language
+#if !defined VP_LANG_01
+	#define VP_LANG_01								"~g~Parachute has been thrown"
+#endif
+
+#if !defined VP_LANG_02
+	#define VP_LANG_02								"~g~Parachute has been opened"
+#endif
+
+#if !defined VP_LANG_03
+	#define VP_LANG_03								"~g~Cannot use parachute"
+#endif
+
 new VehicleConfigParachute[63],
 	VehicleParachuteObject[MAX_VEHICLES][3],
-	PlayerUsingVehPara[32];
+	PlayerUsingVehPara[32],
+	VEHPARA_KEY = KEY_CROUCH;
 
 //Get Compress Adress
 #define GetVehicleParaConfAddress(%0)				(floatround((%0)/32))
@@ -66,6 +81,7 @@ new VehicleConfigParachute[63],
 #define TogglePlayerUsingVehPara(%0,%1)				VP_SetValueBit(PlayerUsingVehPara[GetVehicleParaConfAddress(%0)],GetVehicleParaConfBit(%0),(%1))
 
 #define IsToggleVehicleParachute(%0)				VP_GetValueBit(VehicleConfigParachute[GetVehicleParaConfAddress(%0)],GetVehicleParaConfBit(%0))
+#define SetVehicleParachuteKey(%0)					VEHPARA_KEY = (%0)
 
 stock ToggleVehicleParachute(vehicleid,bool:toggle){
 	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][0])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][0]);
@@ -144,12 +160,17 @@ public OnPlayerUpdate(playerid){
 	if(IsPlayerUsingVehPara(playerid)){
 		if(IsCollisionFlag(GetElementCollisionFlags(GetPlayerVehicleID(playerid),item_vehicle),POSITION_FLAG_GROUND)){
 			StopVehicleParachuteAction(playerid);
-			GameTextForPlayer(playerid,"~g~Parachute has been thrown",2500,3);
+			GameTextForPlayer(playerid,VP_LANG_01,2500,3);
 		} else {
-			static vid, Float:T3D:x, Float:T3D:y, Float:T3D:z;
-			vid = GetPlayerVehicleID(playerid);
-			GetVehicleVelocity(vid,T3D:x,T3D:y,T3D:z);
-			SetVehicleVelocity(vid,T3D:x,T3D:y,-0.2);
+			static T3D:vid;
+			T3D:vid = GetPlayerVehicleID(playerid);
+			if(GetVehicleSpeed(T3D:vid) > 0.0){
+				static Float:T3D:rx, Float:T3D:ry, Float:T3D:rz, Float:T3D:tx, Float:T3D:ty, Float:T3D:tz;
+				T3D:tx = T3D:ty = 0.0;
+				GetVehicleRotation(T3D:vid,T3D:rx,T3D:ry,T3D:rz);
+				ShiftVectorRotation((DeCompRotationFloat(T3D:ry)/180.0),(DeCompRotationFloat(-T3D:rx)/180.0),0.0,	0.0,0.0,T3D:rz, T3D:tx,T3D:ty,T3D:tz);
+				SetVehicleVelocity(T3D:vid,(T3D:tx/10.0),(T3D:ty/10.0),-0.2);
+			}
 		}
 	}
 	#if defined VP_OnPlayerUpdate
@@ -191,7 +212,7 @@ public OnVehicleSpawn(vehicleid){
 public OnPlayerEnterVehicle(playerid,vehicleid,ispassenger){
 	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][0])){
 		ToggleVehicleParachute(vehicleid,false);
-		GameTextForPlayer(playerid,"~g~Parachute has been thrown",2500,3);
+		GameTextForPlayer(playerid,VP_LANG_01,2500,3);
 	}
 	#if defined VP_OnPlayerEnterVehicle
 		VP_OnPlayerEnterVehicle(playerid,vehicleid,ispassenger);
@@ -213,7 +234,7 @@ public OnPlayerEnterVehicle(playerid,vehicleid,ispassenger){
 public OnPlayerExitVehicle(playerid,vehicleid){
 	if(IsPlayerUsingVehPara(playerid)){
 		StopVehicleParachuteAction(playerid);
-		GameTextForPlayer(playerid,"~g~Parachute has been thrown",2500,3);
+		GameTextForPlayer(playerid,VP_LANG_01,2500,3);
 	}
 	#if defined VP_OnPlayerExitVehicle
 		VP_OnPlayerExitVehicle(playerid,vehicleid);
@@ -256,17 +277,17 @@ public OnPlayerStateChange(playerid,newstate,oldstate){
 public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 	if(IsPlayerInAnyVehicle(playerid) && GetPlayerVehicleSeat(playerid) == 0){
 		new vid = GetPlayerVehicleID(playerid);
-		if(Tryg3D_KeyPressed(KEY_CROUCH)){
+		if(Tryg3D_KeyPressed(VEHPARA_KEY)){
 			if(IsToggleVehicleParachute(vid)){
 				if(IsPlayerUsingVehPara(playerid)){
 					StopVehicleParachuteAction(playerid);
-					GameTextForPlayer(playerid,"~g~Parachute has been thrown",2500,3);
+					GameTextForPlayer(playerid,VP_LANG_01,2500,3);
 				} else {
 					if(IsCollisionFlag(GetElementCollisionFlags(vid,item_vehicle),POSITION_FLAG_AIR)){
 						StartVehicleParachuteAction(playerid);
-						GameTextForPlayer(playerid,"~g~Parachute has been opened",2500,3);
+						GameTextForPlayer(playerid,VP_LANG_02,2500,3);
 					} else {
-						GameTextForPlayer(playerid,"~g~Cannot use parachute",2500,3);
+						GameTextForPlayer(playerid,VP_LANG_03,2500,3);
 					}
 				}
 			}
@@ -357,5 +378,20 @@ stock VP_DestroyVehicle(vehicleid){
 	#define _ALS_DestroyVehicle
 #endif
 #define DestroyVehicle VP_DestroyVehicle
+
+//Hook: SetPlayerPos
+stock VP_SetPlayerPos(playerid,Float:x,Float:y,Float:z){
+	if(IsPlayerUsingVehPara(playerid)){
+		StopVehicleParachuteAction(playerid,GetPlayerVehicleID(playerid));
+	}
+	return SetPlayerPos(playerid,x,y,z);
+}
+ 
+#if defined _ALS_SetPlayerPos
+	#undef SetPlayerPos
+#else
+	#define _ALS_SetPlayerPos
+#endif
+#define SetPlayerPos VP_SetPlayerPos
 
 //EOF
