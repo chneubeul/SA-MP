@@ -91,7 +91,7 @@ new KnifeLockTarget[MAX_PLAYERS],
 
 T3D:function KnifeShot(playerid){
 	new Float:mx, Float:my, Float:mz, Float:mrz, Float:mtx, Float:mty, Float:mtz, mvw, mint, Float:trz,
-		Float:px, Float:py, Float:pz, mtime, pteam;
+		Float:px, Float:py, Float:pz, mtime, pteam, Float:dist;
 	GetPlayerPos(playerid,mx,my,mz);
 	GetPlayerFacingAngle(playerid,mrz);
 	mvw = GetPlayerVirtualWorld(playerid);
@@ -103,17 +103,14 @@ T3D:function KnifeShot(playerid){
 	
 	Tryg3DForeach(i){
 		if(i != playerid){
-			if(IsPlayerConnected(i)){
-				if(!IsToggleUseTeamKnifeShoot() || (IsToggleUseTeamKnifeShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
-					if(Tryg3D_IsPlayerSpawned(i)){
-						GetPlayerPos(i,px,py,pz);
-						if(GetPlayerVirtualWorld(i) == mvw && GetPlayerInterior(i) == mint){
-							if(IsPointInCylinder3D(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
-								new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
-								if(dist < ldist){
-									ldist = dist;
-									KnifeLockTarget[playerid] = i;
-								}
+			if(!IsToggleUseTeamKnifeShoot() || (IsToggleUseTeamKnifeShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
+				if(Tryg3D_IsPlayerSpawned(i)){
+					GetPlayerPos(i,px,py,pz);
+					if(GetPlayerVirtualWorld(i) == mvw && GetPlayerInterior(i) == mint){
+						if(IsPointInCylinder3D(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
+							if((dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz)) < ldist){
+								ldist = dist;
+								KnifeLockTarget[playerid] = i;
 							}
 						}
 					}

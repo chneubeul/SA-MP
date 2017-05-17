@@ -121,7 +121,7 @@ stock ToggleMagicShootForPlayer(playerid,bool:toggle){
 
 T3D:function MagicShot(playerid){
 	new Float:mx, Float:my, Float:mz, Float:mrz, Float:mtx, Float:mty, Float:mtz, mvw, mint,
-		Float:px, Float:py, Float:pz, mtime, pteam, Float:ldist = 20000;
+		Float:px, Float:py, Float:pz, mtime, pteam, Float:ldist = 20000, Float:dist;
 	GetPlayerPos(playerid,mx,my,mz);
 	GetPlayerFacingAngle(playerid,mrz);
 	mvw = GetPlayerVirtualWorld(playerid);
@@ -132,17 +132,14 @@ T3D:function MagicShot(playerid){
 	
 	Tryg3DForeach(i){
 		if(i != playerid){
-			if(IsPlayerConnected(i)){
-				if(!IsToggleUseTeamMagicShoot() || (IsToggleUseTeamMagicShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
-					if(Tryg3D_IsPlayerSpawned(i)){
-						GetPlayerPos(i,px,py,pz);
-						if(GetPlayerVirtualWorld(i) == mvw && GetPlayerInterior(i) == mint){
-							if(IsPointInCylinder3D(px,py,pz,mx,my,mz,mtx,mty,mz,2.0)){
-								new Float:dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz);
-								if(dist < ldist){
-									ldist = dist;
-									MagicLockTarget[playerid] = i;
-								}
+			if(!IsToggleUseTeamMagicShoot() || (IsToggleUseTeamMagicShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
+				if(Tryg3D_IsPlayerSpawned(i)){
+					GetPlayerPos(i,px,py,pz);
+					if(GetPlayerVirtualWorld(i) == mvw && GetPlayerInterior(i) == mint){
+						if(IsPointInCylinder3D(px,py,pz,mx,my,mz,mtx,mty,mz,2.0)){
+							if((dist = GetDistanceBetweenPoints3D(px,py,pz,mx,my,mz)) < ldist){
+								ldist = dist;
+								MagicLockTarget[playerid] = i;
 							}
 						}
 					}
