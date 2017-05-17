@@ -11,7 +11,7 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.0.0                                                                                                            *
+ * File Version: 1.1.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.0                                                                                                        *
  * 3DTryg Version: 4.2.1                                                                                                          *
@@ -32,17 +32,22 @@
  * SetDynamicStingerTeam(mobid,teamid);                                                                                           *
  * GetDynamicStingerPlayerID(mobid);                                                                                              *
  * SetDynamicStingerPlayerID(mobid,byplayerid);                                                                                   *
+ * GetPlayerActiveDynamicStinger(playerid);                                                                                       *
+ * ToggleDynamicStingerDamage(mobid,bool:toggle);                                                                                 *
+ *                                                                                                                                *
+ * Callbacks:                                                                                                                     *
+ * OnVehicleDamageByStinger(playerid,killerid,mobid,old_tires,new_tires);                                                         *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
 //Check Version Stingers.inc
 #if !defined _Dynamic_Stingers
-	#error [ADM] You need Stingers.inc v1.0.0
+	#error [ADM] You need Stingers.inc v1.1.0
 #elseif !defined Stingers_Version
-	#error [ADM] Update you Stingers.inc to v1.0.0
-#elseif (Data_Convert_Version < 10000)
-	#error [ADM] Update you Stingers.inc to v1.0.0
+	#error [ADM] Update you Stingers.inc to v1.1.0
+#elseif (Data_Convert_Version < 10100)
+	#error [ADM] Update you Stingers.inc to v1.1.0
 #endif
 */
 
@@ -69,7 +74,7 @@
 #endif
 
 
-#define Stingers_Version						(10000) //a.b.c 10000*a+100*b+c
+#define Stingers_Version						(10100) //a.b.c 10000*a+100*b+c
 
 #define STINGERS_EXTRA_ID_OFFSET				(500000)
 
@@ -92,7 +97,8 @@ enum e_stingers {
 	stin_byplayerid,
 	STREAMER_TAG_AREA stin_areaid,
 	STREAMER_TAG_OBJECT stin_objectid,
-	stin_type
+	stin_type,
+	stin_damage
 };
 
 new	STREAMER_TAG_AREA STIN_ActiveForPlayer[MAX_PLAYERS],
@@ -111,6 +117,9 @@ new	STREAMER_TAG_AREA STIN_ActiveForPlayer[MAX_PLAYERS],
 #define GetDynamicStingerPlayerID(%0)					Stingers[(%0)][stin_byplayerid]
 #define SetDynamicStingerPlayerID(%0,%1)				Stingers[(%0)][stin_byplayerid] = (%1)
 
+#define ToggleDynamicStingerDamage(%0,%1)				Stingers[(%0)][stin_damage]
+
+forward OnVehicleDamageByStinger(playerid,killerid,mobid,old_tires,new_tires);
 
 stock STIN_ConstructData(){
 	new data_construct[e_stingers];
@@ -124,6 +133,11 @@ stock STIN_GetFreeID(){
 		if(!IsDynamicStingerActive(i)) return i;
 	}
 	return INVALID_STINGER_ID;
+}
+
+stock GetPlayerActiveDynamicStinger(playerid){
+	if(STIN_ActiveForPlayer[playerid] == INVALID_STREAMER_ID) return INVALID_STINGER_ID;
+	return (Streamer_GetIntData(STREAMER_TYPE_AREA,STIN_ActiveForPlayer[playerid],E_STREAMER_EXTRA_ID)-STINGERS_EXTRA_ID_OFFSET);
 }
 
 stock CreateDynamicStinger(type,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid=-1,interiorid=-1,playerid=-1,Float:streamdistance=100.0,teamid=ANY_TEAM,byplayerid=INVALID_PLAYER_ID){
@@ -148,6 +162,7 @@ stock CreateDynamicStinger(type,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:
 	Stingers[mobid] = STIN_ConstructData();
 	
 	Stingers[mobid][stin_active] = true;
+	Stingers[mobid][stin_damage] = true;
 	Stingers[mobid][stin_teamid] = teamid;
 	Stingers[mobid][stin_byplayerid] = byplayerid;
 	Stingers[mobid][stin_areaid] = CreateDynamicSphere(x,y,z,size,worldid,interiorid,playerid);
@@ -231,39 +246,46 @@ public OnPlayerLeaveDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 //Hook: OnPlayerUpdate
 public OnPlayerUpdate(playerid){
  	if(STIN_ActiveForPlayer[playerid] != INVALID_STREAMER_ID && STIN_LastVehicle[playerid] != 0){
-		new panels,doors,lights,tires,TireStatus[4];
-		GetVehicleDamageStatus(STIN_LastVehicle[playerid],panels,doors,lights,tires);
-		TireStatus[0] = (tires >> 1 & 0x1);
-		TireStatus[1] = (tires >> 3 & 0x1);
-		TireStatus[2] = (tires & 0x1);
-		TireStatus[3] = (tires >> 2 & 0x1);
-		
-		new Float:size_x,Float:size_y;
-		switch(Stingers[STIN_PlayerStinger[playerid]][stin_type]){
-			case STINGER_TYPE_SMALL: {
-				size_x = 1.151422*1.005;
-				size_y = 4.98878*1.005;
-			}
-			case STINGER_TYPE_BIG: {
-				size_x = 1.22695*1.005;
-				size_y = 10.04429*1.005;
-			}
-		}
-		
-		for(new i = 0; i < 4; i++){
-			if(!TireStatus[i]){
-				GetVehiclePartPos(STIN_LastVehicle[playerid],StingersPartTable[i],STIN_PlayerHCP[playerid][6],STIN_PlayerHCP[playerid][7],STIN_PlayerHCP[playerid][8]);
-				if(IsPointInCube3D(
-					STIN_PlayerHCP[playerid][6],STIN_PlayerHCP[playerid][7],STIN_PlayerHCP[playerid][8],
-					STIN_PlayerHCP[playerid][0],STIN_PlayerHCP[playerid][1],STIN_PlayerHCP[playerid][2],
-					STIN_PlayerHCP[playerid][3],STIN_PlayerHCP[playerid][4],STIN_PlayerHCP[playerid][5],
-					size_x,size_y,3.0
-				)){
-					TireStatus[i] = 1;
+		new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,STIN_ActiveForPlayer[playerid],E_STREAMER_EXTRA_ID)-STINGERS_EXTRA_ID_OFFSET);
+		if(Stingers[mobid][stin_damage]){
+			new panels,doors,lights,tires,TireStatus[4],new_tires;
+			GetVehicleDamageStatus(STIN_LastVehicle[playerid],panels,doors,lights,tires);
+			TireStatus[0] = (tires >> 1 & 0x1);
+			TireStatus[1] = (tires >> 3 & 0x1);
+			TireStatus[2] = (tires & 0x1);
+			TireStatus[3] = (tires >> 2 & 0x1);
+			
+			new Float:size_x,Float:size_y;
+			switch(Stingers[STIN_PlayerStinger[playerid]][stin_type]){
+				case STINGER_TYPE_SMALL: {
+					size_x = 1.151422*1.005;
+					size_y = 4.98878*1.005;
+				}
+				case STINGER_TYPE_BIG: {
+					size_x = 1.22695*1.005;
+					size_y = 10.04429*1.005;
 				}
 			}
+			
+			for(new i = 0; i < 4; i++){
+				if(!TireStatus[i]){
+					GetVehiclePartPos(STIN_LastVehicle[playerid],StingersPartTable[i],STIN_PlayerHCP[playerid][6],STIN_PlayerHCP[playerid][7],STIN_PlayerHCP[playerid][8]);
+					if(IsPointInCube3D(
+						STIN_PlayerHCP[playerid][6],STIN_PlayerHCP[playerid][7],STIN_PlayerHCP[playerid][8],
+						STIN_PlayerHCP[playerid][0],STIN_PlayerHCP[playerid][1],STIN_PlayerHCP[playerid][2],
+						STIN_PlayerHCP[playerid][3],STIN_PlayerHCP[playerid][4],STIN_PlayerHCP[playerid][5],
+						size_x,size_y,3.0
+					)){
+						TireStatus[i] = 1;
+					}
+				}
+			}
+			new_tires = (TireStatus[2] | (TireStatus[0] << 1) | (TireStatus[3] << 2) | (TireStatus[1] << 3));
+			if(tires != new_tires){
+				UpdateVehicleDamageStatus(STIN_LastVehicle[playerid],panels,doors,lights,new_tires);
+				CallRemoteFunction("OnVehicleDamageByStinger","ddddd",playerid,Stingers[mobid][stin_byplayerid],mobid,tires,new_tires);
+			}
 		}
-		UpdateVehicleDamageStatus(STIN_LastVehicle[playerid],panels,doors,lights,(TireStatus[2] | (TireStatus[0] << 1) | (TireStatus[3] << 2) | (TireStatus[1] << 3)));
 	}
 	#if defined STIN_OnPlayerUpdate
 		STIN_OnPlayerUpdate(playerid);
