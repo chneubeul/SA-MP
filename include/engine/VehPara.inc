@@ -84,15 +84,10 @@ new VehicleConfigParachute[63],
 #define SetVehicleParachuteKey(%0)					VEHPARA_KEY = (%0)
 
 stock ToggleVehicleParachute(vehicleid,bool:toggle){
-	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][0])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][0]);
-	VehicleParachuteObject[vehicleid][0] = INVALID_STREAMER_ID;
-	
-	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][1])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][1]);
-	VehicleParachuteObject[vehicleid][1] = INVALID_STREAMER_ID;
-	
-	if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][2])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][2]);
-	VehicleParachuteObject[vehicleid][2] = INVALID_STREAMER_ID;
-	
+	for(new i = 0; i < 3; i++){
+		if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][i])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][i]);
+		VehicleParachuteObject[vehicleid][i] = INVALID_STREAMER_ID;
+	}
 	if(toggle){
 		if(!IsToggleVehicleParachute(vehicleid)){
 			VehicleParachuteObject[vehicleid][1] = CreateDynamicObject(1310,0.0,0.0,-6000.0,0.0,0.0,0.0,-1,-1);
@@ -113,13 +108,10 @@ stock StartVehicleParachuteAction(playerid){
 	TogglePlayerUsingVehPara(playerid,1);
 	
 	new vid = GetPlayerVehicleID(playerid);
-	if(IsValidDynamicObject(VehicleParachuteObject[vid][1])) DestroyDynamicObject(VehicleParachuteObject[vid][1]);
-	VehicleParachuteObject[vid][1] = INVALID_STREAMER_ID;
-	
-	if(IsValidDynamicObject(VehicleParachuteObject[vid][2])) DestroyDynamicObject(VehicleParachuteObject[vid][2]);
-	VehicleParachuteObject[vid][2] = INVALID_STREAMER_ID;
-	
-	if(IsValidDynamicObject(VehicleParachuteObject[vid][0])) DestroyDynamicObject(VehicleParachuteObject[vid][0]);
+	for(new i = 0; i < 3; i++){
+		if(IsValidDynamicObject(VehicleParachuteObject[vid][i])) DestroyDynamicObject(VehicleParachuteObject[vid][i]);
+		VehicleParachuteObject[vid][i] = INVALID_STREAMER_ID;
+	}
 	VehicleParachuteObject[vid][0] = CreateDynamicObject(18849,0.0,0.0,-6000.0,0.0,0.0,0.0,GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid));
 	
 	switch(random(5)){
