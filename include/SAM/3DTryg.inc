@@ -9,17 +9,18 @@
  * Publication: http://forum.sa-mp.com/showthread.php?t=591010                                                                       *
  * Website: http://8.ct8.pl                                                                                                          *
  *                                                                                                                                   *
- * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC                                                                             *
+ * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC, VehicleStreamer                                                            *
  * Modules: FoxForeach, Foreach                                                                                                      *
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                             *
  *                                                                                                                                   *
- * File Version: 4.2.1                                                                                                               *
+ * File Version: 4.3.0                                                                                                               *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                    *
  * MapAndreas Version: 1.2.1                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                         *
- * YSF Version: R18-2 (kurta999)                                                                                                     *
+ * YSF Version: R19 (kurta999)                                                                                                       *
  * Streamer Version: 2.9.1                                                                                                           *
- * FCNPC Version: 1.7.0                                                                                                              *
+ * VehicleStreamer Version: 2.9.1                                                                                                    *
+ * FCNPC Version: 1.7.2                                                                                                              *
  *                                                                                                                                   *
  * 3DTryg FindZ Precision:                                                                                                           *
  * 1. ColAndreas   - The most accurate precision with ColAndreas plugin.                                                             *
@@ -42,6 +43,7 @@
  * DISABLE_3D_TRYG_FOXFOREACH   //Use before 3DTryg.inc for disable FoxForeach Module                                                *
  * DISABLE_3D_TRYG_YSIFOREACH   //Use before 3DTryg.inc for disable Foreach Module                                                   *
  * DISABLE_3D_TRYG_FCNPC        //Use before 3DTryg.inc for disable FCNPC Module                                                     *
+ * DISABLE_3D_TRYG_VEHSTREAMER  //Use before 3DTryg.inc for disable VehicleStreamer Module                                           *
  * ENABLE_3D_TRYG_TIMELINE_SYNC //Use before 3DTryg.inc for enable Timeline Sync                                                     *
  * ENABLE_3D_TRYG_STREAM3D      //Use before 3DTryg.inc for enable Stream3D Module                                                   *
  * ENABLE_3D_TRYG_LINE3D        //Use before 3DTryg.inc for enable Line3D Module                                                     *
@@ -234,6 +236,7 @@
  * ShiftVectorRotation(Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,&Float:tx,&Float:ty,&Float:tz);                            *
  * GetCube3DPoint(OrientationCube3D:orientation,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,                                  *
  *                Float:size_x,Float:size_y,Float:size_z,&Float:tx,&Float:ty,&Float:tz);                                             *
+ * bool:IsPlayerFakeSpectating(playerid,bool:force_disable=true);                                                                    *
  *                                                                                                                                   *
  * Universal Functions:                                                                                                              *
  * bool:GetElementPos(elementid,Item3D_Type:element_type,&Float:x,&Float:y,&Float:z);                                                *
@@ -487,6 +490,20 @@
  * AddPointToLine3D(Line3D:LineData[][LinePoint3D],Float:x,Float:y,Float:z,Float:rx=INVALID_ROTATION,                                *
  *                  Float:ry=INVALID_ROTATION,Float:rz=INVALID_ROTATION,max_points = sizeof(LineData));                              *
  *                                                                                                                                   *
+ * VehicleStreamer Functions:                                                                                                        *
+ * Tryg3D::GetDynamicVehicleID(vehicleid);                                                                                           *
+ * GetDynamicVehicleFlags(vehicleid);                                                                                                *
+ * Float:GetDynamicVehicleSpeed(vehicleid);                                                                                          *
+ * GetDynamicVehiclePartPos(vehicleid,partid,&Float:tx,&Float:ty,&Float:tz,Float:offset_x=0.0,Float:offset_y=0.0,Float:offset_z=0.0);*
+ * Float:GetPointInFrontOfDynVeh2D(vehicleid,&Float:tx,&Float:ty,Float:radius);                                                      *
+ * GetPointInFrontOfDynVeh3D(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                      *
+ * bool:IsDynVehInRangeOfPoint(vehicleid,Float:range,Float:x,Float:y,Float:z);                                                       *
+ * bool:IsDynVehFullyInDynamicArea(vehicleid,areaid);                                                                                *
+ * Float:GetPointInFrontOfDynVeh2DCol(vehicleid,&Float:tx,&Float:ty,Float:radius);                                                   *
+ * GetPointInFrontOfDynVeh3DCol(vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0);                   *
+ * bool:IsDynamicVehicleOnSpawn(vehicleid,Float:check_radius=1.0);                                                                   *
+ * bool:IsDynamicVehicleFullyInStream(vehicleid,Stream:StreamData[Stream3D]);                                                        *
+ *                                                                                                                                   *
  * Deprecated Functions:                                                                                                             *
  * Float:GetActorDistanceFromPoint(actorid,Float:x,Float:y,Float:z);                                                                 *
  * Float:GetObjectDistanceFromPoint(objectid,Float:x,Float:y,Float:z);                                                               *
@@ -514,35 +531,39 @@
  * bool:IsPointInWaterFrontOfPlayer(playerid,Float:radius);                                                                          *
  *                                                                                                                                   *
  * Symbols:                                                                                                                          *
- * FLOAT_PI                   - pi constant value                                                                                    *
- * FLOAT_EULER                - Euler number                                                                                         *
- * FLOAT_NAN                  - Float NaN                                                                                            *
- * FLOAT_DEFECT               - Float defect (Arc Test)                                                                              *
- * FLOAT_INFINITY             - Float Infinity                                                                                       *
- * VBTP                       - Value Bigger Than Possible                                                                           *
- * VLTP                       - Value Lower Than Possible                                                                            *
+ * FLOAT_PI                    - pi constant value                                                                                   *
+ * FLOAT_EULER                 - Euler number                                                                                        *
+ * FLOAT_NAN                   - Float NaN                                                                                           *
+ * FLOAT_DEFECT                - Float defect (Arc Test)                                                                             *
+ * FLOAT_INFINITY              - Float Infinity                                                                                      *
+ * VBTP                        - Value Bigger Than Possible                                                                          *
+ * VLTP                        - Value Lower Than Possible                                                                           *
  *                                                                                                                                   *
  * Definitions:                                                                                                                      *
- * VERTICAL_CAMERA_RADIUS     - (modifiable)                                                                                         *
- * HORIZONTAL_CAMERA_RADIUS   - (modifiable)                                                                                         *
- * INVALID_ROTATION           - (modifiable)                                                                                         *
- * MAX_POLYGON_POINTS         - (modifiable)                                                                                         *
- * VEHICLE_SPEED_MULTIPLIER   - (modifiable)                                                                                         *
- * PLAYER_SPEED_MULTIPLIER    - (modifiable)                                                                                         *
- * INVALID_MOVE_TIME          - (modifiable)                                                                                         *
- * INVALID_MOVE_SPEED         - (modifiable)                                                                                         *
+ * VERTICAL_CAMERA_RADIUS      - (modifiable)                                                                                        *
+ * HORIZONTAL_CAMERA_RADIUS    - (modifiable)                                                                                        *
+ * INVALID_ROTATION            - (modifiable)                                                                                        *
+ * MAX_POLYGON_POINTS          - (modifiable)                                                                                        *
+ * VEHICLE_SPEED_MULTIPLIER    - (modifiable)                                                                                        *
+ * PLAYER_SPEED_MULTIPLIER     - (modifiable)                                                                                        *
+ * INVALID_MOVE_TIME           - (modifiable)                                                                                        *
+ * INVALID_MOVE_SPEED          - (modifiable)                                                                                        *
  * INVALID_LINE3D_POINT_ID                                                                                                           *
  *                                                                                                                                   *
  * Module ID:                                                                                                                        *
- * TRYG3D_MODULEID_MAPANDREAS - MapAndreas Plugin Module ID                                                                          *
- * TRYG3D_MODULEID_COLANDREAS - ColAndreas Plugin Module ID                                                                          *
- * TRYG3D_MODULEID_YSF        - YSF Plugin Module ID                                                                                 *
- * TRYG3D_MODULEID_STREAMER   - Streamer Plugin Module ID                                                                            *
- * TRYG3D_MODULEID_FOXFOREACH - FoxForeach Include Module ID                                                                         *
- * TRYG3D_MODULEID_YSIFOREACH - YSIForeach Include Module ID                                                                         *
- * TRYG3D_MODULEID_FCNPC      - FCNPC Plugin Module ID                                                                               *
- * TRYG3D_MODULEID_STREAM3D   - Stream3D Module ID                                                                                   *
- * TRYG3D_MODULEID_LINE3D     - Line3D Module ID                                                                                     *
+ * TRYG3D_MODULEID_MAPANDREAS  - MapAndreas Plugin Module ID                                                                         *
+ * TRYG3D_MODULEID_COLANDREAS  - ColAndreas Plugin Module ID                                                                         *
+ * TRYG3D_MODULEID_YSF         - YSF Plugin Module ID                                                                                *
+ * TRYG3D_MODULEID_STREAMER    - Streamer Plugin Module ID                                                                           *
+ * TRYG3D_MODULEID_FOXFOREACH  - FoxForeach Include Module ID                                                                        *
+ * TRYG3D_MODULEID_YSIFOREACH  - YSIForeach Include Module ID                                                                        *
+ * TRYG3D_MODULEID_FCNPC       - FCNPC Plugin Module ID                                                                              *
+ * TRYG3D_MODULEID_STREAM3D    - Stream3D Module ID                                                                                  *
+ * TRYG3D_MODULEID_LINE3D      - Line3D Module ID                                                                                    *
+ * TRYG3D_MODULEID_ACTOR       - Actor Module ID                                                                                     *
+ * TRYG3D_MODULEID_ATM         - ATM Module ID                                                                                       *
+ * TRYG3D_MODULEID_ANIMS       - Anims Module ID                                                                                     *
+ * TRYG3D_MODULEID_VEHSTREAMER - VehicleStreamer Module ID                                                                           *
  *                                                                                                                                   *
  * Position Flags:                                                                                                                   *
  * POSITION_FLAG_WORLD                                                                                                               *
@@ -558,23 +579,23 @@
  * VF_AIRPLANE      VF_HELICOPTER    VF_BIKES         VF_TRAILER       VF_TOWABLE       VF_POLICE                                    *
  *                                                                                                                                   *
  * Vehicle Parts:                                                                                                                    *
- * VEHICLE_PART_RFTIRE        - Right Front tire                                                                                     *
- * VEHICLE_PART_LFTIRE        - Left Front tire                                                                                      *
- * VEHICLE_PART_RRTIRE        - Right Rear tire                                                                                      *
- * VEHICLE_PART_LRTIRE        - Left Rear tire                                                                                       *
- * VEHICLE_PART_HOOD          - In Front                                                                                             *
- * VEHICLE_PART_TRUNK         - Behind                                                                                               *
- * VEHICLE_PART_ROOF          - Roof                                                                                                 *
- * VEHICLE_PART_CHASSIS       - Chassis                                                                                              *
- * VEHICLE_PART_PETROLCAP     - Petrolcap                                                                                            *
+ * VEHICLE_PART_RFTIRE         - Right Front tire                                                                                    *
+ * VEHICLE_PART_LFTIRE         - Left Front tire                                                                                     *
+ * VEHICLE_PART_RRTIRE         - Right Rear tire                                                                                     *
+ * VEHICLE_PART_LRTIRE         - Left Rear tire                                                                                      *
+ * VEHICLE_PART_HOOD           - In Front                                                                                            *
+ * VEHICLE_PART_TRUNK          - Behind                                                                                              *
+ * VEHICLE_PART_ROOF           - Roof                                                                                                *
+ * VEHICLE_PART_CHASSIS        - Chassis                                                                                             *
+ * VEHICLE_PART_PETROLCAP      - Petrolcap                                                                                           *
  *                                                                                                                                   *
  * enum 'element_orientation'                                                                                                        *
- * # o_left                   - Orientation Left                                                                                     *
- * # o_right                  - Orientation Right                                                                                    *
- * # o_up                     - Orientation UP                                                                                       *
- * # o_down                   - Orientation Down                                                                                     *
- * # o_front                  - Orientation Front                                                                                    *
- * # o_back                   - Orientation Back                                                                                     *
+ * # o_left                    - Orientation Left                                                                                    *
+ * # o_right                   - Orientation Right                                                                                   *
+ * # o_up                      - Orientation UP                                                                                      *
+ * # o_down                    - Orientation Down                                                                                    *
+ * # o_front                   - Orientation Front                                                                                   *
+ * # o_back                    - Orientation Back                                                                                    *
  *                                                                                                                                   *
  * enum 'Item3D_Type'                                                                                                                *
  * # item_player                                                                                                                     *
@@ -589,6 +610,7 @@
  * # item_dynamic_mapicon                                                                                                            *
  * # item_dynamic_3dtext                                                                                                             *
  * # item_dynamic_actor                                                                                                              *
+ * # item_dynamic_vehicle                                                                                                            *
  *                                                                                                                                   *
  * enum 'Vectors3D'                                                                                                                  *
  * # Float: T3D:X             - Position X                                                                                           *
@@ -671,7 +693,7 @@
  *                                                                                                                                   *
  * Functions extra names:                                                                                                            *
  * GetDistanceBetweenPoints   -> GetDistanceBetweenPoints3D                                                                          *
- * Tryg3D::MapAndreasFindZ     -> CA_FindZ_For2DCoord / MapAndreasFindZ                                                              *
+ * Tryg3D::MapAndreasFindZ    -> CA_FindZ_For2DCoord / MapAndreasFindZ                                                               *
  * GetPlayersDistance         -> GetDistanceBetweenPlayers                                                                           *
  * GetVehiclesDistance        -> GetDistanceBetweenVehicles                                                                          *
  * GetObjectsDistance         -> GetDistanceBetweenObjects                                                                           *
@@ -681,11 +703,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.2.1
+	#error [ADM] You need 3DTryg.inc v4.3.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.2.1
-#elseif (Tryg3D_Version < 40201)
-	#error [ADM] Update you 3DTryg.inc to v4.2.1
+	#error [ADM] Update you 3DTryg.inc to v4.3.0
+#elseif (Tryg3D_Version < 40300)
+	#error [ADM] Update you 3DTryg.inc to v4.3.0
 #endif
 */
 
@@ -700,7 +722,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40201) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40300) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize)
@@ -751,6 +773,7 @@
 #define TRYG3D_MODULEID_ACTOR 							(Tryg3DModule:0b0000001000000000)
 #define TRYG3D_MODULEID_ATM   							(Tryg3DModule:0b0000010000000000)
 #define TRYG3D_MODULEID_ANIMS 							(Tryg3DModule:0b0000100000000000)
+#define TRYG3D_MODULEID_VEHSTREAMER 					(Tryg3DModule:0b0001000000000000)
 
 //Detect MapAndreas Plugin [Slot: 1]
 #if ((defined MapAndreas_FindZ_For2DCoord) && (!defined DISABLE_3D_TRYG_MAPANDREAS))
@@ -782,7 +805,7 @@
 	#define Tryg3D_YSF
 	#define Tryg3D_Module_YSF							(true)
 	#if (!defined RemovePlayerForPlayer)
-		#error [ADM] Update you YSF.inc to R18-2
+		#error [ADM] Update you YSF.inc to R19
 	#endif
 #else
 	#define Tryg3D_Module_YSF							(false)
@@ -798,6 +821,14 @@
 	#endif
 #else
 	#define Tryg3D_Module_Streamer						(false)
+#endif
+
+//Detect Streamer Plugin [Slot: 13]
+#if ((defined Tryg3D_Streamer) && (defined STREAMER_TYPE_VEHICLE) && (!defined DISABLE_3D_TRYG_VEHSTREAMER))
+	#define Tryg3D_VehicleStreamer
+	#define Tryg3D_Module_VehicleStreamer				(true)
+#else
+	#define Tryg3D_Module_VehicleStreamer				(false)
 #endif
 
 //Detect FoxForeach Include [Slot: 5]
@@ -824,10 +855,10 @@
 //Detect FCNPC Plugin [Slot: 7]
 #if ((defined _FCNPC_included) && (defined FCNPC_INCLUDE_VERSION) && (!defined DISABLE_3D_TRYG_FCNPC))
 	#define Tryg3D_FCNPC
-	#define Tryg3D_FCNPC_Version							(170) //a.b.c 100*a+10*b+c
+	#define Tryg3D_FCNPC_Version						(172) //a.b.c 100*a+10*b+c
 	#define Tryg3D_Module_FCNPC							(true)
 	#if (!defined MOVE_TYPE_AUTO || !defined MOVE_SPEED_AUTO)
-		#error [ADM] Update you FCNPC.inc to v1.7.0
+		#error [ADM] Update you FCNPC.inc to v1.7.2
 	#endif
 #else
 	#define Tryg3D_Module_FCNPC							(false)
@@ -892,7 +923,7 @@
  ************************************************************************************************************************************/
 
 #if !defined TRYG3D_ELEMENT_TAG
-	#define TRYG3D_ELEMENT_TAG							{Text3D,DynamicObject,DynamicPickup,DynamicCP,DynamicRaceCP,DynamicMapIcon,DynamicText3D,DynamicArea,DynamicActor,_}:
+	#define TRYG3D_ELEMENT_TAG							{Text3D,DynamicObject,DynamicPickup,DynamicCP,DynamicRaceCP,DynamicMapIcon,DynamicText3D,DynamicArea,DynamicActor,DynamicVehicle,_}:
 #endif
 
 #if !defined FLOAT_PI
@@ -1021,7 +1052,8 @@ enum Item3D_Type {
 	item_dynamic_racecp,
 	item_dynamic_mapicon,
 	item_dynamic_3dtext,
-	item_dynamic_actor
+	item_dynamic_actor,
+	item_dynamic_vehicle
 }
 
 enum Vectors3D {
@@ -2713,6 +2745,21 @@ Tryg3D::Function:: GetRandomPointOnEllipticalCyl2D(Float:cx,Float:cy,Float:minz,
 	tz = RandomFloat(0.0,floatsqroot(floatpower(minz-maxz,2)),6)+minz;
 } 
  
+Tryg3D::Function:: bool:IsPlayerFakeSpectating(playerid,bool:force_disable=true){
+	if(GetPlayerState(playerid) == PLAYER_STATE_SPECTATING && IsPlayerAdmin(playerid)) return false;
+	if(GetPlayerCameraMode(playerid) != 4) return false; 
+	
+	new Float:px,Float:py,Float:pz,
+		Float:cx,Float:cy,Float:cz;
+	
+	GetPlayerPos(playerid,px,py,pz);
+	GetPlayerCameraPos(playerid,cx,cy,cz);
+	
+	if(VectorSize(px-cx,py-cy,pz-cz) < 20.0) return false;
+	if(force_disable) SetCameraBehindPlayer(playerid);
+	return true; 
+} 
+ 
 /************************************************************************************************************************************
  *                                                                                                                                  *
  * Universal Functions                                                                                                              *
@@ -2780,6 +2827,13 @@ Tryg3D::Function:: bool:GetElementPos(TRYG3D_ELEMENT_TAG elementid,Item3D_Type:e
 				GetDynamicActorPos(STREAMER_TAG_ACTOR (_:elementid),x,y,z);
 			}
 		#endif
+		
+		#if defined Tryg3D_VehicleStreamer
+			case item_dynamic_vehicle: {
+				GetDynamicVehiclePos(STREAMER_TAG_VEHICLE (_:elementid),x,y,z);
+			}
+		#endif
+		
 		default: return false;
 	}
 	return true;
@@ -2819,6 +2873,11 @@ Tryg3D::Function:: bool:GetElementRotationQuat(TRYG3D_ELEMENT_TAG elementid,Item
 				qw *= (-1);
 			}
 		#endif
+		#if defined Tryg3D_VehicleStreamer
+			case item_dynamic_vehicle: {
+				GetDynamicVehicleRotationQuat(STREAMER_TAG_VEHICLE (_:elementid),qw,qx,qy,qz);
+			}
+		#endif
 		default: return false;
 	}
 	return true;
@@ -2832,7 +2891,7 @@ Tryg3D::Function:: bool:GetElementUpVector(TRYG3D_ELEMENT_TAG elementid,Item3D_T
 		case item_object: {
 			GetQuatUpVector(qw,qx,qy,qz,vx,vy,vz);
 		}
-		case item_vehicle: {
+		case item_vehicle, item_dynamic_vehicle: {
 			GetQuatUpVector(qw,-qx,-qy,-qz,vx,vy,vz);
 		}
 		#if defined Tryg3D_Streamer
@@ -2919,6 +2978,11 @@ Tryg3D::Function:: bool:IsElementOnPlayerScreen(playerid,TRYG3D_ELEMENT_TAG targ
 			}
 			case item_dynamic_actor: {
 				if(testVW && worldid != GetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR (_:targetid))) return false;
+			}
+		#endif
+		#if defined Tryg3D_VehicleStreamer
+			case item_dynamic_vehicle: {
+				if(testVW && worldid != GetDynamicVehicleVirtualWorld(STREAMER_TAG_VEHICLE (_:targetid))) return false;
 			}
 		#endif
 		default: return false;
@@ -3085,6 +3149,11 @@ Tryg3D::Function:: bool:GetElementOrientationPos(TRYG3D_ELEMENT_TAG elementid,It
 				GetDynamicActorFacingAngle(STREAMER_TAG_ACTOR (_:elementid),rz);
 			}
 		#endif
+		#if defined Tryg3D_VehicleStreamer
+			case item_dynamic_vehicle: {
+				GetDynamicVehicleRotation(STREAMER_TAG_VEHICLE (_:elementid),rx,ry,rz);
+			}
+		#endif
 		default: return false;
 	}
 	
@@ -3099,7 +3168,7 @@ Tryg3D::Function:: bool:GetElementOrientationPos(TRYG3D_ELEMENT_TAG elementid,It
 				case o_back:	GetPointInFront3D(x,y,z,0.0,CompRotationFloat(rz+180.0),distance,tx,ty,tz);
 			}
 		}
-		case item_vehicle, item_object, item_dynamic_object: {
+		case item_vehicle, item_object, item_dynamic_object, item_dynamic_vehicle: {
 			switch(orientation){
 				case o_left:	GetPointInFront3D(x,y,z,ry,CompRotationFloat(rz+90.0),distance,tx,ty,tz);
 				case o_right:	GetPointInFront3D(x,y,z,CompRotationFloat(ry+180.0),CompRotationFloat(rz+90.0),distance,tx,ty,tz);
@@ -3215,7 +3284,10 @@ Tryg3D::Function:: Tryg3D::GetModules(&modules_count=0){
 		modules_count++;
 	#endif
 	
-	#if defined Tryg3D_Streamer
+	#if defined Tryg3D_VehicleStreamer
+		format(T3D:string,sizeof(T3D:string),"%s:VehicleStreamer",T3D:string);
+		modules_count++;
+	#elseif defined Tryg3D_Streamer
 		format(T3D:string,sizeof(T3D:string),"%s:Streamer",T3D:string);
 		modules_count++;
 	#endif
@@ -3277,6 +3349,7 @@ Tryg3D::Function:: bool:Tryg3D::IsModuleLoaded(Tryg3DModule:moduleid){
 		case TRYG3D_MODULEID_ACTOR:			return Tryg3D_Module_Actor;
 		case TRYG3D_MODULEID_ATM:			return Tryg3D_Module_ATM;
 		case TRYG3D_MODULEID_ANIMS:			return Tryg3D_Module_Anims;
+		case TRYG3D_MODULEID_VEHSTREAMER:	return Tryg3D_Module_VehicleStreamer;
 	}
 	return false;
 }
@@ -3907,7 +3980,11 @@ Tryg3D::Function:: Tryg3D::CheckStreamerVersion(){
 		Tryg3D::GetStreamerVersionName(T3D:str1,Tryg3D::GetStreamerVersion());
 		Tryg3D::GetStreamerVersionName(T3D:str2,Tryg3D::GetValidStreamerVersion());
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Error: Your Streamer %s It is not compatible with this version 3DTryg, update your streamer to %s",T3D:str1,T3D:str2);
+			#if defined Tryg3D_VehicleStreamer
+				printf("[ADM] Error: Your VehicleStreamer %s It is not compatible with this version 3DTryg, update your VehicleStreamer to %s",T3D:str1,T3D:str2);
+			#else
+				printf("[ADM] Error: Your Streamer %s It is not compatible with this version 3DTryg, update your Streamer to %s",T3D:str1,T3D:str2);
+			#endif
 		}
 		Update3DTrygErrorCount();
 	} else {
@@ -3947,7 +4024,7 @@ Tryg3D::Function:: SetPlayerAbsolutePositionVeh(playerid,Float:x,Float:y,Float:z
 	}
 } 
  
-Tryg3D::Function:: bool:IsVehicleFullyInDynamicArea(vehicleid,areaid){
+Tryg3D::Function:: bool:IsVehicleFullyInDynamicArea(vehicleid,STREAMER_TAG_AREA areaid){
 	new Float:size_x,Float:size_y,Float:size_z,
 		Float:x,Float:y,Float:z,
 		Float:minx,Float:miny,Float:minz,
@@ -5032,6 +5109,66 @@ Tryg3D::Function:: FCNPC_RandomMoveInStream(npcid,Stream:StreamData[Stream3D],Fl
  
 #endif 
  
+#if defined Tryg3D_VehicleStreamer 
+ 
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ * VehicleStreamer Functions                                                                                                        *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
+ 
+#define Tryg3D_GetDynamicVehicleID(%0)					Streamer_GetItemInternalID(0,STREAMER_TYPE_VEHICLE,(%0))
+
+#define GetDynamicVehicleFlags(%0)						GetVehicleFlags(Tryg3D::GetDynamicVehicleID(%0))
+#define GetDynamicVehicleSpeed(%0)						GetVehicleSpeed(Tryg3D::GetDynamicVehicleID(%0))
+#define GetPointInFrontOfDynVeh2D(%0,%1,%2,%3)			GetPointInFrontOfVehicle2D(Tryg3D::GetDynamicVehicleID(%0),(%1),(%2),(%3))
+#define IsDynVehInRangeOfPoint(%0,%1,%2,%3,%4)			IsVehicleInRangeOfPoint(Tryg3D::GetDynamicVehicleID(%0),(%1),(%2),(%3),(%4))
+#define IsDynVehFullyInDynamicArea(%0,%1)				IsVehicleFullyInDynamicArea(Tryg3D::GetDynamicVehicleID(%0),(%1))
+
+#if defined Tryg3D_ColAndreas
+
+	#define GetPointInFrontOfDynVeh2DCol(%0,%1,%2,%3)	GetPointInFrontOfVehicle2DCol(Tryg3D::GetDynamicVehicleID(%0),(%1),(%2),(%3))
+	
+#endif
+
+#if defined Tryg3D_Stream3D
+	
+	#define IsDynamicVehicleFullyInStream(%0,%1)		IsVehicleFullyInStream(Tryg3D::GetDynamicVehicleID(%0),(%1))
+
+#endif
+
+ 
+ 
+Tryg3D::Function:: GetDynamicVehicleRotation(STREAMER_TAG_VEHICLE vehicleid,&Float:rx,&Float:ry,&Float:rz){
+	Tryg3D_GetVehicleRotation(Tryg3D::GetDynamicVehicleID(vehicleid),rx,ry,rz);
+} 
+ 
+Tryg3D::Function:: GetPointInFrontOfDynVeh3D(STREAMER_TAG_VEHICLE vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
+	GetPointInFrontOfVehicle3D(Tryg3D::GetDynamicVehicleID(vehicleid),tx,ty,tz,radius,rx,rz);
+} 
+ 
+Tryg3D::Function:: GetDynamicVehiclePartPos(STREAMER_TAG_VEHICLE vehicleid,partid,&Float:tx,&Float:ty,&Float:tz,Float:offset_x=0.0,Float:offset_y=0.0,Float:offset_z=0.0){
+	GetVehiclePartPos(Tryg3D::GetDynamicVehicleID(vehicleid),partid,tx,ty,tz,offset_x,offset_y,offset_z);
+} 
+ 
+#if defined Tryg3D_ColAndreas 
+ 
+Tryg3D::Function:: GetPointInFrontOfDynVeh3DCol(STREAMER_TAG_VEHICLE vehicleid,&Float:tx,&Float:ty,&Float:tz,Float:radius,&Float:rx=0.0,&Float:rz=0.0){
+	GetPointInFrontOfVehicle3DCol(Tryg3D::GetDynamicVehicleID(vehicleid),tx,ty,tz,radius,rx,rz);
+} 
+ 
+#endif 
+ 
+#if defined Tryg3D_YSF 
+ 
+Tryg3D::Function:: bool:IsDynamicVehicleOnSpawn(STREAMER_TAG_VEHICLE vehicleid,Float:check_radius=1.0){
+	return IsVehicleOnSpawn(Tryg3D::GetDynamicVehicleID(vehicleid),check_radius);
+} 
+ 
+#endif 
+ 
+#endif 
+ 
 /************************************************************************************************************************************
  *                                                                                                                                  *
  * Functions extra names                                                                                                            *
@@ -5226,12 +5363,21 @@ Tryg3D::Function:: Tryg3DInit(){
 		if(GetSVarInt("ADM:3DTryg:Streamer") == 0){
 			SetSVarInt("ADM:3DTryg:Streamer",1);
 			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				if(T3D:Tryg3DStreamerExam){
-					print("[ADM] Info: Streamer successfully init.");
-				} else {
-					print("[ADM] Error: Streamer failed to initiated.");
-					Update3DTrygErrorCount();
-				}
+				#if defined Tryg3D_VehicleStreamer
+					if(T3D:Tryg3DStreamerExam){
+						print("[ADM] Info: VehicleStreamer successfully init.");
+					} else {
+						print("[ADM] Error: VehicleStreamer failed to initiated.");
+						Update3DTrygErrorCount();
+					}
+				#else
+					if(T3D:Tryg3DStreamerExam){
+						print("[ADM] Info: Streamer successfully init.");
+					} else {
+						print("[ADM] Error: Streamer failed to initiated.");
+						Update3DTrygErrorCount();
+					}
+				#endif
 			}
 		}
 	#endif

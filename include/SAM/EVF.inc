@@ -440,7 +440,7 @@ enum EVF::NeonOffset {
 	Float:EVF::NeonX,
 	Float:EVF::NeonY,
     Float:EVF::NeonZ
-}
+};
 
 new const EVF::NeonOffsetData[MAX_VEHICLE_MODELS][EVF::NeonOffset] = {
 	{-0.924999,0.009999,-0.674999},
@@ -1212,19 +1212,19 @@ EVF::Function:: GetVehicleRandomColors(modelid,&color1,&color2){
 }
 
 EVF::Function:: GetVehicleParams(vehicleid,EVF::ParamTypes:type){
-	new evf_params[MAX_VEHICLE_PARAMS];
-	GetVehicleParamsEx(vehicleid,evf_params[0],evf_params[1],evf_params[2],evf_params[3],evf_params[4],evf_params[5],evf_params[6]);
-	return (!(evf_params[_:type] <= 0));
+	new EVF::params[MAX_VEHICLE_PARAMS];
+	GetVehicleParamsEx(vehicleid,EVF::params[0],EVF::params[1],EVF::params[2],EVF::params[3],EVF::params[4],EVF::params[5],EVF::params[6]);
+	return (!(EVF::params[_:type] <= 0));
 }
 
 EVF::Function:: SetVehicleParams(vehicleid,EVF::ParamTypes:type,status,delay = 0){
-	new evf_params[MAX_VEHICLE_PARAMS];
-	if(GetVehicleParamsEx(vehicleid,evf_params[0],evf_params[1],evf_params[2],evf_params[3],evf_params[4],evf_params[5],evf_params[6])){
-		evf_params[_:type] = status;
+	new EVF::params[MAX_VEHICLE_PARAMS];
+	if(GetVehicleParamsEx(vehicleid,EVF::params[0],EVF::params[1],EVF::params[2],EVF::params[3],EVF::params[4],EVF::params[5],EVF::params[6])){
+		EVF::params[_:type] = status;
 		if(delay > 0){
-			SetTimerEx("EVF_SetVehicleParamsEx",delay,false,"iiiiiiii",vehicleid,evf_params[0],evf_params[1],evf_params[2],evf_params[3],evf_params[4],evf_params[5],evf_params[6]);
+			SetTimerEx("EVF::SetVehicleParamsEx",delay,false,"iiiiiiii",vehicleid,EVF::params[0],EVF::params[1],EVF::params[2],EVF::params[3],EVF::params[4],EVF::params[5],EVF::params[6]);
 		} else {
-			SetVehicleParamsEx(vehicleid,evf_params[0],evf_params[1],evf_params[2],evf_params[3],evf_params[4],evf_params[5],evf_params[6]);
+			SetVehicleParamsEx(vehicleid,EVF::params[0],EVF::params[1],EVF::params[2],EVF::params[3],EVF::params[4],EVF::params[5],EVF::params[6]);
 		}
 		return 1;
 	}
