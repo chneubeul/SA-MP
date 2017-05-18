@@ -137,7 +137,7 @@ stock STIN_GetFreeID(){
 
 stock GetPlayerActiveDynamicStinger(playerid){
 	if(STIN_ActiveForPlayer[playerid] == INVALID_STREAMER_ID) return INVALID_STINGER_ID;
-	return (Streamer_GetIntData(STREAMER_TYPE_AREA,STIN_ActiveForPlayer[playerid],E_STREAMER_EXTRA_ID)-STINGERS_EXTRA_ID_OFFSET);
+	return STIN_PlayerStinger[playerid];
 }
 
 stock CreateDynamicStinger(type,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid=-1,interiorid=-1,playerid=-1,Float:streamdistance=100.0,teamid=ANY_TEAM,byplayerid=INVALID_PLAYER_ID){
@@ -246,7 +246,7 @@ public OnPlayerLeaveDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 //Hook: OnPlayerUpdate
 public OnPlayerUpdate(playerid){
  	if(STIN_ActiveForPlayer[playerid] != INVALID_STREAMER_ID && STIN_LastVehicle[playerid] != 0){
-		new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,STIN_ActiveForPlayer[playerid],E_STREAMER_EXTRA_ID)-STINGERS_EXTRA_ID_OFFSET);
+		new mobid = STIN_PlayerStinger[playerid];
 		if(Stingers[mobid][stin_damage]){
 			new panels,doors,lights,tires,TireStatus[4],new_tires;
 			GetVehicleDamageStatus(STIN_LastVehicle[playerid],panels,doors,lights,tires);
@@ -256,7 +256,7 @@ public OnPlayerUpdate(playerid){
 			TireStatus[3] = (tires >> 2 & 0x1);
 			
 			new Float:size_x,Float:size_y;
-			switch(Stingers[STIN_PlayerStinger[playerid]][stin_type]){
+			switch(Stingers[mobid][stin_type]){
 				case STINGER_TYPE_SMALL: {
 					size_x = 1.151422*1.005;
 					size_y = 4.98878*1.005;
