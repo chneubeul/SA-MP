@@ -25,6 +25,10 @@
 #endif
 #define _visible_npc_inc
 
+#if (!defined GetPlayerPoolSize)
+	#error [ADM] This include requires SA:MP version 0.3.7
+#endif
+
 #if ((!defined _YSF_included) || (!defined RemovePlayerForPlayer))
 	#error [ADM] You need YSF R18-2
 #endif

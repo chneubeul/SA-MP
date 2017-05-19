@@ -13,22 +13,22 @@
  *                                                                                                  *
  * File Version: 2.1.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
- * Streamer Version: 2.9.0                                                                          *
- * 3DTryg Version: 4.1.2                                                                            *
+ * Streamer Version: 2.9.1                                                                          *
+ * 3DTryg Version: 4.3.0                                                                            *
  *                                                                                                  *
  ****************************************************************************************************/
 
 #if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined STREAMER_TYPE_ACTOR))
-	#error [ADM] You need Streamer v2.9.0
+	#error [ADM] You need Streamer v2.9.1
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.1.2
+	#error [ADM] You need 3DTryg.inc v4.3.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.1.2
-#elseif (Tryg3D_Version < 40102)
-	#error [ADM] Update you 3DTryg.inc to v4.1.2
+	#error [ADM] Update you 3DTryg.inc to v4.3.0
+#elseif (Tryg3D_Version < 40300)
+	#error [ADM] Update you 3DTryg.inc to v4.3.0
 #endif
 
 #define FIREWORK_ELEMENT			(256)

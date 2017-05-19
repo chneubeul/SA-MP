@@ -14,7 +14,7 @@
  *                                                                                                                                *
  * File Version: 3.0.2                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
- * Streamer Version: 2.9.0                                                                                                        *
+ * Streamer Version: 2.9.1                                                                                                        *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * bool:IsValidVehicleModelID(modelid);                                                                                           *
@@ -253,17 +253,13 @@
 	#error [ADM] Please remove deprecated file VehicleEx.inc
 #endif
 
-#if ((defined EVF_VehicleData) && (defined gVehiclePetrolCapOffsets))
+#if defined gVehiclePetrolCapOffsets
 	#error [ADM] Please remove deprecated file vehicleplus.inc
 #endif
 
 //Update Checker
 #if !defined HTTP
 	#tryinclude <a_http>
-#endif
-
-#if !defined HTTP
-	#tryinclude "a_http"
 #endif
 
 #if !defined HTTP
@@ -1915,7 +1911,7 @@ EVF::Function:: EVF::CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,c
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB,0);
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER,-1);
 	
-	for(new i = 0; i < 4; i++) ToggleVehicleDamageUpdate(vehicleid,i,0);
+	for(new i = 0; i < 4; i++) ToggleVehicleDamageUpdate(vehicleid,i,1);
 	
 	CallRemoteFunction("OnVehicleCreated","i",vehicleid);
 	return vehicleid;

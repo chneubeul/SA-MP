@@ -422,10 +422,6 @@
 #endif
 
 #if !defined HTTP
-	#tryinclude "a_http"
-#endif
-
-#if !defined HTTP
 	#error [ADM] Please include a_http.inc before StreamerFunction.inc
 #endif
 
