@@ -15,15 +15,9 @@ This option is available in ATM.inc
 [ADM] Info: MapAndreas successfully init.
 [ADM] Info: ColAndreas successfully init.
 [ADM] Info: YSF Timeline Sync successfully init.
-[ADM] Info: Streamer successfully init.
-[ADM] Info: FCNPC successfully init.
 [ADM] Info: MapAndreas successfully attached to FCNPC.
-[ADM] Error: Your ColAndreas ... It is not compatible with this version 3DTryg, update your ColAndreas to ...
-[ADM] Error: Your Streamer ... It is not compatible with this version 3DTryg, update your Streamer to ...
-[ADM] Error: Your FCNPC ... It is not compatible with this version 3DTryg, update your FCNPC to ...
 [ADM] Error: MapAndreas failed to initiated.
 [ADM] Error: ColAndreas failed to initiated.
-[ADM] Error: Streamer failed to initiated.
 [ADM] Error: Cannot load /scriptfiles/SAfull.hmap
 [ADM] Error: Cannot load /scriptfiles/colandreas/ColAndreas.cadb
 
