@@ -96,7 +96,7 @@
  * GetVehicleColor(vehicleid,&color1,&color2);                                                                                    *
  * GetVehiclePaintjob(vehicleid);                                                                                                 *
  * GetVehicleInterior(vehicleid);                                                                                                 *
- * GetVehicleSpawnInfo(vehicleid,&Float:x,&Float:y,&Float:z,&Float:rotation,&worldid,&interiorid);                                *
+ * EVF::GetVehicleSpawnInfo(vehicleid,&Float:x,&Float:y,&Float:z,&Float:rotation,&worldid,&interiorid);                           *
  * SetVehicleSpawnInfo(vehicleid,Float:x,Float:y,Float:z,Float:rotation,worldid,interiorid);                                      *
  * IsVehicleOccupied(vehicleid);                                                                                                  *
  *                                                                                                                                *
@@ -1043,6 +1043,16 @@ EVF::Function:: ResetVehicleProperties(vehicleid){
 	}
 }
 
+EVF::Function:: EVF::GetVehicleSpawnInfo(vehicleid,&Float:x,&Float:y,&Float:z,&Float:rotation,&worldid,&interiorid){
+	x = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_X);
+	y = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Y);
+	z = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Z);
+	rotation = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_A);
+	worldid = GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_VW);
+	interiorid = GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_INT);
+	return true;
+}
+	
 #if defined EVF_Streamer
 	EVF::Function:: SetVehicleNeonLights(vehicleid,bool:enable = true,color = RED_NEON){
 		if(!IsValidVehicle(vehicleid)) return 0;
@@ -1090,16 +1100,6 @@ EVF::Function:: ResetVehicleProperties(vehicleid){
 			return 1;
 		}
 		return 0;
-	}
-	
-	EVF::Function:: GetVehicleSpawnInfo(vehicleid,&Float:x,&Float:y,&Float:z,&Float:rotation,&worldid,&interiorid){
-		x = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_X);
-		y = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Y);
-		z = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Z);
-		rotation = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_A);
-		worldid = GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_VW);
-		interiorid = GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_INT);
-		return true;
 	}
 	
 	EVF::Function:: SetVehicleSpawnInfo(vehicleid,Float:x,Float:y,Float:z,Float:rotation,worldid,interiorid){
@@ -2331,7 +2331,7 @@ public OnVehicleSpawn(vehicleid){
 	GetVehicleZAngle(vehicleid,angle);
 
 	new Float:vehicle_pos[3],Float:vehicle_angle,vehicle_worldid,vehicle_interiorid;
-	GetVehicleSpawnInfo(vehicleid,vehicle_pos[0],vehicle_pos[1],vehicle_pos[2],vehicle_angle,vehicle_worldid,vehicle_interiorid);
+	EVF::GetVehicleSpawnInfo(vehicleid,vehicle_pos[0],vehicle_pos[1],vehicle_pos[2],vehicle_angle,vehicle_worldid,vehicle_interiorid);
 
  	if(pos[0] != vehicle_pos[0] || pos[1] != vehicle_pos[1] || pos[2] != vehicle_pos[2] || angle != vehicle_angle || vehicle_worldid != GetVehicleVirtualWorld(vehicleid) || vehicle_interiorid != GetVehicleInterior(vehicleid)){
 		TeleportVehicle(vehicleid,vehicle_pos[0],vehicle_pos[1],vehicle_pos[2],vehicle_angle,vehicle_worldid,vehicle_interiorid);
