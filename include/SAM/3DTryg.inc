@@ -2616,8 +2616,8 @@ Tryg3D::Function:: bool:IsPointInPolygon(Float:x,Float:y,Float:points[],maxpoint
 //GetRandomPointInCircle by Crayder
 Tryg3D::Function:: GetRandomPointInCircle(Float:x,Float:y,Float:radius,&Float:tx,&Float:ty){
 	//"float(random(1000001)) / 1000000.0" is RandomFloat for 0.0 - 1.0.
-	new Float:T3D:alfa = float(random(1000001))/1000000.0,
-		Float:T3D:beta = float(random(1000001))/1000000.0;
+	new Float:T3D:alfa = float(random(1000000)+1)/1000000.0,
+		Float:T3D:beta = float(random(1000000)+1)/1000000.0;
 	if(T3D:beta < T3D:alfa) Tryg3D::SwapInt(T3D:alfa,T3D:beta);
 	tx = x + (T3D:beta * radius * floatcos(2.0 * FLOAT_PI * T3D:alfa / T3D:beta));
 	ty = y + (T3D:beta * radius * floatsin(2.0 * FLOAT_PI * T3D:alfa / T3D:beta));
@@ -2757,8 +2757,8 @@ Tryg3D::Function:: GetRandomPointOnCylinder3D(Float:xA,Float:yA,Float:zA,Float:x
  
 //GetRandomPointOnSphere by Neil Lamoureux
 Tryg3D::Function:: GetRandomPointOnSphere(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz){
-	new Float:T3D:alfa = float(random(1000001))/1000000.0,
-		Float:T3D:beta = float(random(1000001))/1000000.0,
+	new Float:T3D:alfa = float(random(1000000)+1)/1000000.0,
+		Float:T3D:beta = float(random(1000000)+1)/1000000.0,
 		Float:T3D:theta = 2 * FLOAT_PI * T3D:alfa,
 		Float:T3D:phi = acos(2 * T3D:beta - 1);
 	tx = x + (radius * floatsin(T3D:phi,degrees) * floatcos(T3D:theta,degrees));
