@@ -1102,6 +1102,27 @@ EVF::Function:: ResetVehicleProperties(vehicleid){
 	}
 #endif
 
+#define EVF_GetVehicleInterior(%0)	GetVehiclePropertyValue((%0),e_VEHICLE_INTERIOR)
+#define EVF_GetVehiclePaintjob(%0)	GetVehiclePropertyValue((%0),e_VEHICLE_PAINTJOB)
+
+EVF::Function:: EVF::GetVehicleColor(vehicleid,&color1,&color2){
+	if(IsValidVehicle(vehicleid)){
+		color1 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1);
+		color2 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2);
+		return 1;
+	}
+	return 0;
+}
+
+EVF::Function:: bool:EVF::IsVehicleOccupied(vehicleid){
+	EVF::Foreach(i){
+		if(IsPlayerInVehicle(i,vehicleid)){
+			return true;
+		}
+	}
+	return false;
+}
+
 EVF::Function:: EVF::GetVehicleSpawnInfo(vehicleid,&Float:x,&Float:y,&Float:z,&Float:rotation,&worldid,&interiorid){
 	x = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_X);
 	y = Float:GetVehiclePropertyValue(vehicleid,e_VEHICLE_SPAWN_Y);
@@ -1408,12 +1429,8 @@ EVF::Function:: TeleportVehicle(vehicleid,Float:x,Float:y,Float:z,Float:angle,wo
 		}
 	}
 
- 	if(worldid != -1){
-		SetVehicleVirtualWorld(vehicleid,worldid);
-	}
-	if(interiorid != -1){
-		SetVehicleInterior(vehicleid,interiorid);
-	}
+ 	if(worldid != -1) SetVehicleVirtualWorld(vehicleid,worldid);
+	if(interiorid != -1) SetVehicleInterior(vehicleid,interiorid);
 
 	SetVehiclePos(vehicleid,x,y,z);
 	SetVehicleZAngle(vehicleid,angle);
@@ -1794,7 +1811,7 @@ EVF::Function:: EVF::ChangeVehiclePaintjob(vehicleid,paintjobid){
 		SetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB,paintjobid);
 		if(paintjobid == RESET_PAINTJOB_ID){
 			new color1,color2;
-			GetVehicleColor(vehicleid,color1,color2);
+			EVF::GetVehicleColor(vehicleid,color1,color2);
 			ChangeVehicleColor(vehicleid,color1,color2);
 		}
 		return 1;
