@@ -13,14 +13,14 @@
  * Modules: FoxForeach, Foreach                                                                                                      *
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                             *
  *                                                                                                                                   *
- * File Version: 4.3.1                                                                                                               *
+ * File Version: 4.4.0                                                                                                               *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                    *
  * MapAndreas Version: 1.2.1                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                         *
  * YSF Version: R19 (kurta999)                                                                                                       *
  * Streamer Version: 2.9.1                                                                                                           *
  * VehicleStreamer Version: 2.9.1                                                                                                    *
- * FCNPC Version: 1.7.2                                                                                                              *
+ * FCNPC Version: 1.7.3                                                                                                              *
  *                                                                                                                                   *
  * 3DTryg FindZ Precision:                                                                                                           *
  * 1. ColAndreas   - The most accurate precision with ColAndreas plugin.                                                             *
@@ -236,6 +236,7 @@
  * GetCube3DPoint(OrientationCube3D:orientation,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,                                  *
  *                Float:size_x,Float:size_y,Float:size_z,&Float:tx,&Float:ty,&Float:tz);                                             *
  * bool:IsPlayerFakeSpectating(playerid,bool:force_disable=true);                                                                    *
+ * GenerateGangZone(Float:x,Float:y,Float:radius,&Float:minx,&Float:miny,&Float:maxx,&Float:maxy);                                   *
  *                                                                                                                                   *
  * Universal Functions:                                                                                                              *
  * bool:GetElementPos(elementid,Item3D_Type:element_type,&Float:x,&Float:y,&Float:z);                                                *
@@ -441,21 +442,26 @@
  * Float:SetNPCTargetNPCAngle(npcid,targetid,&Float:rz=0.0);                                                                         *
  * FCNPC_SetVehicleRotation(npcid,Float:rx,Float:ry,Float:rz);                                                                       *
  * bool:FCNPC_SetVehicleTargetRotation(npcid,Float:tx,Float:ty,Float:tz,Float:ry=0.0);                                               *
- * FCNPC_GoToAir(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO);                                 *
+ * FCNPC_GoToAir(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,Float:dist_offset = 0.0,          *
+ *               stopdelay = 250);                                                                                                   *
  *                                                                                                                                   *
  * FCNPC Functions (ColAndreas):                                                                                                     *
  * Float:GetPointInFrontOfNPCCol(npcid,&Float:tx,&Float:ty,Float:radius);                                                            *
  * FCNPC_GoToCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,       *
- *               Float:cut_size = 0.0,bool:setangle = true);                                                                         *
+ *               Float:cut_size = 0.0,bool:setangle = true,Float:dist_offset = 0.0,stopdelay = 250);                                 *
  * FCNPC_GoToPlayerCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,                *
- *                     Float:cut_size = 0.0,bool:setangle = true);                                                                   *
+ *                     Float:cut_size = 0.0,bool:setangle = true,Float:dist_offset = 0.0,stopdelay = 250);                           *
  * FCNPC_GoToPlayerOnGroundCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,        *
- *                             Float:cut_size = 1.0,Float:climbing = 2.0,bool:setangle = true);                                      *
- * FCNPC_GoToAirCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,Float:cut_size = 0.0);         *
+ *                             Float:cut_size = 1.0,Float:climbing = 2.0,bool:setangle = true,Float:dist_offset = 0.0,               *
+ *                             stopdelay = 250);                                                                                     *
+ * FCNPC_GoToAirCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,Float:cut_size = 0.0,          *
+ *                  Float:dist_offset = 0.0,stopdelay = 250);                                                                        *
  * FCNPC_RandomMoveInDynamicArea(npcid,STREAMER_TAG_AREA areaid,Float:climbing = 2.0,type = MOVE_TYPE_AUTO,                          *
- *                               Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true);                     *
+ *                               Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true,                      *
+ *                               Float:dist_offset = 0.0,stopdelay = 250);                                                           *
  * FCNPC_RandomMoveInStream(npcid,Stream:StreamData[Stream3D],Float:climbing = 2.0,type = MOVE_TYPE_AUTO,                            *
- *                          Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true);                          *
+ *                          Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true,Float:dist_offset = 0.0,   *
+ *                          stopdelay = 250);                                                                                        *
  *                                                                                                                                   *
  * Stream3D Functions:                                                                                                               *
  * StreamCreate(variable);                                                                                                           *
@@ -705,11 +711,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.3.1
+	#error [ADM] You need 3DTryg.inc v4.4.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.3.1
-#elseif (Tryg3D_Version < 40301)
-	#error [ADM] Update you 3DTryg.inc to v4.3.1
+	#error [ADM] Update you 3DTryg.inc to v4.4.0
+#elseif (Tryg3D_Version < 40400)
+	#error [ADM] Update you 3DTryg.inc to v4.4.0
 #endif
 */
 
@@ -724,7 +730,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40301) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40400) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize)
@@ -838,10 +844,10 @@
 //Detect FCNPC Plugin [Slot: 7]
 #if ((defined _FCNPC_included) && (defined FCNPC_INCLUDE_VERSION) && (!defined DISABLE_3D_TRYG_FCNPC))
 	#define Tryg3D_FCNPC
-	#define Tryg3D_FCNPC_Version						(172) //a.b.c 100*a+10*b+c
+	#define Tryg3D_FCNPC_Version						(173) //a.b.c 100*a+10*b+c
 	#define Tryg3D_Module_FCNPC							(true)
-	#if (!defined MOVE_TYPE_AUTO || !defined MOVE_SPEED_AUTO)
-		#error [ADM] Update you FCNPC.inc to v1.7.2
+	#if (FCNPC_INCLUDE_VERSION < Tryg3D_FCNPC_Version)
+		#error [ADM] Update you FCNPC.inc to v1.7.3
 	#endif
 #else
 	#define Tryg3D_Module_FCNPC							(false)
@@ -2920,6 +2926,13 @@ Tryg3D::Function:: bool:IsPlayerFakeSpectating(playerid,bool:force_disable=true)
 	if(VectorSize(px-cx,py-cy,pz-cz) < 20.0) return false;
 	if(force_disable) SetCameraBehindPlayer(playerid);
 	return true; 
+} 
+ 
+Tryg3D::Function:: GenerateGangZone(Float:x,Float:y,Float:radius,&Float:minx,&Float:miny,&Float:maxx,&Float:maxy){
+	minx = x - radius;
+	miny = y - radius;
+	maxx = x + radius;
+	maxy = y + radius;
 } 
  
 /************************************************************************************************************************************
@@ -5237,7 +5250,7 @@ public OnPlayerSpawn(playerid){
 Tryg3D::Function:: Float:GetNPCSpeed(npcid){
 	new Float:x,Float:y,Float:z;
 	FCNPC_GetVelocity(npcid,x,y,z);
-	return VectorSize(x,y,z);
+	return floatmul(VectorSize(x,y,z),PLAYER_SPEED_MULTIPLIER);
 } 
  
 Tryg3D::Function:: Float:GetPointInFrontOfNPC(npcid,&Float:tx,&Float:ty,Float:radius){
@@ -5303,9 +5316,9 @@ Tryg3D::Function:: bool:FCNPC_SetVehicleTargetRotation(npcid,Float:tx,Float:ty,F
 	return false;
 } 
  
-Tryg3D::Function:: FCNPC_GoToAir(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO){
+Tryg3D::Function:: FCNPC_GoToAir(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,Float:dist_offset = 0.0,stopdelay = 250){
 	FCNPC_SetVehicleTargetRotation(npcid,x,y,z);
-	FCNPC_GoTo(npcid,x,y,z,type,speed,false,0.0,false);
+	FCNPC_GoTo(npcid,x,y,z,type,speed,false,0.0,false,dist_offset,stopdelay);
 } 
  
 #if defined Tryg3D_ColAndreas 
@@ -5322,73 +5335,73 @@ Tryg3D::Function:: Float:GetPointInFrontOfNPCCol(npcid,&Float:tx,&Float:ty,Float
 	return rz;
 } 
  
-Tryg3D::Function:: FCNPC_GoToCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
+Tryg3D::Function:: FCNPC_GoToCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true,Float:dist_offset = 0.0,stopdelay = 250){
 	new Float:px,Float:py,Float:pz,Float:tx,Float:ty,Float:tz;
 	FCNPC_GetPosition(npcid,px,py,pz);
 	if(MovePointColCutLineEx(px,py,pz,x,y,z,tx,ty,tz,cut_size)){
-		FCNPC_GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle);
+		FCNPC_GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
 	}
 } 
  
-Tryg3D::Function:: FCNPC_GoToPlayerCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true){
+Tryg3D::Function:: FCNPC_GoToPlayerCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 0.0,bool:setangle = true,Float:dist_offset = 0.0,stopdelay = 250){
 	new Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz;
 	GetPlayerPos(playerid,x,y,z);
 	FCNPC_GetPosition(npcid,px,py,pz);
 	if(MovePointColCutLineEx(px,py,pz,x,y,z,tx,ty,tz,cut_size)){
-		FCNPC_GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle);
+		FCNPC_GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
 	}
 } 
  
-Tryg3D::Function:: FCNPC_GoToPlayerOnGroundCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 1.0,Float:climbing = 2.0,bool:setangle = true){
+Tryg3D::Function:: FCNPC_GoToPlayerOnGroundCol(npcid,playerid,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,Float:cut_size = 1.0,Float:climbing = 2.0,bool:setangle = true,Float:dist_offset = 0.0,stopdelay = 250){
 	new Float:px,Float:py,Float:pz,Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz;
 	GetPlayerPos(playerid,x,y,z);
 	FCNPC_GetPosition(npcid,px,py,pz);
 	if(GetDistanceBetweenPoints1D(pz,z) > climbing) z = pz;
 	if(MovePointColCutLineEx(px,py,pz,x,y,z,tx,ty,tz,cut_size)){
-		FCNPC_GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle);
+		FCNPC_GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
 	}
 } 
  
-Tryg3D::Function:: FCNPC_GoToAirCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,Float:cut_size = 0.0){
+Tryg3D::Function:: FCNPC_GoToAirCol(npcid,Float:x,Float:y,Float:z,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,Float:cut_size = 0.0,Float:dist_offset = 0.0,stopdelay = 250){
 	new Float:px,Float:py,Float:pz,Float:tx,Float:ty,Float:tz;
 	GetVehiclePos(FCNPC_GetVehicleID(npcid),px,py,pz);
 	if(MovePointColCutLineEx(px,py,pz,x,y,z,tx,ty,tz,cut_size)){
 		FCNPC_SetVehicleTargetRotation(npcid,tx,ty,tz);
-		FCNPC_GoTo(npcid,tx,ty,tz,type,speed,false,0.0,false);
+		FCNPC_GoTo(npcid,tx,ty,tz,type,speed,false,0.0,false,dist_offset,stopdelay);
 	}
 } 
  
 #if defined Tryg3D_Streamer 
  
-Tryg3D::Function:: FCNPC_RandomMoveInDynamicArea(npcid,STREAMER_TAG_AREA areaid,Float:climbing = 2.0,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true){
-	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:tmp_float; 
+Tryg3D::Function:: FCNPC_RandomMoveInDynamicArea(npcid,STREAMER_TAG_AREA areaid,Float:climbing = 2.0,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true,Float:dist_offset = 0.0,stopdelay = 250){
+	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:tmp_float;
 	FCNPC_GetPosition(npcid,x,y,z);
-	if(!GetRandomPointInDynamicArea(areaid,tx,ty,tz)) return 0;
-	CA_FindZ_For2DCoord(tx,ty,tz); 
-	while(CA_RayCastLine(x,y,z,tx,ty,tz,tmp_float,tmp_float,tmp_float)){
+	for(;;){
 		GetRandomPointInDynamicArea(areaid,tx,ty,tz);
-		CA_FindZ_For2DCoord(tx,ty,tz);
+		if(CA_RayCastLine(x,y,z,tx,ty,z,tmp_float,tmp_float,tmp_float)) continue;
+		CA_FindZ_For2DCoord(tx,ty,tz); 
 		if(GetDistanceBetweenPoints1D(tz,z) > climbing) continue;
+		break;
 	}
-    return FCNPC_GoTo(npcid,tx,ty,tz+1.0,type,speed,UseMapAndreas,0.0,setangle); 
+    return FCNPC_GoTo(npcid,tx,ty,tz+1.0,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
 }  
  
 #endif 
  
 #if defined Tryg3D_Stream3D 
  
-Tryg3D::Function:: FCNPC_RandomMoveInStream(npcid,Stream:StreamData[Stream3D],Float:climbing = 2.0,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true){
-	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:tmp_float; 
+Tryg3D::Function:: FCNPC_RandomMoveInStream(npcid,Stream:StreamData[Stream3D],Float:climbing = 2.0,type = MOVE_TYPE_AUTO,Float:speed = MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true,Float:dist_offset = 0.0,stopdelay = 250){
+	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:tmp_float;
 	FCNPC_GetPosition(npcid,x,y,z);
-	GetRandomPointInStream(StreamData,tx,ty,tz);
-	CA_FindZ_For2DCoord(tx,ty,tz); 
-	while(CA_RayCastLine(x,y,z,tx,ty,tz,tmp_float,tmp_float,tmp_float)){
+	for(;;){
 		GetRandomPointInStream(StreamData,tx,ty,tz);
-		CA_FindZ_For2DCoord(tx,ty,tz);
+		if(CA_RayCastLine(x,y,z,tx,ty,z,tmp_float,tmp_float,tmp_float)) continue;
+		CA_FindZ_For2DCoord(tx,ty,tz); 
 		if(GetDistanceBetweenPoints1D(tz,z) > climbing) continue;
+		break;
 	}
-    return FCNPC_GoTo(npcid,tx,ty,tz+1.0,type,speed,UseMapAndreas,0.0,setangle); 
-}  
+    return FCNPC_GoTo(npcid,tx,ty,tz+1.0,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
+} 
  
 #endif 
  
