@@ -733,8 +733,8 @@
 #define Tryg3D_Version									(40400) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
-#if (!defined GetPlayerPoolSize)
-	#error [ADM] This include requires SA:MP version 0.3.7
+#if (!defined GetPlayerPoolSize || !defined GetSVarInt)
+	#error [ADM] This include requires SA:MP version 0.3.7 (github.com/AbyssMorgan/SA-MP/blob/master/samp/include)
 #endif
 
 #if defined _Text_Draw_Ex

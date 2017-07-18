@@ -37,8 +37,8 @@
 #endif
 #define _anti_supreme_troll
 
-#if (!defined GetPlayerPoolSize)
-	#error [ADM] This include requires SA:MP version 0.3.7
+#if (!defined GetPlayerPoolSize || !defined GetSVarInt)
+	#error [ADM] This include requires SA:MP version 0.3.7 (github.com/AbyssMorgan/SA-MP/blob/master/samp/include)
 #endif
 
 //Get Compress Adress

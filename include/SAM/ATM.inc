@@ -50,8 +50,8 @@
 #endif
 #define _ATM_Core
 
-#if (!defined GetPlayerPoolSize)
-	#error [ADM] This include requires SA:MP version 0.3.7
+#if (!defined GetPlayerPoolSize || !defined GetSVarInt)
+	#error [ADM] This include requires SA:MP version 0.3.7 (github.com/AbyssMorgan/SA-MP/blob/master/samp/include)
 #endif
 
 #define ATM_Version											(10402) //a.b.c 10000*a+100*b+c

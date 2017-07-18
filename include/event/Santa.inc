@@ -12,7 +12,7 @@
  * Modules: 3DTryg, StreamerFunction                                                                *
  *                                                                                                  *
  * File Version: 1.4.2                                                                              *
- * SA:MP Version: 0.3.7                                                                             *
+ * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * MapAndreas Version: 1.2.1                                                                        *
  * ColAndreas Version: 1.4.0                                                                        *
@@ -23,6 +23,10 @@
  * OnSantaPickupReward(playerid);                                                                   *
  *                                                                                                  *
  ****************************************************************************************************/
+
+#if (!defined GetPlayerPoolSize || !defined GetSVarInt)
+	#error [ADM] This include requires SA:MP version 0.3.7 (github.com/AbyssMorgan/SA-MP/blob/master/samp/include)
+#endif
 
 #if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined STREAMER_TYPE_ACTOR))
 	#error [ADM] You need Streamer v2.9.1
