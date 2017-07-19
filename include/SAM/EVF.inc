@@ -12,7 +12,7 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 3.0.2                                                                                                            *
+ * File Version: 3.0.3                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.1                                                                                                        *
  *                                                                                                                                *
@@ -42,9 +42,6 @@
  * SwitchVehicleObjective(vehicleid,bool:objective_status);                                                                       *
  * GetVehicleParams(vehicleid,type);                                                                                              *
  * SetVehicleParams(vehicleid,type,status,delay = 0);                                                                             *
- * GetVehicleBoot(vehicleid,&Float:x,&Float:y,&Float:z);                                                                          *
- * GetVehicleHood(vehicleid,&Float:x,&Float:y,&Float:z);                                                                          *
- * GetVehicleRoof(vehicleid,&Float:x,&Float:y,&Float:z);                                                                          *
  * GetVehicleRandomColors(modelid,&color1,&color2);                                                                               *
  * GetNearestVehicle(vehicleid);                                                                                                  *
  * GetVehicleDriver(vehicleid);                                                                                                   *
@@ -80,7 +77,6 @@
  * IsPetrolCapDestroyToggled(vehicleid);                                                                                          *
  * IsVehicleDamageToggled(vehicleid,type);                                                                                        *
  * ToggleVehicleDamageUpdate(vehicleid,type,toggle);                                                                              *
- * GetVehicleOffset(vehicleid,EVF::OffsetTypes:type,&Float:x,&Float:y,&Float:z);                                                  *
  * GetVehicleNextSeat(vehicleid,passenger = 1);                                                                                   *
  * TeleportVehicle(vehicleid,Float:x,Float:y,Float:z,Float:angle,worldid = -1,interiorid = -1);                                   *
  * GetVehicleSlotAttachedObject(vehicleid,slot);                                                                                  *
@@ -91,6 +87,8 @@
  * SetVehicleNeonLights(vehicleid,bool:enable = true,color = RED_NEON);                                                           *
  * VehicleSupportsNeonLights(modelid);                                                                                            *
  * GetVehicleNeonLightsState(vehicleid);                                                                                          *
+ * IsToggledVehicleBulletproof(vehicleid);                                                                                        *
+ * ToggleVehicleBulletproof(vehicleid,bool:toggle);                                                                               *
  *                                                                                                                                *
  * Compatible with YSF Functions:                                                                                                 *
  * GetVehicleColor(vehicleid,&color1,&color2);                                                                                    *
@@ -112,7 +110,6 @@
  * OnVehicleFuelChange(vehicleid,newfuel,oldfuel);                                                                                *
  * OnVehicleBombDeactivate(vehicleid);                                                                                            *
  * OnVehicleBombExplode(vehicleid);                                                                                               *
- * OnPlayerShotVehicle(playerid,vehicleid,weaponid,Float:amount,bodypart);                                                        *
  * OnPlayerEditVehicle(playerid,vehicleid,response,Float:fX,Float:fY,Float:fZ,Float:fRotZ);                                       *
  * OnPlayerEditVehicleObject(playerid,vehicleid,response,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz);                     *
  * OnPlayerReachSpeedCapLimit(playerid,vehicleid,Float:speed);                                                                    *
@@ -204,6 +201,7 @@
  * # e_VEHICLE_DAMAGE_TIRES                                                                                                       *
  * # e_VEHICLE_BOMB                                                                                                               *
  * # e_VEHICLE_BOMB_TIMER                                                                                                         *
+ * # e_VEHICLE_BULLETPROOF                                                                                                        *
  *                                                                                                                                *
  * enum 'EVF::VehicleBodyPart'                                                                                                    *
  * # VEHICLE_BODYPART_UNKNOWN                                                                                                     *
@@ -222,21 +220,16 @@
  * # VEHICLE_TYPE_BOOT                                                                                                            *
  * # VEHICLE_TYPE_OBJECTIVE                                                                                                       *
  *                                                                                                                                *
- * enum 'EVF::OffsetTypes'                                                                                                        *
- * # VEHICLE_OFFSET_BOOT                                                                                                          *
- * # VEHICLE_OFFSET_HOOD                                                                                                          *
- * # VEHICLE_OFFSET_ROOF                                                                                                          *
- *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
 //Check Version EVF.inc
 #if !defined _EVF_include
-	#error [ADM] You need EVF.inc v3.0.2
+	#error [ADM] You need EVF.inc v3.0.3
 #elseif !defined EVF_Version
-	#error [ADM] Update you EVF.inc to v3.0.2
-#elseif (EVF_Version < 30002)
-	#error [ADM] Update you EVF.inc to v3.0.2
+	#error [ADM] Update you EVF.inc to v3.0.3
+#elseif (EVF_Version < 30003)
+	#error [ADM] Update you EVF.inc to v3.0.3
 #endif
 */
 
@@ -266,7 +259,7 @@
 	#error [ADM] Please include a_http.inc before EVF.inc
 #endif
 
-#define EVF_Version									(30002) //a.b.c 10000*a+100*b+c
+#define EVF_Version									(30003) //a.b.c 10000*a+100*b+c
 #define EVF_SAMP_Version							"0.3.7"
 
 #define EVF_Function::								stock
@@ -381,7 +374,8 @@ enum EVF::VehicleProperties {
 	e_VEHICLE_DAMAGE_LIGHTS,
 	e_VEHICLE_DAMAGE_TIRES,
 	e_VEHICLE_BOMB,
-	e_VEHICLE_BOMB_TIMER
+	e_VEHICLE_BOMB_TIMER,
+	e_VEHICLE_BULLETPROOF
 };
 
 enum EVF::VehicleBodyPart {
@@ -401,12 +395,6 @@ enum EVF::ParamTypes {
 	VEHICLE_TYPE_BONNET,
 	VEHICLE_TYPE_BOOT,
 	VEHICLE_TYPE_OBJECTIVE
-};
-
-enum EVF::OffsetTypes {
-	VEHICLE_OFFSET_BOOT,
-	VEHICLE_OFFSET_HOOD,
-	VEHICLE_OFFSET_ROOF
 };
 
 enum EVF::VehicleData {
@@ -946,9 +934,6 @@ new const EVF::VehicleDoors[MAX_VEHICLE_MODELS] = {
 #define EVF_GetActiveCount() 					GetSVarInt("ADM:EVF:ACTIVE")
 #define IsValidVehicleModelID(%0)				(400 <= (%0) <= 611)
 #define SetVehicleInterior(%0,%1)				LinkVehicleToInterior(%0,%1)
-#define GetVehicleBoot(%0,%1,%2,%3)				GetVehicleOffset((%0),VEHICLE_OFFSET_BOOT,(%1),(%2),(%3))
-#define GetVehicleHood(%0,%1,%2,%3)				GetVehicleOffset((%0),VEHICLE_OFFSET_HOOD,(%1),(%2),(%3))
-#define GetVehicleRoof(%0,%1,%2,%3)				GetVehicleOffset((%0),VEHICLE_OFFSET_ROOF,(%1),(%2),(%3))
 #define IsValidVehicleDoor(%0,%1) 				!((%1) > EVF::VehicleDoors[(GetVehicleModel(%0)-400) & MAX_VEHICLE_MODELS])
 #define RemoveVehiclePaintjob(%0)				ChangeVehiclePaintjob((%0),RESET_PAINTJOB_ID)
 #define RestoreVehicleHorn(%0)					SetVehiclePropertyValue((%0),e_VEHICLE_HORN,0)
@@ -978,6 +963,8 @@ new const EVF::VehicleDoors[MAX_VEHICLE_MODELS] = {
 #define GetVehicleBomb(%0)						GetVehiclePropertyValue((%0),e_VEHICLE_BOMB)
 #define IsVehicleBombed(%0)						(GetVehicleBomb(%0) > 0)
 #define RemoveVehicleBomb(%0)					SetVehicleBomb((%0),0)
+#define IsToggledVehicleBulletproof(%0)			GetVehiclePropertyValue((%0),e_VEHICLE_BULLETPROOF)
+#define ToggleVehicleBulletproof(%0,%1)			SetVehiclePropertyValue((%0),e_VEHICLE_BULLETPROOF,(_:%1))
 
 //extra names:
 #define GetVehicleDoorAmountByModelid			GetVehicleModelDoorAmount
@@ -1271,38 +1258,6 @@ EVF::Function:: IsVehicleDamageToggled(vehicleid,type){
 		case VEHICLE_DAMAGE_TIRES:	return GetVehiclePropertyValue(vehicleid,e_VEHICLE_DAMAGE_TIRES);
 	}
 	return 0;
-}
-
-EVF::Function:: GetVehicleOffset(vehicleid,EVF::OffsetTypes:type,&Float:x,&Float:y,&Float:z){
-	new Float:fPos[4],Float:fSize[3];
-
-	if(!IsValidVehicle(vehicleid)){
-		x = y =	z = 0.0;
-		return 0;
-	} else {
-		GetVehiclePos(vehicleid,fPos[0],fPos[1],fPos[2]);
-		GetVehicleZAngle(vehicleid,fPos[3]);
-		GetVehicleModelInfo(GetVehicleModel(vehicleid),VEHICLE_MODEL_INFO_SIZE,fSize[0],fSize[1],fSize[2]);
-
-		switch(type){
-			case VEHICLE_OFFSET_BOOT: {
-				x = fPos[0] - (floatsqroot(fSize[1] + fSize[1]) * floatsin(-fPos[3],degrees));
-				y = fPos[1] - (floatsqroot(fSize[1] + fSize[1]) * floatcos(-fPos[3],degrees));
- 				z = fPos[2];
-			}
-			case VEHICLE_OFFSET_HOOD: {
-				x = fPos[0] + (floatsqroot(fSize[1] + fSize[1]) * floatsin(-fPos[3],degrees));
-				y = fPos[1] + (floatsqroot(fSize[1] + fSize[1]) * floatcos(-fPos[3],degrees));
-	 			z = fPos[2];
-			}
-			case VEHICLE_OFFSET_ROOF: {
-				x = fPos[0];
-				y = fPos[1];
-				z = fPos[2] + floatsqroot(fSize[2]);
-			}
-		}
-	}
-	return 1;
 }
 
 EVF::Function:: GetNearestVehicle(playerid){
@@ -1811,8 +1766,9 @@ EVF::Function:: EVF::ChangeVehiclePaintjob(vehicleid,paintjobid){
 		SetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB,paintjobid);
 		if(paintjobid == RESET_PAINTJOB_ID){
 			new color1,color2;
-			EVF::GetVehicleColor(vehicleid,color1,color2);
-			ChangeVehicleColor(vehicleid,color1,color2);
+			if(EVF::GetVehicleColor(vehicleid,color1,color2)){
+				ChangeVehicleColor(vehicleid,color1,color2);
+			}
 		}
 		return 1;
 	}
@@ -1927,6 +1883,7 @@ EVF::Function:: EVF::CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,c
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_EDITOR,0);
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB,0);
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_BOMB_TIMER,-1);
+	SetVehiclePropertyValue(vehicleid,e_VEHICLE_BULLETPROOF,0);
 	
 	for(new i = 0; i < 4; i++) ToggleVehicleDamageUpdate(vehicleid,i,1);
 	
@@ -2000,6 +1957,7 @@ EVF::Function:: EVF::DestroyVehicle(vehicleid){
 //Hook: OnPlayerWeaponShot
 public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Float:fZ){
 	if(hittype == BULLET_HIT_TYPE_VEHICLE){
+		if(IsToggledVehicleBulletproof(hitid)) return 0;
 		new Float:fHealth, bodypart = _:VEHICLE_BODYPART_UNKNOWN, Float:fDamage = EVF::WeaponDamage[GetPlayerWeapon(playerid)];
 		GetVehicleHealth(hitid,fHealth);
 		if(fHealth > 249.0){
@@ -2337,9 +2295,10 @@ public OnVehicleDamageStatusUpdate(vehicleid, playerid){
 public OnVehicleSpawn(vehicleid){
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB,RESET_PAINTJOB_ID);
 
-	new color1 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1),
-		color2 = GetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2);
-	ChangeVehicleColor(vehicleid,color1,color2);
+	new color1,color2;
+	if(EVF::GetVehicleColor(vehicleid,color1,color2)){
+		ChangeVehicleColor(vehicleid,color1,color2);
+	}
 
 	new Float:pos[3];
 	GetVehiclePos(vehicleid,pos[0],pos[1],pos[2]);
