@@ -30,7 +30,7 @@
 #endif
 
 #if ((!defined _YSF_included) || (!defined RemovePlayerForPlayer))
-	#error [ADM] You need YSF R18-2
+	#error [ADM] You need YSF R19 (github.com/kurta999/YSF/releases)
 #endif
 
 #define VNPC::				VNPC_

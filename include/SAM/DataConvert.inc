@@ -107,7 +107,7 @@
 #endif
 
 #if !defined sscanf
-	#error [ADM] You need SScanf v2.8.2
+	#error [ADM] You need SScanf v2.8.2 (github.com/AbyssMorgan/SA-MP/tree/master/plugins)
 #endif
 
 #define Data_Convert_Version		(20000) //a.b.c 10000*a+100*b+c

@@ -16,7 +16,7 @@
  * Streamer Version: 2.9.1                                                                          *
  * MapAndreas Version: 1.2.1                                                                        *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.3.0                                                                            *
+ * 3DTryg Version: 4.4.0                                                                            *
  * StreamerFunction Version: 2.8.0                                                                  *
  *                                                                                                  *
  * Callbacks:                                                                                       *
@@ -29,16 +29,16 @@
 #endif
 
 #if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined STREAMER_TYPE_ACTOR))
-	#error [ADM] You need Streamer v2.9.1
+	#error [ADM] You need Streamer v2.9.1 (github.com/samp-incognito/samp-streamer-plugin/releases)
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.3.0
+	#error [ADM] You need 3DTryg.inc v4.4.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.3.0
-#elseif (Tryg3D_Version < 40300)
-	#error [ADM] Update you 3DTryg.inc to v4.3.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.0
+#elseif (Tryg3D_Version < 40400)
+	#error [ADM] Update you 3DTryg.inc to v4.4.0
 #endif
 
 //Check Version StreamerFunction.inc

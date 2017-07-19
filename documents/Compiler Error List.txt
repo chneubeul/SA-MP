@@ -5,8 +5,8 @@ Plugin Include:
 [ADM] You need MapAndreas v1.2.1
 [ADM] You need ColAndreas v1.4.0
 [ADM] You need ColAndreas/MapAndreas
-[ADM] You need YSF R18-2
-[ADM] You need FCNPC v1.7.1
+[ADM] You need YSF R19
+[ADM] You need FCNPC v1.7.3
 
 Global Include:
 Detected another command system

@@ -102,7 +102,7 @@
 #define ADM_Encryption_Version 		(20300) //a.b.c 10000*a+100*b+c
 
 #if !defined sscanf
-	#error [ADM] You need SScanf v2.8.2
+	#error [ADM] You need SScanf v2.8.2 (github.com/AbyssMorgan/SA-MP/tree/master/plugins)
 #endif
 
 #define ADM_Function::				stock

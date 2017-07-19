@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * Streamer Version: 2.9.1                                                                                                          *
  * ColAndreas Version: 1.4.0                                                                                                        *
- * 3DTryg Version: 4.3.0                                                                                                            *
+ * 3DTryg Version: 4.4.0                                                                                                            *
  *                                                                                                                                  *
  * Functions:                                                                                                                       *
  * TogglePrivatePortalGun(bool:toggle);            //default: false                                                                 *
@@ -24,8 +24,8 @@
  * bool:IsToggleUseTeamPortalGun();                                                                                                 *
  * TogglePortalGunForAll(bool:toggle);             //default: true                                                                  *
  * bool:IsTogglePortalGunForAll();                                                                                                  *
- * TogglePortalGunForPlayer(playerid,bool:toggle); //default: false                                                                 *
- * bool:IsTogglePortalGunForPlayer(playerid);                                                                                       *
+ * TogglePortalGunForPlayer(playerid,toggle);      //default: 0                                                                     *
+ * IsTogglePortalGunForPlayer(playerid);                                                                                            *
  * Float:GetPortalGunSpeed(playerid);                                                                                               *
  * SetPortalGunSpeed(playerid,Float:speed);                                                                                         *
  * Float:GetPortalGunStreamDistance();                                                                                              *
@@ -45,20 +45,20 @@
 #endif
 
 #if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID) && (!defined STREAMER_TYPE_ACTOR))
-	#error [ADM] You need Streamer v2.9.1
+	#error [ADM] You need Streamer v2.9.1 (github.com/samp-incognito/samp-streamer-plugin/releases)
 #endif
 
 #if !defined COLANDREAS
-	#error [ADM] You need ColAndreas v1.4.0
+	#error [ADM] You need ColAndreas v1.4.0 (github.com/Pottus/ColAndreas/releases)
 #endif
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.3.0
+	#error [ADM] You need 3DTryg.inc v4.4.0
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.3.0
-#elseif (Tryg3D_Version < 40300)
-	#error [ADM] Update you 3DTryg.inc to v4.3.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.0
+#elseif (Tryg3D_Version < 40400)
+	#error [ADM] Update you 3DTryg.inc to v4.4.0
 #endif
 
 #define PG_GetValueBit(%0,%1)					((%0) >>> (%1) & 0x01)
