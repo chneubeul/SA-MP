@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.0                                                                            *
+ * 3DTryg Version: 4.4.1                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamMagicShoot(bool:toggle);            //default: false                                *
@@ -56,11 +56,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.0
+	#error [ADM] You need 3DTryg.inc v4.4.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
-#elseif (Tryg3D_Version < 40400)
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
+#elseif (Tryg3D_Version < 40401)
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
 #endif
 
 #define MAGIC_SPEED 						(12.0)
@@ -133,7 +133,7 @@ T3D:function MagicShot(playerid){
 	Tryg3DForeach(i){
 		if(i != playerid){
 			if(!IsToggleUseTeamMagicShoot() || (IsToggleUseTeamMagicShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
-				if(Tryg3D_IsPlayerSpawned(i)){
+				if(Tryg3D::IsPlayerSpawned(i)){
 					GetPlayerPos(i,px,py,pz);
 					if(GetPlayerVirtualWorld(i) == mvw && GetPlayerInterior(i) == mint){
 						if(IsPointInCylinder3D(px,py,pz,mx,my,mz,mtx,mty,mz,2.0)){
@@ -172,7 +172,7 @@ T3D:function MagicShot(playerid){
 T3D:function MagicDestroy(objectid,targetid,playerid){
 	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
-		Tryg3D_GivePlayerDamage(targetid,GetMagicShootDamage(playerid),playerid,7,3);
+		Tryg3D::GivePlayerDamage(targetid,GetMagicShootDamage(playerid),playerid,7,3);
 		ApplyAnimation(targetid,"ped","SHOT_partial",4.1,0,1,1,1,1,1);
 	}
 	return 1;
@@ -193,7 +193,7 @@ new bool:CRC_MagicInit = true;
 public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 	if(IsToggleMagicShootForAll() || IsToggleMagicShootForPlayer(playerid)){
 		if(GetTickCount()-MagicTime[playerid] >= MAGIC_REFRESH_ACTION){
-			if(GetPlayerWeapon(playerid) == 0 && Tryg3D_KeyPressed(KEY_FIRE) && !IsPlayerInAnyVehicle(playerid)){
+			if(GetPlayerWeapon(playerid) == 0 && Tryg3D::KeyPressed(KEY_FIRE) && !IsPlayerInAnyVehicle(playerid)){
 				MagicShot(playerid);
 			}
 		}

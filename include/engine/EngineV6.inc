@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7                                                                                                            *
  * Streamer Version: 2.9.1                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                       *
- * 3DTryg Version: 4.4.0                                                                                                           *
+ * 3DTryg Version: 4.4.1                                                                                                           *
  *                                                                                                                                 *
  * Include created for the project Next Generation City Mod http://ngc.ct8.pl                                                      *
  *                                                                                                                                 *
@@ -72,11 +72,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.0
+	#error [ADM] You need 3DTryg.inc v4.4.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
-#elseif (Tryg3D_Version < 40400)
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
+#elseif (Tryg3D_Version < 40401)
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
 #endif
 
 #if defined _NOX_ENGINE_X
@@ -261,7 +261,7 @@ stock GetClockPos(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Floa
 	if(!EngineXLoaded) return 0;
 	GetRandomClockPos(x,y,z,radius,tx,ty,tz,trz,rz);
 	new Float:tmpz;
-	Tryg3D_MapAndreasFindZ(tx,ty,tmpz);
+	Tryg3D::MapAndreasFindZ(tx,ty,tmpz);
 	if(tz < tmpz+50.0){
 		tz += 50.0;
 	}
@@ -282,7 +282,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],randRX,randRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX,0.0,randRZ);
 					}
@@ -299,7 +299,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX+8,12.0,randRZ);
 					}
@@ -316,7 +316,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,randRX,randRZ);
 					}
@@ -335,7 +335,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 						GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 						if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 							new Float:tmpz;
-							Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+							Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 							if(tmpz+minz < F5[tZ]){
 								MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,randRX,randRZ);
 							}
@@ -350,7 +350,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 						GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 						if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidObject(objectid))){
 							new Float:tmpz;
-							Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+							Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 							if(tmpz+minz < F5[tZ]){
 								MoveObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,randRX,randRZ);
 							}
@@ -368,7 +368,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 						GetPointInFront3D(F5[X],F5[Y],F5[Z],randRX,randRZ,randR,F5[tX],F5[tY],F5[tZ]);
 						if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 							new Float:tmpz;
-							Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+							Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 							if(tmpz+minz < F5[tZ]){
 								MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX,0.0,randRZ);
 							}
@@ -382,7 +382,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 					GetPointInFront3D(F5[X],F5[Y],F5[Z],randRX,randRZ,randR,F5[tX],F5[tY],F5[tZ]);
 					if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidObject(objectid))){
 						new Float:tmpz;
-						Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+						Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 						if(tmpz+minz < F5[tZ]){
 							MoveObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX,0.0,randRZ);
 						}
@@ -398,7 +398,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 					GetPointInFront3D(F5[X],F5[Y],F5[Z],randRX,randRZ,randR,F5[tX],F5[tY],F5[tZ]);
 					if((IsPointInDynamicArea(SpecialPolygon[areaid],F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 						new Float:tmpz;
-						Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+						Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 						if(tmpz+minz < F5[tZ]){
 							MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX,0.0,randRZ);
 						}
@@ -416,7 +416,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX+14,12.0,randRZ);
 					}
@@ -460,7 +460,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX,0.0,randRZ);
 					}
@@ -476,7 +476,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);				
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz > 0.0){
 						Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,randRZ);
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,randRZ);
@@ -515,7 +515,7 @@ stock EngineExcavatorUpdate(objectid,areaid,EngineX:engineid,Float:speed){
 				randRZ = Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
-					Tryg3D_MapAndreasFindZ(F5[X],F5[Y],F5[Z]);
+					Tryg3D::MapAndreasFindZ(F5[X],F5[Y],F5[Z]);
 					F5[Z] += 7.0;
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[Z],speed,0.0,0.0,randRZ);
 				}
@@ -599,7 +599,7 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],F5[rX],F5[rZ],randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
 				}
@@ -615,7 +615,7 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
 				}
@@ -631,7 +631,7 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
 				}
@@ -647,7 +647,7 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
 				}
@@ -688,7 +688,7 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
 				}
@@ -705,7 +705,7 @@ stock DeltaEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:mi
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz > 0.0){
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,F5[rZ]);
 				}
@@ -743,7 +743,7 @@ stock EpsilonEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],F5[rX],F5[rZ],randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
@@ -760,7 +760,7 @@ stock EpsilonEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
@@ -777,7 +777,7 @@ stock EpsilonEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
@@ -794,7 +794,7 @@ stock EpsilonEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
@@ -838,7 +838,7 @@ stock EpsilonEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz+minz < F5[tZ]){
 					MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,F5[rX],F5[rY],F5[rZ]);
@@ -856,7 +856,7 @@ stock EpsilonEngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:
 			GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 			if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 				new Float:tmpz;
-				Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+				Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 				if(tmpz > 0.0){
 					MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 					MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,F5[rZ]);
@@ -898,7 +898,7 @@ stock EngineXCA(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],randRX,randRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX,0.0,randRZ);
@@ -916,7 +916,7 @@ stock EngineXCA(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX+8,12.0,randRZ);
@@ -934,7 +934,7 @@ stock EngineXCA(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,randRX,randRZ);
@@ -952,7 +952,7 @@ stock EngineXCA(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX+14,12.0,randRZ);
@@ -999,7 +999,7 @@ stock EngineXCA(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],tmpRX,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz+minz < F5[tZ]){
 						MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,randRX,0.0,randRZ);
@@ -1016,7 +1016,7 @@ stock EngineXCA(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,
 				GetPointInFront3D(F5[X],F5[Y],F5[Z],0.0,tmpRZ,randR,F5[tX],F5[tY],F5[tZ]);				
 				if((IsPointInDynamicArea(EngineXArea(areaid),F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					new Float:tmpz;
-					Tryg3D_MapAndreasFindZ(F5[tX],F5[tY],tmpz);
+					Tryg3D::MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz > 0.0){
 						MovePointColCutLineEx(F5[X],F5[Y],F5[Z],F5[tX],F5[tY],F5[tZ],F5[tX],F5[tY],F5[tZ],cut_size);
 						Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,randRZ);

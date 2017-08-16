@@ -14,7 +14,7 @@
  * File Version: 2.0.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
- * 3DTryg Version: 4.4.0                                                                                                          *
+ * 3DTryg Version: 4.4.1                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,            *
@@ -68,11 +68,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.0
+	#error [ADM] You need 3DTryg.inc v4.4.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
-#elseif (Tryg3D_Version < 40400)
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
+#elseif (Tryg3D_Version < 40401)
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
 #endif
 
 #if defined _dynamic_mine_system
@@ -443,12 +443,12 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 		if(MineComponent[mobid][mine_status] == MINE_STATUS_ACTIVE && MineComponent[mobid][mine_objectid] == objectid && MineComponent[mobid][mine_playerid] != playerid){
 			if((MineComponent[mobid][mine_teamid] != GetPlayerTeam(playerid)) || (MineComponent[mobid][mine_teamid] == ANY_TEAM)){
 				if(MineComponent[mobid][mine_health] != MINE_INFINITY_HEALTH){
-					MineComponent[mobid][mine_health] -= Tryg3D_GetWeaponDamage(weaponid);
+					MineComponent[mobid][mine_health] -= Tryg3D::GetWeaponDamage(weaponid);
 					new buffer[128];
 					if(MineComponent[mobid][mine_health] > 0){
-						format(buffer,sizeof buffer,"Mine~n~~w~%.0f HP~n~~r~~h~~h~-%.0f HP",MineComponent[mobid][mine_health],Tryg3D_GetWeaponDamage(weaponid));
+						format(buffer,sizeof buffer,"Mine~n~~w~%.0f HP~n~~r~~h~~h~-%.0f HP",MineComponent[mobid][mine_health],Tryg3D::GetWeaponDamage(weaponid));
 					} else {
-						format(buffer,sizeof buffer,"Mine~n~~w~0 HP~n~~r~~h~~h~-%.0f HP",Tryg3D_GetWeaponDamage(weaponid));
+						format(buffer,sizeof buffer,"Mine~n~~w~0 HP~n~~r~~h~~h~-%.0f HP",Tryg3D::GetWeaponDamage(weaponid));
 					}
 					GameTextForPlayer(playerid,buffer,500,4);
 					if(MineComponent[mobid][mine_health] <= 0.0){

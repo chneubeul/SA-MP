@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.0                                                                            *
+ * 3DTryg Version: 4.4.1                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * bool:IsPlayerUsingVehPara(playerid);                                                             *
@@ -44,11 +44,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.0
+	#error [ADM] You need 3DTryg.inc v4.4.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
-#elseif (Tryg3D_Version < 40400)
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
+#elseif (Tryg3D_Version < 40401)
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
 #endif
 
 //Language
@@ -158,7 +158,7 @@ public OnPlayerUpdate(playerid){
 			T3D:vid = GetPlayerVehicleID(playerid);
 			T3D:tx = T3D:ty = 0.0;
 			GetVehicleRotation(T3D:vid,T3D:rx,T3D:ry,T3D:rz);
-			ShiftVectorRotation((DeCompRotationFloat(T3D:ry)/180.0),(DeCompRotationFloat(-T3D:rx)/180.0),0.0,	0.0,0.0,T3D:rz, T3D:tx,T3D:ty,T3D:tz);
+			ShiftVectorRotation((DeCompRotationFloat(T3D:ry)/180.0),(DeCompRotationFloat(-T3D:rx)/180.0),0.0,0.0,0.0,T3D:rz,T3D:tx,T3D:ty,T3D:tz);
 			SetVehicleVelocity(T3D:vid,(T3D:tx/10.0),(T3D:ty/10.0),-0.2);
 		}
 	}
@@ -266,7 +266,7 @@ public OnPlayerStateChange(playerid,newstate,oldstate){
 public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 	if(IsPlayerInAnyVehicle(playerid) && GetPlayerVehicleSeat(playerid) == 0){
 		new vid = GetPlayerVehicleID(playerid);
-		if(Tryg3D_KeyPressed(VEHPARA_KEY)){
+		if(Tryg3D::KeyPressed(VEHPARA_KEY)){
 			if(IsToggleVehicleParachute(vid)){
 				if(IsPlayerUsingVehPara(playerid)){
 					StopVehicleParachuteAction(playerid);

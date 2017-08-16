@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.0                                                                            *
+ * 3DTryg Version: 4.4.1                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamKnifeShoot(bool:toggle);            //default: false                                *
@@ -53,11 +53,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.0
+	#error [ADM] You need 3DTryg.inc v4.4.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
-#elseif (Tryg3D_Version < 40400)
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
+#elseif (Tryg3D_Version < 40401)
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
 #endif
 
 #define KNIFE_SPEED 						(12.0)
@@ -104,7 +104,7 @@ T3D:function KnifeShot(playerid){
 	Tryg3DForeach(i){
 		if(i != playerid){
 			if(!IsToggleUseTeamKnifeShoot() || (IsToggleUseTeamKnifeShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
-				if(Tryg3D_IsPlayerSpawned(i)){
+				if(Tryg3D::IsPlayerSpawned(i)){
 					GetPlayerPos(i,px,py,pz);
 					if(GetPlayerVirtualWorld(i) == mvw && GetPlayerInterior(i) == mint){
 						if(IsPointInCylinder3D(px,py,pz, mx,my,mz, mtx,mty,mz, 2.0)){
@@ -142,7 +142,7 @@ T3D:function KnifeShot(playerid){
 T3D:function KnifeDestroy(objectid,targetid,playerid){
 	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
-		Tryg3D_GivePlayerDamage(targetid,GetKnifeShootDamage(playerid),playerid,4,3);
+		Tryg3D::GivePlayerDamage(targetid,GetKnifeShootDamage(playerid),playerid,4,3);
 		ApplyAnimation(targetid,"ped","SHOT_partial",4.1,0,1,1,1,1,1);
 	}
 	return 1;

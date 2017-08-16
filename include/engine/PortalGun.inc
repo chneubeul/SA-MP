@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * Streamer Version: 2.9.1                                                                                                          *
  * ColAndreas Version: 1.4.0                                                                                                        *
- * 3DTryg Version: 4.4.0                                                                                                            *
+ * 3DTryg Version: 4.4.1                                                                                                            *
  *                                                                                                                                  *
  * Functions:                                                                                                                       *
  * TogglePrivatePortalGun(bool:toggle);            //default: false                                                                 *
@@ -54,11 +54,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.0
+	#error [ADM] You need 3DTryg.inc v4.4.1
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
-#elseif (Tryg3D_Version < 40400)
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
+#elseif (Tryg3D_Version < 40401)
+	#error [ADM] Update you 3DTryg.inc to v4.4.1
 #endif
 
 #define PG_GetValueBit(%0,%1)					((%0) >>> (%1) & 0x01)
@@ -145,7 +145,7 @@ new CRC_PortalInit = true;
 public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 	if(IsTogglePortalGunForAll() || IsTogglePortalGunForPlayer(playerid)){
 		if(GetPlayerWeapon(playerid) == 33 && !IsPlayerInAnyVehicle(playerid)){
-			if(Tryg3D_KeyPressed(KEY_YES)){
+			if(Tryg3D::KeyPressed(KEY_YES)){
 				if(GetPortalGunType(playerid)){
 					SetPortalGunType(playerid,PORTAL_GUN_BLUE);
 					GameTextForPlayer(playerid,"~b~Portal Gun Ring",1500,4);
