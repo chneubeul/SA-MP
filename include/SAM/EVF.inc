@@ -256,11 +256,15 @@
 #endif
 
 #if defined _Vehicle_Ex
-	#error [ADM] Please remove deprecated file VehicleEx.inc
+	#error [ADM] Please remove deprecated file VehicleEx.inc (already implemented)
 #endif
 
 #if defined gVehiclePetrolCapOffsets
-	#error [ADM] Please remove deprecated file vehicleplus.inc
+	#error [ADM] Please remove deprecated file vehicleplus.inc (already implemented)
+#endif
+
+#if ((defined g_anltv_VehicleData) && (defined SetVehicleNeonLights))
+	#error [ADM] Please remove deprecated file SetVehicleNeonLights.inc (already implemented)
 #endif
 
 //Update Checker
@@ -277,7 +281,7 @@
 
 #define EVF_Function::								stock
 #define EVF_Public::%0(%1)							forward %0(%1); public %0(%1)
-#define EVF::										EVF_ 
+#define EVF::										EVF_
 
 //Detect Streamer Plugin
 #if ((defined Streamer_AppendArrayData) && (defined INVALID_STREAMER_ID))

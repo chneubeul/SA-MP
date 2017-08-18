@@ -678,11 +678,15 @@
 #endif
 
 #if defined _Text_Draw_Ex
-	#error [ADM] Please remove deprecated file TextDrawEx.inc
+	#error [ADM] Please remove deprecated file TextDrawEx.inc (already implemented)
 #endif
 
 #if defined _Map_Andreas_Ex
-	#error [ADM] Please remove deprecated file MapAndreasEx.inc
+	#error [ADM] Please remove deprecated file MapAndreasEx.inc (already implemented)
+#endif
+
+#if defined _INC_VEHPARTS
+	#error [ADM] Please remove deprecated file VehiclePartPosition.inc (already implemented, check: GetVehiclePartPos)
 #endif
 
 //Update Checker
@@ -696,7 +700,8 @@
 
 #if defined _EVF_include
 	#error [ADM] Please include EVF.inc after 3DTryg.inc for improvements
-#endif 
+#endif
+ 
  
 /************************************************************************************************************************************
  *                                                                                                                                  *

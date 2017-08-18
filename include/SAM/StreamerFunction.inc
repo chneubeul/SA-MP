@@ -1505,8 +1505,8 @@ StreamerSpec::Function:: GetNearestVisibleItem(playerid,type){
 	//Hook: AttachDynamicObjectToObject
 	StreamerSpec::Function:: SF_AttachDynamicObjectToObject(STREAMER_TAG_OBJECT objectid,attachtoid,Float:offsetx,Float:offsety,Float:offsetz,Float:rx,Float:ry,Float:rz,syncrotation = 1){
 		new dobj = AttachDynamicObjectToObject(objectid,attachtoid,offsetx,offsety,offsetz,rx,ry,rz,syncrotation);
-		if(GetDynamicObjectPriority(attachtoid) <= GetDynamicObjectPriority(objectid)){
-			SetDynamicObjectPriority(attachtoid,GetDynamicObjectPriority(objectid)+1);
+		if(GetDynamicObjectPriority(objectid) <= GetDynamicObjectPriority(attachtoid)){
+			SetDynamicObjectPriority(objectid,GetDynamicObjectPriority(attachtoid)+1);
 		}
 		return dobj;
 	}
