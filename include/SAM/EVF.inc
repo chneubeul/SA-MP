@@ -2622,7 +2622,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 	forward EVF_OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Float:fZ);
 #endif
 
-//Hook:OnPlayerConnect
+//Hook: OnPlayerConnect
 public OnPlayerConnect(playerid){
 	EVF::ModShopStatus[playerid] = false;
 	#if defined EVF_OnPlayerConnect

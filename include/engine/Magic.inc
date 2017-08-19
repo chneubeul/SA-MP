@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.1                                                                            *
+ * 3DTryg Version: 4.4.2                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamMagicShoot(bool:toggle);            //default: false                                *
@@ -56,11 +56,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.1
+	#error [ADM] You need 3DTryg.inc v4.4.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.1
-#elseif (Tryg3D_Version < 40401)
-	#error [ADM] Update you 3DTryg.inc to v4.4.1
+	#error [ADM] Update you 3DTryg.inc to v4.4.2
+#elseif (Tryg3D_Version < 40402)
+	#error [ADM] Update you 3DTryg.inc to v4.4.2
 #endif
 
 #define MAGIC_SPEED 						(12.0)
