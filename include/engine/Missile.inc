@@ -11,10 +11,10 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 2.0.0                                                                                                            *
+ * File Version: 2.1.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.1                                                                                                        *
- * 3DTryg Version: 4.4.0                                                                                                          *
+ * 3DTryg Version: 4.4.2                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, *
@@ -33,17 +33,18 @@
  * Callbacks:                                                                                                                     *
  * OnMissileDestroy(mobid,Float:x,Float:y,Float:z,type,killerid,byplayerid);                                                      *
  * OnMissileDetectPlayer(playerid,killerid);                                                                                      *
+ * OnMissileRequestLaunch(Float:x,Float:y,Float:z,playerid,targetid);                                                             *
  *                                                                                                                                *
  **********************************************************************************************************************************/
 
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v2.0.0
+	#error [ADM] You need Missile.inc v2.1.0
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v2.0.0
-#elseif (Missile_Version < 20000)
-	#error [ADM] Update you Missile.inc to v2.0.0
+	#error [ADM] Update you Missile.inc to v2.1.0
+#elseif (Missile_Version < 20100)
+	#error [ADM] Update you Missile.inc to v2.1.0
 #endif
 */
 
@@ -62,14 +63,14 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.0
+	#error [ADM] You need 3DTryg.inc v4.4.2
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
-#elseif (Tryg3D_Version < 40400)
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.2
+#elseif (Tryg3D_Version < 40402)
+	#error [ADM] Update you 3DTryg.inc to v4.4.2
 #endif
 
-#define Missile_Version						(20000)
+#define Missile_Version						(20100)
 
 #define MISSILE_OBJECT_NORMAL				(0)
 #define MISSILE_OBJECT_BIG					(1)
@@ -136,10 +137,17 @@ stock FindFreeMissileID(){
 
 forward OnMissileDestroy(mobid,Float:x,Float:y,Float:z,type,killerid,byplayerid);
 forward OnMissileDetectPlayer(playerid,killerid);
+#if defined OnMissileRequestLaunch
+	forward OnMissileRequestLaunch(Float:x,Float:y,Float:z,playerid,targetid);
+#endif
 
 stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, \
 	Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM, \
 	bool:remote=false,remote_count=MAX_MISSILE_REMOTE_TARGET,Float:remote_height=1.0,Float:arc_roll=0.0){
+	
+	#if defined OnMissileRequestLaunch
+		if(!OnMissileRequestLaunch(tx,ty,tz,byplayerid,INVALID_PLAYER_ID)) return INVALID_MISSILE_ID;
+	#endif
 	
 	new mobid = FindFreeMissileID();
 	if(mobid == INVALID_MISSILE_ID){
@@ -164,8 +172,11 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 		case MISSILE_OBJECT_HYDRA: {
 			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(345,x,y,z,rx,0.0,rz,worldid,interiorid,playerid,streamdistance,streamdistance);
 		}
-		case MISSILE_OBJECT_BOMB, MISSILE_OBJECT_BOMB_STATIC: {
+		case MISSILE_OBJECT_BOMB: {
 			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(1636,x,y,z,rx,0.0,rz,worldid,interiorid,playerid,streamdistance,streamdistance);
+		}
+		case MISSILE_OBJECT_BOMB_STATIC: {
+			MissileComponent[mobid][missile_objectid] = CreateDynamicObject(1636,x,y,z,0.0,0.0,rz,worldid,interiorid,playerid,streamdistance,streamdistance);
 		}
 	}
 	MissileComponent[mobid][missile_explode] = explode_radius;
@@ -206,8 +217,11 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 			case MISSILE_OBJECT_HYDRA: {
 				SetDynamicObjectRot(MissileComponent[mobid][missile_objectid],rx,0.0,rz);
 			}
-			case MISSILE_OBJECT_BOMB, MISSILE_OBJECT_BOMB_STATIC: {
+			case MISSILE_OBJECT_BOMB: {
 				SetDynamicObjectRot(MissileComponent[mobid][missile_objectid],rx,0.0,rz);
+			}
+			case MISSILE_OBJECT_BOMB_STATIC: {
+				SetDynamicObjectRot(MissileComponent[mobid][missile_objectid],0.0,0.0,rz);
 			}
 		}
 	} else {
@@ -246,6 +260,10 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 
 stock MissileLaunchAimPlayer(targetid,type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, \
 	Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM){
+	
+	#if defined OnMissileRequestLaunch
+		if(!OnMissileRequestLaunch(tx,ty,tz,byplayerid,targetid)) return INVALID_MISSILE_ID;
+	#endif
 	
 	new mobid = FindFreeMissileID();
 	if(mobid == INVALID_MISSILE_ID){
@@ -540,6 +558,27 @@ public OnPlayerDeath(playerid, killerid, reason){
 #define OnPlayerDeath MIS_OnPlayerDeath
 #if defined MIS_OnPlayerDeath
 	forward MIS_OnPlayerDeath(playerid, killerid, reason);
+#endif
+
+//Hook: OnPlayerConnect
+public OnPlayerConnect(playerid){
+	
+	Streamer_ToggleIdleUpdate(playerid,1);
+	
+	#if defined MIS_OnPlayerConnect
+		MIS_OnPlayerConnect(playerid);
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnPlayerConnect
+	#undef OnPlayerConnect
+#else
+	#define _ALS_OnPlayerConnect
+#endif
+#define OnPlayerConnect MIS_OnPlayerConnect
+#if defined MIS_OnPlayerConnect
+	forward MIS_OnPlayerConnect(playerid);
 #endif
 
 //EOF
