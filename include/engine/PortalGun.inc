@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * Streamer Version: 2.9.1                                                                                                          *
  * ColAndreas Version: 1.4.0                                                                                                        *
- * 3DTryg Version: 4.4.2                                                                                                            *
+ * 3DTryg Version: 4.4.3                                                                                                            *
  *                                                                                                                                  *
  * Functions:                                                                                                                       *
  * TogglePrivatePortalGun(bool:toggle);            //default: false                                                                 *
@@ -54,11 +54,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.2
+	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
-#elseif (Tryg3D_Version < 40402)
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40403)
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #define PG_GetValueBit(%0,%1)					((%0) >>> (%1) & 0x01)
@@ -76,8 +76,8 @@
 #define PORTAL_GUN_BLUE							(0)
 #define PORTAL_GUN_ORANGE						(1)
 
-new PortalGunRing[MAX_PLAYERS][2],
-	PortalGunZone[MAX_PLAYERS][2],
+new STREAMER_TAG_OBJECT PortalGunRing[MAX_PLAYERS][2],
+	STREAMER_TAG_AREA PortalGunZone[MAX_PLAYERS][2],
 	PlayerInPortal[MAX_PLAYERS],
 	Float:PortalGunSpeed[MAX_PLAYERS],
 	PortalEnabledForPlayer[PG_GetConfigSize(MAX_PLAYERS)],
@@ -125,11 +125,11 @@ T3D:function ForceOpenPortalGunRing(playerid,portal_id,Float:ox,Float:oy,Float:o
 T3D:function ForceClosePortalGunRing(playerid){
 	if(IsValidDynamicObject(PortalGunRing[playerid][0])) DestroyDynamicObject(PortalGunRing[playerid][0]);
 	if(IsValidDynamicObject(PortalGunRing[playerid][1])) DestroyDynamicObject(PortalGunRing[playerid][1]);
-	PortalGunRing[playerid][0] = PortalGunRing[playerid][1] = INVALID_STREAMER_ID;
+	PortalGunRing[playerid][0] = PortalGunRing[playerid][1] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
 	
 	if(IsValidDynamicArea(PortalGunZone[playerid][0])) DestroyDynamicArea(PortalGunZone[playerid][0]);
 	if(IsValidDynamicArea(PortalGunZone[playerid][1])) DestroyDynamicArea(PortalGunZone[playerid][1]);
-	PortalGunZone[playerid][0] = PortalGunZone[playerid][1] = INVALID_STREAMER_ID;
+	PortalGunZone[playerid][0] = PortalGunZone[playerid][1] = STREAMER_TAG_AREA INVALID_STREAMER_ID;
 	return 1;
 }
 
@@ -234,7 +234,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 #endif
 
 //Hook: OnPlayerEnterDynamicArea
-public OnPlayerEnterDynamicArea(playerid,areaid){
+public OnPlayerEnterDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 	new pstate = GetPlayerState(playerid);
 	if(pstate != 1 && pstate != 2 && pstate != 3) return 1;
 	
@@ -300,7 +300,7 @@ public OnPlayerEnterDynamicArea(playerid,areaid){
 #endif
 #define OnPlayerEnterDynamicArea PG_OnPlayerEnterDynamicArea
 #if defined PG_OnPlayerEnterDynamicArea
-	forward PG_OnPlayerEnterDynamicArea(playerid,areaid);
+	forward PG_OnPlayerEnterDynamicArea(playerid,STREAMER_TAG_AREA areaid);
 #endif
 
 //Hook: OnFilterScriptInit

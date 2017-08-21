@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.2                                                                            *
+ * 3DTryg Version: 4.4.3                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamKnifeShoot(bool:toggle);            //default: false                                *
@@ -53,11 +53,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.2
+	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
-#elseif (Tryg3D_Version < 40402)
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40403)
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #define KNIFE_SPEED 						(12.0)
@@ -101,7 +101,7 @@ T3D:function KnifeShot(playerid){
 	new Float:ldist = 20000;
 	pteam = GetPlayerTeam(playerid);
 	
-	Tryg3DForeach(i){
+	Tryg3D::Foreach(i){
 		if(i != playerid){
 			if(!IsToggleUseTeamKnifeShoot() || (IsToggleUseTeamKnifeShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
 				if(Tryg3D::IsPlayerSpawned(i)){
@@ -121,25 +121,25 @@ T3D:function KnifeShot(playerid){
 	
 	if(KnifeLockTarget[playerid] == INVALID_PLAYER_ID){
 		CompRotationFloat(mrz+90.0,trz);
-		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
+		new STREAMER_TAG_OBJECT tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
 		GetPointInFront3DCol(mx,my,mz,356.7,mrz,GetKnifeShootRange(playerid),mtx,mty,mtz);		
 		GetMoveTime(mx,my,mz,mtx,mty,mtz,GetKnifeShootSpeed(playerid),mtime);
 		MoveDynamicObject(tmpobj,mtx,mty,mtz,GetKnifeShootSpeed(playerid),0.0,110.0,trz);
-		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"ddd",tmpobj,INVALID_PLAYER_ID,playerid);
+		SetTimerEx("KnifeDestroy",mtime+KNIFE_REFRESH_MISS,0,"ddd",_:tmpobj,INVALID_PLAYER_ID,playerid);
 	} else {
 		GetPlayerPos(KnifeLockTarget[playerid],px,py,pz);
 		GetRotationFor2Point2D(mx,my,px,py,trz);
 		CompRotationFloat(trz+90.0,trz);
-		new tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
+		new STREAMER_TAG_OBJECT tmpobj = CreateDynamicObject(335,mx,my,mz,0.0,90.0,trz,mvw,mint,-1);
 		GetMoveTime(mx,my,mz,px,py,pz,GetKnifeShootSpeed(playerid),mtime);
 		MoveDynamicObject(tmpobj,px,py,pz,GetKnifeShootSpeed(playerid),0.0,90.0,trz);
-		SetTimerEx("KnifeDestroy",mtime,0,"ddd",tmpobj,KnifeLockTarget[playerid],playerid);
+		SetTimerEx("KnifeDestroy",mtime,0,"ddd",_:tmpobj,KnifeLockTarget[playerid],playerid);
 	}
 	KnifeTime[playerid] = GetTickCount();
 	return 1;
 }
 
-T3D:function KnifeDestroy(objectid,targetid,playerid){
+T3D:function KnifeDestroy(STREAMER_TAG_OBJECT objectid,targetid,playerid){
 	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
 		Tryg3D::GivePlayerDamage(targetid,GetKnifeShootDamage(playerid),playerid,4,3);

@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.2                                                                            *
+ * 3DTryg Version: 4.4.3                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * ToggleUseTeamMagicShoot(bool:toggle);            //default: false                                *
@@ -56,11 +56,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.2
+	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
-#elseif (Tryg3D_Version < 40402)
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40403)
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #define MAGIC_SPEED 						(12.0)
@@ -130,7 +130,7 @@ T3D:function MagicShot(playerid){
 	MagicLockTarget[playerid] = INVALID_PLAYER_ID;
 	pteam = GetPlayerTeam(playerid);
 	
-	Tryg3DForeach(i){
+	Tryg3D::Foreach(i){
 		if(i != playerid){
 			if(!IsToggleUseTeamMagicShoot() || (IsToggleUseTeamMagicShoot() && (pteam != GetPlayerTeam(i) || GetPlayerTeam(i) == NO_TEAM || pteam == NO_TEAM))){
 				if(Tryg3D::IsPlayerSpawned(i)){
@@ -150,26 +150,26 @@ T3D:function MagicShot(playerid){
 	
 	ApplyAnimation(playerid,"KNIFE","knife_3",4.1,0,1,1,0,0,1);
 	if(MagicLockTarget[playerid] == INVALID_PLAYER_ID){
-		new tmpobj = CreateDynamicObject(MagicP[playerid][T3D:INT],mx+MagicP[playerid][T3D:X],my+MagicP[playerid][T3D:Y],mz+MagicP[playerid][T3D:Z],MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]),mvw,mint,-1,_,100.0);
+		new STREAMER_TAG_OBJECT tmpobj = CreateDynamicObject(MagicP[playerid][T3D:INT],mx+MagicP[playerid][T3D:X],my+MagicP[playerid][T3D:Y],mz+MagicP[playerid][T3D:Z],MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]),mvw,mint,-1,_,100.0);
 		GetDynamicObjectPos(tmpobj,mx,my,mz);
 		GetPointInFront3DCol(mx,my,mz,0.0,mrz,GetMagicShootRange(playerid),mtx,mty,mtz);		
 		GetMoveTime(mx,my,mz,mtx,mty,mtz,GetMagicShootSpeed(playerid),mtime);
 		MoveDynamicObject(tmpobj,mtx,mty,mtz,GetMagicShootSpeed(playerid),MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]));
-		SetTimerEx("MagicDestroy",mtime,0,"ddd",tmpobj,INVALID_PLAYER_ID,playerid);
+		SetTimerEx("MagicDestroy",mtime,0,"ddd",_:tmpobj,INVALID_PLAYER_ID,playerid);
 	} else {
 		GetPlayerPos(MagicLockTarget[playerid],px,py,pz);
 		GetRotationFor2Point2D(mx,my,px,py,mrz);
-		new tmpobj = CreateDynamicObject(MagicP[playerid][T3D:INT],mx+MagicP[playerid][T3D:X],my+MagicP[playerid][T3D:Y],mz+MagicP[playerid][T3D:Z],MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]),mvw,mint,-1,_,100.0);
+		new STREAMER_TAG_OBJECT tmpobj = CreateDynamicObject(MagicP[playerid][T3D:INT],mx+MagicP[playerid][T3D:X],my+MagicP[playerid][T3D:Y],mz+MagicP[playerid][T3D:Z],MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]),mvw,mint,-1,_,100.0);
 		GetDynamicObjectPos(tmpobj,mx,my,mz);
 		GetMoveTime(mx,my,mz,px,py,pz,GetMagicShootSpeed(playerid),mtime);
 		MoveDynamicObject(tmpobj,px,py,pz,GetMagicShootSpeed(playerid),MagicP[playerid][T3D:rX],MagicP[playerid][T3D:rY],CompRotationFloat(mrz+MagicP[playerid][T3D:rZ]));
-		SetTimerEx("MagicDestroy",mtime,0,"ddd",tmpobj,MagicLockTarget[playerid],playerid);
+		SetTimerEx("MagicDestroy",mtime,0,"ddd",_:tmpobj,MagicLockTarget[playerid],playerid);
 	}
 	MagicTime[playerid] = GetTickCount();
 	return 1;
 }
 
-T3D:function MagicDestroy(objectid,targetid,playerid){
+T3D:function MagicDestroy(STREAMER_TAG_OBJECT objectid,targetid,playerid){
 	if(IsValidDynamicObject(objectid)) DestroyDynamicObject(objectid);
 	if(targetid != INVALID_PLAYER_ID){
 		Tryg3D::GivePlayerDamage(targetid,GetMagicShootDamage(playerid),playerid,7,3);

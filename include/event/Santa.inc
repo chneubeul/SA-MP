@@ -16,7 +16,7 @@
  * Streamer Version: 2.9.1                                                                          *
  * MapAndreas Version: 1.2.1                                                                        *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.0                                                                            *
+ * 3DTryg Version: 4.4.3                                                                            *
  * StreamerFunction Version: 2.8.0                                                                  *
  *                                                                                                  *
  * Callbacks:                                                                                       *
@@ -34,20 +34,20 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.0
+	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
-#elseif (Tryg3D_Version < 40400)
-	#error [ADM] Update you 3DTryg.inc to v4.4.0
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40403)
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.8.0
+	#error [ADM] You need StreamerFunction.inc v2.8.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.8.0
+	#error [ADM] Update you StreamerFunction.inc to v2.8.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
 #elseif (Streamer_Spec_Version < 20800)
-	#error [ADM] Update you StreamerFunction.inc to v2.8.0
+	#error [ADM] Update you StreamerFunction.inc to v2.8.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
 #endif
 
 #if !defined Tryg3D_MapAndreasFindZ

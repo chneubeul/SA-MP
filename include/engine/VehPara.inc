@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.2                                                                            *
+ * 3DTryg Version: 4.4.3                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * bool:IsPlayerUsingVehPara(playerid);                                                             *
@@ -44,11 +44,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.2
+	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
-#elseif (Tryg3D_Version < 40402)
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40403)
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 //Language
@@ -65,7 +65,7 @@
 #endif
 
 new VehicleConfigParachute[63],
-	VehicleParachuteObject[MAX_VEHICLES][3],
+	STREAMER_TAG_OBJECT VehicleParachuteObject[MAX_VEHICLES][3],
 	PlayerUsingVehPara[32],
 	VEHPARA_KEY = KEY_CROUCH;
 
@@ -86,7 +86,7 @@ new VehicleConfigParachute[63],
 stock ToggleVehicleParachute(vehicleid,bool:toggle){
 	for(new i = 0; i < 3; i++){
 		if(IsValidDynamicObject(VehicleParachuteObject[vehicleid][i])) DestroyDynamicObject(VehicleParachuteObject[vehicleid][i]);
-		VehicleParachuteObject[vehicleid][i] = INVALID_STREAMER_ID;
+		VehicleParachuteObject[vehicleid][i] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
 	}
 	if(toggle){
 		if(!IsToggleVehicleParachute(vehicleid)){
@@ -110,7 +110,7 @@ stock StartVehicleParachuteAction(playerid){
 	new vid = GetPlayerVehicleID(playerid);
 	for(new i = 0; i < 3; i++){
 		if(IsValidDynamicObject(VehicleParachuteObject[vid][i])) DestroyDynamicObject(VehicleParachuteObject[vid][i]);
-		VehicleParachuteObject[vid][i] = INVALID_STREAMER_ID;
+		VehicleParachuteObject[vid][i] =  STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
 	}
 	VehicleParachuteObject[vid][0] = CreateDynamicObject(18849,0.0,0.0,-6000.0,0.0,0.0,0.0,GetPlayerVirtualWorld(playerid),GetPlayerInterior(playerid));
 	

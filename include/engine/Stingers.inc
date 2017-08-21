@@ -14,7 +14,7 @@
  * File Version: 1.1.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.1                                                                                                        *
- * 3DTryg Version: 4.4.2                                                                                                          *
+ * 3DTryg Version: 4.4.3                                                                                                          *
  *                                                                                                                                *
  * Definitions:                                                                                                                   *
  * STINGER_TYPE_SMALL  //Object: 2899                                                                                             *
@@ -66,11 +66,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.2
+	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
-#elseif (Tryg3D_Version < 40402)
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40403)
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 
@@ -224,7 +224,7 @@ public OnPlayerLeaveDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-STINGERS_EXTRA_ID_OFFSET);
 	if(mobid >= 1 && mobid < MAX_STINGERS){
 		if(Stingers[mobid][stin_areaid] == areaid && STIN_ActiveForPlayer[playerid] == areaid){
-			STIN_ActiveForPlayer[playerid] = INVALID_STREAMER_ID;
+			STIN_ActiveForPlayer[playerid] = STREAMER_TAG_AREA INVALID_STREAMER_ID;
 		}
 	}
 	#if defined STIN_OnPlayerLeaveDynamicArea
@@ -245,7 +245,7 @@ public OnPlayerLeaveDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 
 //Hook: OnPlayerUpdate
 public OnPlayerUpdate(playerid){
- 	if(STIN_ActiveForPlayer[playerid] != INVALID_STREAMER_ID && STIN_LastVehicle[playerid] != 0){
+ 	if(STIN_ActiveForPlayer[playerid] != STREAMER_TAG_AREA INVALID_STREAMER_ID && STIN_LastVehicle[playerid] != 0){
 		new mobid = STIN_PlayerStinger[playerid];
 		if(Stingers[mobid][stin_damage]){
 			new panels,doors,lights,tires,TireStatus[4],new_tires;

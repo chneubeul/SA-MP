@@ -13,7 +13,7 @@
  * Modules: FoxForeach, Foreach                                                                                                      *
  * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                             *
  *                                                                                                                                   *
- * File Version: 4.4.2                                                                                                               *
+ * File Version: 4.4.3                                                                                                               *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                    *
  * MapAndreas Version: 1.2.1                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                         *
@@ -651,11 +651,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.2
+	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
-#elseif (Tryg3D_Version < 40402)
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40403)
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 */
 
@@ -670,7 +670,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40402) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40403) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize || !defined GetSVarInt)
@@ -1319,6 +1319,7 @@ Tryg3D::Function:: Tryg3D::GivePlayerDamage(targetid,Float:amount,playerid,weapo
 				amount -= T3D:armour;
 				FCNPC::SetArmour(targetid,0.0);
 				if(T3D:health-amount <= 0.0){
+					CallRemoteFunction("OnPlayerDeath","ddd",targetid,playerid,weaponid);
 					CallRemoteFunction("FCNPC_OnDeath","ddd",targetid,playerid,weaponid);
 					FCNPC::Respawn(targetid);
 				} else {
@@ -1326,6 +1327,7 @@ Tryg3D::Function:: Tryg3D::GivePlayerDamage(targetid,Float:amount,playerid,weapo
 				}
 			} else {
 				if(T3D:health-amount <= 0.0){
+					CallRemoteFunction("OnPlayerDeath","ddd",targetid,playerid,weaponid);
 					CallRemoteFunction("FCNPC_OnDeath","ddd",targetid,playerid,weaponid);
 					FCNPC::Respawn(targetid);
 				} else {
@@ -2411,6 +2413,7 @@ Tryg3D::Function:: CreateDynamicExplosionDMG(Float:x,Float:y,Float:z,type,Float:
 					if(IsPlayerInAnyVehicle(i)){
 						T3D:vid = GetPlayerVehicleID(i);
 						GetVehicleHealth(T3D:vid,T3D:health);
+						CreateExplosionForPlayer(i,x,y,z,type,radius);
 						if(i != byplayerid) SetVehicleHealth(T3D:vid,NLTZF(T3D:health-vehicle_damage));
 					} else {
 						GetPlayerHealth(i,T3D:health);
@@ -2439,6 +2442,7 @@ Tryg3D::Function:: CreateDynamicExplosionDMG(Float:x,Float:y,Float:z,type,Float:
 					if(IsPlayerInAnyVehicle(playerid)){
 						T3D:vid = GetPlayerVehicleID(playerid);
 						GetVehicleHealth(T3D:vid,T3D:health);
+						CreateExplosionForPlayer(playerid,x,y,z,type,radius);
 						if(playerid != byplayerid) SetVehicleHealth(T3D:vid,NLTZF(T3D:health-vehicle_damage));
 					} else {
 						GetPlayerHealth(playerid,T3D:health);
