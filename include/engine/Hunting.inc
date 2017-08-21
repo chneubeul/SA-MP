@@ -5,7 +5,7 @@
  * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
- * Publication: ---                                                                                                               *
+ * Publication: http://forum.sa-mp.com/showthread.php?t=639694                                                                    *
  * Website: http://8.ct8.pl                                                                                                       *
  *                                                                                                                                *
  * Plugins: Streamer, ColAndreas                                                                                                  *
@@ -17,8 +17,6 @@
  * 3DTryg Version: 4.4.3                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
- * Hunting::Count();                                                                                                              *
- * Hunting::GetFreeID();                                                                                                          *
  * Hunting::Create(type,Float:x,Float:y,Float:z,Float:health,respawntime,worldid=-1,interiorid=-1,playerid=-1,                    *
  *                 Float:streamdistance=200.0,moving_area = 0);                                                                   *
  * Hunting::Respawn(mobid);                                                                                                       *
@@ -29,6 +27,7 @@
  * Hunting::SetDrop(mobid,drop);                                                                                                  *
  * Hunting::GetDrop(mobid);                                                                                                       *
  * Hunting::GetPos(mobid,Float:x,Float:y,Float:z);                                                                                *
+ * Hunting::Count();                                                                                                              *
  *                                                                                                                                *
  * Callbacks:                                                                                                                     *
  * OnPlayerTakeHuntDrop(playerid,mobid,drop);                                                                                     *
