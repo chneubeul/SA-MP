@@ -11,18 +11,19 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 2.1.0                                                                                                            *
+ * File Version: 2.2.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.1                                                                                                        *
- * 3DTryg Version: 4.4.2                                                                                                          *
+ * 3DTryg Version: 4.4.3                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, *
  *               Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM,     *
- *               bool:remote=false,remote_count=MAX_MISSILE_REMOTE_TARGET,remote_height=1.0,Float:arc_roll=0.0);                  *
+ *               bool:remote=false,remote_count=MAX_MISSILE_REMOTE_TARGET,remote_height=1.0,Float:arc_roll=0.0,Float:damage=-1.0, *
+ *               Float:vehicle_damage=-1.0);                                                                                      *
  * MissileLaunchAimPlayer(targetid,type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,           *
  *                        worldid,interiorid,playerid,Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,             *
- *                        byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM);                                                          *
+ *                        byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM,Float:damage=-1.0,Float:vehicle_damage=-1.0);              *
  * bool:MissileStopAimPlayer(mobid);                                                                                              *
  * MissileDestroy(mobid,type,playerid);                                                                                           *
  * MissileRemoteTarget(mobid,Float:tx,Float:ty,Float:tz,Float:speed = 0.0);                                                       *
@@ -40,11 +41,11 @@
 /*
 //Check Version Missile.inc
 #if !defined _missile_launcher
-	#error [ADM] You need Missile.inc v2.1.0
+	#error [ADM] You need Missile.inc v2.2.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/engine/Missile.inc)
 #elseif !defined Missile_Version
-	#error [ADM] Update you Missile.inc to v2.1.0
-#elseif (Missile_Version < 20100)
-	#error [ADM] Update you Missile.inc to v2.1.0
+	#error [ADM] Update you Missile.inc to v2.2.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/engine/Missile.inc)
+#elseif (Missile_Version < 20200)
+	#error [ADM] Update you Missile.inc to v2.2.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/engine/Missile.inc)
 #endif
 */
 
@@ -63,14 +64,14 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.2
+	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
-#elseif (Tryg3D_Version < 40402)
-	#error [ADM] Update you 3DTryg.inc to v4.4.2
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40403)
+	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
-#define Missile_Version						(20100)
+#define Missile_Version						(20200)
 
 #define MISSILE_OBJECT_NORMAL				(0)
 #define MISSILE_OBJECT_BIG					(1)
@@ -106,8 +107,8 @@
 
 enum e_missile {
 	bool:missile_active,
-	missile_objectid,
-	missile_areaid,
+	STREAMER_TAG_OBJECT missile_objectid,
+	STREAMER_TAG_AREA missile_areaid,
 	missile_type,
 	Float:missile_explode,
 	missile_playerid,
@@ -116,7 +117,9 @@ enum e_missile {
 	missile_remote_count,
 	missile_remote_id,
 	Float:missile_speed,
-	player_target
+	player_target,
+	Float:missile_dmg,
+	Float:missile_veh_dmg
 }
 
 new MissileComponent[MAX_MISSILE][e_missile],
@@ -143,7 +146,7 @@ forward OnMissileDetectPlayer(playerid,killerid);
 
 stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, \
 	Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM, \
-	bool:remote=false,remote_count=MAX_MISSILE_REMOTE_TARGET,Float:remote_height=1.0,Float:arc_roll=0.0){
+	bool:remote=false,remote_count=MAX_MISSILE_REMOTE_TARGET,Float:remote_height=1.0,Float:arc_roll=0.0,Float:damage=-1.0,Float:vehicle_damage=-1.0){
 	
 	#if defined OnMissileRequestLaunch
 		if(!OnMissileRequestLaunch(tx,ty,tz,byplayerid,INVALID_PLAYER_ID)) return INVALID_MISSILE_ID;
@@ -184,6 +187,11 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 	MissileComponent[mobid][missile_teamid] = teamid;
 	MissileComponent[mobid][missile_speed] = speed;
 	MissileComponent[mobid][player_target] = INVALID_PLAYER_ID;
+	MissileComponent[mobid][missile_dmg] = damage;
+	MissileComponent[mobid][missile_veh_dmg] = vehicle_damage;
+	
+	if(MissileComponent[mobid][missile_dmg] != -1 && MissileComponent[mobid][missile_veh_dmg] == -1) MissileComponent[mobid][missile_veh_dmg] = 750.0;
+	
 	if(remote && remote_count > 0){
 		if(remote_height <= 0.0) remote_height = 1.0;
 		
@@ -259,7 +267,7 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 }
 
 stock MissileLaunchAimPlayer(targetid,type,Float:detection_range,Float:explode_radius,Float:speed,Float:x,Float:y,Float:z,worldid,interiorid,playerid, \
-	Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM){
+	Float:streamdistance,missile_object,Float:tx,Float:ty,Float:tz,byplayerid=INVALID_PLAYER_ID,teamid=ANY_TEAM,Float:damage=-1.0,Float:vehicle_damage=-1.0){
 	
 	#if defined OnMissileRequestLaunch
 		if(!OnMissileRequestLaunch(tx,ty,tz,byplayerid,targetid)) return INVALID_MISSILE_ID;
@@ -299,6 +307,12 @@ stock MissileLaunchAimPlayer(targetid,type,Float:detection_range,Float:explode_r
 	MissileComponent[mobid][missile_remote_count] = MISSILE_REMOTE_PLAYER;
 	MissileComponent[mobid][missile_vehicleid] = GetPlayerVehicleID(byplayerid);
 	MissileComponent[mobid][player_target] = targetid;
+	
+	MissileComponent[mobid][missile_dmg] = damage;
+	MissileComponent[mobid][missile_veh_dmg] = vehicle_damage;
+	
+	if(MissileComponent[mobid][missile_dmg] != -1 && MissileComponent[mobid][missile_veh_dmg] == -1) MissileComponent[mobid][missile_veh_dmg] = 750.0;
+	
 	PlayerAimByMissile[targetid] = true;
 	MissileComponent[mobid][missile_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
 	AttachDynamicAreaToObject(MissileComponent[mobid][missile_areaid],MissileComponent[mobid][missile_objectid]);
@@ -382,7 +396,12 @@ stock MissileDestroy(mobid,type,playerid){
 		interiorid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MissileComponent[mobid][missile_objectid],E_STREAMER_INTERIOR_ID);
 	
 	GetDynamicObjectPos(MissileComponent[mobid][missile_objectid],x,y,z);
-	CreateDynamicExplosion(x,y,z,MissileComponent[mobid][missile_type],MissileComponent[mobid][missile_explode],worldid,interiorid,-1,GetMissileExplodeVisibility());
+	
+	if(MissileComponent[mobid][missile_dmg] == -1.0){
+		CreateDynamicExplosion(x,y,z,MissileComponent[mobid][missile_type],MissileComponent[mobid][missile_explode],worldid,interiorid,-1,GetMissileExplodeVisibility());
+	} else {
+		CreateDynamicExplosionDMG(x,y,z,MissileComponent[mobid][missile_type],MissileComponent[mobid][missile_explode],worldid,interiorid,-1,GetMissileExplodeVisibility(),MissileComponent[mobid][missile_dmg],MissileComponent[mobid][missile_veh_dmg],MissileComponent[mobid][missile_playerid]);
+	}
 	if(IsAnyPlayerInDynamicArea(MissileComponent[mobid][missile_areaid],1)){
 		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
 			if(IsPlayerConnected(i)){
@@ -392,12 +411,11 @@ stock MissileDestroy(mobid,type,playerid){
 			}
 		}
 	}
-	DestroyDynamicObject(MissileComponent[mobid][missile_objectid]);
-	DestroyDynamicArea(MissileComponent[mobid][missile_areaid]);
+	if(IsValidDynamicObject(MissileComponent[mobid][missile_objectid])) DestroyDynamicObject(MissileComponent[mobid][missile_objectid]);
+	if(IsValidDynamicArea(MissileComponent[mobid][missile_areaid])) DestroyDynamicArea(MissileComponent[mobid][missile_areaid]);
 	new byplayerid = MissileComponent[mobid][missile_playerid];
-	MissileComponent[mobid][missile_objectid] = INVALID_STREAMER_ID;
-	MissileComponent[mobid][missile_areaid] = INVALID_STREAMER_ID;
-	MissileComponent[mobid][missile_active] = false;
+	MissileComponent[mobid][missile_objectid] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
+	MissileComponent[mobid][missile_areaid] = STREAMER_TAG_AREA	INVALID_STREAMER_ID;
 	MissileComponent[mobid][missile_type] = 0;
 	MissileComponent[mobid][missile_explode] = 0.0;
 	MissileComponent[mobid][missile_playerid] = INVALID_PLAYER_ID;
@@ -406,14 +424,17 @@ stock MissileDestroy(mobid,type,playerid){
 	MissileComponent[mobid][missile_speed] = 0.0;
 	MissileComponent[mobid][missile_remote_count] = 0;
 	MissileComponent[mobid][missile_remote_id] = 0;
+	MissileComponent[mobid][missile_dmg] = -1.0;
+	MissileComponent[mobid][missile_veh_dmg] = -1.0;
 	MissileComponent[mobid][player_target] = INVALID_PLAYER_ID;
+	MissileComponent[mobid][missile_active] = false;
 	CallLocalFunction("OnMissileDestroy","dfffddd",mobid,x,y,z,type,playerid,byplayerid);
 	if(mobid == MissileUsedUpperBound) MissileUsedUpperBound--;
 	return 1;
 }
 
 //Hook: OnPlayerShootDynamicObject
-public OnPlayerShootDynamicObject(playerid,weaponid,objectid,Float:x,Float:y,Float:z){
+public OnPlayerShootDynamicObject(playerid,weaponid,STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z){
 	if(IsValidDynamicObject(objectid)){
 		new mobid = (Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MISSILE_EXTRA_ID_OFFSET);
 		if(mobid > 0 && mobid < MAX_MISSILE){
@@ -437,11 +458,11 @@ public OnPlayerShootDynamicObject(playerid,weaponid,objectid,Float:x,Float:y,Flo
 #endif
 #define OnPlayerShootDynamicObject MISOnPlayerShootDynamicObject
 #if defined MISOnPlayerShootDynamicObject
-	forward MISOnPlayerShootDynamicObject(playerid,weaponid,objectid,Float:x,Float:y,Float:z);
+	forward MISOnPlayerShootDynamicObject(playerid,weaponid,STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z);
 #endif
 
 //Hook: OnPlayerEnterDynamicArea
-public OnPlayerEnterDynamicArea(playerid,areaid){
+public OnPlayerEnterDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 	new pstate = GetPlayerState(playerid);
 	if(pstate != 1 && pstate != 2 && pstate != 3) return 1;
 	
@@ -468,11 +489,11 @@ public OnPlayerEnterDynamicArea(playerid,areaid){
 #endif
 #define OnPlayerEnterDynamicArea MIS_OnPlayerEnterDynamicArea
 #if defined MIS_OnPlayerEnterDynamicArea
-	forward MIS_OnPlayerEnterDynamicArea(playerid,areaid);
+	forward MIS_OnPlayerEnterDynamicArea(playerid,STREAMER_TAG_AREA areaid);
 #endif
 
 //Hook: OnDynamicObjectMoved
-public OnDynamicObjectMoved(objectid){
+public OnDynamicObjectMoved(STREAMER_TAG_OBJECT objectid){
 	if(IsValidDynamicObject(objectid)){
 		new mobid = (Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MISSILE_EXTRA_ID_OFFSET);
 		if(mobid > 0 && mobid < MAX_MISSILE){
@@ -536,7 +557,7 @@ public OnDynamicObjectMoved(objectid){
 #endif
 #define OnDynamicObjectMoved MIS_OnDynamicObjectMoved
 #if defined MIS_OnDynamicObjectMoved
-	forward MIS_OnDynamicObjectMoved(objectid);
+	forward MIS_OnDynamicObjectMoved(STREAMER_TAG_OBJECT objectid);
 #endif
 
 //Hook: OnPlayerDeath
