@@ -22,6 +22,7 @@ engine/VehicleMissileCol.inc
 engine/VehPara.inc
 engine/PortalGun.inc
 engine/Stingers.inc
+engine/Hunting.inc
 event/Fireworks.inc
 event/Lottery.inc
 event/Santa.inc
