@@ -387,11 +387,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.8.0
+	#error [ADM] You need StreamerFunction.inc v2.8.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.8.0
+	#error [ADM] Update you StreamerFunction.inc to v2.8.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
 #elseif (Streamer_Spec_Version < 20800)
-	#error [ADM] Update you StreamerFunction.inc to v2.8.0
+	#error [ADM] Update you StreamerFunction.inc to v2.8.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
 #endif
 */
 
@@ -1671,7 +1671,7 @@ public OnPlayerLeaveDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 #if defined ENABLE_BULLET_DYNAMIC_OBJECT
 
 	//Hook: OnPlayerShootDynamicObject
-	public OnPlayerShootDynamicObject(playerid,weaponid,objectid,Float:x,Float:y,Float:z){
+	public OnPlayerShootDynamicObject(playerid,weaponid,STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z){
 		new Float:ox, Float:oy, Float:oz, Float:tx, Float:ty, Float:tz;
 		GetPlayerLastShotVectors(playerid,ox,oy,oz,tx,ty,tz);
 		#if defined OnPlayerWeaponShot
@@ -1690,7 +1690,7 @@ public OnPlayerLeaveDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 	#endif
 	#define OnPlayerShootDynamicObject SSpec_OnShootDynamicObject
 	#if defined SSpec_OnShootDynamicObject
-		forward SSpec_OnShootDynamicObject(playerid,weaponid,objectid,Float:x,Float:y,Float:z);
+		forward SSpec_OnShootDynamicObject(playerid,weaponid,STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z);
 	#endif
 	
 #endif
