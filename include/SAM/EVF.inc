@@ -12,7 +12,7 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 3.1.0                                                                                                            *
+ * File Version: 3.1.1                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.1                                                                                                        *
  *                                                                                                                                *
@@ -61,7 +61,7 @@
  * RemoveVehicleBomb(vehicleid);                                                                                                  *
  * SetVehicleBomb(vehicleid,time = 1000);                                                                                         *
  * IsVehicleBombActivated(vehicleid);                                                                                             *
- * Float:EVF::GetVehicleSpeed(vehicleid,bool:kmh = true,Float:velx = 0.0,Float:vely = 0.0,Float:velz = 0.0);                      *
+ * Float:EVF::GetVehicleSpeed(vehicleid);                                                                                         *
  * SetVehicleSpeedCap(vehicleid,Float:maxspeed);                                                                                  *
  * Float:GetVehicleSpeedCap(vehicleid);                                                                                           *
  * DisableVehicleSpeedCap(vehicleid);                                                                                             *
@@ -132,7 +132,9 @@
  * RESET_PAINTJOB_ID                                                                                                              *
  * MAX_VEHICLE_PARAMS                                                                                                             *
  * MAX_VEHICLE_MODELS                                                                                                             *
- * MAX_VEHICLE_FUEL                                                                                                               *
+ * DEFAULT_VEHICLE_FUEL                                                                                                           *
+ * VEHICLE_SPEED_MULTIPLIER                                                                                                       *
+ * MULTIPLIER_FUEL_SYSTEM                                                                                                         *
  *                                                                                                                                *
  * BONNET_HEALTHY_CLOSED                                                                                                          *
  * BONNET_HEALTHY_OPENED                                                                                                          *
@@ -238,11 +240,11 @@
 /*
 //Check Version EVF.inc
 #if !defined _EVF_include
-	#error [ADM] You need EVF.inc v3.1.0
+	#error [ADM] You need EVF.inc v3.1.1
 #elseif !defined EVF_Version
-	#error [ADM] Update you EVF.inc to v3.1.0
-#elseif (EVF_Version < 30100)
-	#error [ADM] Update you EVF.inc to v3.1.0
+	#error [ADM] Update you EVF.inc to v3.1.1
+#elseif (EVF_Version < 30101)
+	#error [ADM] Update you EVF.inc to v3.1.1
 #endif
 */
 
@@ -276,7 +278,7 @@
 	#error [ADM] Please include a_http.inc before EVF.inc
 #endif
 
-#define EVF_Version									(30100) //a.b.c 10000*a+100*b+c
+#define EVF_Version									(30101) //a.b.c 10000*a+100*b+c
 #define EVF_SAMP_Version							"0.3.7"
 
 #define EVF_Function::								stock
@@ -312,10 +314,19 @@
 	#define VEHICLE_UPDATE_INTERVAL					250
 #endif
 
+#if !defined VEHICLE_SPEED_MULTIPLIER
+	#define VEHICLE_SPEED_MULTIPLIER 				170.0
+#endif
+
+#if !defined MULTIPLIER_FUEL_SYSTEM
+	#define MULTIPLIER_FUEL_SYSTEM					1
+#endif
+
 #define RESET_PAINTJOB_ID							3
 #define MAX_VEHICLE_PARAMS							7
 #define MAX_VEHICLE_MODELS							212
-#define MAX_VEHICLE_FUEL							1000
+#define DEFAULT_VEHICLE_FUEL						1000
+#define MAX_VEHICLE_FUEL							DEFAULT_VEHICLE_FUEL
 
 #define BONNET_HEALTHY_CLOSED						0
 #define BONNET_HEALTHY_OPENED						1
@@ -666,9 +677,12 @@ new const EVF::NeonOffsetData[MAX_VEHICLE_MODELS][EVF::NeonOffset] = {
 
 new EVF::VehicleTrailerID[MAX_VEHICLES],
 	EVF::VehicleTempData[MAX_VEHICLES][EVF::VehicleData],
-	EVF::VehicleNeon[MAX_VEHICLES][2],
 	EVF::PlayerTempData[MAX_PLAYERS][EVF::PlayerData],
 	EVF::ModShopStatus[MAX_PLAYERS];
+	
+#if defined EVF_Streamer
+	new STREAMER_TAG_OBJECT EVF::VehicleNeon[MAX_VEHICLES][2];
+#endif
 
 new const Float:EVF::TopSpeed[MAX_VEHICLE_MODELS] = {
 	157.0, 147.0, 186.0, 110.0, 133.0, 164.0, 110.0, 148.0, 100.0, 158.0, 129.0, 221.0, 168.0, 110.0, 105.0, 192.0, 154.0, 270.0, 115.0, 149.0,
@@ -1413,6 +1427,14 @@ static const EVF::ComponentNames[][] = {
 	#define EVF_Foreach(%0)						for(new %0 = 0, p_%0 = GetPlayerPoolSize(); %0 <= p_%0; %0++) if(IsPlayerConnected(%0))
 #endif
 
+#if (defined _FOREACH_LOCAL_VERSION && defined Vehicle@YSII_Sg)
+	#define EVF_ForeachVehicle(%0)				foreach(new %0 : Vehicle)
+#elseif (defined _FOREACH_LOCAL_VERSION && defined Vehicles@YSII_Sg)
+	#define EVF_ForeachVehicle(%0)				foreach(new %0 : Vehicles)
+#else
+	#define EVF_ForeachVehicle(%0) 				for(new %0 = 1, %0_upp = GetVehiclePoolSize(); %0 <= %0_upp; %0++) if(IsValidVehicle(%0))
+#endif
+
 #define SetVehiclePropertyValue(%0,%1,%2)		EVF_VehicleProperty[(%0)][(%1)] = (%2)
 #define GetVehiclePropertyValue(%0,%1)			EVF_VehicleProperty[(%0)][(%1)]
 #define EVF_GetActiveCount() 					GetSVarInt("ADM:EVF:ACTIVE")
@@ -1470,10 +1492,7 @@ forward OnPlayerEditVehicleObject(playerid,vehicleid,response,Float:x,Float:y,Fl
 forward OnPlayerReachSpeedCapLimit(playerid,vehicleid,Float:speed);
 forward OnVehicleBombActivate(vehicleid);
 forward OnVehicleModEx(playerid,vehicleid,componentid,price,illegal);
-
-#if defined OnVehicleFuelChange
-	forward OnVehicleFuelChange(vehicleid,newfuel,oldfuel);
-#endif
+forward OnVehicleFuelChange(vehicleid,newfuel,oldfuel);
 
 #if defined OnVehiclePosChange
 	forward OnVehiclePosChange(vehicleid,Float:newx,Float:newy,Float:newz,Float:newangle,Float:oldx,Float:oldy,Float:oldz,Float:oldangle);
@@ -1545,7 +1564,7 @@ EVF::Function:: GetVehicleComponentPrice(componentid){
 		
 		if(IsValidDynamicObject(EVF::VehicleNeon[vehicleid][0])) DestroyDynamicObject(EVF::VehicleNeon[vehicleid][0]);
 		if(IsValidDynamicObject(EVF::VehicleNeon[vehicleid][1])) DestroyDynamicObject(EVF::VehicleNeon[vehicleid][1]);
-		EVF::VehicleNeon[vehicleid][0] = EVF::VehicleNeon[vehicleid][1] = INVALID_STREAMER_ID;
+		EVF::VehicleNeon[vehicleid][0] = EVF::VehicleNeon[vehicleid][1] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
 		
 		if(!enable) return 1;
 		if(18647 <= color <= 18652){
@@ -1691,13 +1710,10 @@ EVF::Function:: EVF::GetVehicleDamageStatus(vehicleid,type){
 	return -1;
 }
 
-EVF::Function:: Float:EVF::GetVehicleSpeed(vehicleid,bool:kmh = true,Float:velx = 0.0,Float:vely = 0.0,Float:velz = 0.0){
-	if(velx == 0.0 && vely == 0.0 && velz == 0.0) GetVehicleVelocity(vehicleid,velx,vely,velz);
-	if(kmh){
-		return floatsqroot(((velx * velx) + (vely * vely)) + (velz * velz)) * 136.666667;
-	} else {
-		return floatsqroot(((velx * velx) + (vely * vely)) + (velz * velz)) * 85.4166672;
-	}
+EVF::Function:: Float:EVF::GetVehicleSpeed(vehicleid){
+	new Float:x,Float:y,Float:z;
+	GetVehicleVelocity(vehicleid,x,y,z);
+	return floatmul(VectorSize(x,y,z),VEHICLE_SPEED_MULTIPLIER);
 }
 
 EVF::Function:: GetVehicleRandomColors(modelid,&color1,&color2){
@@ -1771,7 +1787,7 @@ EVF::Function:: GetNearestVehicle(playerid){
 		Float:fSX, Float:fSY, Float:fSZ,
 		Float:fRadius;
 
-	for(new i = 1, j = GetVehiclePoolSize(); i <= j; i++){
+	EVF::ForeachVehicle(i){
 		if(!IsVehicleStreamedIn(i,playerid)) continue;
 		GetVehiclePos(i,fX,fY,fZ);
 
@@ -2060,7 +2076,7 @@ EVF::Function:: SetVehicleDoorState(vehicleid,doorid,door_state){
 
 EVF::Public:: OnVehicleTimeUpdate(){
 	new Float:EVF::Vec[4];
-	for(new vehicleid = 1, v_upp = GetVehiclePoolSize(); vehicleid <= v_upp; vehicleid++){
+	EVF::ForeachVehicle(vehicleid){
 		if(EVF::VehicleProperty[vehicleid][e_VEHICLE_STORED]){
 			GetVehiclePos(vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2]);
 			GetVehicleZAngle(vehicleid,EVF::Vec[3]);
@@ -2083,54 +2099,54 @@ EVF::Public:: OnVehicleTimeUpdate(){
 			#endif
 
 			GetVehicleVelocity(vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2]);
-			#if defined OnVehicleVelocityChange
-				if(IsVehicleFuelToggled(vehicleid)){
-					if(EVF::Vec[0] != EVF::VehicleTempData[vehicleid][e_vel_x] || EVF::Vec[1] != EVF::VehicleTempData[vehicleid][e_vel_y] || EVF::Vec[2] != EVF::VehicleTempData[vehicleid][e_vel_z]){
-						//fuel system
-						new vehicle_speed = floatround(EVF::GetVehicleSpeed(vehicleid,true,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2]));
-						if(vehicle_speed > 0.0){
-							//if vehicle out of fuel
-							if(GetVehicleFuel(vehicleid) <= 0){
-								SetVehicleParams(vehicleid,VEHICLE_TYPE_ENGINE,0);
-								new vehicle_driver = GetVehicleDriverID(vehicleid);
-								if(IsPlayerConnected(vehicle_driver)){
-									GameTextForPlayer(vehicle_driver,"~r~Vehicle out of fuel !",5000,3);
-								}
-							} else {
-								//if vehicle has some EVF::Vecitive fuel
-								EVF::VehicleTempData[vehicleid][e_uptime] += 1;
+			if(IsVehicleFuelToggled(vehicleid)){
+				//fuel system
+				new Float:vehicle_speed = EVF::GetVehicleSpeed(vehicleid);
+				//if vehicle out of fuel
+				if(GetVehicleFuel(vehicleid) <= 0){
+					SetVehicleParams(vehicleid,VEHICLE_TYPE_ENGINE,0);
+					new vehicle_driver = GetVehicleDriverID(vehicleid);
+					if(IsPlayerConnected(vehicle_driver)){
+						GameTextForPlayer(vehicle_driver,"~r~Vehicle out of fuel !",5000,3);
+					}
+				} else {
+					//if vehicle has some EVF::Vecitive fuel
+					EVF::VehicleTempData[vehicleid][e_uptime] += 1;
 
-								//if the vehicle speed is quiet high
-								new fuel_consumption_level = 0;
-								for(new i = 20, j = floatround(GetVehicleTopSpeed(vehicleid)); i <= j; i += 20){
-									if(vehicle_speed > i){
-										fuel_consumption_level += 1;
-									}
-								}
-
-								EVF::VehicleTempData[vehicleid][e_uptime] += 1;
-								if(EVF::VehicleTempData[vehicleid][e_uptime] > 20){ // 250 ms * 20 = 5 seconds
-									EVF::VehicleTempData[vehicleid][e_uptime] = 0;
-									new old_fuel = GetVehicleFuel(vehicleid), new_fuel = (old_fuel - fuel_consumption_level - 1);
-									#if defined OnVehicleFuelChange
-										CallRemoteFunction("OnVehicleFuelChange","iii",vehicleid,new_fuel,old_fuel);
-									#else
-										SetVehiclePropertyValue(vehicleid,v_fuel,new_fuel);
-									#endif
-								}
+					//if the vehicle speed is quiet high
+					new fuel_consumption_level = 0;
+					
+					if(vehicle_speed == 0.0 && GetVehicleParams(vehicleid,VEHICLE_TYPE_ENGINE)){
+						fuel_consumption_level = MULTIPLIER_FUEL_SYSTEM;
+					} else if(vehicle_speed > 0.0){
+						for(new i = 20, j = floatround(GetVehicleTopSpeed(vehicleid)); i <= j; i += 20){
+							if(vehicle_speed > i){
+								fuel_consumption_level += MULTIPLIER_FUEL_SYSTEM;
 							}
 						}
-						
-						if(CallRemoteFunction("OnVehicleVelocityChange","iffffff",vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2],EVF::VehicleTempData[vehicleid][e_vel_x],EVF::VehicleTempData[vehicleid][e_vel_y],EVF::VehicleTempData[vehicleid][e_vel_z])){
-							EVF::VehicleTempData[vehicleid][e_vel_x] = EVF::Vec[0];
-							EVF::VehicleTempData[vehicleid][e_vel_y] = EVF::Vec[1];
-							EVF::VehicleTempData[vehicleid][e_vel_z] = EVF::Vec[2];
-						} else {
-							return SetVehicleVelocity(vehicleid,EVF::VehicleTempData[vehicleid][e_vel_x],EVF::VehicleTempData[vehicleid][e_vel_y],EVF::VehicleTempData[vehicleid][e_vel_z]);
-						}
+					}
+					
+					EVF::VehicleTempData[vehicleid][e_uptime] += 1;
+					if(EVF::VehicleTempData[vehicleid][e_uptime] > 20){ // 250 ms * 20 = 5 seconds
+						EVF::VehicleTempData[vehicleid][e_uptime] = 0;
+						new old_fuel = GetVehicleFuel(vehicleid),
+							new_fuel = (old_fuel - fuel_consumption_level - 1);
+						if(new_fuel < 0) new_fuel = 0;
+						CallRemoteFunction("OnVehicleFuelChange","iii",vehicleid,new_fuel,old_fuel);
+						SetVehicleFuel(vehicleid,new_fuel);
 					}
 				}
-			#endif
+				#if defined OnVehicleVelocityChange
+					if(CallRemoteFunction("OnVehicleVelocityChange","iffffff",vehicleid,EVF::Vec[0],EVF::Vec[1],EVF::Vec[2],EVF::VehicleTempData[vehicleid][e_vel_x],EVF::VehicleTempData[vehicleid][e_vel_y],EVF::VehicleTempData[vehicleid][e_vel_z])){
+						EVF::VehicleTempData[vehicleid][e_vel_x] = EVF::Vec[0];
+						EVF::VehicleTempData[vehicleid][e_vel_y] = EVF::Vec[1];
+						EVF::VehicleTempData[vehicleid][e_vel_z] = EVF::Vec[2];
+					} else {
+						return SetVehicleVelocity(vehicleid,EVF::VehicleTempData[vehicleid][e_vel_x],EVF::VehicleTempData[vehicleid][e_vel_y],EVF::VehicleTempData[vehicleid][e_vel_z]);
+					}
+				#endif
+			}
+			
 
 			GetVehicleHealth(vehicleid,EVF::Vec[0]);
 			#if defined OnVehicleHealthChange
@@ -2147,7 +2163,7 @@ EVF::Public:: OnVehicleTimeUpdate(){
 	return 1;
 }
 
-EVF::Public:: EVF_SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective){
+EVF::Public:: EVF::SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective){
 	SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
 }
 
@@ -2349,7 +2365,7 @@ public OnVehicleRespray(playerid,vehicleid,color1,color2){
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_1,color1);
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_COLOR_2,color2);
 	#if defined EVF_OnVehicleRespray
-		EVF_OnVehicleRespray(playerid,vehicleid,color1,color2);
+		EVF::OnVehicleRespray(playerid,vehicleid,color1,color2);
 	#endif
 	return 1;
 }
@@ -2368,7 +2384,7 @@ public OnVehicleRespray(playerid,vehicleid,color1,color2){
 public OnVehiclePaintjob(playerid,vehicleid,paintjobid){
 	SetVehiclePropertyValue(vehicleid,e_VEHICLE_PAINTJOB,paintjobid);
 	#if defined EVF_OnVehiclePaintjob
-		EVF_OnVehiclePaintjob(playerid,vehicleid,paintjobid);
+		EVF::OnVehiclePaintjob(playerid,vehicleid,paintjobid);
 	#endif
 	return 1;
 }
@@ -2424,7 +2440,7 @@ EVF::Function:: EVF::CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,c
 	SetVehicleVirtualWorld(vehicleid,worldid);
 	
 	SetVehicleHorn(vehicleid,0);
-	SetVehicleFuel(vehicleid,MAX_VEHICLE_FUEL);
+	SetVehicleFuel(vehicleid,DEFAULT_VEHICLE_FUEL);
 	SetVehicleSpeedCap(vehicleid,0.0);
 	
 	ToggleUnoccupiedVehicleDamage(vehicleid,unoccupied_damage);
@@ -2607,7 +2623,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 		CallRemoteFunction("OnPlayerShotVehicle","dddfd",playerid,hitid,weaponid,fDamage,bodypart);
 	}
 	#if defined EVF_OnPlayerWeaponShot
-		EVF_OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,fX,fY,fZ);
+		EVF::OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,fX,fY,fZ);
 	#endif
 	return 1;
 }
@@ -2626,7 +2642,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 public OnPlayerConnect(playerid){
 	EVF::ModShopStatus[playerid] = false;
 	#if defined EVF_OnPlayerConnect
-		return EVF_OnPlayerConnect(playerid);
+		return EVF::OnPlayerConnect(playerid);
 	#else
 		return 1;
 	#endif
@@ -2646,7 +2662,7 @@ public OnPlayerConnect(playerid){
 public OnEnterExitModShop(playerid,enterexit,interiorid){
 	EVF::ModShopStatus[playerid] = enterexit;
 	#if defined EVF_OnEnterExitModShop
-	    return EVF_OnEnterExitModShop(playerid, enterexit, interiorid);
+	    return EVF::OnEnterExitModShop(playerid, enterexit, interiorid);
 	#else
 	    return 1;
 	#endif
@@ -2665,12 +2681,12 @@ public OnEnterExitModShop(playerid,enterexit,interiorid){
 //Hook: OnVehicleMod
 public OnVehicleMod(playerid,vehicleid,componentid){
 	if(!IsValidComponentForVehicle(vehicleid,componentid) || !EVF::ModShopStatus[playerid] || GetPlayerState(playerid) == PLAYER_STATE_PASSENGER){
-	    CallLocalFunction("OnVehicleModEx","iiiii",playerid,vehicleid,componentid,GetVehicleComponentPrice(componentid),true);
+	    CallRemoteFunction("OnVehicleModEx","iiiii",playerid,vehicleid,componentid,GetVehicleComponentPrice(componentid),true);
 	    return 0;
 	}
-	CallLocalFunction("OnVehicleModEx","iiiii",playerid,vehicleid,componentid,GetVehicleComponentPrice(componentid),false);
+	CallRemoteFunction("OnVehicleModEx","iiiii",playerid,vehicleid,componentid,GetVehicleComponentPrice(componentid),false);
 	#if defined EVF_OnVehicleMod
-	    return EVF_OnVehicleMod(playerid,vehicleid,componentid);
+	    return EVF::OnVehicleMod(playerid,vehicleid,componentid);
 	#else
 	    return 1;
 	#endif
@@ -2762,7 +2778,7 @@ public OnVehicleMod(playerid,vehicleid,componentid){
 			}
 		}
 		#if defined EVF_OnPlayerEditDynamicObject
-			OnPlayerEditDynamicObject(playerid,objectid,response,x,y,z,rx,ry,rz);
+			EVF::OnPlayerEditDynamicObject(playerid,objectid,response,x,y,z,rx,ry,rz);
 		#endif
 		return 1;
 	}
@@ -2785,7 +2801,7 @@ public OnPlayerUpdate(playerid){
 		if(speedcap != 0.0){
 			new Float:vel[3], Float:speed;
 			GetVehicleVelocity(vehicleid,vel[0],vel[1],vel[2]);
-			speed = EVF::GetVehicleSpeed(vehicleid,true,vel[0],vel[1],vel[2]);
+			speed = EVF::GetVehicleSpeed(vehicleid);
 			if(speed > speedcap){
 				CallRemoteFunction("OnPlayerReachSpeedCapLimit","iif",playerid,vehicleid,speed);
 				vel[0] = (vel[0] / speed) * speedcap;
@@ -2805,7 +2821,7 @@ public OnPlayerUpdate(playerid){
 		}
 	}
 	#if defined EVF_OnPlayerUpdate
-		EVF_OnPlayerUpdate(playerid);
+		EVF::OnPlayerUpdate(playerid);
 	#endif
 	return 1;
 }
@@ -2847,7 +2863,7 @@ public OnPlayerStateChange(playerid,newstate,oldstate){
 		}
 	}
 	#if defined EVF_OnPlayerStateChange
-		EVF_OnPlayerStateChange(playerid,newstate,oldstate);
+		EVF::OnPlayerStateChange(playerid,newstate,oldstate);
 	#endif
 	return 1;
 }
@@ -2869,7 +2885,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
 			if(horn != 0){
 				new Float:pos[3];
 				GetPlayerPos(playerid,pos[0],pos[1],pos[2]);
-				EVF_Foreach(i){
+				EVF::Foreach(i){
 					if(IsPlayerInRangeOfPoint(i,35.0,pos[0],pos[1],pos[2])){
 						PlayerPlaySound(playerid,horn,pos[0],pos[1],pos[2]);
 					}
@@ -2878,7 +2894,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
 		}
 	}
 	#if defined EVF_OnPlayerKeyStateChange
-		EVF_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+		EVF::OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
 	#endif
 	return 1;
 }
@@ -2904,7 +2920,7 @@ public OnVehicleDamageStatusUpdate(vehicleid, playerid){
 	if(!IsVehicleDamageToggled(vehicleid,VEHICLE_DAMAGE_TIRES)) EVF::UpdateVehicleDamageStatus(vehicleid,VEHICLE_DAMAGE_TIRES,0);
 
 	#if defined EVF_OVDSU
-		EVF_OVDSU(vehicleid,playerid);
+		EVF::OVDSU(vehicleid,playerid);
 	#endif
 	return 1;
 }
@@ -2943,7 +2959,7 @@ public OnVehicleSpawn(vehicleid){
 	}
 
 	#if defined EVF_OnVehicleSpawn
-		EVF_OnVehicleSpawn(vehicleid);
+		EVF::OnVehicleSpawn(vehicleid);
 	#endif
 	return 1;
 }
@@ -3024,7 +3040,7 @@ public OnFilterScriptInit(){
 		EVF::Init();
 	}
 	#if defined EVF_OnFilterScriptInit
-		EVF_OnFilterScriptInit();
+		EVF::OnFilterScriptInit();
 	#endif
 	return 1;
 }
@@ -3046,7 +3062,7 @@ public OnGameModeInit(){
 		EVF::Init();
 	}
 	#if defined EVF_OnGameModeInit
-		EVF_OnGameModeInit();
+		EVF::OnGameModeInit();
 	#endif
 	return 1;
 }
@@ -3068,7 +3084,7 @@ public OnFilterScriptExit(){
 		EVF::Exit();
 	}
 	#if defined EVF_OnFilterScriptExit
-		EVF_OnFilterScriptExit();
+		EVF::OnFilterScriptExit();
 	#endif
 	return 1;
 }
@@ -3090,7 +3106,7 @@ public OnGameModeExit(){
 		EVF::Exit();
 	}
 	#if defined EVF_OnGameModeExit
-		EVF_OnGameModeExit();
+		EVF::OnGameModeExit();
 	#endif
 	return 1;
 }
@@ -3108,6 +3124,7 @@ public OnGameModeExit(){
 #pragma unused EVF_VehicleName
 #pragma unused EVF_TopSpeed
 #pragma unused EVF_PlayerTempData
+#pragma unused EVF_NeonOffsetData
 
 #if !defined _3D_Tryg
 	#pragma unused EVF_WeaponDamage
