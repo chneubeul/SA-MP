@@ -484,6 +484,9 @@ public OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA areaid){
 	new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-HUNT_EXTRA_ID_OFFSET);
 	if(mobid > 0 && mobid < MAX_HUNTING_ANIMALS){
 		if(Hunting::Data[mobid][Hunting::drop_area] == areaid){
+			if(Hunting::Data[mobid][Hunting::state] == HUNTING_STATE_SPAWNED){
+				Hunting::SetSpeed(mobid,8.0);
+			}
 			CallRemoteFunction("OnPlayerApproachingAnimal","ddd",playerid,mobid,Hunting::Data[mobid][Hunting::state]);
 		}
 	}	
