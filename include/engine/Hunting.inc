@@ -419,7 +419,7 @@ T3D:function Hunting::OnUpdate(){
 						}
 					}
 				}
-				if(GetTickCount() >= Hunting::Data[mobid][Hunting::calm]){
+				if(GetTickCount() >= Hunting::Data[mobid][Hunting::calm] && Hunting::Data[mobid][Hunting::calm] != 0){
 					Hunting::SetSpeed(mobid,0.8);
 				}
 				switch(Hunting::Data[mobid][Hunting::type]){
@@ -486,6 +486,7 @@ public OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA areaid){
 		if(Hunting::Data[mobid][Hunting::drop_area] == areaid){
 			if(Hunting::Data[mobid][Hunting::state] == HUNTING_STATE_SPAWNED){
 				Hunting::SetSpeed(mobid,8.0);
+				Hunting::Data[mobid][Hunting::calm] = GetTickCount() + 30000;
 			}
 			CallRemoteFunction("OnPlayerApproachingAnimal","ddd",playerid,mobid,Hunting::Data[mobid][Hunting::state]);
 		}
