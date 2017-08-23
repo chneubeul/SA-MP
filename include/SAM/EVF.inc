@@ -2802,7 +2802,7 @@ public OnPlayerUpdate(playerid){
 			new Float:vel[3], Float:speed;
 			GetVehicleVelocity(vehicleid,vel[0],vel[1],vel[2]);
 			speed = EVF::GetVehicleSpeed(vehicleid);
-			if(speed > speedcap){
+			if(speed > speedcap && speed > 0.0){
 				CallRemoteFunction("OnPlayerReachSpeedCapLimit","iif",playerid,vehicleid,speed);
 				vel[0] = (vel[0] / speed) * speedcap;
 				vel[1] = (vel[1] / speed) * speedcap;

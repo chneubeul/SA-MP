@@ -11,7 +11,7 @@
  * Plugins: Streamer, ColAndreas                                                                                                  *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.2.0                                                                                                            *
+ * File Version: 1.2.1                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -132,7 +132,7 @@ enum Hunting::enum {
 	STREAMER_TAG_AREA Hunting::areaid,
 	Hunting::type,
 	Float:Hunting::health,
-	Float:Hunting::max_health,
+	Float:Hunting::spawn_health,
 	Hunting::state,
 	Hunting::respawntime,
 	Hunting::drop,
@@ -199,8 +199,8 @@ new Hunting::Data[MAX_HUNTING_ANIMALS][Hunting::enum],
 #define Hunt_GetHealth(%0)						Hunting::Data[(%0)][Hunting::health]
 #define Hunt_SetHealth(%0,%1)					Hunting::Data[(%0)][Hunting::health] = (%1)
 
-#define Hunt_GetSpawnHealth(%0)					Hunting::Data[(%0)][Hunting::max_health]
-#define Hunt_SetSpawnHealth(%0,%1)				Hunting::Data[(%0)][Hunting::max_health] = (%1)
+#define Hunt_GetSpawnHealth(%0)					Hunting::Data[(%0)][Hunting::spawn_health]
+#define Hunt_SetSpawnHealth(%0,%1)				Hunting::Data[(%0)][Hunting::spawn_health] = (%1)
 
 #define Hunt_GetRespawnTime(%0)					Hunting::Data[(%0)][Hunting::respawntime]
 #define Hunt_SetRespawnTime(%0,%1)				Hunting::Data[(%0)][Hunting::respawntime] = (%1)
@@ -209,9 +209,6 @@ new Hunting::Data[MAX_HUNTING_ANIMALS][Hunting::enum],
 #define Hunt_IsSpawned(%0)						(Hunting::Data[(%0)][Hunting::state] == HUNTING_STATE_SPAWNED)
 #define Hunt_IsDead(%0)							(Hunting::Data[(%0)][Hunting::state] == HUNTING_STATE_DEAD)
 
-#define Hunt_GetInterior(%0)					Streamer_GetIntData(STREAMER_TYPE_OBJECT,Hunting::Data[(%0)][Hunting::objectid],E_STREAMER_INTERIOR_ID)
-#define Hunt_GetVirtualWorld(%0)				Streamer_GetIntData(STREAMER_TYPE_OBJECT,Hunting::Data[(%0)][Hunting::objectid],E_STREAMER_WORLD_ID)
-
 #define Hunt_GetSpeed(%0)						Hunting::Data[(%0)][Hunting::speed]
 #define Hunt_SetSpeed(%0,%1)					Hunting::Data[(%0)][Hunting::speed] = (%1)
 
@@ -219,8 +216,6 @@ new Hunting::Data[MAX_HUNTING_ANIMALS][Hunting::enum],
 #define Hunt_SetPressTime(%0,%1)				Hunting::Data[(%0)][Hunting::press_time] = (%1)
 
 #define Hunt_IsScared(%0)						(Hunting::Data[(%0)][Hunting::calm] != 0)
-
-#define Hunt_SetScaredRange(%0,%1)				Streamer_SetFloatData(STREAMER_TYPE_AREA,Hunting::Data[(%0)][Hunting::scared_area],E_STREAMER_SIZE,(%1))
 
 stock Hunting::Count(){
 	new cnt = 0;
@@ -285,6 +280,19 @@ stock Float:Hunting::GetScaredRange(mobid){
 	return Hunting::range;
 }
 
+stock Hunting::SetScaredRange(mobid,Float:range){
+	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
+	if(!Hunting::IsValid(mobid)) return 0;
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Hunting::Data[mobid][Hunting::scared_area],E_STREAMER_SIZE,range);
+	return 1;
+}
+
+stock Hunting::GetInterior(mobid){
+	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
+	if(!Hunting::IsValid(mobid)) return 0;
+	return Streamer_GetIntData(STREAMER_TYPE_OBJECT,Hunting::Data[mobid][Hunting::objectid],E_STREAMER_INTERIOR_ID);
+}
+
 stock Hunting::SetInterior(mobid,interiorid){
 	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
 	if(!Hunting::IsValid(mobid)) return 0;
@@ -292,6 +300,12 @@ stock Hunting::SetInterior(mobid,interiorid){
 	Streamer_SetIntData(STREAMER_TYPE_AREA,Hunting::Data[mobid][Hunting::drop_area],E_STREAMER_INTERIOR_ID,interiorid);
 	Streamer_SetIntData(STREAMER_TYPE_AREA,Hunting::Data[mobid][Hunting::scared_area],E_STREAMER_INTERIOR_ID,interiorid);
 	return 1;
+}
+
+stock Hunting::GetVirtualWorld(mobid){
+	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
+	if(!Hunting::IsValid(mobid)) return 0;
+	return Streamer_GetIntData(STREAMER_TYPE_OBJECT,Hunting::Data[mobid][Hunting::objectid],E_STREAMER_WORLD_ID);
 }
 
 stock Hunting::SetVirtualWorld(mobid,worldid){
@@ -375,7 +389,8 @@ stock Hunting::Create(type,Float:x,Float:y,Float:z,Float:health,respawntime,worl
 			}
 			return INVALID_HUNTING_ID;
 		}
-	} else if(IsPointInWater(x,y) || IsPointInUnderground(x,y,z)){
+	} 
+	if(IsPointInWater(x,y) || IsPointInUnderground(x,y,z)){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
 			printf("[ADM] Error: Failed to Hunting::Create(%d,%f,%f,%f,...) position out of world",type,x,y,z);
 		}
@@ -411,7 +426,7 @@ stock Hunting::Create(type,Float:x,Float:y,Float:z,Float:health,respawntime,worl
 	Hunting::Data[mobid][Hunting::type] = type;
 	Hunting::Data[mobid][Hunting::respawntime] = respawntime;
 	Hunting::Data[mobid][Hunting::health] = health;
-	Hunting::Data[mobid][Hunting::max_health] = health;
+	Hunting::Data[mobid][Hunting::spawn_health] = health;
 	Hunting::Data[mobid][Hunting::drop] = 1;
 	Hunting::Data[mobid][Hunting::tX] = x;
 	Hunting::Data[mobid][Hunting::tY] = y;
@@ -446,9 +461,14 @@ stock Hunting::Destroy(mobid){
 stock Hunting::Respawn(mobid){
 	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
 	if(!Hunting::IsValid(mobid)) return 0;
-	
 	Hunting::Data[mobid][Hunting::respawn_tick] = 0;
-	Hunting::Data[mobid][Hunting::health] = Hunting::Data[mobid][Hunting::max_health];
+	
+	if(Hunting::IsSpawned(mobid)){
+		Hunting::Data[mobid][Hunting::state] = HUNTING_STATE_DEAD;
+		Hunting::Stop(mobid);
+	}
+	
+	Hunting::Data[mobid][Hunting::health] = Hunting::Data[mobid][Hunting::spawn_health];
 	Hunting::SetDrop(mobid,1);
 	
 	SetDynamicObjectMaterial(Hunting::Data[mobid][Hunting::objectid],0,0,"","",0);
@@ -456,7 +476,12 @@ stock Hunting::Respawn(mobid){
 	new modelid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,Hunting::Data[mobid][Hunting::objectid],E_STREAMER_MODEL_ID);
 	Streamer_SetIntData(STREAMER_TYPE_OBJECT,Hunting::Data[mobid][Hunting::objectid],E_STREAMER_MODEL_ID,modelid);
 
-	SetDynamicObjectPos(Hunting::Data[mobid][Hunting::objectid],Hunting::Data[mobid][Hunting::X],Hunting::Data[mobid][Hunting::Y],Hunting::Data[mobid][Hunting::Z]);
+	new Float:tmp_float,Float:target_z;
+	MovePointCol(Hunting::Data[mobid][Hunting::X],Hunting::Data[mobid][Hunting::Y],Hunting::Data[mobid][Hunting::Z]+1.0,Hunting::Data[mobid][Hunting::X],Hunting::Data[mobid][Hunting::Y],-100.0,tmp_float,tmp_float,target_z);
+	switch(Hunting::Data[mobid][Hunting::type]){
+		case HUNTING_TYPE_DEER:	target_z += 0.5;
+	}
+	SetDynamicObjectPos(Hunting::Data[mobid][Hunting::objectid],Hunting::Data[mobid][Hunting::X],Hunting::Data[mobid][Hunting::Y],target_z);
 	
 	Hunting::Data[mobid][Hunting::tX] = Hunting::Data[mobid][Hunting::X];
 	Hunting::Data[mobid][Hunting::tY] = Hunting::Data[mobid][Hunting::Y];
@@ -506,6 +531,14 @@ stock Hunting::Kill(mobid,playerid=INVALID_PLAYER_ID){
 	if(!Hunting::IsSpawned(mobid)) return 0;
 	Hunting::Data[mobid][Hunting::state] = HUNTING_STATE_DEAD;
 	Hunting::Data[mobid][Hunting::health] = 0.0;
+	
+	#if defined OnAnimalScareStateChanged
+		if(Hunting::IsScared(mobid)){
+			OnAnimalScareStateChanged(mobid,Hunting::Data[mobid][Hunting::last_scared],0);
+		}
+	#endif
+	Hunting::Data[mobid][Hunting::calm] = 0;
+	Hunting::Data[mobid][Hunting::last_scared] = INVALID_PLAYER_ID;
 	
 	Hunting::Stop(mobid);
 	
