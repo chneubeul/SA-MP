@@ -58,6 +58,10 @@
 │   ├───Stingers
 │   │   ├───3DTryg
 │   │   └───Streamer
+│   ├───Hunting
+│   │   ├───3DTryg
+│   │   ├───ColAndreas
+│   │   └───Streamer
 │   ├───Mines
 │   │   ├───3DTryg
 │   │   └───Streamer
