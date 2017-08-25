@@ -814,7 +814,7 @@ public OnPlayerLeaveDynamicArea(playerid, STREAMER_TAG_AREA areaid){
 
 //Hook: OnPlayerKeyStateChange
 public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
-	if(Tryg3D::KeyPressed(Hunting::Key)){
+	if(Tryg3D::KeyPressed(Hunting::Key) && !IsPlayerInAnyVehicle(playerid)){
 		new mobid = Hunting::GetActiveMob(playerid,HUNTING_STATE_DEAD);
 		if(Hunting::GetPressTime(mobid) == 0){
 			#if defined OnPlayerTakeHuntDrop
@@ -827,7 +827,7 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 			Hunting::PlayerPress[playerid] = GetTickCount() + Hunting::GetPressTime(mobid);
 		}
 	}
-	if(Tryg3D::KeyReleased(Hunting::Key)){
+	if(Tryg3D::KeyReleased(Hunting::Key) && !IsPlayerInAnyVehicle(playerid)){
 		if(GetTickCount() >= Hunting::PlayerPress[playerid] && Hunting::PlayerPress[playerid] != 0){
 			Hunting::PlayerPress[playerid] = 0;
 			new mobid = Hunting::GetActiveMob(playerid,HUNTING_STATE_DEAD);
