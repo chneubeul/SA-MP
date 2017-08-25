@@ -11,7 +11,7 @@
  * Plugins: Streamer, ColAndreas                                                                                                  *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.2.1                                                                                                            *
+ * File Version: 1.3.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -49,6 +49,7 @@
  * Hunting::GetPressTime(mobid);                                                                                                  *
  * Hunting::SetPressTime(mobid,miliseconds);                                                                                      *
  * Hunting::GetFacingAngle(mobid);                                                                                                *
+ * Hunting::SetCalmTime(mobid,time=0);                                                                                            *
  * Hunting::IsPlayerInRange(playerid,mobid,Float:range);                                                                          *
  * Hunting::IsToggledMoving(mobid);                                                                                               *
  * Hunting::ToggleMoving(mobid,toggle);                                                                                           *
@@ -56,6 +57,8 @@
  * Hunting::IsSpawned(mobid);                                                                                                     *
  * Hunting::IsDead(mobid);                                                                                                        *
  * Hunting::IsScared(mobid);                                                                                                      *
+ * Hunting::IsStopped(mobid);                                                                                                     *
+ * Hunting::IsMoving(mobid);                                                                                                      *
  *                                                                                                                                *
  * Extended Functions:                                                                                                            *
  * Hunting::Count();                                                                                                              *
@@ -68,6 +71,7 @@
  * OnPlayerTakeHuntDrop(playerid,mobid,drop); //return 0 set drop flag 0                                                          *
  * OnPlayerKillHuntAnimal(playerid,mobid);                                                                                        *
  * OnPlayerApproachingAnimal(playerid,mobid,mob_state);                                                                           *
+ * OnPlayerExitApproachingAnimal(playerid,mobid,mob_state);                                                                       *
  * OnAnimalTakeDamage(mobid,playerid,Float:amount,weaponid);                                                                      *
  * OnHuntAnimalRespawn(mobid);                                                                                                    *
  * OnAnimalScareStateChanged(mobid,playerid,isscared);                                                                            *
@@ -148,7 +152,8 @@ enum Hunting::enum {
 	Hunting::calm,
 	Hunting::press_time,
 	Hunting::last_scared,
-	Hunting::stop_delay
+	Hunting::stop_delay,
+	Hunting::last_respawn
 }
 
 new Hunting::Data[MAX_HUNTING_ANIMALS][Hunting::enum],
@@ -167,6 +172,10 @@ new Hunting::Data[MAX_HUNTING_ANIMALS][Hunting::enum],
 
 #if defined OnPlayerApproachingAnimal
 	forward OnPlayerApproachingAnimal(playerid,mobid,mob_state);
+#endif
+
+#if defined OnPlayerExitApproachingAnimal
+	forward OnPlayerExitApproachingAnimal(playerid,mobid,mob_state);
 #endif
 
 #if defined OnAnimalTakeDamage
@@ -217,6 +226,8 @@ new Hunting::Data[MAX_HUNTING_ANIMALS][Hunting::enum],
 
 #define Hunt_IsScared(%0)						(Hunting::Data[(%0)][Hunting::calm] != 0)
 
+#define Hunt_IsStopped(%0)						(Hunting::Data[(%0)][Hunting::stop_delay] != 0 || !Hunting::Data[(%0)][Hunting::moving])
+
 stock Hunting::Count(){
 	new cnt = 0;
 	for(new mobid = 1; mobid <= Hunting::Upperbound; mobid++){
@@ -240,7 +251,15 @@ stock Hunting::Construct(){
 	
 	return Hunting::data_construct;
 }
-	
+
+stock Hunting::SetCalmTime(mobid,time=0){		
+	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
+	if(!Hunting::IsValid(mobid)) return 0;
+	if(!Hunting::IsScared(mobid)) return 0;
+	Hunting::Data[mobid][Hunting::calm] = GetTickCount() + time;
+	return 1;
+}
+
 stock Hunting::Stop(mobid,delay=-1){
 	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
 	if(delay > 0){
@@ -252,6 +271,14 @@ stock Hunting::Stop(mobid,delay=-1){
 	}
 	StopDynamicObject(Hunting::Data[mobid][Hunting::objectid]);
 	return 1;
+}
+
+stock Hunting::IsMoving(mobid){
+	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
+	if(!Hunting::IsValid(mobid)) return 0;
+	new Float:x,Float:y,Float:z;
+	Hunting::GetPos(mobid,x,y,z);
+	return (GetDistanceBetweenPoints2D(Hunting::Data[mobid][Hunting::tX],Hunting::Data[mobid][Hunting::tY],x,y) > 0.0);
 }
 
 stock Hunting::SetSpawn(mobid,Float:x,Float:y,Float:z){
@@ -432,6 +459,7 @@ stock Hunting::Create(type,Float:x,Float:y,Float:z,Float:health,respawntime,worl
 	Hunting::Data[mobid][Hunting::tY] = y;
 	Hunting::Data[mobid][Hunting::moving] = 1;
 	Hunting::Data[mobid][Hunting::speed] = 0.8;
+	Hunting::Data[mobid][Hunting::last_respawn] = 0;
 	
 	Hunting::SetSpawn(mobid,x,y,z);
 	
@@ -462,6 +490,14 @@ stock Hunting::Respawn(mobid){
 	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
 	if(!Hunting::IsValid(mobid)) return 0;
 	Hunting::Data[mobid][Hunting::respawn_tick] = 0;
+	
+	if(GetTickCount() - Hunting::Data[mobid][Hunting::last_respawn] < 50 && Hunting::Data[mobid][Hunting::last_respawn] != 0){
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Error: Failed to Hunting::Respawn(%d) must pass 50 ms before the next respawn",mobid);
+		}
+		return 0;
+	}
+	Hunting::Data[mobid][Hunting::last_respawn] = GetTickCount();
 	
 	if(Hunting::IsSpawned(mobid)){
 		Hunting::Data[mobid][Hunting::state] = HUNTING_STATE_DEAD;
@@ -745,6 +781,35 @@ public OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA areaid){
 #define OnPlayerEnterDynamicArea HUN_OnPlayerEnterDynamicArea
 #if defined HUN_OnPlayerEnterDynamicArea
 	forward HUN_OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA areaid);
+#endif
+
+//Hook: OnPlayerLeaveDynamicArea
+public OnPlayerLeaveDynamicArea(playerid, STREAMER_TAG_AREA areaid){
+	new Hunting::extraid = Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID), mobid;
+	
+	mobid = (Hunting::extraid - HUNT_EXTRA_ID_OFFSET);
+	if(mobid > 0 && mobid < MAX_HUNTING_ANIMALS){
+		if(Hunting::Data[mobid][Hunting::drop_area] == areaid){
+			#if defined OnPlayerExitApproachingAnimal
+				OnPlayerExitApproachingAnimal(playerid,mobid,Hunting::Data[mobid][Hunting::state]);
+			#endif
+		}
+	}
+	
+	#if defined HUN_OnPlayerLeaveDynamicArea
+		HUN_OnPlayerLeaveDynamicArea(playerid, areaid);
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnPlayerLeaveDynamicArea
+	#undef OnPlayerLeaveDynamicArea
+#else
+	#define _ALS_OnPlayerLeaveDynamicArea
+#endif
+#define OnPlayerLeaveDynamicArea HUN_OnPlayerLeaveDynamicArea
+#if defined HUN_OnPlayerLeaveDynamicArea
+	forward HUN_OnPlayerLeaveDynamicArea(playerid, STREAMER_TAG_AREA areaid);
 #endif
 
 //Hook: OnPlayerKeyStateChange
