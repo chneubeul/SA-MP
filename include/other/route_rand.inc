@@ -11,7 +11,7 @@
  * Plugins: None                                                                                    *
  * Modules: None                                                                                    *
  * Attributes: None                                                                                 *
- * Data Base: route_rand.bin                                                                        *
+ * Data Base: /scriptfiles/route_rand.bin                                                           *
  *                                                                                                  *
  * File Version: 1.0.0                                                                              *
  * SA:MP Version: 0.3.7                                                                             *
