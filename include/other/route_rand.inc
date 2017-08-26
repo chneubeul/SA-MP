@@ -7,7 +7,8 @@
 #define RR_MergeValue(%0,%1,%2,%3,%4)		((%0) = (((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 #define RR_MergeFloat(%0,%1,%2,%3,%4)		((%0) = Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 
-stock DumpTempData(const input[],const output[]){
+//file generator (you don't need this :D)
+stock Route_DumpTempData(const input[],const output[]){
 	if(fexist(output)) fremove(output);
 	new File:inpf = fopen(input,io_read),
 		File:outf = fopen(output,io_write),
