@@ -22,9 +22,16 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
-#if !defined MAX_ROUTE_RANDOM
-	#define MAX_ROUTE_RANDOM					(27608)
+#if defined _route_rand
+	#endinput
 #endif
+#define _route_rand
+
+#if !defined MAX_ROUTE_RANDOM
+	#define MAX_ROUTE_RANDOM				(27608)
+#endif
+
+#define INVALID_ROUTE_ID					(-1)
 
 //BitFunctions.inc
 #define RR_ExtractValue(%0,%1,%2,%3,%4)		((%1) = (((%0) & 0xFF000000) >>> 24),(%2) = (((%0) & 0x00FF0000) >>> 16),(%3) = (((%0) & 0x0000FF00) >>> 8),(%4) = ((%0) & 0x000000FF))
@@ -34,9 +41,9 @@
 #define RR_MergeFloat(%0,%1,%2,%3,%4)		((%0) = Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 
 stock GetRandomRoutePoint(const file_name[],&Float:x,&Float:y,&Float:z){
-	if(!fexist(file_name)) return 0;
+	if(!fexist(file_name)) return INVALID_ROUTE_ID;
 	new File:inpf = fopen(file_name,io_read);
-	if(!inpf) return 0;
+	if(!inpf) return INVALID_ROUTE_ID;
 	new routeid = random(MAX_ROUTE_RANDOM);
 	fseek(inpf,routeid*12,seek_start);
 	RR_MergeFloat(x,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
