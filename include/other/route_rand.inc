@@ -17,7 +17,7 @@
  * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  * Functions:                                                                                       *
- * GetRandomRoutePoint(const file_name[],&Float:x,&Float:y,&Float:z);                               *
+ * GetRandomRoutePoint(const file_name[],&Float:x,&Float:y,&Float:z,max_points=MAX_ROUTE_RANDOM);   *
  * Route_DumpTempData(const input[],const output[]); //file generator (you don't need this :D)      *
  *                                                                                                  *
  ****************************************************************************************************/
@@ -40,11 +40,11 @@
 #define RR_MergeValue(%0,%1,%2,%3,%4)		((%0) = (((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 #define RR_MergeFloat(%0,%1,%2,%3,%4)		((%0) = Float:(((%1) << 24) | ((%2) << 16) | ((%3) << 8) | (%4)))
 
-stock GetRandomRoutePoint(const file_name[],&Float:x,&Float:y,&Float:z){
+stock GetRandomRoutePoint(const file_name[],&Float:x,&Float:y,&Float:z,max_points=MAX_ROUTE_RANDOM){
 	if(!fexist(file_name)) return INVALID_ROUTE_ID;
 	new File:inpf = fopen(file_name,io_read);
 	if(!inpf) return INVALID_ROUTE_ID;
-	new routeid = random(MAX_ROUTE_RANDOM);
+	new routeid = random(max_points);
 	fseek(inpf,routeid*12,seek_start);
 	RR_MergeFloat(x,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
 	RR_MergeFloat(y,fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false),fgetchar(inpf,0,false));
