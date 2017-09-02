@@ -6,7 +6,7 @@
  * Contributors: Ron Rivest, Y_Less, Abyss Morgan                                                   *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
- * Publication: N/A                                                                                 *
+ * Publication: None                                                                                *
  * Website: http://8.ct8.pl                                                                         *
  *                                                                                                  *
  * Plugins: None                                                                                    *

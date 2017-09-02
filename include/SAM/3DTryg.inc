@@ -1377,6 +1377,7 @@ Tryg3D::Function:: GetVehiclePartPos(vehicleid,partid,&Float:tx,&Float:ty,&Float
 	new Float:ox,Float:oy,Float:oz,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz;
 	GetVehiclePos(vehicleid,x,y,z);
 	Tryg3D::GetVehicleRotation(vehicleid,rx,ry,rz);
+	GetVehicleZAngle(vehicleid,rz);
 	switch(partid){
 		case VEHICLE_PART_RFTIRE: {
 			GetVehicleModelInfo(GetVehicleModel(vehicleid),VEHICLE_MODEL_INFO_WHEELSFRONT,ox,oy,oz);
@@ -1441,6 +1442,7 @@ Tryg3D::Function:: GetDynamicVehiclePartPos(STREAMER_TAG_VEHICLE vehicleid,parti
 	new Float:ox,Float:oy,Float:oz,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz;
 	GetDynamicVehiclePos(vehicleid,x,y,z);
 	GetDynamicVehicleRotation(vehicleid,rx,ry,rz);
+	GetDynamicVehicleZAngle(vehicleid,rz);
 	switch(partid){
 		case VEHICLE_PART_RFTIRE: {
 			GetVehicleModelInfo(GetDynamicVehicleModel(vehicleid),VEHICLE_MODEL_INFO_WHEELSFRONT,ox,oy,oz);
