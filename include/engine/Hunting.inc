@@ -11,7 +11,7 @@
  * Plugins: Streamer, ColAndreas                                                                                                  *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.3.0                                                                                                            *
+ * File Version: 1.3.1                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -283,7 +283,6 @@ stock Hunting::IsMoving(mobid){
 
 stock Hunting::SetSpawn(mobid,Float:x,Float:y,Float:z){
 	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
-	if(!Hunting::IsValid(mobid)) return 0;
 	Hunting::Data[mobid][Hunting::X] = x;
 	Hunting::Data[mobid][Hunting::Y] = y;
 	Hunting::Data[mobid][Hunting::Z] = z;
@@ -375,7 +374,7 @@ stock Hunting::GoTo(mobid,Float:x,Float:y,bool:disable_moving=false){
 
 stock Hunting::SetPos(mobid,Float:x,Float:y,Float:z,bool:disable_moving=false){
 	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
-	if(!Hunting::IsSpawned(mobid)) return 0;
+	if(!Hunting::IsValid(mobid)) return 0;
 	
 	if(IsPointInWater(x,y)) return 0;
 	if(Hunting::Data[mobid][Hunting::areaid] != STREAMER_TAG_AREA INVALID_STREAMER_ID){
@@ -500,9 +499,9 @@ stock Hunting::Respawn(mobid){
 	Hunting::Data[mobid][Hunting::last_respawn] = GetTickCount();
 	
 	if(Hunting::IsSpawned(mobid)){
-		Hunting::Data[mobid][Hunting::state] = HUNTING_STATE_DEAD;
 		Hunting::Stop(mobid);
 	}
+	Hunting::Data[mobid][Hunting::state] = HUNTING_STATE_DEAD;
 	
 	Hunting::Data[mobid][Hunting::health] = Hunting::Data[mobid][Hunting::spawn_health];
 	Hunting::SetDrop(mobid,1);
@@ -632,17 +631,18 @@ T3D:function Hunting::OnUpdate(){
 	for(new mobid = 1; mobid <= Hunting::Upperbound; mobid++){
 		switch(Hunting::Data[mobid][Hunting::state]){
 			case HUNTING_STATE_SPAWNED: {
-				target_z = 0.0;
+				x = y = z = target_z = 0.0;
 				Hunting::GetPos(mobid,x,y,z);
+				if(x == 0.0 && y == 0.0 && z == 0.0) continue;
 				MovePointCol(x,y,z+1.0,x,y,-100.0,tmp_float,tmp_float,target_z);
 				if(Hunting::IsToggledMoving(mobid)){
 					if(GetDistanceBetweenPoints2D(Hunting::Data[mobid][Hunting::tX],Hunting::Data[mobid][Hunting::tY],x,y) == 0.0){
 						for(;;){
 							vx = vy = vz = 0.0;
 							GetRandomPointInCircle(x,y,25.0,tx,ty);
-							MovePointColCutLineEx(x,y,z+1.0,tx,ty,z+1.0,vx,vy,vz,3.0);
+							if(!MovePointColCutLineEx(x,y,z+1.0,tx,ty,z+1.0,vx,vy,vz,3.0)) continue;
 							if(GetDistanceBetweenPoints2D(x,y,vx,vy) <= 2.0) continue;
-							if(IsPointInWater(vx,vy)) continue;
+							if(IsPointInWater(vx,vy,vz)) continue;
 							if(Hunting::Data[mobid][Hunting::areaid] != STREAMER_TAG_AREA INVALID_STREAMER_ID){
 								if(!IsPointInDynamicArea(Hunting::Data[mobid][Hunting::areaid],vx,vy,vz)) continue;
 							}
