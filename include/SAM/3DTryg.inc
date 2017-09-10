@@ -1577,100 +1577,6 @@ Tryg3D::Function:: GetDynamicVehiclePartPos(STREAMER_TAG_VEHICLE vehicleid,parti
  
 #endif 
  
-#if defined Tryg3D_VehicleCollision 
- 
-/************************************************************************************************************************************
- *                                                                                                                                  *
- * Vehicle Collision Functions                                                                                                      *
- *                                                                                                                                  *
- ************************************************************************************************************************************/
-
-#define IsVehicleCollisionEnabled()				Tryg3D::VehicleCollisionSystem 
- 
-Tryg3D::Public:: Tryg3D::SyncVehicleCollision(vehicleid){
-	if(!Tryg3D::VehicleCollisionSystem) return 0;
-	new Float:T3D:sx,Float:T3D:sy,Float:T3D:sz;
-	GetVehicleModelInfo(GetVehicleModel(vehicleid),VEHICLE_MODEL_INFO_SIZE,T3D:sx,T3D:sy,T3D:sz);
-	
-	T3D:sx /= 2.0;
-	T3D:sy /= 2.0;
-	T3D:sz /= 2.0;
-	
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MIN_X,-T3D:sx);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MIN_Y,-T3D:sy);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MIN_Z,-T3D:sz);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MAX_X,T3D:sx);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MAX_Y,T3D:sy);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MAX_Z,T3D:sz);
-	
-	AttachDynamicAreaToVehicle(Tryg3D::VehicleCollisionZone[vehicleid],vehicleid);
-	return 1;
-} 
- 
-Tryg3D::Public:: Tryg3D::InitVehicleCollision(){
-	if(Tryg3D::VehicleCollisionSystem) return 0;
-	
-	for(new vehicleid = 1; vehicleid < MAX_VEHICLES; vehicleid++){
-		Tryg3D::VehicleCollisionZone[vehicleid] = CreateDynamicCube(-1.0,-1.0,-6000.0,1.0,1.0,-5000.0);
-		Streamer_SetIntData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_EXTRA_ID,(vehicleid+VCOLLISION_EXTRA_ID_OFFSET));
-		if(IsValidVehicle(vehicleid)){
-			Tryg3D::SyncVehicleCollision(vehicleid);
-		}
-	}
-	
-	Tryg3D::VehicleCollisionSystem = true;
-	print("[ADM] Info: Vehicle Collision successfully init.");
-	return 1;
-} 
- 
-Tryg3D::Public:: Tryg3D::ExitVehicleCollision(){
-	if(!Tryg3D::VehicleCollisionSystem) return 0;
-	for(new vehicleid = 1; vehicleid < MAX_VEHICLES; vehicleid++){
-		if(IsValidDynamicArea(Tryg3D::VehicleCollisionZone[vehicleid])) DestroyDynamicArea(Tryg3D::VehicleCollisionZone[vehicleid]);
-		Tryg3D::VehicleCollisionZone[vehicleid] = STREAMER_TAG_AREA INVALID_STREAMER_ID;
-	}
-	Tryg3D::VehicleCollisionSystem = false;
-	print("[ADM] Info: Vehicle Collision successfully exit.");
-	return 1;
-} 
- 
-Tryg3D::Function:: MovePointColWithVehicle(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
-	x = y = z = 0.0;
-	CA_RayCastLine(StartX,StartY,StartZ,EndX,EndY,EndZ,x,y,z); //first find wall collision
-	if(x == 0.0) x = EndX;
-	if(y == 0.0) y = EndY;
-	if(z == 0.0) z = EndZ;
-	if(Tryg3D::VehicleCollisionSystem){
-		new Float:vx, Float:vy, Float:vz, Tryg3D::AreaCount;
-		Tryg3D::AreaCount = GetNumberDynamicAreasForLine(StartX,StartY,StartZ,x,y,z);
-		if(Tryg3D::AreaCount){
-			new STREAMER_TAG_AREA Tryg3D::Area[128], vehicleid, Float:sx, Float:sy, Float:sz, Float:last_dist = 20000.0, Float:dist, near_vehicleid = INVALID_VEHICLE_ID;
-			GetDynamicAreasForLine(StartX,StartY,StartZ,x,y,z,Tryg3D::Area,sizeof(Tryg3D::Area));
-			for(new k = 0; k < Tryg3D::AreaCount; k++){
-				vehicleid = Streamer_GetIntData(STREAMER_TYPE_AREA,Tryg3D::Area[k],E_STREAMER_EXTRA_ID) - VCOLLISION_EXTRA_ID_OFFSET;
-				if(vehicleid >= 1 && vehicleid < MAX_VEHICLES && IsValidVehicle(vehicleid)){
-					if(Tryg3D::Area[k] == Tryg3D::VehicleCollisionZone[vehicleid]){
-						GetVehiclePos(vehicleid,vx,vy,vz);
-						if((dist = GetDistanceBetweenPoints3D(StartX,StartY,StartZ,vx,vy,vz)) < last_dist){
-							last_dist = dist;
-							near_vehicleid = vehicleid;
-						}
-					}
-				}
-			}
-			if(near_vehicleid != INVALID_VEHICLE_ID){
-				GetVehiclePos(near_vehicleid,vx,vy,vz);
-				GetVehicleModelInfo(GetVehicleModel(near_vehicleid),VEHICLE_MODEL_INFO_SIZE,sx,sy,sz);
-				GetPointFor2Point3DEx(StartX,StartY,StartZ,vx,vy,vz,GetDistanceBetweenPoints3D(StartX,StartY,StartZ,vx,vy,vz)-VectorSize((sx/2.0),(sy/2.0),(sz/2.0)),x,y,z);
-				return near_vehicleid;
-			}
-		}
-	}
-	return INVALID_VEHICLE_ID;
-} 
- 
-#endif 
- 
 /************************************************************************************************************************************
  *                                                                                                                                  *
  * Nero_3D ScreenToWorld Functions                                                                                                  *
@@ -3741,6 +3647,100 @@ Tryg3D::Function:: bool:GetElementOrientationPos(TRYG3D_ELEMENT_TAG elementid,It
 	}
 	return true;
 } 
+ 
+#if defined Tryg3D_VehicleCollision 
+ 
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ * Vehicle Collision Functions                                                                                                      *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
+
+#define IsVehicleCollisionEnabled()				Tryg3D::VehicleCollisionSystem 
+ 
+Tryg3D::Public:: Tryg3D::SyncVehicleCollision(vehicleid){
+	if(!Tryg3D::VehicleCollisionSystem) return 0;
+	new Float:T3D:sx,Float:T3D:sy,Float:T3D:sz;
+	GetVehicleModelInfo(GetVehicleModel(vehicleid),VEHICLE_MODEL_INFO_SIZE,T3D:sx,T3D:sy,T3D:sz);
+	
+	T3D:sx /= 2.0;
+	T3D:sy /= 2.0;
+	T3D:sz /= 2.0;
+	
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MIN_X,-T3D:sx);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MIN_Y,-T3D:sy);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MIN_Z,-T3D:sz);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MAX_X,T3D:sx);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MAX_Y,T3D:sy);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MAX_Z,T3D:sz);
+	
+	AttachDynamicAreaToVehicle(Tryg3D::VehicleCollisionZone[vehicleid],vehicleid);
+	return 1;
+} 
+ 
+Tryg3D::Public:: Tryg3D::InitVehicleCollision(){
+	if(Tryg3D::VehicleCollisionSystem) return 0;
+	
+	for(new vehicleid = 1; vehicleid < MAX_VEHICLES; vehicleid++){
+		Tryg3D::VehicleCollisionZone[vehicleid] = CreateDynamicCube(-1.0,-1.0,-6000.0,1.0,1.0,-5000.0);
+		Streamer_SetIntData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_EXTRA_ID,(vehicleid+VCOLLISION_EXTRA_ID_OFFSET));
+		if(IsValidVehicle(vehicleid)){
+			Tryg3D::SyncVehicleCollision(vehicleid);
+		}
+	}
+	
+	Tryg3D::VehicleCollisionSystem = true;
+	print("[ADM] Info: Vehicle Collision successfully init.");
+	return 1;
+} 
+ 
+Tryg3D::Public:: Tryg3D::ExitVehicleCollision(){
+	if(!Tryg3D::VehicleCollisionSystem) return 0;
+	for(new vehicleid = 1; vehicleid < MAX_VEHICLES; vehicleid++){
+		if(IsValidDynamicArea(Tryg3D::VehicleCollisionZone[vehicleid])) DestroyDynamicArea(Tryg3D::VehicleCollisionZone[vehicleid]);
+		Tryg3D::VehicleCollisionZone[vehicleid] = STREAMER_TAG_AREA INVALID_STREAMER_ID;
+	}
+	Tryg3D::VehicleCollisionSystem = false;
+	print("[ADM] Info: Vehicle Collision successfully exit.");
+	return 1;
+} 
+ 
+Tryg3D::Function:: MovePointColWithVehicle(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
+	x = y = z = 0.0;
+	CA_RayCastLine(StartX,StartY,StartZ,EndX,EndY,EndZ,x,y,z); //first find wall collision
+	if(x == 0.0) x = EndX;
+	if(y == 0.0) y = EndY;
+	if(z == 0.0) z = EndZ;
+	if(Tryg3D::VehicleCollisionSystem){
+		new Float:vx, Float:vy, Float:vz, Tryg3D::AreaCount;
+		Tryg3D::AreaCount = GetNumberDynamicAreasForLine(StartX,StartY,StartZ,x,y,z);
+		if(Tryg3D::AreaCount){
+			new STREAMER_TAG_AREA Tryg3D::Area[128], vehicleid, Float:sx, Float:sy, Float:sz, Float:last_dist = 20000.0, Float:dist, near_vehicleid = INVALID_VEHICLE_ID;
+			GetDynamicAreasForLine(StartX,StartY,StartZ,x,y,z,Tryg3D::Area,sizeof(Tryg3D::Area));
+			for(new k = 0; k < Tryg3D::AreaCount; k++){
+				vehicleid = Streamer_GetIntData(STREAMER_TYPE_AREA,Tryg3D::Area[k],E_STREAMER_EXTRA_ID) - VCOLLISION_EXTRA_ID_OFFSET;
+				if(vehicleid >= 1 && vehicleid < MAX_VEHICLES && IsValidVehicle(vehicleid)){
+					if(Tryg3D::Area[k] == Tryg3D::VehicleCollisionZone[vehicleid]){
+						GetVehiclePos(vehicleid,vx,vy,vz);
+						if((dist = GetDistanceBetweenPoints3D(StartX,StartY,StartZ,vx,vy,vz)) < last_dist){
+							last_dist = dist;
+							near_vehicleid = vehicleid;
+						}
+					}
+				}
+			}
+			if(near_vehicleid != INVALID_VEHICLE_ID){
+				GetVehiclePos(near_vehicleid,vx,vy,vz);
+				GetVehicleModelInfo(GetVehicleModel(near_vehicleid),VEHICLE_MODEL_INFO_SIZE,sx,sy,sz);
+				GetPointFor2Point3DEx(StartX,StartY,StartZ,vx,vy,vz,GetDistanceBetweenPoints3D(StartX,StartY,StartZ,vx,vy,vz)-VectorSize((sx/2.0),(sy/2.0),(sz/2.0)),x,y,z);
+				return near_vehicleid;
+			}
+		}
+	}
+	return INVALID_VEHICLE_ID;
+} 
+ 
+#endif 
  
 #if defined Tryg3D_Anims 
  
