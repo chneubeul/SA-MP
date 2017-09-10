@@ -11,9 +11,9 @@
  *                                                                                                                                   *
  * Plugins: MapAndreas, ColAndreas, YSF, Streamer, FCNPC, VehicleStreamer                                                            *
  * Modules: FoxForeach, Foreach                                                                                                      *
- * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims                                                                             *
+ * Internal Modules: Stream3D, Line3D, Actor, ATM, Anims, VehicleCollision                                                           *
  *                                                                                                                                   *
- * File Version: 4.4.3                                                                                                               *
+ * File Version: 4.5.0                                                                                                               *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                    *
  * MapAndreas Version: 1.2.1                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                         *
@@ -47,6 +47,7 @@
  * ENABLE_3D_TRYG_STREAM3D      //Use before 3DTryg.inc for enable Stream3D Module                                                   *
  * ENABLE_3D_TRYG_LINE3D        //Use before 3DTryg.inc for enable Line3D Module                                                     *
  * ENABLE_3D_TRYG_ANIMS         //Use before 3DTryg.inc for enable Anims Module                                                      *
+ * DISABLE_3D_TRYG_VEHICLECOL   //Use before 3DTryg.inc for disable VehicleCollision Module                                          *
  *                                                                                                                                   *
  * //Complementary Functions:
  * Float:sqrtN(Float:value,Float:exponent);
@@ -275,6 +276,12 @@
  * //VehiclePartPosition Functions:
  * GetVehiclePartPos(vehicleid,partid,&Float:tx,&Float:ty,&Float:tz,Float:offset_x=0.0,Float:offset_y=0.0,Float:offset_z=0.0);
  * GetDynamicVehiclePartPos(vehicleid,partid,&Float:tx,&Float:ty,&Float:tz,Float:offset_x=0.0,Float:offset_y=0.0,Float:offset_z=0.0);
+ * 
+ * //VehicleCollision Functions:
+ * Tryg3D::InitVehicleCollision();
+ * Tryg3D::ExitVehicleCollision();
+ * Tryg3D::SyncVehicleCollision(vehicleid);
+ * MovePointColWithVehicle(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z);
  * 
  * //Extended Functions:
  * Tryg3D::GetModuleName(Tryg3D::Module:moduleid);
@@ -638,6 +645,7 @@
  * # TRYG3D_MODULEID_ATM                                                                                                             *
  * # TRYG3D_MODULEID_ANIMS                                                                                                           *
  * # TRYG3D_MODULEID_VEHSTREAMER                                                                                                     *
+ * # TRYG3D_MODULEID_VEHICLECOL                                                                                                      *
  *                                                                                                                                   *
  * //Functions extra names:                                                                                                          *
  * GetDistanceBetweenPoints   -> GetDistanceBetweenPoints3D                                                                          *
@@ -651,11 +659,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40403)
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40500)
+	#error [ADM] Update you 3DTryg.inc to v4.5.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 */
 
@@ -670,7 +678,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40403) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40500) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize || !defined GetSVarInt)
@@ -840,6 +848,15 @@
 	#define Tryg3D_Module_Anims							(false)
 #endif
 
+//Detect VehicleCollision Module [Slot: 13]
+#if ((defined Tryg3D_Streamer) && (defined Tryg3D_ColAndreas) && (!defined DISABLE_3D_TRYG_VEHICLECOL))
+	#define Tryg3D_VehicleCollision
+	#define Tryg3D_Module_VehicleCollision				(true)
+#else
+	#define Tryg3D_Module_VehicleCollision				(false)
+#endif
+
+
 //Detect i_quat Include by IllidanS4 [Slot: 102]
 #if ((defined GetVehicleRotation) && (defined VectorRelToAbsQuat))
 	#define Tryg3D_i_quat
@@ -991,7 +1008,8 @@ enum Tryg3D_Module {
 	TRYG3D_MODULEID_ACTOR,
 	TRYG3D_MODULEID_ATM,
 	TRYG3D_MODULEID_ANIMS,
-	TRYG3D_MODULEID_VEHSTREAMER
+	TRYG3D_MODULEID_VEHSTREAMER,
+	TRYG3D_MODULEID_VEHICLECOL
 }
 
 enum element_orientation {
@@ -1199,6 +1217,70 @@ new Tryg3D::VehicleFlags[212];
 #elseif defined Tryg3D_MapAndreas
 	#define Tryg3D_MapAndreasFindZ						MapAndreasFindZ
 	#define Tryg3DMapAndreasFindZ						Tryg3D_MapAndreasFindZ
+#endif 
+ 
+#if defined Tryg3D_VehicleCollision 
+ 
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ * Vehicle Collision Module                                                                                                         *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
+ 
+#define VCOLLISION_EXTRA_ID_OFFSET				(800000)
+
+new STREAMER_TAG_AREA Tryg3D::VehicleCollisionZone[MAX_VEHICLES],
+	bool:Tryg3D::VehicleCollisionSystem = false;
+
+//Hook: OnVehicleSpawn
+public OnVehicleSpawn(vehicleid){
+	if(Tryg3D::VehicleCollisionSystem){
+		Tryg3D::SyncVehicleCollision(vehicleid);
+	}
+	#if defined Tryg3D_OnVehicleSpawn
+		Tryg3D::OnVehicleSpawn(vehicleid);
+	#endif
+	return 1;
+}
+
+#if defined Tryg3D_OnVehicleSpawn
+	forward Tryg3D_OnVehicleSpawn(vehicleid);
+#endif
+#if defined _ALS_OnVehicleSpawn
+	#undef OnVehicleSpawn
+#else
+	#define _ALS_OnVehicleSpawn
+#endif
+#define OnVehicleSpawn Tryg3D_OnVehicleSpawn
+
+//Sync on VehicleCreated
+#if ((defined _EVF_include) && (defined EVF_Version))
+	#if (EVF_Version >= 20000)
+	
+		//Hook: OnVehicleCreated
+		public OnVehicleCreated(vehicleid){
+			if(Tryg3D::VehicleCollisionSystem){
+				Tryg3D::SyncVehicleCollision(vehicleid);
+			}
+			#if defined Tryg3D_OnVehicleCreated
+				Tryg3D::OnVehicleCreated(vehicleid);
+			#endif
+			return 1;
+		}
+
+		#if defined Tryg3D_OnVehicleCreated
+			forward Tryg3D_OnVehicleCreated(vehicleid);
+		#endif
+		#if defined _ALS_OnVehicleCreated
+			#undef OnVehicleCreated
+		#else
+			#define _ALS_OnVehicleCreated
+		#endif
+		#define OnVehicleCreated Tryg3D_OnVehicleCreated
+		
+	#endif
+#endif 
+ 
 #endif 
  
 /************************************************************************************************************************************
@@ -1492,6 +1574,100 @@ Tryg3D::Function:: GetDynamicVehiclePartPos(STREAMER_TAG_VEHICLE vehicleid,parti
 	ShiftOffsetToPosition(x,y,z, rx,ry,rz, ox,oy,oz, tx,ty,tz);
 }
  
+ 
+#endif 
+ 
+#if defined Tryg3D_VehicleCollision 
+ 
+/************************************************************************************************************************************
+ *                                                                                                                                  *
+ * Vehicle Collision Functions                                                                                                      *
+ *                                                                                                                                  *
+ ************************************************************************************************************************************/
+
+#define IsVehicleCollisionEnabled()				Tryg3D::VehicleCollisionSystem 
+ 
+Tryg3D::Public:: Tryg3D::SyncVehicleCollision(vehicleid){
+	if(!Tryg3D::VehicleCollisionSystem) return 0;
+	new Float:T3D:sx,Float:T3D:sy,Float:T3D:sz;
+	GetVehicleModelInfo(GetVehicleModel(vehicleid),VEHICLE_MODEL_INFO_SIZE,T3D:sx,T3D:sy,T3D:sz);
+	
+	T3D:sx /= 2.0;
+	T3D:sy /= 2.0;
+	T3D:sz /= 2.0;
+	
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MIN_X,-T3D:sx);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MIN_Y,-T3D:sy);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MIN_Z,-T3D:sz);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MAX_X,T3D:sx);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MAX_Y,T3D:sy);
+	Streamer_SetFloatData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_MAX_Z,T3D:sz);
+	
+	AttachDynamicAreaToVehicle(Tryg3D::VehicleCollisionZone[vehicleid],vehicleid);
+	return 1;
+} 
+ 
+Tryg3D::Public:: Tryg3D::InitVehicleCollision(){
+	if(Tryg3D::VehicleCollisionSystem) return 0;
+	
+	for(new vehicleid = 1; vehicleid < MAX_VEHICLES; vehicleid++){
+		Tryg3D::VehicleCollisionZone[vehicleid] = CreateDynamicCube(-1.0,-1.0,-6000.0,1.0,1.0,-5000.0);
+		Streamer_SetIntData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_EXTRA_ID,(vehicleid+VCOLLISION_EXTRA_ID_OFFSET));
+		if(IsValidVehicle(vehicleid)){
+			Tryg3D::SyncVehicleCollision(vehicleid);
+		}
+	}
+	
+	Tryg3D::VehicleCollisionSystem = true;
+	print("[ADM] Info: Vehicle Collision successfully init.");
+	return 1;
+} 
+ 
+Tryg3D::Public:: Tryg3D::ExitVehicleCollision(){
+	if(!Tryg3D::VehicleCollisionSystem) return 0;
+	for(new vehicleid = 1; vehicleid < MAX_VEHICLES; vehicleid++){
+		if(IsValidDynamicArea(Tryg3D::VehicleCollisionZone[vehicleid])) DestroyDynamicArea(Tryg3D::VehicleCollisionZone[vehicleid]);
+		Tryg3D::VehicleCollisionZone[vehicleid] = STREAMER_TAG_AREA INVALID_STREAMER_ID;
+	}
+	Tryg3D::VehicleCollisionSystem = false;
+	print("[ADM] Info: Vehicle Collision successfully exit.");
+	return 1;
+} 
+ 
+Tryg3D::Function:: MovePointColWithVehicle(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
+	x = y = z = 0.0;
+	CA_RayCastLine(StartX,StartY,StartZ,EndX,EndY,EndZ,x,y,z); //first find wall collision
+	if(x == 0.0) x = EndX;
+	if(y == 0.0) y = EndY;
+	if(z == 0.0) z = EndZ;
+	if(Tryg3D::VehicleCollisionSystem){
+		new Float:vx, Float:vy, Float:vz, Tryg3D::AreaCount;
+		Tryg3D::AreaCount = GetNumberDynamicAreasForLine(StartX,StartY,StartZ,x,y,z);
+		if(Tryg3D::AreaCount){
+			new STREAMER_TAG_AREA Tryg3D::Area[128], vehicleid, Float:sx, Float:sy, Float:sz, Float:last_dist = 20000.0, Float:dist, near_vehicleid = INVALID_VEHICLE_ID;
+			GetDynamicAreasForLine(StartX,StartY,StartZ,x,y,z,Tryg3D::Area,sizeof(Tryg3D::Area));
+			for(new k = 0; k < Tryg3D::AreaCount; k++){
+				vehicleid = Streamer_GetIntData(STREAMER_TYPE_AREA,Tryg3D::Area[k],E_STREAMER_EXTRA_ID) - VCOLLISION_EXTRA_ID_OFFSET;
+				if(vehicleid >= 1 && vehicleid < MAX_VEHICLES && IsValidVehicle(vehicleid)){
+					if(Tryg3D::Area[k] == Tryg3D::VehicleCollisionZone[vehicleid]){
+						GetVehiclePos(vehicleid,vx,vy,vz);
+						if((dist = GetDistanceBetweenPoints3D(StartX,StartY,StartZ,vx,vy,vz)) < last_dist){
+							last_dist = dist;
+							near_vehicleid = vehicleid;
+						}
+					}
+				}
+			}
+			if(near_vehicleid != INVALID_VEHICLE_ID){
+				GetVehiclePos(near_vehicleid,vx,vy,vz);
+				GetVehicleModelInfo(GetVehicleModel(near_vehicleid),VEHICLE_MODEL_INFO_SIZE,sx,sy,sz);
+				GetPointFor2Point3DEx(StartX,StartY,StartZ,vx,vy,vz,GetDistanceBetweenPoints3D(StartX,StartY,StartZ,vx,vy,vz)-VectorSize((sx/2.0),(sy/2.0),(sz/2.0)),x,y,z);
+				return near_vehicleid;
+			}
+		}
+	}
+	return INVALID_VEHICLE_ID;
+} 
  
 #endif 
  
@@ -3659,6 +3835,7 @@ Tryg3D::Function:: bool:Tryg3D::IsModuleLoaded(Tryg3D::Module:moduleid){
 		case TRYG3D_MODULEID_ATM:			return Tryg3D_Module_ATM;
 		case TRYG3D_MODULEID_ANIMS:			return Tryg3D_Module_Anims;
 		case TRYG3D_MODULEID_VEHSTREAMER:	return Tryg3D_Module_VehicleStreamer;
+		case TRYG3D_MODULEID_VEHICLECOL:	return Tryg3D_Module_VehicleCollision;
 	}
 	return false;
 }
@@ -3679,6 +3856,7 @@ Tryg3D::Function:: Tryg3D::GetModuleName(Tryg3D::Module:moduleid,module_name[],m
 		case TRYG3D_MODULEID_ATM:			format(module_name,maxdest,"ATM");
 		case TRYG3D_MODULEID_ANIMS:			format(module_name,maxdest,"Anims");
 		case TRYG3D_MODULEID_VEHSTREAMER:	format(module_name,maxdest,"VehicleStreamer");
+		case TRYG3D_MODULEID_VEHICLECOL:	format(module_name,maxdest,"VehicleCollision");
 	}
 }
  
