@@ -1251,35 +1251,7 @@ public OnVehicleSpawn(vehicleid){
 #else
 	#define _ALS_OnVehicleSpawn
 #endif
-#define OnVehicleSpawn Tryg3D_OnVehicleSpawn
-
-//Sync on VehicleCreated
-#if ((defined _EVF_include) && (defined EVF_Version))
-	#if (EVF_Version >= 20000)
-	
-		//Hook: OnVehicleCreated
-		public OnVehicleCreated(vehicleid){
-			if(Tryg3D::VehicleCollisionSystem){
-				Tryg3D::SyncVehicleCollision(vehicleid);
-			}
-			#if defined Tryg3D_OnVehicleCreated
-				Tryg3D::OnVehicleCreated(vehicleid);
-			#endif
-			return 1;
-		}
-
-		#if defined Tryg3D_OnVehicleCreated
-			forward Tryg3D_OnVehicleCreated(vehicleid);
-		#endif
-		#if defined _ALS_OnVehicleCreated
-			#undef OnVehicleCreated
-		#else
-			#define _ALS_OnVehicleCreated
-		#endif
-		#define OnVehicleCreated Tryg3D_OnVehicleCreated
-		
-	#endif
-#endif 
+#define OnVehicleSpawn Tryg3D_OnVehicleSpawn 
  
 #endif 
  
@@ -2114,7 +2086,7 @@ Tryg3D::Function:: Float:GetVehicleSpeed(vehicleid){
  
 Tryg3D::Function:: SetVehicleSpeed(vehicleid,Float:speed){
 	new Float:rx,Float:ry,Float:rz,Float:vx,Float:vy,Float:vz;
-	GetVehicleRotation(vehicleid,rx,ry,rz);
+	Tryg3D::GetVehicleRotation(vehicleid,rx,ry,rz);
 	GetPointInFront3DEx(0.0,0.0,0.0,rx,ry,rz,(speed / VEHICLE_SPEED_MULTIPLIER),vx,vy,vz);
 	SetVehicleVelocity(vehicleid,vx,vy,vz);
 } 
