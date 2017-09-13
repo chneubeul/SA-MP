@@ -1,99 +1,106 @@
-/****************************************************************************************************
- *                                                                                                  *
- *                                      )(   Data Convert   )(                                      *
- *                                                                                                  *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
- * Contributors: Crayder, Shiny                                                                     *
- *                                                                                                  *
- * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
- * Publication: http://forum.sa-mp.com/showthread.php?t=610012                                      *
- * Website: http://8.ct8.pl                                                                         *
- *                                                                                                  *
- * Plugins: SScanf                                                                                  *
- * Modules: None                                                                                    *
- *                                                                                                  *
- * File Version: 2.0.0                                                                              *
- * SA:MP Version: 0.3.7                                                                             *
- * SScanf Version: 2.8.2                                                                            *
- *                                                                                                  *
- * Definitions:                                                                                     *
- * FIRST_FILE_ADDRESS                                                                               *
- * INVALID_FILE_ID                                                                                  *
- * INVALID_FILE_HANDLE                                                                              *
- * INT_NUMBER_LEN                                                                                   *
- * HEX_NUMBER_LEN                                                                                   *
- * BIN_NUMBER_LEN                                                                                   *
- * OCT_NUMBER_LEN                                                                                   *
- *                                                                                                  *
- * Functions:                                                                                       *
- * GetFileHandleID(File:handle);                                                                    *
- * GetFileID(File:handle);                                                                          *
- * bool:IsIdentical({AllTag,_}:variable1,{AllTag,_}:variable2);                                     *
- * strcopy(input[],output[]);  //string copy for warning 224: indeterminate array size              *
- * fstrcopy(input[],output[],maxdest = sizeof(output));   //fast string copy                        *
- * ABCToCBA(input[],output[]);                                                                      *
- * AnyToInt(string[],type,&bool:flag);                                                              *
- * IntToAny(value,output[],type);                                                                   *
- * rot13(string[]);                                                                                 *
- * code128(input[],output[]);                                                                       *
- * swap_int({Float,_}:int1,{Float,_}:int2);                                                         *
- * swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2));             *
- * bool:ContainInSeries(value,...);                                                                 *
- * bool:ContainInSeriesFloat(Float:value,Float:...);                                                *
- * StringEqual(string1[],string2[],ignorecase);                                                     *
- * StringNotEqual(string1[],string2[],ignorecase);                                                  *
- * base64_decode(input[],output[]); //d:base64                                                      *
- * base64_encode(input[],output[]); //e:base64                                                      *
- *                                                                                                  *
- * Validators:                                                                                      *
- * bool:IsDecimalNumber(string[]);                                                                  *
- * bool:IsHexNumber(string[]);                                                                      *
- * bool:IsBinaryNumber(string[]);                                                                   *
- * bool:IsOctalNumber(string[]);                                                                    *
- * bool:IsFloatNumber(string[]);                                                                    *
- *                                                                                                  *
- * Convert to Bool:                                                                                 *
- * bool:StringToBool(string[]);                                                                     *
- * bool:IntToBool(value);                                                                           *
- *                                                                                                  *
- * Convert to Int:                                                                                  *
- * StringToInt(string[]);                                                                           *
- * BoolToInt(bool:boolean);                                                                         *
- * HexToInt(string[]);                                                                              *
- * BinToInt(string[]);                                                                              *
- * OctToInt(string[]);                                                                              *
- *                                                                                                  *
- * Convert to Hex:                                                                                  *
- * IntToHex(value);                                                                                 *
- * IntToHexEx(value);                                                                               *
- * BinToHex(string[]);                                                                              *
- * BinToHexEx(string[]);                                                                            *
- * OctToHex(string[]);                                                                              *
- *                                                                                                  *
- * Convert to Bin:                                                                                  *
- * IntToBin(value);                                                                                 *
- * HexToBin(string[]);                                                                              *
- * OctToBin(string[]);                                                                              *
- *                                                                                                  *
- * Convert to Oct:                                                                                  *
- * IntToOct(value);                                                                                 *
- * HexToOct(string[]);                                                                              *
- * BinToOct(string[]);                                                                              *
- *                                                                                                  *
- * Binary Data Convert:                                                                             *
- * FloatToInt(Float:value); //Convert Float binary data to Integer binary data !                    *
- * Float:IntToFloat(value); //Convert Integer binary data to Float binary data !                    *
- *                                                                                                  *
- ****************************************************************************************************/
+/*************************************************************************************************************************************
+ *                                                                                                                                   *
+ *                                                      )(   Data Convert   )(                                                       *
+ *                                                                                                                                   *
+ * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                               *
+ * Contributors: Crayder, Shiny                                                                                                      *
+ *                                                                                                                                   *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                            *
+ * Publication: http://forum.sa-mp.com/showthread.php?t=610012                                                                       *
+ * Website: http://8.ct8.pl                                                                                                          *
+ *                                                                                                                                   *
+ * Plugins: SScanf                                                                                                                   *
+ * Modules: None                                                                                                                     *
+ *                                                                                                                                   *
+ * File Version: 2.1.0                                                                                                               *
+ * SA:MP Version: 0.3.7                                                                                                              *
+ * SScanf Version: 2.8.2                                                                                                             *
+ *                                                                                                                                   *
+ * Definitions:                                                                                                                      *
+ * FIRST_FILE_ADDRESS                                                                                                                *
+ * INVALID_FILE_ID                                                                                                                   *
+ * INVALID_FILE_HANDLE                                                                                                               *
+ * INT_NUMBER_LEN                                                                                                                    *
+ * HEX_NUMBER_LEN                                                                                                                    *
+ * BIN_NUMBER_LEN                                                                                                                    *
+ * OCT_NUMBER_LEN                                                                                                                    *
+ *                                                                                                                                   *
+ * Functions:                                                                                                                        *
+ * strcopy(input[],output[]);  //string copy for warning 224: indeterminate array size                                               *
+ * fstrcopy(input[],output[],maxdest = sizeof(output));   //fast string copy                                                         *
+ * ABCToCBA(input[],output[]);                                                                                                       *
+ * AnyToInt(string[],type,&bool:flag);                                                                                               *
+ * IntToAny(value,output[],type);                                                                                                    *
+ * rot13(string[]);                                                                                                                  *
+ * code128(input[],output[]);                                                                                                        *
+ * swap_int({Float,_}:int1,{Float,_}:int2);                                                                                          *
+ * swap_string(string1[], string2[], dest1 = sizeof(string1), dest2 = sizeof(string2));                                              *
+ * bool:ContainInSeries(value,...);                                                                                                  *
+ * bool:ContainInSeriesFloat(Float:value,Float:...);                                                                                 *
+ * StringEqual(string1[],string2[],ignorecase);                                                                                      *
+ * StringNotEqual(string1[],string2[],ignorecase);                                                                                   *
+ * base64_decode(input[],output[]); //d:base64                                                                                       *
+ * base64_encode(input[],output[]); //e:base64                                                                                       *
+ * StripNewLine(string[]);                                                                                                           *
+ * strreplace(string[],const search[],const replacement[],bool:ignorecase = false,pos = 0,limit = -1,maxlength = sizeof(string));    *
+ * strlower(string[]);                                                                                                               *
+ * strupper(string[]);                                                                                                               *
+ *                                                                                                                                   *
+ * File functions:                                                                                                                   *
+ * GetFileHandleID(File:handle);                                                                                                     *
+ * GetFileID(File:handle);                                                                                                           *
+ * fcopy(input[],output[]);                                                                                                          *
+ * frename(oldname[],newname[]);                                                                                                     *
+ *                                                                                                                                   *
+ * Validators:                                                                                                                       *
+ * bool:IsDecimalNumber(string[]);                                                                                                   *
+ * bool:IsHexNumber(string[]);                                                                                                       *
+ * bool:IsBinaryNumber(string[]);                                                                                                    *
+ * bool:IsOctalNumber(string[]);                                                                                                     *
+ * bool:IsFloatNumber(string[]);                                                                                                     *
+ *                                                                                                                                   *
+ * Convert to Bool:                                                                                                                  *
+ * bool:StringToBool(string[]);                                                                                                      *
+ * bool:IntToBool(value);                                                                                                            *
+ *                                                                                                                                   *
+ * Convert to Int:                                                                                                                   *
+ * StringToInt(string[]);                                                                                                            *
+ * BoolToInt(bool:boolean);                                                                                                          *
+ * HexToInt(string[]);                                                                                                               *
+ * BinToInt(string[]);                                                                                                               *
+ * OctToInt(string[]);                                                                                                               *
+ *                                                                                                                                   *
+ * Convert to Hex:                                                                                                                   *
+ * IntToHex(value);                                                                                                                  *
+ * IntToHexEx(value);                                                                                                                *
+ * BinToHex(string[]);                                                                                                               *
+ * BinToHexEx(string[]);                                                                                                             *
+ * OctToHex(string[]);                                                                                                               *
+ *                                                                                                                                   *
+ * Convert to Bin:                                                                                                                   *
+ * IntToBin(value);                                                                                                                  *
+ * HexToBin(string[]);                                                                                                               *
+ * OctToBin(string[]);                                                                                                               *
+ *                                                                                                                                   *
+ * Convert to Oct:                                                                                                                   *
+ * IntToOct(value);                                                                                                                  *
+ * HexToOct(string[]);                                                                                                               *
+ * BinToOct(string[]);                                                                                                               *
+ *                                                                                                                                   *
+ * Binary Data Convert:                                                                                                              *
+ * FloatToInt(Float:value); //Convert Float binary data to Integer binary data !                                                     *
+ * Float:IntToFloat(value); //Convert Integer binary data to Float binary data !                                                     *
+ *                                                                                                                                   *
+ *************************************************************************************************************************************/
 
 /*
 //Check Version DataConvert.inc
 #if !defined _Data_Convert
-	#error [ADM] You need DataConvert.inc v2.0.0
+	#error [ADM] You need DataConvert.inc v2.1.0
 #elseif !defined Data_Convert_Version
-	#error [ADM] Update you DataConvert.inc to v2.0.0
-#elseif (Data_Convert_Version < 20000)
-	#error [ADM] Update you DataConvert.inc to v2.0.0
+	#error [ADM] Update you DataConvert.inc to v2.1.0
+#elseif (Data_Convert_Version < 20100)
+	#error [ADM] Update you DataConvert.inc to v2.1.0
 #endif
 */
 
@@ -110,7 +117,7 @@
 	#error [ADM] You need SScanf v2.8.2 (github.com/AbyssMorgan/SA-MP/tree/master/plugins)
 #endif
 
-#define Data_Convert_Version		(20000) //a.b.c 10000*a+100*b+c
+#define Data_Convert_Version		(20100) //a.b.c 10000*a+100*b+c
 
 new const LettersTable[] = {
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
@@ -159,8 +166,6 @@ new const Decoder[] = {
 #define INVALID_FILE_HANDLE			(File:0)
 #define GetFileHandleID(%0)			(_:%0)
 #define StringToInt(%0)				strval(%0)
-
-#define IsIdentical(%0,%1)			((tagof(%0) == tagof(%1)) && (_:%0) == (_:%1))
 
 //swapvars by Crayder
 #define swap_int(%0,%1)				(((%0) ^= (%1)), ((%1) ^= (%0)), ((%0) ^= (%1)))
@@ -412,6 +417,84 @@ stock BinToOct(string[]){
 	new DC_Result[OCT_NUMBER_LEN];
 	IntToAny(BinToInt(string),DC_Result,8);
 	return DC_Result;
+}
+
+stock strlower(string[]){
+	for(new i = 0, j = strlen(string); i < j; i++){
+		string[i] = tolower(string[i]);
+	}
+}
+
+stock strupper(string[]){
+	for(new i = 0, j = strlen(string); i < j; i++){
+		string[i] = toupper(string[i]);
+	}
+}
+
+stock StripNewLine(string[]){
+	new len = strlen(string);
+	if(string[0] == 0) return 0;
+	if(string[(len-1)]=='\n' || string[(len-1)]=='\r'){
+		string[(len-1)] = 0;
+		if(string[0] == 0) return 0;
+		if(string[(len-2)]=='\n' || string[(len-2)]=='\r'){
+			string[(len-2)] = 0;
+		}
+	}
+	return 1;
+}
+
+stock fcopy(input[],output[]){
+	if(!fexist(input)) return 0;
+	if(fexist(output)) return 0;
+	new File:inpf = fopen(input,io_read),
+		File:outf = fopen(output,io_write);
+	if(!inpf || !outf) return 0;
+	for(new i = flength(inpf); i > 0; i--){
+		fputchar(outf,fgetchar(inpf,0,false),false);
+	}
+	fclose(inpf);
+	fclose(outf);
+	return 1;
+}
+
+stock frename(oldname[],newname[]){
+	if(!fexist(oldname)) return 0;
+	if(fexist(newname)) return 0;
+    if(!fcopy(oldname,newname))	return 0;
+    fremove(oldname);
+    return 1;
+}
+
+stock strreplace(string[],const search[],const replacement[],bool:ignorecase = false,pos = 0,limit = -1,maxlength = sizeof(string)){
+	if(limit == 0) return 0;
+
+	new sublen = strlen(search),
+		replen = strlen(replacement),
+		bool:packed = ispacked(string),
+		maxlen = maxlength,
+		len = strlen(string),
+		count = 0;
+    
+	if(packed) maxlen *= 4;
+    if(!sublen) return 0;
+    
+	while(-1 != (pos = strfind(string, search, ignorecase, pos))){
+		strdel(string, pos, pos + sublen);
+		len -= sublen;
+		
+		if(replen && len + replen < maxlen){
+			strins(string, replacement, pos, maxlength);
+
+			pos += replen;
+			len += replen;
+		}
+
+		// Is there a limit of number of replacements, if so, did we break it?
+		if(limit != -1 && ++count >= limit)	break;
+	}
+
+	return count;
 }
 
 //base64 by Shiny
