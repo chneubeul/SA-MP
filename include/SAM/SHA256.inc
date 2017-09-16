@@ -29,8 +29,6 @@
 #define SHA256(%0)			SHA256_Hash(%0)
 #define SHA_256(%0)			SHA256_Hash(%0)
 
-#define stock
-
 stock UINT8ToBit(value){
 	new str[] = "00000000", i = 7;
 	while(value){
