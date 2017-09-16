@@ -21,6 +21,11 @@
  *                                                                                                  *
  ****************************************************************************************************/
 
+#if defined _MD5_HASH
+	#endinput
+#endif
+#define _MD5_HASH
+
 enum E_MD5_CONTEXT {
 	E_MD5_CONTEXT_BUF[4],
 	E_MD5_CONTEXT_BITS[2],
