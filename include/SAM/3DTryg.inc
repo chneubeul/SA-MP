@@ -5809,7 +5809,7 @@ Tryg3D::Public:: Tryg3D::OnRequestResponse(index, response_code, data[]){
 		if(T3D:ver != T3D:file_ver){
 			print(" ");
 			printf("[ADM] Info: Please update your 3DTryg include to v%d.%d.%d from here:",Tryg3D::GetVersion(T3D:ver));
-			print("https://github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc");
+			print("http://8.ct8.pl/d/3DTryg.inc");
 			print(" ");
 		}
 	}
