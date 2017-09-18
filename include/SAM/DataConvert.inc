@@ -458,13 +458,15 @@ stock fcopy(input[],output[]){
 	return 1;
 }
 
-stock frename(oldname[],newname[]){
-	if(!fexist(oldname)) return 0;
-	if(fexist(newname)) return 0;
-    if(!fcopy(oldname,newname))	return 0;
-    fremove(oldname);
-    return 1;
-}
+#if !defined _YSF_included
+	stock frename(oldname[],newname[]){
+		if(!fexist(oldname)) return 0;
+		if(fexist(newname)) return 0;
+		if(!fcopy(oldname,newname))	return 0;
+		fremove(oldname);
+		return 1;
+	}
+#endif
 
 stock strreplace(string[],const search[],const replacement[],bool:ignorecase = false,pos = 0,limit = -1,maxlength = sizeof(string)){
 	if(limit == 0) return 0;
