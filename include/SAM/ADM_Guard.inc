@@ -29,17 +29,14 @@
  *                                                                                                  *
  ****************************************************************************************************/
  
-#if defined _ANTI_GOD_ADM
+#if defined _ADM_GUARD_SYSTEM
 	#endinput
 #endif
-#define _ANTI_GOD_ADM
+#define _ADM_GUARD_SYSTEM
 
 #if !defined _progress2_included
 	#error [ADM] You need progress2.inc (github.com/AbyssMorgan/SA-MP/blob/master/include/samp/progress2.inc)
 #endif
-
-#define ADMG_GetWeaponSlot(%0)				ADMG_WeaponSlot[(%0)]
-#define ADMG_NMTVF(%0,%1)					(((%0) > (%1))?(%1):(%0))
 
 #if !defined MAX_PLAYER_HEALTH
 	#define MAX_PLAYER_HEALTH				(100.0)
@@ -58,6 +55,9 @@
 #endif
 
 #define ADMG::								ADMG_
+
+#define ADMG_GetWeaponSlot(%0)				ADMG::WeaponSlot[(%0)]
+#define ADMG_NMTVF(%0,%1)					(((%0) > (%1))?(%1):(%0))
 
 new Float:		ADMG::health[MAX_PLAYERS],
 	Float:		ADMG::armour[MAX_PLAYERS],
