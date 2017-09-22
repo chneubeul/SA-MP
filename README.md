@@ -1,4 +1,4 @@
-## Abyss Morgan SA:MP Includes and Scripts
+## SA:MP Includes and Scripts
 
 
 ### Full script list and upcoming updates:
@@ -6,13 +6,13 @@
 
 
 ### Read posts in forum samp to get more information:
-* [SA:MP Forum Threads](http://8.ct8.pl/1)
+* [SA:MP Forum Threads](http://8.ct8.pl/r/forum_threads)
 
 
 ### Found a bug, please report it here:
 * [GitHub](https://github.com/AbyssMorgan/SA-MP/issues)
-* [SA:MP Forum](http://8.ct8.pl/22)
-* [My Website](http://8.ct8.pl/sendreport)
+* [SA:MP Forum](http://8.ct8.pl/r/forum_profile)
+* [My Website](http://8.ct8.pl/r/sendreport)
 
 
 ### Repository Scripts/Includes Support:
@@ -20,13 +20,14 @@
 
 
 ### Repository developer:
-* [Abyss Morgan](http://8.ct8.pl/22)
+* [Abyss Morgan](http://8.ct8.pl/r/abyssmorgan)
 
 
 ### Beta Testers:
-* [Banan](http://8.ct8.pl/banan)
-* [FerilanS](http://8.ct8.pl/ferilans)
-* [MuchomoE](http://8.ct8.pl/muchomoe)
+* [Banan](http://8.ct8.pl/r/banan)
+* [FerilanS](http://8.ct8.pl/r/ferilans)
+* [MuchomoE](http://8.ct8.pl/r/muchomoe)
+* [Unrea1](http://8.ct8.pl/r/Unrea1)
 
 
 ### Contributors:
