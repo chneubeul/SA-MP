@@ -346,4 +346,55 @@ public OnPlayerDisconnect(playerid,reason){
 	forward STIN_OnPlayerDisconnect(playerid,reason);
 #endif
 
+new bool:CRC_STINInit = true;
+
+//Hook: OnFilterScriptInit
+public OnFilterScriptInit(){
+	if(CRC_STINInit){
+		CRC_STINInit = false;
+		for(new mobid = 1; mobid < MAX_STINGERS; mobid++){
+			Stingers[mobid] = STIN_ConstructData();
+		}
+	}
+	#if defined STIN_OnFilterScriptInit
+		STIN_OnFilterScriptInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptInit
+	#undef OnFilterScriptInit
+#else
+	#define _ALS_OnFilterScriptInit
+#endif
+#define OnFilterScriptInit STIN_OnFilterScriptInit
+#if defined STIN_OnFilterScriptInit
+	forward STIN_OnFilterScriptInit();
+#endif
+
+//Hook: OnGameModeInit
+public OnGameModeInit(){
+	if(CRC_STINInit){
+		CRC_STINInit = false;
+		for(new mobid = 1; mobid < MAX_STINGERS; mobid++){
+			Stingers[mobid] = STIN_ConstructData();
+		}
+	}
+	#if defined STIN_OnGameModeInit
+		STIN_OnGameModeInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+#else
+	#define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit STIN_OnGameModeInit
+#if defined STIN_OnGameModeInit
+	forward STIN_OnGameModeInit();
+#endif
+
+
 //EOF
