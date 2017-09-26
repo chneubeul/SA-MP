@@ -47,7 +47,7 @@
 #endif
 
 #if !defined BAR_COLOR_HEALTH
-	#define BAR_COLOR_HEALTH				(0xCC0000FF)
+	#define BAR_COLOR_HEALTH				(0x990000FF)
 #endif
 
 #if !defined BAR_COLOR_ARMOUR

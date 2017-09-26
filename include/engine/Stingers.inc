@@ -11,7 +11,7 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.1.0                                                                                                            *
+ * File Version: 1.1.1                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.1                                                                                                        *
  * 3DTryg Version: 4.4.3                                                                                                          *
@@ -43,11 +43,11 @@
 /*
 //Check Version Stingers.inc
 #if !defined _Dynamic_Stingers
-	#error [ADM] You need Stingers.inc v1.1.0
+	#error [ADM] You need Stingers.inc v1.1.1
 #elseif !defined Stingers_Version
-	#error [ADM] Update you Stingers.inc to v1.1.0
-#elseif (Data_Convert_Version < 10100)
-	#error [ADM] Update you Stingers.inc to v1.1.0
+	#error [ADM] Update you Stingers.inc to v1.1.1
+#elseif (Data_Convert_Version < 10101)
+	#error [ADM] Update you Stingers.inc to v1.1.1
 #endif
 */
 
@@ -74,7 +74,7 @@
 #endif
 
 
-#define Stingers_Version						(10100) //a.b.c 10000*a+100*b+c
+#define Stingers_Version						(10101) //a.b.c 10000*a+100*b+c
 
 #define STINGERS_EXTRA_ID_OFFSET				(500000)
 
@@ -161,7 +161,6 @@ stock CreateDynamicStinger(type,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:
 	}
 	Stingers[mobid] = STIN_ConstructData();
 	
-	Stingers[mobid][stin_active] = true;
 	Stingers[mobid][stin_damage] = true;
 	Stingers[mobid][stin_teamid] = teamid;
 	Stingers[mobid][stin_byplayerid] = byplayerid;
@@ -171,6 +170,7 @@ stock CreateDynamicStinger(type,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:
 	
 	AttachDynamicAreaToObject(Stingers[mobid][stin_areaid],Stingers[mobid][stin_objectid]);
 	Streamer_SetIntData(STREAMER_TYPE_AREA,Stingers[mobid][stin_areaid],E_STREAMER_EXTRA_ID,(mobid+STINGERS_EXTRA_ID_OFFSET));
+	Stingers[mobid][stin_active] = true;
 	
 	return mobid;
 }
@@ -324,6 +324,26 @@ public OnPlayerStateChange(playerid,newstate,oldstate){
 #define OnPlayerStateChange STIN_OnPlayerStateChange
 #if defined STIN_OnPlayerStateChange
 	forward STIN_OnPlayerStateChange(playerid,newstate,oldstate);
+#endif
+
+//Hook: OnPlayerDisconnect
+public OnPlayerDisconnect(playerid,reason){
+	STIN_ActiveForPlayer[playerid] = STREAMER_TAG_AREA INVALID_STREAMER_ID;
+	STIN_LastVehicle[playerid] = 0;
+	#if defined STIN_OnPlayerDisconnect
+		STIN_OnPlayerDisconnect(playerid,reason);
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnPlayerDisconnect
+	#undef OnPlayerDisconnect
+#else
+	#define _ALS_OnPlayerDisconnect
+#endif
+#define OnPlayerDisconnect STIN_OnPlayerDisconnect
+#if defined STIN_OnPlayerDisconnect
+	forward STIN_OnPlayerDisconnect(playerid,reason);
 #endif
 
 //EOF
