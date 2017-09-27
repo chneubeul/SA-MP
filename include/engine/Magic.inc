@@ -166,7 +166,7 @@ T3D:function MagicShot(playerid){
 		SetTimerEx("MagicDestroy",mtime,0,"ddd",_:tmpobj,MagicLockTarget[playerid],playerid);
 	}
 	MagicTime[playerid] = GetTickCount();
-	return 1;
+	return MagicLockTarget[playerid];
 }
 
 T3D:function MagicDestroy(STREAMER_TAG_OBJECT objectid,targetid,playerid){

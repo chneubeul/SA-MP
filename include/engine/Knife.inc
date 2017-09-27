@@ -136,7 +136,7 @@ T3D:function KnifeShot(playerid){
 		SetTimerEx("KnifeDestroy",mtime,0,"ddd",_:tmpobj,KnifeLockTarget[playerid],playerid);
 	}
 	KnifeTime[playerid] = GetTickCount();
-	return 1;
+	return KnifeLockTarget[playerid];
 }
 
 T3D:function KnifeDestroy(STREAMER_TAG_OBJECT objectid,targetid,playerid){
