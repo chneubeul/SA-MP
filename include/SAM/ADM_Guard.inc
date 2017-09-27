@@ -198,14 +198,14 @@ stock ADMG::SetPlayerScore(playerid,score){
 
 //Hook: GetPlayerWeaponData
 stock ADMG::GetPlayerWeaponData(playerid,slot,&weapons,&ammo){
-	switch(slotid){
+	switch(slot){
 		case 0..1, 7..12: {
 			GetPlayerWeaponData(playerid,slot,weapons,ammo);
-			weapons = ADMG::WeaponID[playerid][slotid];
+			weapons = ADMG::WeaponID[playerid][slot];
 		}
 		default: {
-			weapons = ADMG::WeaponID[playerid][slotid];
-			ammo = ADMG::WeaponAmmo[playerid][slotid];
+			weapons = ADMG::WeaponID[playerid][slot];
+			ammo = ADMG::WeaponAmmo[playerid][slot];
 		}
 	}
 }
@@ -380,7 +380,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 		Kick(playerid);
 		return 1;
 	}
-	ADMG::WeaponAmmo[playerid][slotid]--;
+	SetPlayerAmmo(playerid,slotid,ADMG::WeaponAmmo[playerid][slotid]-1);
 	if(ADMG::WeaponAmmo[playerid][slotid] == 0){
 		RemovePlayerWeapon(playerid,weaponid);
 	}
