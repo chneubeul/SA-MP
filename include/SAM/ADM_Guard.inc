@@ -479,14 +479,6 @@ public OnPlayerConnect(playerid){
 
 //Hook: OnPlayerDisconnect
 public OnPlayerDisconnect(playerid,reason){
-	ADMG::health[playerid] = 0.0;
-	ADMG::armour[playerid] = 0.0;
-	ADMG::score[playerid] = 0;
-	ADMG::money[playerid] = 0;
-	for(new slot = 0; slot < 12; slot++){
-		ADMG::WeaponID[playerid][slot] = 0;
-		ADMG::WeaponAmmo[playerid][slot] = 0;
-	}
 	DestroyPlayerProgressBar(playerid,ADMG::ProgressBar[playerid][0]);
 	DestroyPlayerProgressBar(playerid,ADMG::ProgressBar[playerid][1]);
 	#if defined ADMG_OnPlayerDisconnect
