@@ -375,7 +375,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 		}
 	}
 	new slotid = ADMG::GetWeaponSlot(weaponid);
-	if(ADMG::WeaponID[playerid][slotid] != weaponid && ADMG::WeaponID[playerid][slotid] != 0){
+	if(ADMG::WeaponID[playerid][slotid] != weaponid){
 		printf("[ADM GUARD] [%s](%d)%s has been kicked: Weapon Hack RAW:[%d != %d]",ADMG::GetPlayerIP(playerid),playerid,ADMG::GetPlayerNick(playerid),weaponid,ADMG::WeaponID[playerid][slotid]);
 		Kick(playerid);
 		return 1;
