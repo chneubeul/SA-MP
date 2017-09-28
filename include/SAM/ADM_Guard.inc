@@ -34,6 +34,9 @@
 #endif
 #define _ADM_GUARD_SYSTEM
 
+#define ADMG_VERSION		 				(10000) //a.b.c 10000*a+100*b+c
+#define ADMG_SAMP_VERSION					"0.3.7"
+
 #if !defined _progress2_included
 	#error [ADM] You need progress2.inc (github.com/AbyssMorgan/SA-MP/blob/master/include/samp/progress2.inc)
 #endif
@@ -58,6 +61,8 @@
 	#define BAR_COLOR_ARMOUR				(0xFFFFFFFF)
 #endif
 
+#define ADMG_Function::						stock
+#define ADMG_Public::%0(%1)					forward %0(%1); public %0(%1)
 #define ADMG::								ADMG_
 
 #define ADMG_GetWeaponSlot(%0)				ADMG::WeaponSlot[(%0)]
@@ -74,20 +79,20 @@ new Float:		ADMG::health[MAX_PLAYERS],
 new ADMG::WeaponSlot[] = {0,0,1,1,1,1,1,1,1,1,10,10,10,10,10,10,8,8,8,-1,-1,-1,2,2,2,3,3,3,4,4,5,5,4,6,6,7,7,7,7,8,12,9,9,9,11,11,11};
 
 
-stock ADMG::GetPlayerNick(playerid){
+ADMG::Function::ADMG::GetPlayerNick(playerid){
 	new ADMG::nick[MAX_PLAYER_NAME];
 	GetPlayerName(playerid,ADMG::nick,sizeof(ADMG::nick));
 	return ADMG::nick;
 }
 
-stock ADMG::GetPlayerIP(playerid){
+ADMG::Function::ADMG::GetPlayerIP(playerid){
 	new ADMG::ip[MAX_PLAYER_NAME];
 	GetPlayerIp(playerid,ADMG::ip,sizeof(ADMG::ip));
 	return ADMG::ip;
 }
 
 //Hook: GetPlayerHealth
-stock Float:ADMG::GetPlayerHealth(playerid){
+ADMG::Function::Float:ADMG::GetPlayerHealth(playerid){
 	return ADMG::health[playerid];
 }
 
@@ -99,7 +104,7 @@ stock Float:ADMG::GetPlayerHealth(playerid){
 #define GetPlayerHealth ADMG::GetPlayerHealth
 
 //Hook: SetPlayerHealth
-stock ADMG::SetPlayerHealth(playerid,Float:health){
+ADMG::Function::ADMG::SetPlayerHealth(playerid,Float:health){
 	ADMG::health[playerid] = health;
 	SetPlayerProgressBarValue(playerid,ADMG::ProgressBar[playerid][0],ADMG::NMTVF(health,MAX_PLAYER_HEALTH));
 	return SetPlayerHealth(playerid,health+256);
@@ -113,7 +118,7 @@ stock ADMG::SetPlayerHealth(playerid,Float:health){
 #define SetPlayerHealth ADMG::SetPlayerHealth
 
 //Hook: GetPlayerArmour
-stock Float:ADMG::GetPlayerArmour(playerid){
+ADMG::Function::Float:ADMG::GetPlayerArmour(playerid){
 	return ADMG::armour[playerid];
 }
 
@@ -125,7 +130,7 @@ stock Float:ADMG::GetPlayerArmour(playerid){
 #define GetPlayerArmour ADMG::GetPlayerArmour
 
 //Hook: SetPlayerArmour
-stock ADMG::SetPlayerArmour(playerid,Float:armour){
+ADMG::Function::ADMG::SetPlayerArmour(playerid,Float:armour){
 	ADMG::armour[playerid] = armour;
 	SetPlayerProgressBarValue(playerid,ADMG::ProgressBar[playerid][1],ADMG::NMTVF(armour,MAX_PLAYER_ARMOUR));
 	if(armour <= 0.0){
@@ -143,14 +148,14 @@ stock ADMG::SetPlayerArmour(playerid,Float:armour){
 #endif
 #define SetPlayerArmour ADMG::SetPlayerArmour
 
-stock SetPlayerMoney(playerid,money){
+ADMG::Function::SetPlayerMoney(playerid,money){
 	ADMG::money[playerid] = money;
 	ResetPlayerMoney(playerid);
 	GivePlayerMoney(playerid,money);
 }
 
 //Hook: GetPlayerMoney
-stock ADMG::GetPlayerMoney(playerid){
+ADMG::Function::ADMG::GetPlayerMoney(playerid){
 	return ADMG::money[playerid];
 }
 
@@ -162,7 +167,7 @@ stock ADMG::GetPlayerMoney(playerid){
 #define GetPlayerMoney ADMG::GetPlayerMoney
 
 //Hook: GivePlayerMoney
-stock ADMG::GivePlayerMoney(playerid,money){
+ADMG::Function::ADMG::GivePlayerMoney(playerid,money){
 	ADMG::money[playerid] += money;
 	ResetPlayerMoney(playerid);
 	GivePlayerMoney(playerid,ADMG::money[playerid]);
@@ -176,7 +181,7 @@ stock ADMG::GivePlayerMoney(playerid,money){
 #define GivePlayerMoney ADMG::GivePlayerMoney
 
 //Hook: GetPlayerScore
-stock ADMG::GetPlayerScore(playerid){
+ADMG::Function::ADMG::GetPlayerScore(playerid){
 	return ADMG::score[playerid];
 }
 
@@ -188,7 +193,7 @@ stock ADMG::GetPlayerScore(playerid){
 #define GetPlayerScore ADMG::GetPlayerScore
 
 //Hook: SetPlayerScore
-stock ADMG::SetPlayerScore(playerid,score){
+ADMG::Function::ADMG::SetPlayerScore(playerid,score){
 	ADMG::score[playerid] = score;
 	SetPlayerScore(playerid,ADMG::score[playerid]);
 }
@@ -201,7 +206,7 @@ stock ADMG::SetPlayerScore(playerid,score){
 #define SetPlayerScore ADMG::SetPlayerScore
 
 //Hook: GetPlayerWeaponData
-stock ADMG::GetPlayerWeaponData(playerid,slot,&weapons,&ammo){
+ADMG::Function::ADMG::GetPlayerWeaponData(playerid,slot,&weapons,&ammo){
 	switch(slot){
 		case 0..1, 7..12: {
 			GetPlayerWeaponData(playerid,slot,weapons,ammo);
@@ -222,7 +227,7 @@ stock ADMG::GetPlayerWeaponData(playerid,slot,&weapons,&ammo){
 #define GetPlayerWeaponData ADMG::GetPlayerWeaponData
 
 //Hook: GetPlayerAmmo
-stock ADMG::GetPlayerAmmo(playerid){
+ADMG::Function::ADMG::GetPlayerAmmo(playerid){
 	new slotid = ADMG::GetWeaponSlot(GetPlayerWeapon(playerid));
 	switch(slotid){
 		case 0..1, 7..12: return GetPlayerAmmo(playerid);
@@ -239,7 +244,7 @@ stock ADMG::GetPlayerAmmo(playerid){
 #define GetPlayerAmmo ADMG::GetPlayerAmmo
 
 //Hook: SetPlayerAmmo
-stock ADMG::SetPlayerAmmo(playerid,weaponslot,ammo){
+ADMG::Function::ADMG::SetPlayerAmmo(playerid,weaponslot,ammo){
 	ADMG::WeaponAmmo[playerid][weaponslot] = ammo;
 	return SetPlayerAmmo(playerid,weaponslot,ammo);
 }
@@ -252,7 +257,7 @@ stock ADMG::SetPlayerAmmo(playerid,weaponslot,ammo){
 #define SetPlayerAmmo ADMG::SetPlayerAmmo
 
 //Hook: GivePlayerWeapon
-stock ADMG::GivePlayerWeapon(playerid,weaponid,ammo){
+ADMG::Function::ADMG::GivePlayerWeapon(playerid,weaponid,ammo){
 	new slotid = ADMG::GetWeaponSlot(weaponid);
 	if(ADMG::WeaponID[playerid][slotid] == weaponid){
 		ADMG::WeaponAmmo[playerid][slotid] += ammo;
@@ -273,7 +278,7 @@ stock ADMG::GivePlayerWeapon(playerid,weaponid,ammo){
 #define GivePlayerWeapon ADMG::GivePlayerWeapon
 
 //Hook: ResetPlayerWeapons
-stock ADMG::ResetPlayerWeapons(playerid){
+ADMG::Function::ADMG::ResetPlayerWeapons(playerid){
 	for(new slot = 0; slot < 12; slot++){
 		ADMG::WeaponID[playerid][slot] = 0;
 		ADMG::WeaponAmmo[playerid][slot] = 0;
@@ -288,7 +293,7 @@ stock ADMG::ResetPlayerWeapons(playerid){
 #endif
 #define ResetPlayerWeapons ADMG::ResetPlayerWeapons
 
-stock RemovePlayerWeapon(playerid,weaponid){
+ADMG::Function::RemovePlayerWeapon(playerid,weaponid){
 	new plyWeapons[12], plyAmmo[12];
 	for(new slot = 0; slot < 12; slot++){
 	new wep, ammo;
@@ -302,7 +307,7 @@ stock RemovePlayerWeapon(playerid,weaponid){
 	}
 }
 
-stock ADMG::GivePlayerDamage(targetid,Float:amount,playerid,weaponid){
+ADMG::Function::ADMG::GivePlayerDamage(targetid,Float:amount,playerid,weaponid){
 	if(ADMG::armour[targetid] >= amount){
 		SetPlayerArmour(targetid,ADMG::armour[targetid]-amount);
 	} else if(ADMG::armour[targetid] < amount){
@@ -502,6 +507,147 @@ public OnPlayerDisconnect(playerid,reason){
 #define OnPlayerDisconnect ADMG::OnPlayerDisconnect
 #if defined ADMG_OnPlayerDisconnect
 	forward ADMG::OnPlayerDisconnect(playerid,reason);
+#endif
+
+new bool:CRC_ADMGInit = true,
+	bool:CRC_ADMGExit = true;
+
+ADMG::Public:: ADMG::OnRequestResponse(index, response_code, data[]){
+	if(response_code == 200){
+		if(isnull(data)) return 0;
+		new ADMG_version[16], ADMG_ver, ADMG_file_ver = ADMG_VERSION;
+		strmid(ADMG_version,data,0,strlen(data));
+		ADMG_ver = strval(ADMG_version);
+		if(ADMG_ver > ADMG_file_ver){
+			print(" ");
+			printf("[ADM] Info: Please update your ADM Guard include to v%d.%d.%d from here:",(ADMG_ver / 10000),((ADMG_ver % 10000) / 100),((ADMG_ver % 10000) % 100));
+			print("http://8.ct8.pl/d/ADM_Guard.inc");
+			print(" ");
+		}
+	}
+	return 1;
+}
+
+ADMG::Function:: ADMG::Init(){
+	
+	//Welcome to ADMG
+	new ver_name[16];
+	format(ver_name,sizeof(ver_name),"%d.%d.%d",(ADMG_VERSION / 10000),((ADMG_VERSION % 10000) / 100),((ADMG_VERSION % 10000) % 100));
+	if(GetSVarInt("ADM:ADMG:INIT") == 0){
+		SetSVarInt("ADM:ADMG:INIT",1);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Info: Load ADM Guard v%s for SA:MP %s by Abyss Morgan",ver_name,ADMG_SAMP_VERSION);
+		}
+	}
+	
+	if(GetSVarInt("ADM:ADMG:VERCHECK") == 0){
+		SetSVarInt("ADM:ADMG:VERCHECK",1);
+		new ADMG_send_data[50];
+		format(ADMG_send_data,sizeof(ADMG_send_data),"8.ct8.pl/admg/check.php?version=%d",ADMG_VERSION);
+		HTTP(10,HTTP_GET,ADMG_send_data,"","ADMG_OnRequestResponse");
+	}
+}
+
+ADMG::Function:: ADMG::Exit(){
+	SetSVarInt("ADM:ADMG:ACTIVE",GetADMGActiveCount()-1);
+	
+	//Goodbye ADMG
+	new ver_name[16];
+	format(ver_name,sizeof(ver_name),"%d.%d.%d",(ADMG_VERSION / 10000),((ADMG_VERSION % 10000) / 100),((ADMG_VERSION % 10000) % 100));
+	if(GetADMGActiveCount() == 0){
+		SetSVarInt("ADM:ADMG:INIT",0);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Info: Unload ADM Guard v%s for SA:MP %s by Abyss Morgan",ver_name,ADMG_SAMP_VERSION);
+		}
+	}
+}
+
+//Hook: OnFilterScriptInit
+public OnFilterScriptInit(){
+	if(CRC_ADMGInit){
+		CRC_ADMGInit = false;
+		ADMG::Init();
+	}
+	#if defined ADMG_OnFilterScriptInit
+		ADMG_OnFilterScriptInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptInit
+	#undef OnFilterScriptInit
+#else
+	#define _ALS_OnFilterScriptInit
+#endif
+#define OnFilterScriptInit ADMG_OnFilterScriptInit
+#if defined ADMG_OnFilterScriptInit
+	forward ADMG_OnFilterScriptInit();
+#endif
+
+//Hook: OnGameModeInit
+public OnGameModeInit(){
+	if(CRC_ADMGInit){
+		CRC_ADMGInit = false;
+		ADMG::Init();
+	}
+	#if defined ADMG_OnGameModeInit
+		ADMG_OnGameModeInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+#else
+	#define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit ADMG_OnGameModeInit
+#if defined ADMG_OnGameModeInit
+	forward ADMG_OnGameModeInit();
+#endif
+
+//Hook: OnFilterScriptExit
+public OnFilterScriptExit(){
+	if(CRC_ADMGExit){
+		CRC_ADMGExit = false;
+		ADMG::Exit();
+	}
+	#if defined ADMG_OnFilterScriptExit
+		ADMG_OnFilterScriptExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit ADMG_OnFilterScriptExit
+#if defined ADMG_OnFilterScriptExit
+	forward ADMG_OnFilterScriptExit();
+#endif
+
+//Hook: OnGameModeExit
+public OnGameModeExit(){
+	if(CRC_ADMGExit){
+		CRC_ADMGExit = false;
+		ADMG::Exit();
+	}
+	#if defined ADMG_OnGameModeExit
+		ADMG_OnGameModeExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeExit
+	#undef OnGameModeExit
+#else
+	#define _ALS_OnGameModeExit
+#endif
+#define OnGameModeExit ADMG_OnGameModeExit
+#if defined ADMG_OnGameModeExit
+	forward ADMG_OnGameModeExit();
 #endif
 
 //EOF
