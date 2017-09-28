@@ -38,6 +38,10 @@
 	#error [ADM] You need progress2.inc (github.com/AbyssMorgan/SA-MP/blob/master/include/samp/progress2.inc)
 #endif
 
+#if defined _3D_Tryg
+	#error [ADM] Please include ADM_Guard.inc before 3DTryg.inc
+#endif
+
 #if !defined MAX_PLAYER_HEALTH
 	#define MAX_PLAYER_HEALTH				(100.0)
 #endif

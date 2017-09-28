@@ -201,12 +201,12 @@ stock MissileLaunch(type,Float:detection_range,Float:explode_radius,Float:speed,
 		
 		GetArcPoints3D(x,y,z,tx,ty,tz,arc_roll,remote_height,MissilePoints[mobid],remote_count);
 		
-		new rid = remote_count-1;
-		tx = MissilePoints[mobid][rid][0];
-		ty = MissilePoints[mobid][rid][1];
-		tz = MissilePoints[mobid][rid][2];
+		//new rid = remote_count-1;
+		//tx = MissilePoints[mobid][rid][0];
+		//ty = MissilePoints[mobid][rid][1];
+		//tz = MissilePoints[mobid][rid][2];
 		
-		MovePointCol(tx,ty,tz,tx,ty,tz-10000.0,MissilePoints[mobid][rid][0],MissilePoints[mobid][rid][1],MissilePoints[mobid][rid][2]);
+		//MovePointCol(tx,ty,tz,tx,ty,tz-10000.0,MissilePoints[mobid][rid][0],MissilePoints[mobid][rid][1],MissilePoints[mobid][rid][2]);
 		
 		tx = MissilePoints[mobid][1][0];
 		ty = MissilePoints[mobid][1][1];

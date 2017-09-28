@@ -1,9 +1,12 @@
 SAM.inc
+SAM/ADM_Guard.inc
 SAM/StreamerFunction.inc
 SAM/BitFunctions.inc
 SAM/RGB.inc
 SAM/3DTryg.inc
 SAM/LY.inc
+SAM/MD5.inc
+SAM/SHA256.inc
 SAM/ADM.inc
 SAM/DataConvert.inc
 SAM/EVF.inc
