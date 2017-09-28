@@ -12,7 +12,7 @@
  * Plugins: SScanf                                                                                                                   *
  * Modules: None                                                                                                                     *
  *                                                                                                                                   *
- * File Version: 2.1.0                                                                                                               *
+ * File Version: 2.1.1                                                                                                               *
  * SA:MP Version: 0.3.7                                                                                                              *
  * SScanf Version: 2.8.2                                                                                                             *
  *                                                                                                                                   *
@@ -96,11 +96,11 @@
 /*
 //Check Version DataConvert.inc
 #if !defined _Data_Convert
-	#error [ADM] You need DataConvert.inc v2.1.0
+	#error [ADM] You need DataConvert.inc v2.1.1
 #elseif !defined Data_Convert_Version
-	#error [ADM] Update you DataConvert.inc to v2.1.0
-#elseif (Data_Convert_Version < 20100)
-	#error [ADM] Update you DataConvert.inc to v2.1.0
+	#error [ADM] Update you DataConvert.inc to v2.1.1
+#elseif (Data_Convert_Version < 20101)
+	#error [ADM] Update you DataConvert.inc to v2.1.1
 #endif
 */
 
@@ -113,17 +113,31 @@
 	#error [ADM] Please remove deprecated file base64.inc
 #endif
 
+//Update Checker
+#if !defined HTTP
+	#tryinclude <a_http>
+#endif
+
+#if !defined HTTP
+	#error [ADM] Please include a_http.inc before DataConvert.inc
+#endif
+
 #if !defined sscanf
 	#error [ADM] You need SScanf v2.8.2 (github.com/AbyssMorgan/SA-MP/tree/master/plugins)
 #endif
 
-#define Data_Convert_Version		(20100) //a.b.c 10000*a+100*b+c
+#define Data_Convert_Version						(20101) //a.b.c 10000*a+100*b+c
+#define DataConvert_SAMP_VERSION					"0.3.7"
 
-new const LettersTable[] = {
+#define DataConvert_Function::						stock
+#define DataConvert_Public::%0(%1)					forward %0(%1); public %0(%1)
+#define DataConvert::								DataConvert_
+
+new const DataConvert::LettersTable[] = {
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 };
 	
-new const Decoder[] = {
+new const DataConvert::Decoder[] = {
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -153,40 +167,42 @@ new const Decoder[] = {
 };
 
 #if !defined isnull
-	#define isnull(%1) 				((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
+	#define isnull(%1) 					((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
 #endif
 
-#define INT_NUMBER_LEN				12
-#define HEX_NUMBER_LEN				12
-#define BIN_NUMBER_LEN				36
-#define OCT_NUMBER_LEN				14
+#define INT_NUMBER_LEN					12
+#define HEX_NUMBER_LEN					12
+#define BIN_NUMBER_LEN					36
+#define OCT_NUMBER_LEN					14
 
-#define FIRST_FILE_ADDRESS			(0x004E5A18)
-#define INVALID_FILE_ID				(0xFFB1A5E7)
-#define INVALID_FILE_HANDLE			(File:0)
-#define GetFileHandleID(%0)			(_:%0)
-#define StringToInt(%0)				strval(%0)
+#define FIRST_FILE_ADDRESS				(0x004E5A18)
+#define INVALID_FILE_ID					(0xFFB1A5E7)
+#define INVALID_FILE_HANDLE				(File:0)
+#define GetFileHandleID(%0)				(_:%0)
+#define StringToInt(%0)					strval(%0)
 
 //swapvars by Crayder
-#define swap_int(%0,%1)				(((%0) ^= (%1)), ((%1) ^= (%0)), ((%0) ^= (%1)))
+#define swap_int(%0,%1)					(((%0) ^= (%1)), ((%1) ^= (%0)), ((%0) ^= (%1)))
 
-#define BoolToInt(%0)				((%0)?1:0)
-#define IntToBool(%0)				(((%0) == 1)?true:false)
+#define BoolToInt(%0)					((%0)?1:0)
+#define IntToBool(%0)					(((%0) == 1)?true:false)
 
-#define FloatToInt(%0)				(_:%0)
-#define IntToFloat(%0)				(Float:%0)
+#define FloatToInt(%0)					(_:%0)
+#define IntToFloat(%0)					(Float:%0)
 
-#define StringEqual(%0,%1,%2) 		(!strcmp((%0),(%1),(%2)))
-#define StringNotEqual(%0,%1,%2)	(strcmp((%0),(%1),(%2)) != 0)
+#define StringEqual(%0,%1,%2) 			(!strcmp((%0),(%1),(%2)))
+#define StringNotEqual(%0,%1,%2)		(strcmp((%0),(%1),(%2)) != 0)
 
-stock ABCToCBA(input[],output[]){
+#define DataConvert_GetActiveCount() 	GetSVarInt("ADM:DataConvert:ACTIVE")
+
+DataConvert::Function:: ABCToCBA(input[],output[]){
 	for(new i = 0, j = strlen(input); i < j; i++){
 		output[j-(i+1)] = input[i];
 	}
 	output[strlen(input)] = EOS;
 }
 
-stock AnyToInt(string[],type,&bool:flag){
+DataConvert::Function:: AnyToInt(string[],type,&bool:flag){
 	new DC_Symbol, len = strlen(string), i = 1, value;
 	if(string[0] >= 0x30 && string[0] <= 0x39){
 		value = string[0] - 48;
@@ -215,7 +231,7 @@ stock AnyToInt(string[],type,&bool:flag){
 	return value;
 }
 
-stock IntToAny(value,output[],type){
+DataConvert::Function:: IntToAny(value,output[],type){
 	new tmp = value, val[256], i = 0;
 	while(tmp > 0){
 		val[i] = (tmp % type);
@@ -231,45 +247,45 @@ stock IntToAny(value,output[],type){
 	ABCToCBA(val,output);
 }
 
-stock strcopy(input[],output[]){
+DataConvert::Function:: strcopy(input[],output[]){
 	for(new i = 0, j = strlen(input); i < j; i++){
 		output[i] = input[i];
 	}
 	output[strlen(input)] = EOS;
 }
 
-stock fstrcopy(input[],output[],maxdest = sizeof(output)){
+DataConvert::Function:: fstrcopy(input[],output[],maxdest = sizeof(output)){
 	output[0] = EOS;
 	strcat(output,input,maxdest);
 	output[strlen(input)] = EOS;
 }
 
-stock bool:IsDecimalNumber(string[]){
+DataConvert::Function:: bool:IsDecimalNumber(string[]){
 	new value = 0;
 	return !(sscanf(string,"d",value));
 }
 
-stock bool:IsHexNumber(string[]){
+DataConvert::Function:: bool:IsHexNumber(string[]){
 	new value = 0;
 	return !(sscanf(string,"x",value));
 }
 
-stock bool:IsBinaryNumber(string[]){
+DataConvert::Function:: bool:IsBinaryNumber(string[]){
 	new value = 0;
 	return !(sscanf(string,"b",value));
 }
 
-stock bool:IsOctalNumber(string[]){
+DataConvert::Function:: bool:IsOctalNumber(string[]){
 	new value = 0;
 	return !(sscanf(string,"o",value));
 }
 
-stock bool:IsFloatNumber(string[]){
+DataConvert::Function:: bool:IsFloatNumber(string[]){
 	new Float:value = 0;
 	return !(sscanf(string,"f",value));
 }
 
-stock bool:swap_string(string1[],string2[],dest1 = sizeof(string1),dest2 = sizeof(string2)){
+DataConvert::Function:: bool:swap_string(string1[],string2[],dest1 = sizeof(string1),dest2 = sizeof(string2)){
 	if(dest1 < strlen(string2) || dest2 < strlen(string1)) return false;
 	new swap_size = dest1;
 	if(dest2 > swap_size) swap_size = dest2;
@@ -279,24 +295,24 @@ stock bool:swap_string(string1[],string2[],dest1 = sizeof(string1),dest2 = sizeo
 	return true;
 }
 
-stock GetFileID(File:handle){
+DataConvert::Function:: GetFileID(File:handle){
 	return (handle == INVALID_FILE_HANDLE)?INVALID_FILE_ID:((GetFileHandleID(handle)-FIRST_FILE_ADDRESS)/32);
 }
 
-stock BinToInt(string[]){
+DataConvert::Function:: BinToInt(string[]){
 	new value = 0;
 	if(sscanf(string,"b",value)) return 0;
 	return value;
 }
 
-stock HexToBin(string[]){
+DataConvert::Function:: HexToBin(string[]){
 	new DC_Result[BIN_NUMBER_LEN], value = 0;
 	sscanf(string,"x",value);
 	format(DC_Result,sizeof(DC_Result),"%b",value);
 	return DC_Result;
 }
 
-stock BinToHex(string[]){
+DataConvert::Function:: BinToHex(string[]){
 	new DC_Result[HEX_NUMBER_LEN], value = 0;
 	if(sscanf(string,"b",value)){
 		format(DC_Result,sizeof(DC_Result),"0");
@@ -306,7 +322,7 @@ stock BinToHex(string[]){
 	return DC_Result;
 }
 
-stock BinToHexEx(string[]){
+DataConvert::Function:: BinToHexEx(string[]){
 	new DC_Result[HEX_NUMBER_LEN], value = 0;
 	if(sscanf(string,"b",value)){
 		format(DC_Result,sizeof(DC_Result),"0");
@@ -316,41 +332,41 @@ stock BinToHexEx(string[]){
 	return DC_Result;
 }
 
-stock IntToBin(value){
+DataConvert::Function:: IntToBin(value){
 	new DC_Result[BIN_NUMBER_LEN];
 	format(DC_Result,sizeof(DC_Result),"%b",value);
 	return DC_Result;
 }
 
-stock bool:StringToBool(string[]){
+DataConvert::Function:: bool:StringToBool(string[]){
 	return (string[0] != '0');
 }
 
-stock HexToInt(string[]){
+DataConvert::Function:: HexToInt(string[]){
 	new value = 0;
 	if(sscanf(string,"x",value)) return 0;
 	return value;
 }
 
-stock IntToHex(value){
+DataConvert::Function:: IntToHex(value){
 	new DC_Result[HEX_NUMBER_LEN];
 	format(DC_Result,sizeof(DC_Result),"%06x",value);
 	return DC_Result;
 }
 
-stock IntToHexEx(value){
+DataConvert::Function:: IntToHexEx(value){
 	new DC_Result[HEX_NUMBER_LEN];
 	format(DC_Result,sizeof(DC_Result),"%x",value);
 	return DC_Result;
 }
 
-stock OctToInt(string[]){
+DataConvert::Function:: OctToInt(string[]){
 	new value = 0;
 	if(sscanf(string,"o",value)) return 0;
 	return value;
 }
 
-stock OctToHex(string[]){
+DataConvert::Function:: OctToHex(string[]){
 	new DC_Result[HEX_NUMBER_LEN], value = 0;
 	if(sscanf(string,"o",value)){
 		format(DC_Result,sizeof(DC_Result),"0");
@@ -360,7 +376,7 @@ stock OctToHex(string[]){
 	return DC_Result;
 }
 
-stock OctToBin(string[]){
+DataConvert::Function:: OctToBin(string[]){
 	new DC_Result[BIN_NUMBER_LEN], value = 0;
 	if(sscanf(string,"o",value)){
 		format(DC_Result,sizeof(DC_Result),"0");
@@ -370,7 +386,7 @@ stock OctToBin(string[]){
 	return DC_Result;
 }
 
-stock rot13(string[]){
+DataConvert::Function:: rot13(string[]){
 	for(new i = 0, j = strlen(string); i < j; i++){
 		if('a' <= string[i] <= 'z'){
 			string[i] = (string[i] - 'a' + 13) % 26 + 'a';
@@ -380,58 +396,58 @@ stock rot13(string[]){
 	}
 }
 
-stock code128(input[],output[]){
+DataConvert::Function:: code128(input[],output[]){
 	for(new i = 0, j = strlen(input); i < j; i++){
 		output[i] = (0xFF & input[i]+128);
 	}
 	output[strlen(input)] = EOS;
 }
 
-stock bool:ContainInSeries(value,...){
+DataConvert::Function:: bool:ContainInSeries(value,...){
 	for(new i = 1, j = numargs(); i < j; i++){
 		if(getarg(i) == value) return true;
 	}
 	return false;
 }
 
-stock bool:ContainInSeriesFloat(Float:value,Float:...){
+DataConvert::Function:: bool:ContainInSeriesFloat(Float:value,Float:...){
 	for(new i = 1, j = numargs(); i < j; i++){
 		if((Float:getarg(i)) == value) return true;
 	}
 	return false;
 }
 
-stock IntToOct(value){
+DataConvert::Function:: IntToOct(value){
 	new DC_Result[OCT_NUMBER_LEN];
 	IntToAny(value,DC_Result,8);
 	return DC_Result;
 }
 
-stock HexToOct(string[]){
+DataConvert::Function:: HexToOct(string[]){
 	new DC_Result[OCT_NUMBER_LEN];
 	IntToAny(HexToInt(string),DC_Result,8);
 	return DC_Result;
 }
 
-stock BinToOct(string[]){
+DataConvert::Function:: BinToOct(string[]){
 	new DC_Result[OCT_NUMBER_LEN];
 	IntToAny(BinToInt(string),DC_Result,8);
 	return DC_Result;
 }
 
-stock strlower(string[]){
+DataConvert::Function:: strlower(string[]){
 	for(new i = 0, j = strlen(string); i < j; i++){
 		string[i] = tolower(string[i]);
 	}
 }
 
-stock strupper(string[]){
+DataConvert::Function:: strupper(string[]){
 	for(new i = 0, j = strlen(string); i < j; i++){
 		string[i] = toupper(string[i]);
 	}
 }
 
-stock StripNewLine(string[]){
+DataConvert::Function:: StripNewLine(string[]){
 	new len = strlen(string);
 	if(string[0] == 0) return 0;
 	if(string[(len-1)]=='\n' || string[(len-1)]=='\r'){
@@ -444,7 +460,7 @@ stock StripNewLine(string[]){
 	return 1;
 }
 
-stock fcopy(input[],output[]){
+DataConvert::Function:: fcopy(input[],output[]){
 	if(!fexist(input)) return 0;
 	if(fexist(output)) return 0;
 	new File:inpf = fopen(input,io_read),
@@ -459,7 +475,7 @@ stock fcopy(input[],output[]){
 }
 
 #if !defined _YSF_included
-	stock frename(oldname[],newname[]){
+	DataConvert::Function:: frename(oldname[],newname[]){
 		if(!fexist(oldname)) return 0;
 		if(fexist(newname)) return 0;
 		if(!fcopy(oldname,newname))	return 0;
@@ -468,7 +484,7 @@ stock fcopy(input[],output[]){
 	}
 #endif
 
-stock strreplace(string[],const search[],const replacement[],bool:ignorecase = false,pos = 0,limit = -1,maxlength = sizeof(string)){
+DataConvert::Function:: strreplace(string[],const search[],const replacement[],bool:ignorecase = false,pos = 0,limit = -1,maxlength = sizeof(string)){
 	if(limit == 0) return 0;
 
 	new sublen = strlen(search),
@@ -500,20 +516,20 @@ stock strreplace(string[],const search[],const replacement[],bool:ignorecase = f
 }
 
 //base64 by Shiny
-stock base64_decode(input[],output[]){
+DataConvert::Function:: base64_decode(input[],output[]){
 	new SpaceReplacer = '=', len = strlen(input), Position;
 	
 	for(new i = 0; i < len; i++){
 		new char_[2];
-		char_[0] = Decoder[input[i++]];
-		char_[1] = Decoder[input[i]];
+		char_[0] = DataConvert::Decoder[input[i++]];
+		char_[1] = DataConvert::Decoder[input[i]];
 		char_[0] = (char_[0] << 2) | ((char_[1] >> 4) & 3);
 		Position += format(output[Position], len, "%c", char_[0]);
 		
 		if(++i < len){
 			char_[0] = input[i];
 			if(char_[0] == SpaceReplacer) break;
-			char_[0] = Decoder[input[i]];
+			char_[0] = DataConvert::Decoder[input[i]];
 			char_[1] = ((char_[1] << 4) & 240) | ((char_[0] >> 2) & 15);
 			Position += format(output[Position], len, "%c", char_[1]);
 		}
@@ -521,26 +537,26 @@ stock base64_decode(input[],output[]){
 		if(++i < len){
 			char_[1] = input[i];
 			if(char_[1] == SpaceReplacer) break;
-			char_[1] = Decoder[input[i]];
+			char_[1] = DataConvert::Decoder[input[i]];
 			char_[0] = ((char_[0] << 6) & 192) | char_[1];
 			Position += format(output[Position], len, "%c", char_[0]);
 		}
 	}
 }
 
-stock base64_encode(input[],output[]){
+DataConvert::Function:: base64_encode(input[],output[]){
 	new SpaceReplacer = '=', len = strlen(input), Position;
 	
 	for(new i = 0 ; i < len ; i++){
 		new Character;
 		Character = (input[i] >> 2) & 63;
-		Position += format(output[Position], len, "%c", LettersTable[Character]);
+		Position += format(output[Position], len, "%c", DataConvert::LettersTable[Character]);
 		Character = (input[i] << 4) & 63;
 		
 		if(++i < len){
 			Character |= (input[i] >> 4) & 15;
 		}
-		Position += format(output[Position], len, "%c", LettersTable[Character]);
+		Position += format(output[Position], len, "%c", DataConvert::LettersTable[Character]);
 
 		if(i < len){
 			Character = (input[i] << 2) & 63;
@@ -548,7 +564,7 @@ stock base64_encode(input[],output[]){
 			if(++i < len){
 				Character |= (input[i] >> 6) & 3;
 			}
-			Position += format(output[Position], len, "%c", LettersTable[Character]);
+			Position += format(output[Position], len, "%c", DataConvert::LettersTable[Character]);
 		} else {
 			i++;
 			Position += format(output[Position], len, "%c", SpaceReplacer);
@@ -556,7 +572,7 @@ stock base64_encode(input[],output[]){
 
 		if(i < len){
 			Character = input[i] & 63;
-			Position += format(output[Position], len, "%c", LettersTable[Character]);
+			Position += format(output[Position], len, "%c", DataConvert::LettersTable[Character]);
 		} else {
 			Position += format(output[Position], len, "%c", SpaceReplacer);
 		}
@@ -565,5 +581,147 @@ stock base64_encode(input[],output[]){
 
 #define e:base64 					base64_encode
 #define d:base64 					base64_decode
+
+DataConvert::Public:: DataConvert::OnRequestResponse(index, response_code, data[]){
+	if(response_code == 200){
+		if(isnull(data)) return 0;
+		new DataConvert::version[16], DataConvert::ver, DataConvert::file_ver = Data_Convert_Version;
+		strmid(DataConvert::version,data,0,strlen(data));
+		DataConvert::ver = strval(DataConvert::version);
+		if(DataConvert::ver > DataConvert::file_ver){
+			print(" ");
+			printf("[ADM] Info: Please update your DataConvert include to v%d.%d.%d from here:",(DataConvert::ver / 10000),((DataConvert::ver % 10000) / 100),((DataConvert::ver % 10000) % 100));
+			print("http://8.ct8.pl/d/DataConvert.inc");
+			print(" ");
+		}
+	}
+	return 1;
+}
+
+DataConvert::Function:: DataConvert::Init(){
+	SetSVarInt("ADM:DataConvert:ACTIVE",DataConvert::GetActiveCount()+1);
+	
+	//Welcome to DataConvert
+	new DataConvert::ver_name[16];
+	format(DataConvert::ver_name,sizeof(DataConvert::ver_name),"%d.%d.%d",(Data_Convert_Version / 10000),((Data_Convert_Version % 10000) / 100),((Data_Convert_Version % 10000) % 100));
+	if(GetSVarInt("ADM:DataConvert:INIT") == 0){
+		SetSVarInt("ADM:DataConvert:INIT",1);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Info: Load Data Convert v%s for SA:MP %s by Abyss Morgan",DataConvert::ver_name,DataConvert::SAMP_VERSION);
+		}
+	}
+	
+	if(GetSVarInt("ADM:DataConvert:VERCHECK") == 0){
+		SetSVarInt("ADM:DataConvert:VERCHECK",1);
+		new DataConvert::send_data[50];
+		format(DataConvert::send_data,sizeof(DataConvert::send_data),"8.ct8.pl/dc/check.php?version=%d",Data_Convert_Version);
+		HTTP(14,HTTP_GET,DataConvert::send_data,"","DataConvert_OnRequestResponse");
+	}
+}
+
+DataConvert::Function:: DataConvert::Exit(){
+	SetSVarInt("ADM:DataConvert:ACTIVE",DataConvert::GetActiveCount()-1);
+	
+	//Goodbye DataConvert
+	new DataConvert::ver_name[16];
+	format(DataConvert::ver_name,sizeof(DataConvert::ver_name),"%d.%d.%d",(Data_Convert_Version / 10000),((Data_Convert_Version % 10000) / 100),((Data_Convert_Version % 10000) % 100));
+	if(DataConvert::GetActiveCount() == 0){
+		SetSVarInt("ADM:DataConvert:INIT",0);
+		if(GetSVarInt("ADM:Logging:Disable") == 0){
+			printf("[ADM] Info: Unload Data Convert v%s for SA:MP %s by Abyss Morgan",DataConvert::ver_name,DataConvert::SAMP_VERSION);
+		}
+	}
+}
+
+new bool:CRC_DataConvertInit = true,
+	bool:CRC_DataConvertExit = true;
+	
+//Hook: OnFilterScriptInit
+public OnFilterScriptInit(){
+	if(CRC_DataConvertInit){
+		CRC_DataConvertInit = false;
+		DataConvert::Init();
+	}
+	#if defined DataConvert_OnFilterScriptInit
+		DataConvert::OnFilterScriptInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptInit
+	#undef OnFilterScriptInit
+#else
+	#define _ALS_OnFilterScriptInit
+#endif
+#define OnFilterScriptInit DataConvert_OnFilterScriptInit
+#if defined DataConvert_OnFilterScriptInit
+	forward DataConvert_OnFilterScriptInit();
+#endif
+
+//Hook: OnGameModeInit
+public OnGameModeInit(){
+	if(CRC_DataConvertInit){
+		CRC_DataConvertInit = false;
+		DataConvert::Init();
+	}
+	#if defined DataConvert_OnGameModeInit
+		DataConvert::OnGameModeInit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+#else
+	#define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit DataConvert_OnGameModeInit
+#if defined DataConvert_OnGameModeInit
+	forward DataConvert_OnGameModeInit();
+#endif
+
+//Hook: OnFilterScriptExit
+public OnFilterScriptExit(){
+	if(CRC_DataConvertExit){
+		CRC_DataConvertExit = false;
+		DataConvert::Exit();
+	}
+	#if defined DataConvert_OnFilterScriptExit
+		DataConvert::OnFilterScriptExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnFilterScriptExit
+	#undef OnFilterScriptExit
+#else
+	#define _ALS_OnFilterScriptExit
+#endif
+#define OnFilterScriptExit DataConvert_OnFilterScriptExit
+#if defined DataConvert_OnFilterScriptExit
+	forward DataConvert_OnFilterScriptExit();
+#endif
+
+//Hook: OnGameModeExit
+public OnGameModeExit(){
+	if(CRC_DataConvertExit){
+		CRC_DataConvertExit = false;
+		DataConvert::Exit();
+	}
+	#if defined DataConvert_OnGameModeExit
+		DataConvert::OnGameModeExit();
+	#endif
+	return 1;
+}
+
+#if defined _ALS_OnGameModeExit
+	#undef OnGameModeExit
+#else
+	#define _ALS_OnGameModeExit
+#endif
+#define OnGameModeExit DataConvert_OnGameModeExit
+#if defined DataConvert_OnGameModeExit
+	forward DataConvert_OnGameModeExit();
+#endif
 
 //EOF

@@ -48,6 +48,15 @@
 	#error [ADM] Please include ADM_Guard.inc before 3DTryg.inc
 #endif
 
+//Update Checker
+#if !defined HTTP
+	#tryinclude <a_http>
+#endif
+
+#if !defined HTTP
+	#error [ADM] Please include a_http.inc before ADM_Guard.inc
+#endif
+
 #if !defined MAX_PLAYER_HEALTH
 	#define MAX_PLAYER_HEALTH				(100.0)
 #endif
