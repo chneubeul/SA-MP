@@ -27,6 +27,9 @@
  * SetPlayerMoney(playerid,money);                                                                  *
  * ADMG::ResetPlayerWeapons(playerid);                                                              *
  *                                                                                                  *
+ * Callbacks:                                                                                       *
+ * OnHackDetect(playerid,reason);                                                                   *
+ *                                                                                                  *
  ****************************************************************************************************/
  
 #if defined _ADM_GUARD_SYSTEM
@@ -78,21 +81,27 @@ new Float:		ADMG::health[MAX_PLAYERS],
 	
 new ADMG::WeaponSlot[] = {0,0,1,1,1,1,1,1,1,1,10,10,10,10,10,10,8,8,8,-1,-1,-1,2,2,2,3,3,3,4,4,5,5,4,6,6,7,7,7,7,8,12,9,9,9,11,11,11};
 
+enum HackDetectReason {
+	HACK_DETECT_WEAPONHACK,
+	HACK_DETECT_FAKEKILL
+}
 
-ADMG::Function::ADMG::GetPlayerNick(playerid){
+forward OnHackDetect(playerid,reason);
+
+ADMG::Function:: ADMG::GetPlayerNick(playerid){
 	new ADMG::nick[MAX_PLAYER_NAME];
 	GetPlayerName(playerid,ADMG::nick,sizeof(ADMG::nick));
 	return ADMG::nick;
 }
 
-ADMG::Function::ADMG::GetPlayerIP(playerid){
+ADMG::Function:: ADMG::GetPlayerIP(playerid){
 	new ADMG::ip[MAX_PLAYER_NAME];
 	GetPlayerIp(playerid,ADMG::ip,sizeof(ADMG::ip));
 	return ADMG::ip;
 }
 
 //Hook: GetPlayerHealth
-ADMG::Function::Float:ADMG::GetPlayerHealth(playerid){
+ADMG::Function:: Float:ADMG::GetPlayerHealth(playerid){
 	return ADMG::health[playerid];
 }
 
@@ -104,7 +113,7 @@ ADMG::Function::Float:ADMG::GetPlayerHealth(playerid){
 #define GetPlayerHealth ADMG::GetPlayerHealth
 
 //Hook: SetPlayerHealth
-ADMG::Function::ADMG::SetPlayerHealth(playerid,Float:health){
+ADMG::Function:: ADMG::SetPlayerHealth(playerid,Float:health){
 	ADMG::health[playerid] = health;
 	SetPlayerProgressBarValue(playerid,ADMG::ProgressBar[playerid][0],ADMG::NMTVF(health,MAX_PLAYER_HEALTH));
 	return SetPlayerHealth(playerid,health+256);
@@ -118,7 +127,7 @@ ADMG::Function::ADMG::SetPlayerHealth(playerid,Float:health){
 #define SetPlayerHealth ADMG::SetPlayerHealth
 
 //Hook: GetPlayerArmour
-ADMG::Function::Float:ADMG::GetPlayerArmour(playerid){
+ADMG::Function:: Float:ADMG::GetPlayerArmour(playerid){
 	return ADMG::armour[playerid];
 }
 
@@ -130,7 +139,7 @@ ADMG::Function::Float:ADMG::GetPlayerArmour(playerid){
 #define GetPlayerArmour ADMG::GetPlayerArmour
 
 //Hook: SetPlayerArmour
-ADMG::Function::ADMG::SetPlayerArmour(playerid,Float:armour){
+ADMG::Function:: ADMG::SetPlayerArmour(playerid,Float:armour){
 	ADMG::armour[playerid] = armour;
 	SetPlayerProgressBarValue(playerid,ADMG::ProgressBar[playerid][1],ADMG::NMTVF(armour,MAX_PLAYER_ARMOUR));
 	if(armour <= 0.0){
@@ -148,14 +157,14 @@ ADMG::Function::ADMG::SetPlayerArmour(playerid,Float:armour){
 #endif
 #define SetPlayerArmour ADMG::SetPlayerArmour
 
-ADMG::Function::SetPlayerMoney(playerid,money){
+ADMG::Function:: SetPlayerMoney(playerid,money){
 	ADMG::money[playerid] = money;
 	ResetPlayerMoney(playerid);
 	GivePlayerMoney(playerid,money);
 }
 
 //Hook: GetPlayerMoney
-ADMG::Function::ADMG::GetPlayerMoney(playerid){
+ADMG::Function:: ADMG::GetPlayerMoney(playerid){
 	return ADMG::money[playerid];
 }
 
@@ -167,7 +176,7 @@ ADMG::Function::ADMG::GetPlayerMoney(playerid){
 #define GetPlayerMoney ADMG::GetPlayerMoney
 
 //Hook: GivePlayerMoney
-ADMG::Function::ADMG::GivePlayerMoney(playerid,money){
+ADMG::Function:: ADMG::GivePlayerMoney(playerid,money){
 	ADMG::money[playerid] += money;
 	ResetPlayerMoney(playerid);
 	GivePlayerMoney(playerid,ADMG::money[playerid]);
@@ -181,7 +190,7 @@ ADMG::Function::ADMG::GivePlayerMoney(playerid,money){
 #define GivePlayerMoney ADMG::GivePlayerMoney
 
 //Hook: GetPlayerScore
-ADMG::Function::ADMG::GetPlayerScore(playerid){
+ADMG::Function:: ADMG::GetPlayerScore(playerid){
 	return ADMG::score[playerid];
 }
 
@@ -193,7 +202,7 @@ ADMG::Function::ADMG::GetPlayerScore(playerid){
 #define GetPlayerScore ADMG::GetPlayerScore
 
 //Hook: SetPlayerScore
-ADMG::Function::ADMG::SetPlayerScore(playerid,score){
+ADMG::Function:: ADMG::SetPlayerScore(playerid,score){
 	ADMG::score[playerid] = score;
 	SetPlayerScore(playerid,ADMG::score[playerid]);
 }
@@ -206,7 +215,7 @@ ADMG::Function::ADMG::SetPlayerScore(playerid,score){
 #define SetPlayerScore ADMG::SetPlayerScore
 
 //Hook: GetPlayerWeaponData
-ADMG::Function::ADMG::GetPlayerWeaponData(playerid,slot,&weapons,&ammo){
+ADMG::Function:: ADMG::GetPlayerWeaponData(playerid,slot,&weapons,&ammo){
 	switch(slot){
 		case 0..1, 7..12: {
 			GetPlayerWeaponData(playerid,slot,weapons,ammo);
@@ -227,7 +236,7 @@ ADMG::Function::ADMG::GetPlayerWeaponData(playerid,slot,&weapons,&ammo){
 #define GetPlayerWeaponData ADMG::GetPlayerWeaponData
 
 //Hook: GetPlayerAmmo
-ADMG::Function::ADMG::GetPlayerAmmo(playerid){
+ADMG::Function:: ADMG::GetPlayerAmmo(playerid){
 	new slotid = ADMG::GetWeaponSlot(GetPlayerWeapon(playerid));
 	switch(slotid){
 		case 0..1, 7..12: return GetPlayerAmmo(playerid);
@@ -244,7 +253,7 @@ ADMG::Function::ADMG::GetPlayerAmmo(playerid){
 #define GetPlayerAmmo ADMG::GetPlayerAmmo
 
 //Hook: SetPlayerAmmo
-ADMG::Function::ADMG::SetPlayerAmmo(playerid,weaponslot,ammo){
+ADMG::Function:: ADMG::SetPlayerAmmo(playerid,weaponslot,ammo){
 	ADMG::WeaponAmmo[playerid][weaponslot] = ammo;
 	return SetPlayerAmmo(playerid,weaponslot,ammo);
 }
@@ -257,7 +266,7 @@ ADMG::Function::ADMG::SetPlayerAmmo(playerid,weaponslot,ammo){
 #define SetPlayerAmmo ADMG::SetPlayerAmmo
 
 //Hook: GivePlayerWeapon
-ADMG::Function::ADMG::GivePlayerWeapon(playerid,weaponid,ammo){
+ADMG::Function:: ADMG::GivePlayerWeapon(playerid,weaponid,ammo){
 	new slotid = ADMG::GetWeaponSlot(weaponid);
 	if(ADMG::WeaponID[playerid][slotid] == weaponid){
 		ADMG::WeaponAmmo[playerid][slotid] += ammo;
@@ -278,7 +287,7 @@ ADMG::Function::ADMG::GivePlayerWeapon(playerid,weaponid,ammo){
 #define GivePlayerWeapon ADMG::GivePlayerWeapon
 
 //Hook: ResetPlayerWeapons
-ADMG::Function::ADMG::ResetPlayerWeapons(playerid){
+ADMG::Function:: ADMG::ResetPlayerWeapons(playerid){
 	for(new slot = 0; slot < 12; slot++){
 		ADMG::WeaponID[playerid][slot] = 0;
 		ADMG::WeaponAmmo[playerid][slot] = 0;
@@ -293,7 +302,7 @@ ADMG::Function::ADMG::ResetPlayerWeapons(playerid){
 #endif
 #define ResetPlayerWeapons ADMG::ResetPlayerWeapons
 
-ADMG::Function::RemovePlayerWeapon(playerid,weaponid){
+ADMG::Function:: RemovePlayerWeapon(playerid,weaponid){
 	new plyWeapons[12], plyAmmo[12];
 	for(new slot = 0; slot < 12; slot++){
 	new wep, ammo;
@@ -307,7 +316,7 @@ ADMG::Function::RemovePlayerWeapon(playerid,weaponid){
 	}
 }
 
-ADMG::Function::ADMG::GivePlayerDamage(targetid,Float:amount,playerid,weaponid){
+ADMG::Function:: ADMG::GivePlayerDamage(targetid,Float:amount,playerid,weaponid){
 	if(ADMG::armour[targetid] >= amount){
 		SetPlayerArmour(targetid,ADMG::armour[targetid]-amount);
 	} else if(ADMG::armour[targetid] < amount){
@@ -385,8 +394,7 @@ public OnPlayerWeaponShot(playerid,weaponid,hittype,hitid,Float:fX,Float:fY,Floa
 	}
 	new slotid = ADMG::GetWeaponSlot(weaponid);
 	if(ADMG::WeaponID[playerid][slotid] != weaponid){
-		printf("[ADM GUARD] [%s](%d)%s has been kicked: Weapon Hack RAW:[%d != %d]",ADMG::GetPlayerIP(playerid),playerid,ADMG::GetPlayerNick(playerid),weaponid,ADMG::WeaponID[playerid][slotid]);
-		Kick(playerid);
+		CallLocalFunction("OnHackDetect","dd",playerid,_:HACK_DETECT_WEAPONHACK);
 		return 1;
 	}
 	SetPlayerAmmo(playerid,slotid,ADMG::WeaponAmmo[playerid][slotid]-1);
@@ -415,8 +423,7 @@ public OnPlayerDeath(playerid,killerid,reason){
 	if(killerid == INVALID_PLAYER_ID){
 		switch(reason){
 			case 0..34: {
-				printf("[ADM GUARD] [%s](%d)%s has been kicked: Fake Kill",ADMG::GetPlayerIP(playerid),playerid,ADMG::GetPlayerNick(playerid));
-				Kick(playerid);
+				CallLocalFunction("OnHackDetect","dd",playerid,_:HACK_DETECT_FAKEKILL);
 				return 1;
 			}
 		}
@@ -528,7 +535,7 @@ ADMG::Public:: ADMG::OnRequestResponse(index, response_code, data[]){
 	return 1;
 }
 
-ADMG::Function:: ADMG::Init(){
+ADMG::Function::  ADMG::Init(){
 	
 	//Welcome to ADMG
 	new ver_name[16];
@@ -548,17 +555,13 @@ ADMG::Function:: ADMG::Init(){
 	}
 }
 
-ADMG::Function:: ADMG::Exit(){
-	SetSVarInt("ADM:ADMG:ACTIVE",GetADMGActiveCount()-1);
-	
+ADMG::Function::  ADMG::Exit(){
 	//Goodbye ADMG
 	new ver_name[16];
 	format(ver_name,sizeof(ver_name),"%d.%d.%d",(ADMG_VERSION / 10000),((ADMG_VERSION % 10000) / 100),((ADMG_VERSION % 10000) % 100));
-	if(GetADMGActiveCount() == 0){
-		SetSVarInt("ADM:ADMG:INIT",0);
-		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Info: Unload ADM Guard v%s for SA:MP %s by Abyss Morgan",ver_name,ADMG_SAMP_VERSION);
-		}
+	SetSVarInt("ADM:ADMG:INIT",0);
+	if(GetSVarInt("ADM:Logging:Disable") == 0){
+		printf("[ADM] Info: Unload ADM Guard v%s for SA:MP %s by Abyss Morgan",ver_name,ADMG_SAMP_VERSION);
 	}
 }
 
