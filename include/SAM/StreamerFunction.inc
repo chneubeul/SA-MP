@@ -11,7 +11,7 @@
  * Plugins: Streamer                                                                                                                       *
  * Modules: None                                                                                                                           *
  *                                                                                                                                         *
- * File Version: 2.8.0                                                                                                                     *
+ * File Version: 2.8.1                                                                                                                     *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *
  * Streamer Version: 2.9.1                                                                                                                 *
  *                                                                                                                                         *
@@ -36,9 +36,7 @@
  * GetDynamicObjectMoveSpeed(objectid,&Float:speed);                                                                                       *
  * SetDynamicObjectMoveSpeed(objectid,Float:speed);                                                                                        *
  * GetDynamicObjectMovePos(objectid,&Float:x,&Float:y,&Float:z);                                                                           *
- * SetDynamicObjectMovePos(objectid,Float:x,Float:y,Float:z);                                                                              *
  * GetDynamicObjectMoveRot(objectid,&Float:rx,&Float:ry,&Float:rz);                                                                        *
- * SetDynamicObjectMoveRot(objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0);                                             *
  * GetDynamicObjectMoveTime(objectid,&objstate,&rtime=0);                                                                                  *
  * SetDynamicObjectAttachSync(objectid,syncrotation);                                                                                      *
  * RemoveDynamicObjectMaterial(objectid,materialindex);                                                                                    *
@@ -46,7 +44,6 @@
  * DeattachObjectDynamicObject(objectid);                                                                                                  *
  * DeattachDynamicObjectComponent(objectid,type);                                                                                          *
  * DestroyDynamicObjectComponent(objectid,type);                                                                                           *
- * RebuildDynamicObject(objectid,...);                                                                                                     *
  * GetDynamicObjectArea(objectid);                                                                                                         *
  * SetDynamicObjectArea(objectid,areaid);                                                                                                  *
  * GetDynamicObjectPriority(objectid);                                                                                                     *
@@ -66,12 +63,6 @@
  * DestroyObjects();                                                                                                                       *
  * DestroyPlayerObjects(playerid,bool:streamer = false);                                                                                   *
  * GangZoneDestroyAll();                                                                                                                   *
- *                                                                                                                                         *
- * Cube Functions:                                                                                                                         *
- * DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1);            *
- * DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1);  *
- * bool:IsPointInArea(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz);                          *
- * bool:IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,vw1,int1,vw2,int2);      *
  *                                                                                                                                         *
  * Vehicle Functions:                                                                                                                      *
  * CountVehicles();                                                                                                                        *
@@ -300,6 +291,7 @@
  * GetDynamicVehiclePoolSize();                                                                                                            *
  *                                                                                                                                         *
  * Update Functions:                                                                                                                       *
+ * UpdateAllDynamicItem(type);                                                                                                             *
  * UpdateAllDynamicElements();                                                                                                             *
  * UpdateAllDynamicObjects();                                                                                                              *
  * UpdateAllDynamicPickups();                                                                                                              *
@@ -387,11 +379,11 @@
 /*
 //Check Version StreamerFunction.inc
 #if !defined _streamer_spec
-	#error [ADM] You need StreamerFunction.inc v2.8.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
+	#error [ADM] You need StreamerFunction.inc v2.8.1 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
 #elseif !defined Streamer_Spec_Version
-	#error [ADM] Update you StreamerFunction.inc to v2.8.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
-#elseif (Streamer_Spec_Version < 20800)
-	#error [ADM] Update you StreamerFunction.inc to v2.8.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
+	#error [ADM] Update you StreamerFunction.inc to v2.8.1 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
+#elseif (Streamer_Spec_Version < 20801)
+	#error [ADM] Update you StreamerFunction.inc to v2.8.1 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc)
 #endif
 */
 
@@ -412,7 +404,7 @@
 	#define SSpec_StreamerVehicle
 #endif
 
-#define Streamer_Spec_Version 					(20800) //a.b.c 10000*a+100*b+c
+#define Streamer_Spec_Version 					(20801) //a.b.c 10000*a+100*b+c
 #define Streamer_Spec_SAMP_Version				"0.3.7"
 #define Valid_Streamer_Version 					(0x291)
 
@@ -472,6 +464,7 @@
 #define StreamerSpec_Function::					stock
 #define StreamerSpec_Public::%0(%1)				forward %0(%1); public %0(%1)
 #define StreamerSpec::							StreamerSpec_
+#define Streamer::								Streamer_
 
 #if !defined isnull
 	#define isnull(%1) 							((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
@@ -485,206 +478,216 @@
 
 #define BULLET_HIT_TYPE_DYNAMIC_OBJECT			15
 
-#define GetStreamerVersion()					Streamer_IncludeFileVersion
+#define GetStreamerVersion()					Streamer::IncludeFileVersion
 #define GetValidStreamerVersion()				Valid_Streamer_Version
 
 //DynamicObject
-#define GetDynamicObjectModel(%1)				Streamer_GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_MODEL_ID)
-#define SetDynamicObjectModel(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_MODEL_ID,(%2))
-#define GetDynamicObjectINT(%1)					Streamer_GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_INTERIOR_ID)
-#define SetDynamicObjectINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_INTERIOR_ID,(%2))
-#define GetDynamicObjectVW(%1)					Streamer_GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_WORLD_ID)
-#define SetDynamicObjectVW(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_WORLD_ID,(%2))
-#define GetDynamicObjectSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define SetDynamicObjectSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define GetDynamicObjectDD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_DRAW_DISTANCE,(%2))
-#define SetDynamicObjectDD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_DRAW_DISTANCE,(%2))
-#define GetDynamicObjectMoveSpeed(%1,%2) 		Streamer_GetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_MOVE_SPEED,(%2))
-#define SetDynamicObjectMoveSpeed(%1,%2) 		Streamer_SetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_MOVE_SPEED,(%2))
-#define DeattachObjectDynamicObject(%1)			Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID)
-#define SetDynamicObjectAttachSync(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_SYNC_ROTATION,(%2))
-#define GetDynamicObjectArea(%1)				STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_AREA_ID)
-#define SetDynamicObjectArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_AREA_ID,(_:%2))
-#define GetDynamicObjectPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_PRIORITY)
-#define SetDynamicObjectPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_PRIORITY,(%2))
-#define GetDynamicObjectInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_OBJECT,(%1))
-#define SetDynamicObjectInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_OBJECT,(%1),(%2))
+#define GetDynamicObjectModel(%1)				Streamer::GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_MODEL_ID)
+#define SetDynamicObjectModel(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_MODEL_ID,(%2))
+#define GetDynamicObjectINT(%1)					Streamer::GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_INTERIOR_ID)
+#define SetDynamicObjectINT(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicObjectVW(%1)					Streamer::GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_WORLD_ID)
+#define SetDynamicObjectVW(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_WORLD_ID,(%2))
+#define GetDynamicObjectSD(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define SetDynamicObjectSD(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define GetDynamicObjectDD(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_DRAW_DISTANCE,(%2))
+#define SetDynamicObjectDD(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_DRAW_DISTANCE,(%2))
+#define GetDynamicObjectMoveSpeed(%1,%2) 		Streamer::GetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_MOVE_SPEED,(%2))
+#define SetDynamicObjectMoveSpeed(%1,%2) 		Streamer::SetFloatData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_MOVE_SPEED,(%2))
+#define DeattachObjectDynamicObject(%1)			Streamer::SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID)
+#define SetDynamicObjectAttachSync(%1,%2)		Streamer::SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_SYNC_ROTATION,(%2))
+#define GetDynamicObjectArea(%1)				STREAMER_TAG_AREA Streamer::GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_AREA_ID)
+#define SetDynamicObjectArea(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_AREA_ID,(_:%2))
+#define GetDynamicObjectPriority(%1)			Streamer::GetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_PRIORITY)
+#define SetDynamicObjectPriority(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_OBJECT,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicObjectInvertArea(%1)			Streamer::IsToggleItemInvAreas(STREAMER_TYPE_OBJECT,(%1))
+#define SetDynamicObjectInvertArea(%1,%2)		Streamer::ToggleItemInvAreas(STREAMER_TYPE_OBJECT,(%1),(%2))
 #define GetDynamicObjectDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_OBJECT,(%1),(%2))
 #define SetDynamicObjectDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_OBJECT,(%1),(%2))
 #define RemoveDynamicObjectDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_OBJECT,(%1))
 #define IsSetDynamicObjectDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_OBJECT,(%1))
+#define UpdateAllDynamicObjects() 				UpdateAllDynamicItem(STREAMER_TYPE_OBJECT)
 
 //DynamicPickup
-#define GetDynamicPickupModel(%1)				Streamer_GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_MODEL_ID)
-#define SetDynamicPickupModel(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_MODEL_ID,(%2))
-#define GetDynamicPickupSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define SetDynamicPickupSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define GetDynamicPickupVW(%1)					Streamer_GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_WORLD_ID)
-#define SetDynamicPickupVW(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_WORLD_ID,(%2))
-#define GetDynamicPickupINT(%1)					Streamer_GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_INTERIOR_ID)
-#define SetDynamicPickupINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_INTERIOR_ID,(%2))
-#define GetDynamicPickupType(%1)				Streamer_GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_TYPE)
-#define SetDynamicPickupType(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_TYPE,(%2))
-#define GetDynamicPickupArea(%1)				STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_AREA_ID)
-#define SetDynamicPickupArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_AREA_ID,(_:%2))
-#define GetDynamicPickupPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_PRIORITY)
-#define SetDynamicPickupPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_PRIORITY,(%2))
-#define GetDynamicPickupInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_PICKUP,(%1))
-#define SetDynamicPickupInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_PICKUP,(%1),(%2))
+#define GetDynamicPickupModel(%1)				Streamer::GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_MODEL_ID)
+#define SetDynamicPickupModel(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_MODEL_ID,(%2))
+#define GetDynamicPickupSD(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define SetDynamicPickupSD(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define GetDynamicPickupVW(%1)					Streamer::GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_WORLD_ID)
+#define SetDynamicPickupVW(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_WORLD_ID,(%2))
+#define GetDynamicPickupINT(%1)					Streamer::GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_INTERIOR_ID)
+#define SetDynamicPickupINT(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicPickupType(%1)				Streamer::GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_TYPE)
+#define SetDynamicPickupType(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_TYPE,(%2))
+#define GetDynamicPickupArea(%1)				STREAMER_TAG_AREA Streamer::GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_AREA_ID)
+#define SetDynamicPickupArea(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_AREA_ID,(_:%2))
+#define GetDynamicPickupPriority(%1)			Streamer::GetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_PRIORITY)
+#define SetDynamicPickupPriority(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_PICKUP,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicPickupInvertArea(%1)			Streamer::IsToggleItemInvAreas(STREAMER_TYPE_PICKUP,(%1))
+#define SetDynamicPickupInvertArea(%1,%2)		Streamer::ToggleItemInvAreas(STREAMER_TYPE_PICKUP,(%1),(%2))
 #define GetDynamicPickupDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_PICKUP,(%1),(%2))
 #define SetDynamicPickupDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_PICKUP,(%1),(%2))
 #define RemoveDynamicPickupDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_PICKUP,(%1))
 #define IsSetDynamicPickupDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_PICKUP,(%1))
+#define UpdateAllDynamicPickups()				UpdateAllDynamicItem(STREAMER_TYPE_PICKUP)
 
 //DynamicCP
-#define GetDynamicCPSize(%1,%2)					Streamer_GetFloatData(STREAMER_TYPE_CP,(%1),E_STREAMER_SIZE,(%2))
-#define SetDynamicCPSize(%1,%2)					Streamer_SetFloatData(STREAMER_TYPE_CP,(%1),E_STREAMER_SIZE,(%2))
-#define GetDynamicCPArea(%1)					STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_AREA_ID)
-#define SetDynamicCPArea(%1,%2)					Streamer_SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_AREA_ID,(_:%2))
-#define GetDynamicCPPriority(%1)				Streamer_GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_PRIORITY)
-#define SetDynamicCPPriority(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_PRIORITY,(%2))
-#define GetDynamicCPSD(%1,%2)					Streamer_GetFloatData(STREAMER_TYPE_CP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define SetDynamicCPSD(%1,%2)					Streamer_SetFloatData(STREAMER_TYPE_CP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define GetDynamicCPVW(%1)						Streamer_GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_WORLD_ID)
-#define SetDynamicCPVW(%1,%2)					Streamer_SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_WORLD_ID,(%2))
-#define GetDynamicCPINT(%1)						Streamer_GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_INTERIOR_ID)
-#define SetDynamicCPINT(%1,%2)					Streamer_SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_INTERIOR_ID,(%2))
-#define GetDynamicCPInvertArea(%1)				Streamer_IsToggleItemInvAreas(STREAMER_TYPE_CP,(%1))
-#define SetDynamicCPInvertArea(%1,%2)			Streamer_ToggleItemInvAreas(STREAMER_TYPE_CP,(%1),(%2))
+#define GetDynamicCPSize(%1,%2)					Streamer::GetFloatData(STREAMER_TYPE_CP,(%1),E_STREAMER_SIZE,(%2))
+#define SetDynamicCPSize(%1,%2)					Streamer::SetFloatData(STREAMER_TYPE_CP,(%1),E_STREAMER_SIZE,(%2))
+#define GetDynamicCPArea(%1)					STREAMER_TAG_AREA Streamer::GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_AREA_ID)
+#define SetDynamicCPArea(%1,%2)					Streamer::SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_AREA_ID,(_:%2))
+#define GetDynamicCPPriority(%1)				Streamer::GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_PRIORITY)
+#define SetDynamicCPPriority(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicCPSD(%1,%2)					Streamer::GetFloatData(STREAMER_TYPE_CP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define SetDynamicCPSD(%1,%2)					Streamer::SetFloatData(STREAMER_TYPE_CP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define GetDynamicCPVW(%1)						Streamer::GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_WORLD_ID)
+#define SetDynamicCPVW(%1,%2)					Streamer::SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_WORLD_ID,(%2))
+#define GetDynamicCPINT(%1)						Streamer::GetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_INTERIOR_ID)
+#define SetDynamicCPINT(%1,%2)					Streamer::SetIntData(STREAMER_TYPE_CP,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicCPInvertArea(%1)				Streamer::IsToggleItemInvAreas(STREAMER_TYPE_CP,(%1))
+#define SetDynamicCPInvertArea(%1,%2)			Streamer::ToggleItemInvAreas(STREAMER_TYPE_CP,(%1),(%2))
 #define GetDynamicCPDatagram(%1,%2)				GetStreamerDatagram(STREAMER_TYPE_CP,(%1),(%2))
 #define SetDynamicCPDatagram(%1,%2)				SetStreamerDatagram(STREAMER_TYPE_CP,(%1),(%2))
 #define RemoveDynamicCPDatagram(%1)				RemoveStreamDatagram(STREAMER_TYPE_CP,(%1))
 #define IsSetDynamicCPDatagram(%1)				IsSetStreamerDatagram(STREAMER_TYPE_CP,(%1))
+#define UpdateAllDynamicCPs()					UpdateAllDynamicItem(STREAMER_TYPE_CP)
 
 //DynamicRaceCP
-#define GetDynamicRaceCPSize(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_SIZE,(%2))
-#define SetDynamicRaceCPSize(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_SIZE,(%2))
-#define GetDynamicRaceCPArea(%1)				STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_AREA_ID)
-#define SetDynamicRaceCPArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_AREA_ID,(_:%2))
-#define GetDynamicRaceCPPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_PRIORITY)
-#define SetDynamicRaceCPPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_PRIORITY,(%2))
-#define GetDynamicRaceCPSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define SetDynamicRaceCPSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define GetDynamicRaceCPType(%1)				Streamer_GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_TYPE)
-#define SetDynamicRaceCPType(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_TYPE,(%2))
-#define GetDynamicRaceCPVW(%1)					Streamer_GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_WORLD_ID)
-#define SetDynamicRaceCPVW(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_WORLD_ID,(%2))
-#define GetDynamicRaceCPINT(%1)					Streamer_GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_INTERIOR_ID)
-#define SetDynamicRaceCPINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_INTERIOR_ID,(%2))
-#define GetDynamicRaceCPInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_RACE_CP,(%1))
-#define SetDynamicRaceCPInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_RACE_CP,(%1),(%2))
+#define GetDynamicRaceCPSize(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_SIZE,(%2))
+#define SetDynamicRaceCPSize(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_SIZE,(%2))
+#define GetDynamicRaceCPArea(%1)				STREAMER_TAG_AREA Streamer::GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_AREA_ID)
+#define SetDynamicRaceCPArea(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_AREA_ID,(_:%2))
+#define GetDynamicRaceCPPriority(%1)			Streamer::GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_PRIORITY)
+#define SetDynamicRaceCPPriority(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicRaceCPSD(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define SetDynamicRaceCPSD(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define GetDynamicRaceCPType(%1)				Streamer::GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_TYPE)
+#define SetDynamicRaceCPType(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_TYPE,(%2))
+#define GetDynamicRaceCPVW(%1)					Streamer::GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_WORLD_ID)
+#define SetDynamicRaceCPVW(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_WORLD_ID,(%2))
+#define GetDynamicRaceCPINT(%1)					Streamer::GetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_INTERIOR_ID)
+#define SetDynamicRaceCPINT(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_RACE_CP,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicRaceCPInvertArea(%1)			Streamer::IsToggleItemInvAreas(STREAMER_TYPE_RACE_CP,(%1))
+#define SetDynamicRaceCPInvertArea(%1,%2)		Streamer::ToggleItemInvAreas(STREAMER_TYPE_RACE_CP,(%1),(%2))
 #define GetDynamicRaceCPDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_RACE_CP,(%1),(%2))
 #define SetDynamicRaceCPDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_RACE_CP,(%1),(%2))
 #define RemoveDynamicRaceCPDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_RACE_CP,(%1))
 #define IsSetDynamicRaceCPDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_RACE_CP,(%1))
+#define UpdateAllDynamicRaceCPs()				UpdateAllDynamicItem(STREAMER_TYPE_RACE_CP)
 
 //DynamicMapIcon
-#define GetDynamicMapIconColor(%1)				Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_COLOR)
-#define SetDynamicMapIconColor(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_COLOR,(%2))
-#define GetDynamicMapIconArea(%1)				STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_AREA_ID)
-#define SetDynamicMapIconArea(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_AREA_ID,(_:%2))
-#define GetDynamicMapIconPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_PRIORITY)
-#define SetDynamicMapIconPriority(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_PRIORITY,(%2))
-#define GetDynamicMapIconSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define SetDynamicMapIconSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define GetDynamicMapIconType(%1)				Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_TYPE)
-#define SetDynamicMapIconType(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_TYPE,(%2))
-#define GetDynamicMapIconVW(%1)					Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_WORLD_ID)
-#define SetDynamicMapIconVW(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_WORLD_ID,(%2))
-#define GetDynamicMapIconINT(%1)				Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_INTERIOR_ID)
-#define SetDynamicMapIconINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_INTERIOR_ID,(%2))
-#define GetDynamicMapIconStyle(%1)				Streamer_GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STYLE)
-#define SetDynamicMapIconStyle(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STYLE,(%2))
+#define GetDynamicMapIconColor(%1)				Streamer::GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_COLOR)
+#define SetDynamicMapIconColor(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_COLOR,(%2))
+#define GetDynamicMapIconArea(%1)				STREAMER_TAG_AREA Streamer::GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_AREA_ID)
+#define SetDynamicMapIconArea(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_AREA_ID,(_:%2))
+#define GetDynamicMapIconPriority(%1)			Streamer::GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_PRIORITY)
+#define SetDynamicMapIconPriority(%1,%2)		Streamer::SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicMapIconSD(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define SetDynamicMapIconSD(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define GetDynamicMapIconType(%1)				Streamer::GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_TYPE)
+#define SetDynamicMapIconType(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_TYPE,(%2))
+#define GetDynamicMapIconVW(%1)					Streamer::GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_WORLD_ID)
+#define SetDynamicMapIconVW(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_WORLD_ID,(%2))
+#define GetDynamicMapIconINT(%1)				Streamer::GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_INTERIOR_ID)
+#define SetDynamicMapIconINT(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicMapIconStyle(%1)				Streamer::GetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STYLE)
+#define SetDynamicMapIconStyle(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_MAP_ICON,(%1),E_STREAMER_STYLE,(%2))
 #define GetDynamicMapIconDatagram(%1,%2)		GetStreamerDatagram(STREAMER_TYPE_MAP_ICON,(%1),(%2))
 #define SetDynamicMapIconDatagram(%1,%2)		SetStreamerDatagram(STREAMER_TYPE_MAP_ICON,(%1),(%2))
-#define GetDynamicMapIconInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_MAP_ICON,(%1))
-#define SetDynamicMapIconInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_MAP_ICON,(%1),(%2))
+#define GetDynamicMapIconInvertArea(%1)			Streamer::IsToggleItemInvAreas(STREAMER_TYPE_MAP_ICON,(%1))
+#define SetDynamicMapIconInvertArea(%1,%2)		Streamer::ToggleItemInvAreas(STREAMER_TYPE_MAP_ICON,(%1),(%2))
 #define RemoveDynamicMapIconDatagram(%1)		RemoveStreamDatagram(STREAMER_TYPE_MAP_ICON,(%1))
 #define IsSetDynamicMapIconDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_MAP_ICON,(%1))
+#define UpdateAllDynamicMapIcons()				UpdateAllDynamicItem(STREAMER_TYPE_MAP_ICON)
 
 //Dynamic3DText
-#define GetDynamic3DTextDD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_DRAW_DISTANCE,(%2))
-#define SetDynamic3DTextDD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_DRAW_DISTANCE,(%2))
-#define GetDynamic3DTextSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define SetDynamic3DTextSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define GetDynamic3DTextVW(%1)					Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_WORLD_ID)
-#define SetDynamic3DTextVW(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_WORLD_ID,(%2))
-#define GetDynamic3DTextINT(%1)					Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_INTERIOR_ID)
-#define SetDynamic3DTextINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_INTERIOR_ID,(%2))
-#define GetDynamic3DTextColor(%1)				Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_COLOR)
-#define SetDynamic3DTextColor(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_COLOR,(%2))
-#define SetDynamic3DTextTestLos(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_TEST_LOS,(%2))
-#define AttachDynamic3DTextToPlayer(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_ATTACHED_PLAYER,(%2))
-#define AttachDynamic3DTextToVehicle(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_ATTACHED_VEHICLE,(%2))
-#define GetDynamic3DTextArea(%1)				STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_AREA_ID)
-#define SetDynamic3DTextArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_AREA_ID,(_:%2))
-#define GetDynamic3DTextPriority(%1)			Streamer_GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_PRIORITY)
-#define SetDynamic3DTextPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_PRIORITY,(%2))
-#define GetDynamic3DTextInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_3D_TEXT_LABEL,(%1))
-#define SetDynamic3DTextInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_3D_TEXT_LABEL,(%1),(%2))
+#define GetDynamic3DTextDD(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_DRAW_DISTANCE,(%2))
+#define SetDynamic3DTextDD(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_DRAW_DISTANCE,(%2))
+#define GetDynamic3DTextSD(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define SetDynamic3DTextSD(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define GetDynamic3DTextVW(%1)					Streamer::GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_WORLD_ID)
+#define SetDynamic3DTextVW(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_WORLD_ID,(%2))
+#define GetDynamic3DTextINT(%1)					Streamer::GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_INTERIOR_ID)
+#define SetDynamic3DTextINT(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamic3DTextColor(%1)				Streamer::GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_COLOR)
+#define SetDynamic3DTextColor(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_COLOR,(%2))
+#define SetDynamic3DTextTestLos(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_TEST_LOS,(%2))
+#define AttachDynamic3DTextToPlayer(%1,%2)		Streamer::SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_ATTACHED_PLAYER,(%2))
+#define AttachDynamic3DTextToVehicle(%1,%2)		Streamer::SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_ATTACHED_VEHICLE,(%2))
+#define GetDynamic3DTextArea(%1)				STREAMER_TAG_AREA Streamer::GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_AREA_ID)
+#define SetDynamic3DTextArea(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_AREA_ID,(_:%2))
+#define GetDynamic3DTextPriority(%1)			Streamer::GetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_PRIORITY)
+#define SetDynamic3DTextPriority(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_3D_TEXT_LABEL,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamic3DTextInvertArea(%1)			Streamer::IsToggleItemInvAreas(STREAMER_TYPE_3D_TEXT_LABEL,(%1))
+#define SetDynamic3DTextInvertArea(%1,%2)		Streamer::ToggleItemInvAreas(STREAMER_TYPE_3D_TEXT_LABEL,(%1),(%2))
 #define GetDynamic3DTextDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1),(%2))
 #define SetDynamic3DTextDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1),(%2))
 #define RemoveDynamic3DTextDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1))
 #define IsSetDynamic3DTextDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_3D_TEXT_LABEL,(_:%1))
+#define UpdateAllDynamic3DTextLabels()			UpdateAllDynamicItem(STREAMER_TYPE_3D_TEXT_LABEL)
 
 //DynamicArea
-#define GetDynamicAreaVW(%1)					Streamer_GetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_WORLD_ID)
-#define SetDynamicAreaVW(%1,%2)					Streamer_SetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_WORLD_ID,(%2))
-#define GetDynamicAreaINT(%1)					Streamer_GetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_INTERIOR_ID)
-#define SetDynamicAreaINT(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_INTERIOR_ID,(%2))
-#define GetDynamicAreaSize(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_AREA,(%1),E_STREAMER_SIZE,(%2))
-#define SetDynamicAreaSize(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_AREA,(%1),E_STREAMER_SIZE,(%2))
+#define GetDynamicAreaVW(%1)					Streamer::GetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_WORLD_ID)
+#define SetDynamicAreaVW(%1,%2)					Streamer::SetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_WORLD_ID,(%2))
+#define GetDynamicAreaINT(%1)					Streamer::GetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_INTERIOR_ID)
+#define SetDynamicAreaINT(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_AREA,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicAreaSize(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_AREA,(%1),E_STREAMER_SIZE,(%2))
+#define SetDynamicAreaSize(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_AREA,(%1),E_STREAMER_SIZE,(%2))
 #define GetDynamicAreaDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_AREA,(%1),(%2))
 #define SetDynamicAreaDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_AREA,(%1),(%2))
 #define RemoveDynamicAreaDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_AREA,(%1))
 #define IsSetDynamicAreaDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_AREA,(%1))
+#define UpdateAllDynamicAreas()					UpdateAllDynamicItem(STREAMER_TYPE_AREA)
 
 //DynamicActor
-#define GetDynamicActorModel(%1)				Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_MODEL_ID)
-#define SetDynamicActorModel(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_MODEL_ID,(%2))
-#define GetDynamicActorInterior(%1)				Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_INTERIOR_ID)
-#define SetDynamicActorInterior(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_INTERIOR_ID,(%2))
-#define GetDynamicActorArea(%1)					STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_AREA_ID)
-#define SetDynamicActorArea(%1,%2)				Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_AREA_ID,(_:%2))
-#define GetDynamicActorPriority(%1)				Streamer_GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_PRIORITY)
-#define SetDynamicActorPriority(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_PRIORITY,(%2))
-#define GetDynamicActorSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define SetDynamicActorSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-#define GetDynamicActorInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_ACTOR,(%1))
-#define SetDynamicActorInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_ACTOR,(%1),(%2))
+#define GetDynamicActorModel(%1)				Streamer::GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_MODEL_ID)
+#define SetDynamicActorModel(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_MODEL_ID,(%2))
+#define GetDynamicActorInterior(%1)				Streamer::GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_INTERIOR_ID)
+#define SetDynamicActorInterior(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_INTERIOR_ID,(%2))
+#define GetDynamicActorArea(%1)					STREAMER_TAG_AREA Streamer::GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_AREA_ID)
+#define SetDynamicActorArea(%1,%2)				Streamer::SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_AREA_ID,(_:%2))
+#define GetDynamicActorPriority(%1)				Streamer::GetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_PRIORITY)
+#define SetDynamicActorPriority(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_PRIORITY,(%2))
+#define GetDynamicActorSD(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define SetDynamicActorSD(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_ACTOR,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+#define GetDynamicActorInvertArea(%1)			Streamer::IsToggleItemInvAreas(STREAMER_TYPE_ACTOR,(%1))
+#define SetDynamicActorInvertArea(%1,%2)		Streamer::ToggleItemInvAreas(STREAMER_TYPE_ACTOR,(%1),(%2))
 #define GetDynamicActorDatagram(%1,%2)			GetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1),(%2))
 #define SetDynamicActorDatagram(%1,%2)			SetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1),(%2))
 #define RemoveDynamicActorDatagram(%1)			RemoveStreamDatagram(STREAMER_TYPE_ACTOR,(%1))
 #define IsSetDynamicActorDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_ACTOR,(%1))
-#define DestroyAllDynamicActors()				Streamer_DestroyAllItems(STREAMER_TYPE_ACTOR,1)
-#define CountDynamicActors()					Streamer_CountItems(STREAMER_TYPE_ACTOR,1)
+#define DestroyAllDynamicActors()				Streamer::DestroyAllItems(STREAMER_TYPE_ACTOR,1)
+#define CountDynamicActors()					Streamer::CountItems(STREAMER_TYPE_ACTOR,1)
+#define UpdateAllDynamicActors()				UpdateAllDynamicItem(STREAMER_TYPE_ACTOR)
 
 //DynamicVehicle
 #if defined SSpec_StreamerVehicle
 
-	#define SetDynamicVehicleModel(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_MODEL_ID,(%2))
-	#define GetDynamicVehicleSiren(%1)				Streamer_GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_SIREN)
-	#define SetDynamicVehicleSiren(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_SIREN,(%2))
-	#define GetDynamicVehicleRespawnTime(%1)		Streamer_GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_RESPAWN_TIME)
-	#define SetDynamicVehicleRespawnTime(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_RESPAWN_TIME,(%2))
-	#define GetDynamicVehicleArea(%1)				STREAMER_TAG_AREA Streamer_GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_AREA_ID)
-	#define SetDynamicVehicleArea(%1,%2)			Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_AREA_ID,(_:%2))
-	#define GetDynamicVehiclePriority(%1)			Streamer_GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_PRIORITY)
-	#define SetDynamicVehiclePriority(%1,%2)		Streamer_SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_PRIORITY,(%2))
-	#define GetDynamicVehicleSD(%1,%2)				Streamer_GetFloatData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-	#define SetDynamicVehicleSD(%1,%2)				Streamer_SetFloatData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
-	#define GetDynamicVehicleInvertArea(%1)			Streamer_IsToggleItemInvAreas(STREAMER_TYPE_VEHICLE,(%1))
-	#define SetDynamicVehicleInvertArea(%1,%2)		Streamer_ToggleItemInvAreas(STREAMER_TYPE_VEHICLE,(%1),(%2))
+	#define SetDynamicVehicleModel(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_MODEL_ID,(%2))
+	#define GetDynamicVehicleSiren(%1)				Streamer::GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_SIREN)
+	#define SetDynamicVehicleSiren(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_SIREN,(%2))
+	#define GetDynamicVehicleRespawnTime(%1)		Streamer::GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_RESPAWN_TIME)
+	#define SetDynamicVehicleRespawnTime(%1,%2)		Streamer::SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_RESPAWN_TIME,(%2))
+	#define GetDynamicVehicleArea(%1)				STREAMER_TAG_AREA Streamer::GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_AREA_ID)
+	#define SetDynamicVehicleArea(%1,%2)			Streamer::SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_AREA_ID,(_:%2))
+	#define GetDynamicVehiclePriority(%1)			Streamer::GetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_PRIORITY)
+	#define SetDynamicVehiclePriority(%1,%2)		Streamer::SetIntData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_PRIORITY,(%2))
+	#define GetDynamicVehicleSD(%1,%2)				Streamer::GetFloatData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+	#define SetDynamicVehicleSD(%1,%2)				Streamer::SetFloatData(STREAMER_TYPE_VEHICLE,(%1),E_STREAMER_STREAM_DISTANCE,(%2))
+	#define GetDynamicVehicleInvertArea(%1)			Streamer::IsToggleItemInvAreas(STREAMER_TYPE_VEHICLE,(%1))
+	#define SetDynamicVehicleInvertArea(%1,%2)		Streamer::ToggleItemInvAreas(STREAMER_TYPE_VEHICLE,(%1),(%2))
 	#define GetDynamicVehicleDatagram(%1,%2)		GetStreamerDatagram(STREAMER_TYPE_VEHICLE,(%1),(%2))
 	#define SetDynamicVehicleDatagram(%1,%2)		SetStreamerDatagram(STREAMER_TYPE_VEHICLE,(%1),(%2))
 	#define RemoveDynamicVehicleDatagram(%1)		RemoveStreamDatagram(STREAMER_TYPE_VEHICLE,(%1))
 	#define IsSetDynamicVehicleDatagram(%1)			IsSetStreamerDatagram(STREAMER_TYPE_VEHICLE,(%1))
-	#define DestroyAllDynamicVehicles()				Streamer_DestroyAllItems(STREAMER_TYPE_VEHICLE,1)
-	#define CountDynamicVehicles()					Streamer_CountItems(STREAMER_TYPE_VEHICLE,1)
+	#define DestroyAllDynamicVehicles()				Streamer::DestroyAllItems(STREAMER_TYPE_VEHICLE,1)
+	#define CountDynamicVehicles()					Streamer::CountItems(STREAMER_TYPE_VEHICLE,1)
 
-	#define GetDynamicVehiclePoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_VEHICLE)
+	#define GetDynamicVehiclePoolSize()				Streamer::GetUpperBound(STREAMER_TYPE_VEHICLE)
 	#define ForDynamicVehicles(%1)					for(new STREAMER_TAG_VEHICLE %1 = STREAMER_TAG_VEHICLE 1, STREAMER_TAG_VEHICLE p_%1 = STREAMER_TAG_VEHICLE GetDynamicVehiclePoolSize(); _:%1 <= _:p_%1; STREAMER_TAG_VEHICLE ((_:%1)+=1))
 	#define GetNearestVisibleVehicle(%0)			GetNearestVisibleItem((%0),STREAMER_TYPE_VEHICLE)
+	
+	#define UpdateAllDynamicVehicles()				UpdateAllDynamicItem(STREAMER_TYPE_VEHICLE)
 	
 #endif
 
@@ -702,14 +705,14 @@
 #define IsSetVehicleDatagram(%1)				IsSetStreamerDatagram(STREAMEX_VEHICLE,(%1))
 
 //PoolSize
-#define GetDynamicObjectPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_OBJECT)
-#define GetDynamicPickupPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_PICKUP)
-#define GetDynamicCPPoolSize()					Streamer_GetUpperBound(STREAMER_TYPE_CP)
-#define GetDynamicRaceCPPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_RACE_CP)
-#define GetDynamicMapIconPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_MAP_ICON)
-#define GetDynamic3DTextPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_3D_TEXT_LABEL)
-#define GetDynamicAreaPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_AREA)
-#define GetDynamicActorPoolSize()				Streamer_GetUpperBound(STREAMER_TYPE_ACTOR)
+#define GetDynamicObjectPoolSize()				Streamer::GetUpperBound(STREAMER_TYPE_OBJECT)
+#define GetDynamicPickupPoolSize()				Streamer::GetUpperBound(STREAMER_TYPE_PICKUP)
+#define GetDynamicCPPoolSize()					Streamer::GetUpperBound(STREAMER_TYPE_CP)
+#define GetDynamicRaceCPPoolSize()				Streamer::GetUpperBound(STREAMER_TYPE_RACE_CP)
+#define GetDynamicMapIconPoolSize()				Streamer::GetUpperBound(STREAMER_TYPE_MAP_ICON)
+#define GetDynamic3DTextPoolSize()				Streamer::GetUpperBound(STREAMER_TYPE_3D_TEXT_LABEL)
+#define GetDynamicAreaPoolSize()				Streamer::GetUpperBound(STREAMER_TYPE_AREA)
+#define GetDynamicActorPoolSize()				Streamer::GetUpperBound(STREAMER_TYPE_ACTOR)
 
 //Foreach
 #define ForDynamicObjects(%1)					for(new STREAMER_TAG_OBJECT			%1 = STREAMER_TAG_OBJECT		1, STREAMER_TAG_OBJECT			p_%1 = STREAMER_TAG_OBJECT			GetDynamicObjectPoolSize();		_:%1 <= _:p_%1; STREAMER_TAG_OBJECT			((_:%1)+=1))
@@ -731,6 +734,7 @@
 #define GetNearestVisibleArea(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_AREA)
 #define GetNearestVisibleActor(%0)				GetNearestVisibleItem((%0),STREAMER_TYPE_ACTOR)
 
+//Internal
 #define GetStreamerSpecActiveCount() 			GetSVarInt("ADM:StreamerSpec:ACTIVE")
 
 //extra names
@@ -848,7 +852,7 @@ StreamerSpec::Function:: CountPlayerObjects(playerid,bool:streamer = false){
 				count++;
 			}
 		} else {
-			if(Streamer_GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID){
+			if(Streamer::GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID){
 				if(IsValidPlayerObject(playerid,i)){
 					count++;
 				}
@@ -867,71 +871,9 @@ StreamerSpec::Function:: DestroyPlayerObjects(playerid,bool:streamer = false){
 				count++;
 			}
 		} else {
-			if(Streamer_GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID){
+			if(Streamer::GetItemStreamerID(playerid,STREAMER_TYPE_OBJECT,i) == INVALID_STREAMER_ID){
 				if(IsValidPlayerObject(playerid,i)){
 					DestroyPlayerObject(playerid,i);
-					count++;
-				}
-			}
-		}
-	}
-	return count;
-}
-
-StreamerSpec::Function:: RebuildDynamicObject(STREAMER_TAG_OBJECT objectid,modelid,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:rz,worldid = -1,interiorid = -1,playerid = -1,Float:streamdistance = STREAMER_OBJECT_SD,Float:drawdistance = STREAMER_OBJECT_DD,areaid = -1,priority = 0){
-	if(!IsValidDynamicObject(objectid)) return 0;
-	if(IsDynamicObjectMoving(objectid)) StopDynamicObject(objectid);
-	SetDynamicObjectPosAndRot(objectid,x,y,z,rx,ry,rz);
-	SetDynamicObjectModel(objectid,modelid);
-	SetDynamicObjectVW(objectid,worldid);
-	SetDynamicObjectINT(objectid,interiorid);
-	SetDynamicObjectSD(objectid,streamdistance);
-	SetDynamicObjectDD(objectid,drawdistance);
-	SetDynamicObjectArea(objectid,areaid);
-	SetDynamicObjectPriority(objectid,priority);
-	return 1;
-}
-
-StreamerSpec::Function:: bool:IsPointInArea(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
-	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz)) return true;
-	return false;
-}
-
-StreamerSpec::Function:: bool:IsPointInAreaEx(Float:x,Float:y,Float:z,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,vw1 = -1,int1 = -1,vw2 = -1,int2 = -1){
-	if((x >= minx && x <= maxx) && (y >= miny && y <= maxy) && (z >= minz && z <= maxz) && (vw1 == vw2) && (int1 == int2)) return true;
-	return false;
-}
-
-StreamerSpec::Function:: DestroyDynamicObjectsInCube(Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
-	new count = 0,Float:piox,Float:pioy,Float:pioz,pioVW,pioINT;
-	ForDynamicObjects(i){
-		if(IsValidDynamicObject(i)){
-			GetDynamicObjectPos(i,piox,pioy,pioz);
-			pioVW = GetDynamicObjectVW(i);
-			pioINT = GetDynamicObjectINT(i);
-			if(IsPointInArea(piox,pioy,pioz,minx,miny,minz,maxx,maxy,maxz)){
-				if(((worldid == pioVW) || (worldid == -1)) && (interiorid == pioINT) || (interiorid == -1)){
-					if(IsDynamicObjectMoving(i)) StopDynamicObject(i);
-					DestroyDynamicObject(i);
-					count++;
-				}
-			}
-		}
-	}
-	return count;
-}
-
-StreamerSpec::Function:: DestroyDynamicObjectsInCubeFM(modelid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz,worldid = -1,interiorid = -1){
-	new count = 0,Float:piox,Float:pioy,Float:pioz,pioVW,pioINT;
-	ForDynamicObjects(i){
-		if(IsValidDynamicObject(i)){
-			GetDynamicObjectPos(i,piox,pioy,pioz);
-			pioVW = GetDynamicObjectVW(i);
-			pioINT = GetDynamicObjectINT(i);
-			if(IsPointInArea(piox,pioy,pioz,minx,miny,minz,maxx,maxy,maxz)){
-				if(((worldid == pioVW) || (worldid == -1)) && ((interiorid == pioINT) || (interiorid == -1)) && (modelid == GetDynamicObjectModel(i))){
-					if(IsDynamicObjectMoving(i)) StopDynamicObject(i);
-					DestroyDynamicObject(i);
 					count++;
 				}
 			}
@@ -944,7 +886,7 @@ StreamerSpec::Function:: DestroyVehicleDynamicObject(vehicleid){
 	new count = 0;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
-			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE) == vehicleid){
+			if(Streamer::GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE) == vehicleid){
 				DestroyDynamicObject(i);
 				count++;
 			}
@@ -957,8 +899,8 @@ StreamerSpec::Function:: DeattachVehicleDynamicObject(vehicleid){
 	new count = 0;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
-			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE) == vehicleid){
-				Streamer_SetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE,INVALID_VEHICLE_ID);
+			if(Streamer::GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE) == vehicleid){
+				Streamer::SetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_VEHICLE,INVALID_VEHICLE_ID);
 				count++;
 			}
 		}
@@ -970,8 +912,8 @@ StreamerSpec::Function:: DeattachPlayerDynamicObject(playerid){
 	new count = 0;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
-			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER) == playerid){
-				Streamer_SetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER,INVALID_PLAYER_ID);
+			if(Streamer::GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER) == playerid){
+				Streamer::SetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER,INVALID_PLAYER_ID);
 				count++;
 			}
 		}
@@ -983,7 +925,7 @@ StreamerSpec::Function:: DestroyPlayerDynamicObject(playerid){
 	new count = 0;
 	ForDynamicObjects(i){
 		if(IsValidDynamicObject(i)){
-			if(Streamer_GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER) == playerid){
+			if(Streamer::GetIntData(STREAMER_TYPE_OBJECT,i,E_STREAMER_ATTACHED_PLAYER) == playerid){
 				DestroyDynamicObject(i);
 				count++;
 			}
@@ -993,167 +935,155 @@ StreamerSpec::Function:: DestroyPlayerDynamicObject(playerid){
 }
 
 StreamerSpec::Function:: GetDynamicCPPos(STREAMER_TAG_CP checkpointid,&Float:x,&Float:y,&Float:z){
-	Streamer_GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_X,x);
-	Streamer_GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Y,y);
-	Streamer_GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Z,z);
+	Streamer::GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_X,x);
+	Streamer::GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Y,y);
+	Streamer::GetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: SetDynamicCPPos(STREAMER_TAG_CP checkpointid,Float:x,Float:y,Float:z){
-	Streamer_SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_X,x);
-	Streamer_SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Y,y);
-	Streamer_SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Z,z);
+	Streamer::SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_X,x);
+	Streamer::SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Y,y);
+	Streamer::SetFloatData(STREAMER_TYPE_CP,checkpointid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: GetDynamicRaceCPPos(STREAMER_TAG_RACE_CP checkpointid,&Float:x,&Float:y,&Float:z){
-	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_X,x);
-	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Y,y);
-	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Z,z);
+	Streamer::GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_X,x);
+	Streamer::GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Y,y);
+	Streamer::GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: SetDynamicRaceCPPos(STREAMER_TAG_RACE_CP checkpointid,Float:x,Float:y,Float:z){
-	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_X,x);
-	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Y,y);
-	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Z,z);
+	Streamer::SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_X,x);
+	Streamer::SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Y,y);
+	Streamer::SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: GetDynamicRaceCPNext(STREAMER_TAG_RACE_CP checkpointid,&Float:nextx,&Float:nexty,&Float:nextz){
-	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_X,nextx);
-	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Y,nexty);
-	Streamer_GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Z,nextz);
+	Streamer::GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_X,nextx);
+	Streamer::GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Y,nexty);
+	Streamer::GetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Z,nextz);
 }
 
 StreamerSpec::Function:: SetDynamicRaceCPNext(STREAMER_TAG_RACE_CP checkpointid,Float:nextx,Float:nexty,Float:nextz){
-	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_X,nextx);
-	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Y,nexty);
-	Streamer_SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Z,nextz);
+	Streamer::SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_X,nextx);
+	Streamer::SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Y,nexty);
+	Streamer::SetFloatData(STREAMER_TYPE_RACE_CP,checkpointid,E_STREAMER_NEXT_Z,nextz);
 }
 
 StreamerSpec::Function:: GetDynamicObjectMovePos(STREAMER_TAG_OBJECT objectid,&Float:x,&Float:y,&Float:z){
-	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,x);
-	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,y);
-	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,z);
+	Streamer::GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,x);
+	Streamer::GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,y);
+	Streamer::GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,z);
 }
 
 StreamerSpec::Function:: GetDynamicObjectMoveRot(STREAMER_TAG_OBJECT objectid,&Float:rx,&Float:ry,&Float:rz){
-	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
-	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
-	Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
-}
-
-StreamerSpec::Function:: SetDynamicObjectMovePos(STREAMER_TAG_OBJECT objectid,Float:x,Float:y,Float:z){
-	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,x);
-	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,y);
-	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,z);
-}
-
-StreamerSpec::Function:: SetDynamicObjectMoveRot(STREAMER_TAG_OBJECT objectid,Float:rx = -1000.0,Float:ry = -1000.0,Float:rz = -1000.0){
-	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
-	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
-	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
+	Streamer::GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_X,rx);
+	Streamer::GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Y,ry);
+	Streamer::GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_R_Z,rz);
 }
 
 StreamerSpec::Function:: GetDynamicPickupPos(STREAMER_TAG_PICKUP pickupid,&Float:x,&Float:y,&Float:z){
-	Streamer_GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_X,x);
-	Streamer_GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Y,y);
-	Streamer_GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Z,z);
+	Streamer::GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_X,x);
+	Streamer::GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Y,y);
+	Streamer::GetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: SetDynamicPickupPos(STREAMER_TAG_PICKUP pickupid,Float:x,Float:y,Float:z){
-	Streamer_SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_X,x);
-	Streamer_SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Y,y);
-	Streamer_SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Z,z);
+	Streamer::SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_X,x);
+	Streamer::SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Y,y);
+	Streamer::SetFloatData(STREAMER_TYPE_PICKUP,pickupid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: GetDynamicMapIconPos(STREAMER_TAG_MAP_ICON iconid,&Float:x,&Float:y,&Float:z){
-	Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_X,x);
-	Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Y,y);
-	Streamer_GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Z,z);
+	Streamer::GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_X,x);
+	Streamer::GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Y,y);
+	Streamer::GetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: SetDynamicMapIconPos(STREAMER_TAG_MAP_ICON iconid,Float:x,Float:y,Float:z){
-	Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_X,x);
-	Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Y,y);
-	Streamer_SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Z,z);
+	Streamer::SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_X,x);
+	Streamer::SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Y,y);
+	Streamer::SetFloatData(STREAMER_TYPE_MAP_ICON,iconid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: GetDynamic3DTextPos(STREAMER_TAG_3D_TEXT_LABEL id,&Float:x,&Float:y,&Float:z){
-	Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_X,x);
-	Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Y,y);
-	Streamer_GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Z,z);
+	Streamer::GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_X,x);
+	Streamer::GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Y,y);
+	Streamer::GetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: SetDynamic3DTextPos(STREAMER_TAG_3D_TEXT_LABEL id,Float:x,Float:y,Float:z){
-	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_X,x);
-	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Y,y);
-	Streamer_SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Z,z);
+	Streamer::SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_X,x);
+	Streamer::SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Y,y);
+	Streamer::SetFloatData(STREAMER_TYPE_3D_TEXT_LABEL,id,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: GetDynamicCirclePos(STREAMER_TAG_AREA areaid,&Float:x,&Float:y){
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
 }
 
 StreamerSpec::Function:: SetDynamicCirclePos(STREAMER_TAG_AREA areaid,Float:x,Float:y){
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
 }
 
 StreamerSpec::Function:: GetDynamicCylinderPos(STREAMER_TAG_AREA areaid,&Float:x,&Float:y,&Float:minz,&Float:maxz){
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
 }
 
 StreamerSpec::Function:: SetDynamicCylinderPos(STREAMER_TAG_AREA areaid,Float:x,Float:y,Float:minz,Float:maxz){
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
 }
 
 StreamerSpec::Function:: GetDynamicSpherePos(STREAMER_TAG_AREA areaid,&Float:x,&Float:y,&Float:z){
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Z,z);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: SetDynamicSpherePos(STREAMER_TAG_AREA areaid,Float:x,Float:y,Float:z){
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Z,z);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_X,x);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Y,y);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_Z,z);
 }
 
 StreamerSpec::Function:: GetDynamicCubePos(STREAMER_TAG_AREA areaid,&Float:minx,&Float:miny,&Float:minz,&Float:maxx,&Float:maxy,&Float:maxz){
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
 }
 
 StreamerSpec::Function:: SetDynamicCubePos(STREAMER_TAG_AREA areaid,Float:minx,Float:miny,Float:minz,Float:maxx,Float:maxy,Float:maxz){
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Z,minz);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Z,maxz);
 }
 
 StreamerSpec::Function:: GetDynamicRectanglePos(STREAMER_TAG_AREA areaid,&Float:minx,&Float:miny,&Float:maxx,&Float:maxy){
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
 }
 
 StreamerSpec::Function:: SetDynamicRectanglePos(STREAMER_TAG_AREA areaid,Float:minx,Float:miny,Float:maxx,Float:maxy){
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_X,minx);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MIN_Y,miny);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_X,maxx);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,areaid,E_STREAMER_MAX_Y,maxy);
 }
 
 StreamerSpec::Function:: DestroyDynamicObjectComponent(STREAMER_TAG_OBJECT objectid,type){
@@ -1161,7 +1091,7 @@ StreamerSpec::Function:: DestroyDynamicObjectComponent(STREAMER_TAG_OBJECT objec
 	switch(type){
 		case STREAMER_TYPE_OBJECT: {
 			ForDynamicObjects(i){
-				if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == _:objectid){
+				if(Streamer::GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == _:objectid){
 					DestroyDynamicObject(i);
 					count++;
 				}
@@ -1169,7 +1099,7 @@ StreamerSpec::Function:: DestroyDynamicObjectComponent(STREAMER_TAG_OBJECT objec
 		}
 		case STREAMER_TYPE_AREA: {
 			ForDynamicAreas(i){
-				if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == _:objectid){
+				if(Streamer::GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == _:objectid){
 					DestroyDynamicArea(i);
 					count++;
 				}
@@ -1185,16 +1115,16 @@ StreamerSpec::Function:: DeattachDynamicObjectComponent(STREAMER_TAG_OBJECT obje
 	switch(type){
 		case STREAMER_TYPE_OBJECT: {
 			ForDynamicObjects(i){
-				if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == _:objectid){
-					Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID);
+				if(Streamer::GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == _:objectid){
+					Streamer::SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_STREAMER_ID);
 					count++;
 				}
 			}
 		}
 		case STREAMER_TYPE_AREA: {
 			ForDynamicAreas(i){
-				if(Streamer_GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == _:objectid){
-					Streamer_SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_VEHICLE_ID);
+				if(Streamer::GetIntData(type,i,E_STREAMER_ATTACHED_OBJECT) == _:objectid){
+					Streamer::SetIntData(type,i,E_STREAMER_ATTACHED_OBJECT,INVALID_VEHICLE_ID);
 					count++;
 				}
 			}
@@ -1224,65 +1154,15 @@ StreamerSpec::Function:: GetDynamicObjectMoveTime(STREAMER_TAG_OBJECT objectid,&
 	}
 }
 
-StreamerSpec::Function:: UpdateAllDynamicObjects(){
+StreamerSpec::Function:: UpdateAllDynamicItem(type){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		Streamer_Update(i,STREAMER_TYPE_OBJECT);
+		Streamer::Update(i,type);
 	}
 }
-
-StreamerSpec::Function:: UpdateAllDynamicPickups(){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		Streamer_Update(i,STREAMER_TYPE_PICKUP);
-	}
-}
-
-StreamerSpec::Function:: UpdateAllDynamicCPs(){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		Streamer_Update(i,STREAMER_TYPE_CP);
-	}
-}
-
-StreamerSpec::Function:: UpdateAllDynamicRaceCPs(){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		Streamer_Update(i,STREAMER_TYPE_RACE_CP);
-	}
-}
-
-StreamerSpec::Function:: UpdateAllDynamicMapIcons(){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		Streamer_Update(i,STREAMER_TYPE_MAP_ICON);
-	}
-}
-
-StreamerSpec::Function:: UpdateAllDynamic3DTextLabels(){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		Streamer_Update(i,STREAMER_TYPE_3D_TEXT_LABEL);
-	}
-}
-
-StreamerSpec::Function:: UpdateAllDynamicAreas(){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		Streamer_Update(i,STREAMER_TYPE_AREA);
-	}
-}
-
-StreamerSpec::Function:: UpdateAllDynamicActors(){
-	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		Streamer_Update(i,STREAMER_TYPE_ACTOR);
-	}
-}
-
-#if defined SSpec_StreamerVehicle
-	StreamerSpec::Function:: UpdateAllDynamicVehicles(){
-		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-			Streamer_Update(i,STREAMER_TYPE_VEHICLE);
-		}
-	}
-#endif
 
 StreamerSpec::Function:: UpdateAllDynamicElements(){
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++){
-		Streamer_Update(i);
+		Streamer::Update(i);
 	}
 }
 
@@ -1316,14 +1196,14 @@ StreamerSpec::Function:: GetNearestVisibleItem(playerid,type){
 		Float:min_radius = 20000.0, Float:distance, idx_max = 0, idx = 0;
 	
 	GetPlayerPos(playerid,x,y,z);
-	idx_max = Streamer_CountVisibleItems(playerid,type,1);
+	idx_max = Streamer::CountVisibleItems(playerid,type,1);
 	switch(type){
 		case STREAMER_TYPE_OBJECT, STREAMER_TYPE_PICKUP, STREAMER_TYPE_MAP_ICON, STREAMER_TYPE_3D_TEXT_LABEL, STREAMER_TYPE_ACTOR: {
-			max_element = Streamer_GetVisibleItems(type,playerid);
+			max_element = Streamer::GetVisibleItems(type,playerid);
 			while(idx <= max_element && idx_max > 0){
-				if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
+				if((tmp_item = Streamer::GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
 					idx_max--;
-					Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+					Streamer::GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
 					if(distance < min_radius){
 						itemid = tmp_item;
 						min_radius = distance;
@@ -1335,11 +1215,11 @@ StreamerSpec::Function:: GetNearestVisibleItem(playerid,type){
 		
 		#if defined SSpec_StreamerVehicle
 			case STREAMER_TYPE_VEHICLE: {
-				max_element = Streamer_GetVisibleItems(type,playerid);
+				max_element = Streamer::GetVisibleItems(type,playerid);
 				while(idx <= max_element && idx_max > 0){
-					if((tmp_item = Streamer_GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
+					if((tmp_item = Streamer::GetItemStreamerID(playerid,type,idx)) != INVALID_STREAMER_ID){
 						idx_max--;
-						Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+						Streamer::GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
 						if(distance < min_radius){
 							itemid = tmp_item;
 							min_radius = distance;
@@ -1362,9 +1242,9 @@ StreamerSpec::Function:: GetNearestVisibleItem(playerid,type){
 			max_element = GetDynamicAreaPoolSize(), idx = 1;
 			while(idx <= max_element && idx_max > 0){
 				if(IsValidDynamicArea(STREAMER_TAG_AREA idx)){
-					if(Streamer_IsItemVisible(playerid,type,idx)){
+					if(Streamer::IsItemVisible(playerid,type,idx)){
 						idx_max--;
-						Streamer_GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
+						Streamer::GetDistanceToItem(x,y,z,type,tmp_item,distance,3);
 						if(distance < min_radius){
 							itemid = tmp_item;
 							min_radius = distance;
@@ -1707,13 +1587,13 @@ new bool:CRC_StreamerFunctionInit = true,
 StreamerSpec::Public:: SSpec_OnRequestResponse(index, response_code, data[]){
 	if(response_code == 200){
 		if(isnull(data)) return 0;
-		new sspec_version[16], sspec_ver, sspec_file_ver = Streamer_Spec_Version;
+		new sspec_version[16], sspec_ver, sspec_file_ver = Streamer::Spec_Version;
 		strmid(sspec_version,data,0,strlen(data));
 		sspec_ver = strval(sspec_version);
-		if(sspec_ver != sspec_file_ver){
+		if(sspec_ver > sspec_file_ver){
 			print(" ");
 			printf("[ADM] Info: Please update your StreamerFunction include to v%d.%d.%d from here:",(sspec_ver / 10000),((sspec_ver % 10000) / 100),((sspec_ver % 10000) % 100));
-			print("https://github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/StreamerFunction.inc");
+			print("http://8.ct8.pl/d/StreamerFunction.inc");
 			print(" ");
 		}
 	}
@@ -1725,18 +1605,18 @@ StreamerSpec::Function:: StreamerSpecInit(){
 	
 	//Welcome to StreamerFunction
 	new ver_name[16];
-	format(ver_name,sizeof(ver_name),"%d.%d.%d",(Streamer_Spec_Version / 10000),((Streamer_Spec_Version % 10000) / 100),((Streamer_Spec_Version % 10000) % 100));
+	format(ver_name,sizeof(ver_name),"%d.%d.%d",(Streamer::Spec_Version / 10000),((Streamer::Spec_Version % 10000) / 100),((Streamer::Spec_Version % 10000) % 100));
 	if(GetSVarInt("ADM:StreamerSpec:INIT") == 0){
 		SetSVarInt("ADM:StreamerSpec:INIT",1);
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Info: Load Streamer Functions v%s for SA:MP %s by Abyss Morgan",ver_name,Streamer_Spec_SAMP_Version);
+			printf("[ADM] Info: Load Streamer Functions v%s for SA:MP %s by Abyss Morgan",ver_name,Streamer::Spec_SAMP_Version);
 		}
 	}
 	
 	if(GetSVarInt("ADM:StreamerSpec:VERCHECK") == 0){
 		SetSVarInt("ADM:StreamerSpec:VERCHECK",1);
 		new sspec_send_data[50];
-		format(sspec_send_data,sizeof(sspec_send_data),"8.ct8.pl/sspec/check.php?version=%d",Streamer_Spec_Version);
+		format(sspec_send_data,sizeof(sspec_send_data),"8.ct8.pl/sspec/check.php?version=%d",Streamer::Spec_Version);
 		HTTP(1,HTTP_GET,sspec_send_data,"","SSpec_OnRequestResponse");
 	}
 	
@@ -1750,11 +1630,11 @@ StreamerSpec::Function:: StreamerSpecExit(){
 	
 	//Goodbye StreamerSpec
 	new ver_name[16];
-	format(ver_name,sizeof(ver_name),"%d.%d.%d",(Streamer_Spec_Version / 10000),((Streamer_Spec_Version % 10000) / 100),((Streamer_Spec_Version % 10000) % 100));
+	format(ver_name,sizeof(ver_name),"%d.%d.%d",(Streamer::Spec_Version / 10000),((Streamer::Spec_Version % 10000) / 100),((Streamer::Spec_Version % 10000) % 100));
 	if(GetStreamerSpecActiveCount() == 0){
 		SetSVarInt("ADM:StreamerSpec:INIT",0);
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			printf("[ADM] Info: Unload Streamer Functions v%s for SA:MP %s by Abyss Morgan",ver_name,Streamer_Spec_SAMP_Version);
+			printf("[ADM] Info: Unload Streamer Functions v%s for SA:MP %s by Abyss Morgan",ver_name,Streamer::Spec_SAMP_Version);
 		}
 	}
 }
