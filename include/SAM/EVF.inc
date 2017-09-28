@@ -2980,7 +2980,7 @@ EVF::Public:: EVF::OnRequestResponse(index, response_code, data[]){
 		new EVF::version[16], EVF::ver, EVF::file_ver = EVF_Version;
 		strmid(EVF::version,data,0,strlen(data));
 		EVF::ver = strval(EVF::version);
-		if(EVF::ver != EVF::file_ver){
+		if(EVF::ver > EVF::file_ver){
 			print(" ");
 			printf("[ADM] Info: Please update your EVF include to v%d.%d.%d from here:",(EVF::ver / 10000),((EVF::ver % 10000) / 100),((EVF::ver % 10000) % 100));
 			print("http://8.ct8.pl/d/EVF.inc");
