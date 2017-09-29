@@ -16,7 +16,7 @@
  * Streamer Version: 2.9.1                                                                          *
  * MapAndreas Version: 1.2.1                                                                        *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.3                                                                            *
+ * 3DTryg Version: 4.5.2                                                                            *
  * StreamerFunction Version: 2.8.0                                                                  *
  *                                                                                                  *
  * Callbacks:                                                                                       *
@@ -34,11 +34,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40403)
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40502)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 //Check Version StreamerFunction.inc
@@ -93,16 +93,28 @@ new SantaGift[MAX_SANTAGIFTS],
 #endif
 
 stock SantaInit(){
-	if(!IsMapAndreasInit()){
-		if(GetSVarInt("ADM:Logging:Disable") == 0){
-			print("[ADM] Error: Invalid MapAndreas Memory.");
+	#if defined Tryg3D_ColAndreas
+		Tryg3D::SafeColAndreasInit();
+		if(!Tryg3D::IsColAndreasInit()){
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				printf("[ADM] Error: Invalid ColAndreas Memory.");
+			}
+			return 0;
 		}
-	} else {
-		for(new i = 0; i < MAX_SANTAGIFTS; i++){
-			SantaGiftCreate(i);
+	#elseif defined Tryg3D_MapAndreas
+		Tryg3D::SafeMapAndreasInit();
+		if(!Tryg3D::IsMapAndreasInit()){
+			if(GetSVarInt("ADM:Logging:Disable") == 0){
+				printf("[ADM] Error: Invalid MapAndreas Memory.");
+			}
+			return 0;
 		}
-		SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SANTAGIFTS,true,"d",1);
+	#endif
+	for(new i = 0; i < MAX_SANTAGIFTS; i++){
+		SantaGiftCreate(i);
 	}
+	SantaTimer[0] = SetTimerEx("SantaReset",REFRESH_SANTAGIFTS,true,"d",1);
+	return 1;
 }
 
 forward SantaPickUp(playerid,pickupid);
@@ -117,7 +129,7 @@ new bool:CRC_SantaInit = true,
 public OnGameModeInit(){
 	if(CRC_SantaInit){
 		CRC_SantaInit = false;
-		SantaInit();
+		if(!SantaInit()) printf("[ADM] Error: Failed to init Santa.inc");
 	}
 	#if defined SantaOnGameModeInit
 		SantaOnGameModeInit();
@@ -139,7 +151,7 @@ public OnGameModeInit(){
 public OnFilterScriptInit(){
 	if(CRC_SantaInit){
 		CRC_SantaInit = false;
-		SantaInit();
+		if(!SantaInit()) printf("[ADM] Error: Failed to init Santa.inc");
 	}
 	#if defined SantaOnFilterScriptInit
 		SantaOnFilterScriptInit();
@@ -225,7 +237,7 @@ public SantaGiftCreate(giftid){
 	while(IsPointInWater(piox,pioy,0.0)){
 		GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
 	}
-	Tryg3D_MapAndreasFindZ(piox,pioy,pioz);
+	Tryg3D::MapAndreasFindZ(piox,pioy,pioz);
 
 	pioz+=1.0;
 	SantaGift[giftid] = CreateDynamicPickup(SantaPickupModel[smodel][0],2,piox,pioy,pioz,0,0);
@@ -239,7 +251,7 @@ public SantaGiftReset(giftid){
 	while(IsPointInWater(piox,pioy,0.0)){
 		GetRandomPointInRectangle(-3000.0,-3000.0,3000.0,3000.0,piox,pioy);
 	}
-	Tryg3D_MapAndreasFindZ(piox,pioy,pioz);
+	Tryg3D::MapAndreasFindZ(piox,pioy,pioz);
 	
 	pioz+=1.0;
 	SetDynamicPickupPos(SantaGift[giftid],piox,pioy,pioz);
