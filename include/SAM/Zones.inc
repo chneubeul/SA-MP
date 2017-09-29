@@ -1,24 +1,40 @@
-/*  SA:MP Functions
- *
- *  ZONES Functions By ~Cueball~
- *  ZONES Functions Aided By Betamaster (locations), Mabako (locations), Simon (finetuning)
- *
- *  (c) Copyright 2005-2008, SA:MP Team
- *
- */
+/****************************************************************************************************
+ *                                                                                                  *
+ *                                      )(   SA:MP Zones   )(                                       *
+ *                                                                                                  *
+ * Copyright © 2017 Cueball. All rights reserved.                                                   *
+ * Contributors: Betamaster, Mabako, Simon, RoamPT                                                  *
+ *                                                                                                  *
+ * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
+ * Publication: None                                                                                *
+ * Website: http://8.ct8.pl                                                                         *
+ *                                                                                                  *
+ * Plugins: None                                                                                    *
+ * Modules: None                                                                                    *
+ *                                                                                                  *
+ * File Version: 1.0.0                                                                              *
+ * SA:MP Version: 0.3.7                                                                             *
+ *                                                                                                  *
+ * Functions:                                                                                       *
+ * GetPlayer2DZone(playerid,zone[],len);                                                            *
+ * GetPlayer3DZone(playerid,zone[],len);                                                            *
+ *                                                                                                  *
+ ****************************************************************************************************/
 
-// Zone System 0.1 by RoamPT
-// I just exported static const gSAZones, stock IsPlayerInZone, stock GetPlayer2DZone, stock GetPlayer3DZone from a_zones include.
+#if defined _SAMP_ZONES
+	#endinput
+#endif
+#define _SAMP_ZONES
 
 #define MAX_ZONE_NAME 28
 
-enum SAZONE_MAIN { //Betamaster
+enum SAZONE_MAIN {
 	SAZONE_NAME[MAX_ZONE_NAME],
 	Float:SAZONE_AREA[6]
 };
 
-new const gSAZones[][SAZONE_MAIN] = {  // Majority of names and area coordinates adopted from Mabako's 'Zones Script' v0.2
-	//	NAME                            AREA (Xmin,Ymin,Zmin,Xmax,Ymax,Zmax)
+new const gSAZones[][SAZONE_MAIN] = {
+	//NAME                          AREA (Xmin,Ymin,Zmin,Xmax,Ymax,Zmax)
 	{"The Big Ear",	                {-410.00,1403.30,-3.00,-137.90,1681.20,200.00}},
 	{"Aldea Malvada",               {-1372.10,2498.50,0.00,-1277.50,2615.30,200.00}},
 	{"Angel Pine",                  {-2324.90,-2584.20,-6.10,-1964.20,-2212.10,200.00}},
@@ -385,35 +401,26 @@ new const gSAZones[][SAZONE_MAIN] = {  // Majority of names and area coordinates
 	{"Red County",                  {-1213.90,-768.00,-242.90,2997.00,596.30,900.00}},
 	{"Flint County",                {-1213.90,-2892.90,-242.90,44.60,-768.00,900.00}},
 	{"Whetstone",                   {-2997.40,-2892.90,-242.90,-1213.90,-1115.50,900.00}},
-	//other
-	{"Stocznia Wojskowa NGC",		{3700.0,-300.0,-100.0,4300.0,300.0,1000.0}},
-	{"Maelstrom Fleet",				{600.0,-4400.0,-100.0,1200.0,-3800.0,1000.0}},
-	{"Posterunek Akron",			{-4287.9329,256.5904,-100.0,-3887.9329,656.5904,1000.0}},
-	{"Ship Commanding NGC",			{-5800.0,1000.0,-100.0,-4700.0,2500.0,1000.0}},
 	{"San Andreas",                 {-20000.0,-20000.0,-100.0,20000.0,20000.0,20000.0}}
 };
 
-stock GetPlayer2DZone(playerid, zone[], len) //Credits to Cueball, Betamaster, Mabako, and Simon (for finetuning).
-{
+stock GetPlayer2DZone(playerid,zone[],len){
 	new Float:x, Float:y, Float:z;
-	GetPlayerPos(playerid, x, y, z);
- 	for(new i = 0; i != sizeof(gSAZones); i++ )
- 	{
-		if(x >= gSAZones[i][SAZONE_AREA][0] && x <= gSAZones[i][SAZONE_AREA][3] && y >= gSAZones[i][SAZONE_AREA][1] && y <= gSAZones[i][SAZONE_AREA][4])
-		{
-		    return format(zone, len, gSAZones[i][SAZONE_NAME], 0);
+	GetPlayerPos(playerid,x,y,z);
+ 	for(new i = 0, j = sizeof(gSAZones); i < j; i++){
+		if(x >= gSAZones[i][SAZONE_AREA][0] && x <= gSAZones[i][SAZONE_AREA][3] && y >= gSAZones[i][SAZONE_AREA][1] && y <= gSAZones[i][SAZONE_AREA][4]){
+		    return format(zone,len,gSAZones[i][SAZONE_NAME],0);
 		}
 	}
 	return 0;
 }
 
-stock GetPlayer3DZone(playerid, zone[], len) //Credits to Cueball, Betamaster, Mabako, and Simon (for finetuning).
-{
+stock GetPlayer3DZone(playerid,zone[],len){
 	new Float:x, Float:y, Float:z;
-	GetPlayerPos(playerid, x, y, z);
- 	for(new i = 0; i != sizeof(gSAZones); i++ ){
+	GetPlayerPos(playerid,x,y,z);
+ 	for(new i = 0, j = sizeof(gSAZones); i < j; i++){
 		if(x >= gSAZones[i][SAZONE_AREA][0] && x <= gSAZones[i][SAZONE_AREA][3] && y >= gSAZones[i][SAZONE_AREA][1] && y <= gSAZones[i][SAZONE_AREA][4] && z >= gSAZones[i][SAZONE_AREA][2] && z <= gSAZones[i][SAZONE_AREA][5]){
-		    return format(zone, len, gSAZones[i][SAZONE_NAME], 0);
+		    return format(zone,len,gSAZones[i][SAZONE_NAME],0);
 		}
 	}
 	return 0;
