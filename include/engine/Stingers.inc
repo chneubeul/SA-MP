@@ -14,7 +14,7 @@
  * File Version: 1.1.1                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.1                                                                                                        *
- * 3DTryg Version: 4.4.3                                                                                                          *
+ * 3DTryg Version: 4.5.2                                                                                                          *
  *                                                                                                                                *
  * Definitions:                                                                                                                   *
  * STINGER_TYPE_SMALL  //Object: 2899                                                                                             *
@@ -66,11 +66,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40403)
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40502)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 
@@ -169,7 +169,7 @@ stock CreateDynamicStinger(type,Float:x,Float:y,Float:z,Float:rx,Float:ry,Float:
 	Stingers[mobid][stin_type] = type;
 	
 	AttachDynamicAreaToObject(Stingers[mobid][stin_areaid],Stingers[mobid][stin_objectid]);
-	Streamer_SetIntData(STREAMER_TYPE_AREA,Stingers[mobid][stin_areaid],E_STREAMER_EXTRA_ID,(mobid+STINGERS_EXTRA_ID_OFFSET));
+	Streamer::SetIntData(STREAMER_TYPE_AREA,Stingers[mobid][stin_areaid],E_STREAMER_EXTRA_ID,(mobid+STINGERS_EXTRA_ID_OFFSET));
 	Stingers[mobid][stin_active] = true;
 	
 	return mobid;
@@ -186,7 +186,7 @@ stock DestroyDynamicStinger(mobid){
 
 //Hook: OnPlayerEnterDynamicArea
 public OnPlayerEnterDynamicArea(playerid,STREAMER_TAG_AREA areaid){
-	new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-STINGERS_EXTRA_ID_OFFSET);
+	new mobid = (Streamer::GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-STINGERS_EXTRA_ID_OFFSET);
 	if(mobid >= 1 && mobid < MAX_STINGERS){
 		if(Stingers[mobid][stin_areaid] == areaid){
 			if(GetDynamicStingerPlayerID(mobid) != playerid){
@@ -221,7 +221,7 @@ public OnPlayerEnterDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 
 //Hook: OnPlayerLeaveDynamicArea
 public OnPlayerLeaveDynamicArea(playerid,STREAMER_TAG_AREA areaid){
-	new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-STINGERS_EXTRA_ID_OFFSET);
+	new mobid = (Streamer::GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-STINGERS_EXTRA_ID_OFFSET);
 	if(mobid >= 1 && mobid < MAX_STINGERS){
 		if(Stingers[mobid][stin_areaid] == areaid && STIN_ActiveForPlayer[playerid] == areaid){
 			STIN_ActiveForPlayer[playerid] = STREAMER_TAG_AREA INVALID_STREAMER_ID;

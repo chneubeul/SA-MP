@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
- * 3DTryg Version: 4.4.3                                                                                                          *
+ * 3DTryg Version: 4.5.2                                                                                                          *
  * Missile Version: 2.2.0                                                                                                         *
  *                                                                                                                                *
  * Vehicle Weapons:                                                                                                               *
@@ -261,11 +261,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40403)
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40502)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #if defined _veh_missile_launcher
@@ -710,7 +710,7 @@ T3D:function OnVehicleShot(playerid,type){
 
 			new F4[Float3D], F5[Float3D];
 			GetVehiclePos(vid,F5[T3D:X],F5[T3D:Y],F5[T3D:Z]);
-			GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
+			Tryg3D::GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
 			
 			F4[T3D:VW] = GetPlayerVirtualWorld(playerid);
 			F4[T3D:INT] = GetPlayerInterior(playerid);
@@ -739,7 +739,7 @@ T3D:function OnVehicleShot(playerid,type){
 
 			new F4[Float3D], F5[Float3D];
 			GetVehiclePos(vid,F5[T3D:X],F5[T3D:Y],F5[T3D:Z]);
-			GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
+			Tryg3D::GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
 			
 			F4[T3D:VW] = GetPlayerVirtualWorld(playerid);
 			F4[T3D:INT] = GetPlayerInterior(playerid);
@@ -784,7 +784,7 @@ T3D:function OnVehicleShot(playerid,type){
 
 			new F4[Float3D], F5[Float3D];
 			GetVehiclePos(vid,F5[T3D:X],F5[T3D:Y],F5[T3D:Z]);
-			GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
+			Tryg3D::GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
 			CompRotationFloat(F5[T3D:rX]-45.0,F5[T3D:rX]);
 			
 			F4[T3D:VW] = GetPlayerVirtualWorld(playerid);
@@ -976,7 +976,7 @@ T3D:function OnVehicleShot(playerid,type){
 			
 			new F4[Float3D], F5[Vectors3D];
 			GetPointInFrontOfVehicle3D(vid,F4[T3D:X],F4[T3D:Y],F4[T3D:Z],5.0);
-			GetVehicleRotation(vid,F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
+			Tryg3D::GetVehicleRotation(vid,F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
 			
 			F4[T3D:VW] = GetPlayerVirtualWorld(playerid);
 			F4[T3D:INT] = GetPlayerInterior(playerid);
@@ -1003,7 +1003,7 @@ T3D:function OnVehicleShot(playerid,type){
 			
 			new F4[Float3D], F5[Float3D];
 			GetVehiclePos(vid,F5[T3D:X],F5[T3D:Y],F5[T3D:Z]);
-			GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
+			Tryg3D::GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
 			GetPointInFront3DCol(F5[T3D:X],F5[T3D:Y],F5[T3D:Z],270.0,F5[T3D:rZ],VMC::Distance[vid][type],F4[T3D:tX],F4[T3D:tY],F4[T3D:tZ]);
 			
 			F4[T3D:VW] = GetPlayerVirtualWorld(playerid);
@@ -1031,7 +1031,7 @@ T3D:function OnVehicleShot(playerid,type){
 			
 			new F4[Float3D], F5[Float3D];
 			GetVehiclePos(vid,F5[T3D:X],F5[T3D:Y],F5[T3D:Z]);
-			GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
+			Tryg3D::GetVehicleRotation(vid,F5[T3D:rX],F5[T3D:rY],F5[T3D:rZ]);
 			
 			F4[T3D:VW] = GetPlayerVirtualWorld(playerid);
 			F4[T3D:INT] = GetPlayerInterior(playerid);

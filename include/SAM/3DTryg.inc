@@ -1108,7 +1108,10 @@ new Tryg3D::VehicleFlags[212],
 #if !defined CreateExplosionForPlayer
 	native CreateExplosionForPlayer(playerid,Float:X,Float:Y,Float:Z,type,Float:Radius);
 #endif
- 
+
+#if !defined IsValidVehicle
+	native IsValidVehicle(vehicleid);
+#endif 
  
 /************************************************************************************************************************************
  *                                                                                                                                  *

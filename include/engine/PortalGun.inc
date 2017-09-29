@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                   *
  * Streamer Version: 2.9.1                                                                                                          *
  * ColAndreas Version: 1.4.0                                                                                                        *
- * 3DTryg Version: 4.4.3                                                                                                            *
+ * 3DTryg Version: 4.5.2                                                                                                            *
  *                                                                                                                                  *
  * Functions:                                                                                                                       *
  * TogglePrivatePortalGun(bool:toggle);            //default: false                                                                 *
@@ -54,11 +54,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40403)
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40502)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #define PG_GetValueBit(%0,%1)					((%0) >>> (%1) & 0x01)
@@ -118,7 +118,7 @@ T3D:function ForceOpenPortalGunRing(playerid,portal_id,Float:ox,Float:oy,Float:o
 	}
 	PortalGunZone[playerid][portal_id] = CreateDynamicSphere(0.0,0.0,-6000.0,1.5,worldid,interiorid,-1);
 	AttachDynamicAreaToObject(PortalGunZone[playerid][portal_id],PortalGunRing[playerid][portal_id]);
-	Streamer_SetIntData(STREAMER_TYPE_AREA,PortalGunZone[playerid][portal_id],E_STREAMER_EXTRA_ID,playerid+PORTAL_EXTRA_ID_OFFSET);
+	Streamer::SetIntData(STREAMER_TYPE_AREA,PortalGunZone[playerid][portal_id],E_STREAMER_EXTRA_ID,playerid+PORTAL_EXTRA_ID_OFFSET);
 	MoveDynamicObject(PortalGunRing[playerid][portal_id],px,py,pz,GetPortalGunSpeed(playerid));
 }
 
@@ -238,7 +238,7 @@ public OnPlayerEnterDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 	new pstate = GetPlayerState(playerid);
 	if(pstate != 1 && pstate != 2 && pstate != 3) return 1;
 	
-	new targetid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-PORTAL_EXTRA_ID_OFFSET);
+	new targetid = (Streamer::GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-PORTAL_EXTRA_ID_OFFSET);
 	if(targetid >= 0 && targetid < MAX_PLAYERS){
 		if(!IsTogglePrivatePortalGun() || (IsTogglePrivatePortalGun() && playerid == targetid)){
 			if(!IsToggleUseTeamPortalGun() || (IsToggleUseTeamPortalGun() && (GetPlayerTeam(playerid) == GetPlayerTeam(targetid) || GetPlayerTeam(targetid) == NO_TEAM || GetPlayerTeam(playerid) == NO_TEAM))){
@@ -255,8 +255,8 @@ public OnPlayerEnterDynamicArea(playerid,STREAMER_TAG_AREA areaid){
 							new F4[Float3D];
 							GetDynamicObjectPos(PortalGunRing[targetid][portal_id],F4[T3D:X],F4[T3D:Y],F4[T3D:Z]);
 							GetDynamicObjectRot(PortalGunRing[targetid][portal_id],F4[T3D:rX],F4[T3D:rY],F4[T3D:rZ]);
-							F4[T3D:VW] = Streamer_GetIntData(STREAMER_TYPE_OBJECT,PortalGunRing[targetid][portal_id],E_STREAMER_WORLD_ID);
-							F4[T3D:INT] = Streamer_GetIntData(STREAMER_TYPE_OBJECT,PortalGunRing[targetid][portal_id],E_STREAMER_INTERIOR_ID);
+							F4[T3D:VW] = Streamer::GetIntData(STREAMER_TYPE_OBJECT,PortalGunRing[targetid][portal_id],E_STREAMER_WORLD_ID);
+							F4[T3D:INT] = Streamer::GetIntData(STREAMER_TYPE_OBJECT,PortalGunRing[targetid][portal_id],E_STREAMER_INTERIOR_ID);
 							
 							F4[T3D:rX] = CompRotationFloat(F4[T3D:rX]+90.0);
 							

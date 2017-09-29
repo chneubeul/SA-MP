@@ -14,7 +14,7 @@
  * File Version: 2.1.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
- * 3DTryg Version: 4.4.3                                                                                                          *
+ * 3DTryg Version: 4.5.2                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:health,respawntime,Float:x,Float:y,Float:z,            *
@@ -75,11 +75,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40403)
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40502)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #if defined _dynamic_mine_system
@@ -154,8 +154,8 @@ new MineComponent[MAX_MINES][e_mine],
 #define GetDynamicMineRot(%0,%1,%2,%3)			GetDynamicObjectRot(MineComponent[(%0)][mine_objectid],%1,%2,%3)
 #define SetDynamicMineRot(%0,%1,%2,%3)			SetDynamicObjectRot(MineComponent[(%0)][mine_objectid],%1,%2,%3)
 
-#define GetDynamicMineDetectionRange(%0,%1)		Streamer_GetFloatData(STREAMER_TYPE_AREA,MineComponent[(%0)][mine_areaid],E_STREAMER_SIZE,(%1))
-#define SetDynamicMineDetectionRange(%0,%1)		Streamer_SetFloatData(STREAMER_TYPE_AREA,MineComponent[(%0)][mine_areaid],E_STREAMER_SIZE,(%1))
+#define GetDynamicMineDetectionRange(%0,%1)		Streamer::GetFloatData(STREAMER_TYPE_AREA,MineComponent[(%0)][mine_areaid],E_STREAMER_SIZE,(%1))
+#define SetDynamicMineDetectionRange(%0,%1)		Streamer::SetFloatData(STREAMER_TYPE_AREA,MineComponent[(%0)][mine_areaid],E_STREAMER_SIZE,(%1))
 
 #define GetDynamicMineExplodeRadius(%0,%1)		(%1) = MineComponent[(%0)][mine_explode]
 #define SetDynamicMineExplodeRadius(%0,%1)		MineComponent[(%0)][mine_explode] = (%1)
@@ -169,8 +169,8 @@ new MineComponent[MAX_MINES][e_mine],
 #define GetDynamicMineTeam(%0)					MineComponent[(%0)][mine_teamid]
 #define SetDynamicMineTeam(%0,%1)				MineComponent[(%0)][mine_teamid] = (%1)
 
-#define GetDynamicMineVW(%0)					Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[(%0)][mine_objectid],E_STREAMER_WORLD_ID,(%1))
-#define GetDynamicMineINT(%0)					Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[(%0)][mine_objectid],E_STREAMER_INTERIOR_ID,(%1))
+#define GetDynamicMineVW(%0)					Streamer::GetIntData(STREAMER_TYPE_OBJECT,MineComponent[(%0)][mine_objectid],E_STREAMER_WORLD_ID,(%1))
+#define GetDynamicMineINT(%0)					Streamer::GetIntData(STREAMER_TYPE_OBJECT,MineComponent[(%0)][mine_objectid],E_STREAMER_INTERIOR_ID,(%1))
 
 #define GetDynamicMineType(%0)					MineComponent[(%0)][mine_type]
 #define SetDynamicMineType(%0,%1)				MineComponent[(%0)][mine_type] = (%1)
@@ -184,21 +184,21 @@ new MineComponent[MAX_MINES][e_mine],
 #define GetDynamicMineVehicleDamage(%0)			MineComponent[(%0)][mine_vehicle_damage]
 #define SetDynamicMineVehicleDamage(%0,%1)		MineComponent[(%0)][mine_vehicle_damage] = (%1)
 
-#define GetDynamicMineSD(%0,%1)					Streamer_GetFloatData(STREAMER_TYPE_OBJECT,MineComponent[(%0)][mine_objectid],E_STREAMER_STREAM_DISTANCE,(%1))
+#define GetDynamicMineSD(%0,%1)					Streamer::GetFloatData(STREAMER_TYPE_OBJECT,MineComponent[(%0)][mine_objectid],E_STREAMER_STREAM_DISTANCE,(%1))
 
 stock SetDynamicMineVW(mobid,worldid){
-	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID,worldid);
-	Streamer_SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_WORLD_ID,worldid);
+	Streamer::SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID,worldid);
+	Streamer::SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_WORLD_ID,worldid);
 }
 
 stock SetDynamicMineINT(mobid,interiorid){
-	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_INTERIOR_ID,interiorid);
-	Streamer_SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_INTERIOR_ID,interiorid);
+	Streamer::SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_INTERIOR_ID,interiorid);
+	Streamer::SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_INTERIOR_ID,interiorid);
 }
 
 stock SetDynamicMineSD(mobid,Float:streamdistance){
-	Streamer_SetFloatData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_STREAM_DISTANCE,streamdistance);
-	Streamer_SetFloatData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_STREAM_DISTANCE,streamdistance);
+	Streamer::SetFloatData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_STREAM_DISTANCE,streamdistance);
+	Streamer::SetFloatData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_STREAM_DISTANCE,streamdistance);
 }
 
 stock CountDynamicMines(){
@@ -372,8 +372,8 @@ stock CreateDynamicMine(type,Float:detection_range,Float:explode_radius,Float:he
 	MineComponent[mobid][mine_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
 	AttachDynamicAreaToObject(MineComponent[mobid][mine_areaid],MineComponent[mobid][mine_objectid]);
 	
-	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
-	Streamer_SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
+	Streamer::SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
+	Streamer::SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
 	MineComponent[mobid][mine_status] = MINE_STATUS_ACTIVE;
 	if(mobid > MineUpperBound) MineUpperBound = mobid;
 	return mobid;
@@ -405,8 +405,8 @@ stock CreateDynamicMineEx(objectid,type,Float:detection_range,Float:explode_radi
 	MineComponent[mobid][mine_areaid] = CreateDynamicSphere(x,y,z,detection_range,worldid,interiorid,playerid);
 	AttachDynamicAreaToObject(MineComponent[mobid][mine_areaid],MineComponent[mobid][mine_objectid]);
 	
-	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
-	Streamer_SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
+	Streamer::SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
+	Streamer::SetIntData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_EXTRA_ID,(mobid+MINE_EXTRA_ID_OFFSET));
 	MineComponent[mobid][mine_status] = MINE_STATUS_ACTIVE;
 	if(mobid > MineUpperBound) MineUpperBound = mobid;
 	return mobid;
@@ -438,11 +438,11 @@ public ExplodeDynamicMine(mobid,type,playerid){
 	if(mobid <= 0 || mobid >= MAX_MINES) return 0;
 	if(MineComponent[mobid][mine_status] != MINE_STATUS_ACTIVE) return 0;
 	new Float:minex, Float:miney, Float:minez,
-		worldid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID),
-		interiorid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_INTERIOR_ID),
+		worldid = Streamer::GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID),
+		interiorid = Streamer::GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_INTERIOR_ID),
 		Float:radius;
 	
-	Streamer_GetFloatData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_SIZE,radius);
+	Streamer::GetFloatData(STREAMER_TYPE_AREA,MineComponent[mobid][mine_areaid],E_STREAMER_SIZE,radius);
 	GetDynamicObjectPos(MineComponent[mobid][mine_objectid],minex,miney,minez);
 	
 	if(GetDynamicMineDamage(mobid) == -1.0){
@@ -453,7 +453,7 @@ public ExplodeDynamicMine(mobid,type,playerid){
 	}
 	MineComponent[mobid][mine_tickcount] = GetTickCount()+(MineComponent[mobid][mine_respawntime]*1000);
 	MineComponent[mobid][mine_status] = MINE_STATUS_DAMAGED;
-	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID,worldid+10000); //hide mine
+	Streamer::SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID,worldid+10000); //hide mine
 	CallRemoteFunction("OnMineDestroy","dfffddfd",mobid,minex,miney,minez,type,playerid,radius,MineComponent[mobid][mine_playerid]);
 	return 1;
 }
@@ -461,8 +461,8 @@ public ExplodeDynamicMine(mobid,type,playerid){
 public RespawnDynamicMine(mobid){
 	if(mobid <= 0 || mobid >= MAX_MINES) return 0;
 	if(MineComponent[mobid][mine_status] == MINE_STATUS_ACTIVE) return 0;
-	new worldid = Streamer_GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID);
-	Streamer_SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID,worldid-10000); //show mine
+	new worldid = Streamer::GetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID);
+	Streamer::SetIntData(STREAMER_TYPE_OBJECT,MineComponent[mobid][mine_objectid],E_STREAMER_WORLD_ID,worldid-10000); //show mine
 	MineComponent[mobid][mine_tickcount] = 0;
 	MineComponent[mobid][mine_health] = MineComponent[mobid][mine_maxhealth];
 	MineComponent[mobid][mine_status] = MINE_STATUS_ACTIVE;
@@ -471,7 +471,7 @@ public RespawnDynamicMine(mobid){
 
 //Hook: OnPlayerShootDynamicObject
 public OnPlayerShootDynamicObject(playerid, weaponid, STREAMER_TAG_OBJECT objectid, Float:x, Float:y, Float:z){
-	new mobid = (Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
+	new mobid = (Streamer::GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mobid > 0 && mobid < MAX_MINES){
 		if(MineComponent[mobid][mine_status] == MINE_STATUS_ACTIVE && MineComponent[mobid][mine_objectid] == objectid && MineComponent[mobid][mine_playerid] != playerid){
 			if((MineComponent[mobid][mine_teamid] != GetPlayerTeam(playerid)) || (MineComponent[mobid][mine_teamid] == ANY_TEAM)){
@@ -509,7 +509,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, STREAMER_TAG_OBJECT object
 
 //Hook: OnPlayerEnterDynamicArea
 public OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA areaid){
-	new mobid = (Streamer_GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
+	new mobid = (Streamer::GetIntData(STREAMER_TYPE_AREA,areaid,E_STREAMER_EXTRA_ID)-MINE_EXTRA_ID_OFFSET);
 	if(mobid > 0 && mobid < MAX_MINES){
 		if(MineComponent[mobid][mine_status] == MINE_STATUS_ACTIVE && MineComponent[mobid][mine_areaid] == areaid && MineComponent[mobid][mine_playerid] != playerid){
 			new bool:tmp_det = false;

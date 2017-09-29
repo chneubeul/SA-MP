@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.4.3                                                                            *
+ * 3DTryg Version: 4.5.2                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * bool:IsPlayerUsingVehPara(playerid);                                                             *
@@ -44,11 +44,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40403)
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40502)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 //Language
@@ -157,7 +157,7 @@ public OnPlayerUpdate(playerid){
 			static T3D:vid, Float:T3D:rx, Float:T3D:ry, Float:T3D:rz, Float:T3D:tx, Float:T3D:ty, Float:T3D:tz;
 			T3D:vid = GetPlayerVehicleID(playerid);
 			T3D:tx = T3D:ty = 0.0;
-			GetVehicleRotation(T3D:vid,T3D:rx,T3D:ry,T3D:rz);
+			Tryg3D::GetVehicleRotation(T3D:vid,T3D:rx,T3D:ry,T3D:rz);
 			ShiftVectorRotation((DeCompRotationFloat(T3D:ry)/180.0),(DeCompRotationFloat(-T3D:rx)/180.0),0.0,0.0,0.0,T3D:rz,T3D:tx,T3D:ty,T3D:tz);
 			SetVehicleVelocity(T3D:vid,(T3D:tx/10.0),(T3D:ty/10.0),-0.2);
 		}

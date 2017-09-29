@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7                                                                                                            *
  * Streamer Version: 2.9.1                                                                                                         *
  * MapAndreas Version: 1.2.1                                                                                                       *
- * 3DTryg Version: 4.4.3                                                                                                           *
+ * 3DTryg Version: 4.5.2                                                                                                           *
  *                                                                                                                                 *
  * Include created for the project Next Generation City Mod http://ngc.ct8.pl                                                      *
  *                                                                                                                                 *
@@ -71,11 +71,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40403)
-	#error [ADM] Update you 3DTryg.inc to v4.4.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40502)
+	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #if defined _NOX_ENGINE_X
@@ -106,8 +106,8 @@ forward OnEngineXInit();
 forward OnEngineXExit();
 
 public OnEngineXInit(){
-	SafeMapAndreasInit();
-	if(!IsMapAndreasInit()){
+	Tryg3D::SafeMapAndreasInit();
+	if(!Tryg3D::IsMapAndreasInit()){
 		if(GetSVarInt("ADM:Logging:Disable") == 0){
 			printf("[ADM] Error: Invalid MapAndreas Memory.");
 			printf("[ADM] Error: NGCM Mob Move Engine System %s not loaded.",NOX_VERSION);
@@ -402,7 +402,7 @@ stock EngineX(objectid,areaid,EngineX:engineid,minradius,maxradius,Float:minz,Fl
 					new Float:tmpz;
 					MapAndreasFindZ(F5[tX],F5[tY],tmpz);
 					if(tmpz > 0.0){
-						Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,randRZ);
+						Streamer::SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,randRZ);
 						MoveDynamicObject(objectid,F5[tX],F5[tY],F5[tZ],speed,0.0,0.0,randRZ);
 					}
 				}
@@ -435,10 +435,10 @@ stock EngineExcavatorUpdate(objectid,areaid,EngineX:engineid,Float:speed){
 		case ENGINE_EXCAVATOR: {
 			if(IsDynamicObjectMoving(objectid)){
 				new randRZ;
-				Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,F5[tX]);
-				Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,F5[tY]);
-				Streamer_GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,F5[tZ]);
-				randRZ = Streamer_GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID);
+				Streamer::GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_X,F5[tX]);
+				Streamer::GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Y,F5[tY]);
+				Streamer::GetFloatData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_MOVE_Z,F5[tZ]);
+				randRZ = Streamer::GetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID);
 				if((IsPointInDynamicArea(areaid,F5[tX],F5[tY],F5[tZ])) && (IsValidDynamicObject(objectid))){
 					GetDynamicObjectPos(objectid,F5[X],F5[Y],F5[Z]);
 					MapAndreasFindZ(F5[X],F5[Y],F5[Z]);
@@ -500,7 +500,7 @@ stock DeltaEngineRotation(objectid,EngineX:engineid,Float:speed = 0.050){
 		/*
 		//Invalid
 		case ENGINE_EXCAVATOR: {
-			Streamer_SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,floatround(F5[rZ]));
+			Streamer::SetIntData(STREAMER_TYPE_OBJECT,objectid,E_STREAMER_EXTRA_ID,floatround(F5[rZ]));
 			MoveDynamicObject(objectid,F5[X],F5[Y],F5[Z],speed,0.0,0.0,F5[rZ]-180.0);
 		}
 		*/
