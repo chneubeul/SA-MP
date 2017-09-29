@@ -4,27 +4,27 @@
  *                                                                                                  *
  * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
- * Pack Version: 2017_FSE_13                                                                        *
+ * Pack Version: 2017_FSE_17                                                                        *
  * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  ****************************************************************************************************/
 
-#include "SAM/ADM_Guard.inc"        //not published
-#include "SAM/StreamerFunction.inc" //http://forum.sa-mp.com/showthread.php?t=590918
-#include "SAM/BitFunctions.inc"     //http://forum.sa-mp.com/showthread.php?t=591223
-#include "SAM/RGB.inc"              //http://forum.sa-mp.com/showthread.php?t=590770
-#include "SAM/FoxForeach.inc"       //http://forum.sa-mp.com/showthread.php?t=611175
-#include "SAM/3DTryg.inc"           //http://forum.sa-mp.com/showthread.php?t=591010
-#include "SAM/LY.inc"               //http://forum.sa-mp.com/showthread.php?t=598933
-#include "SAM/MD5.inc"              //not published
-#include "SAM/SHA256.inc"           //not published
-#include "SAM/ADM.inc"              //http://forum.sa-mp.com/showthread.php?t=595203
-#include "SAM/DataConvert.inc"      //http://forum.sa-mp.com/showthread.php?p=3719467
-#include "SAM/EVF.inc"              //http://forum.sa-mp.com/showthread.php?p=3727224
-#include "SAM/vnpc.inc"             //http://forum.sa-mp.com/showthread.php?t=632664
-#include "SAM/SOI.inc"				//not published
-#include "SAM/Logs.inc"             //not published
-#include "SAM/ATM.inc"              //not published
-#include "SAM/Zones.inc"            //not published
+#include "SAM/ADM_Guard.inc"
+#include "SAM/StreamerFunction.inc"
+#include "SAM/BitFunctions.inc"
+#include "SAM/RGB.inc"
+#include "SAM/FoxForeach.inc"
+#include "SAM/3DTryg.inc"
+#include "SAM/LY.inc"
+#include "SAM/MD5.inc"
+#include "SAM/SHA256.inc"
+#include "SAM/ADM.inc"
+#include "SAM/DataConvert.inc"
+#include "SAM/EVF.inc"
+#include "SAM/vnpc.inc"
+#include "SAM/SOI.inc"
+#include "SAM/Logs.inc"
+#include "SAM/ATM.inc"
+#include "SAM/Zones.inc"
 
 //EOF
