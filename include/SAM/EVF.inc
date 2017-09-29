@@ -1516,7 +1516,8 @@ EVF::Function:: ResetVehicleProperties(vehicleid){
 EVF::Function:: GetComponentName(componentid,name[],len = sizeof(name)){
 	if(MIN_VEHICLE_COMPONENT_ID <= componentid <= MAX_VEHICLE_COMPONENT_ID){
 		componentid -= MIN_VEHICLE_COMPONENT_ID;
-		return format(name,len,"%s",EVF::ComponentNames[componentid]);
+		format(name,len,"%s",EVF::ComponentNames[componentid]);
+		return 1;
 	}
 	name[0] = '\0';
 	return 0;
