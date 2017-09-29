@@ -25,5 +25,6 @@
 #include "SAM/SOI.inc"				//not published
 #include "SAM/Logs.inc"             //not published
 #include "SAM/ATM.inc"              //not published
+#include "SAM/Zones.inc"            //not published
 
 //EOF

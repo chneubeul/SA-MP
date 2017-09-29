@@ -1,3 +1,4 @@
+
 /*==============================================================================
 
 
@@ -6,7 +7,7 @@
 		A SA:MP UI library for rendering progress bars used to visualise all
 		manner of data from health to a countdown timer.
 
-		Library originally written by Fl√°vio Toribio: flavio_toribio@hotmail.com
+		Library originally written by Fl·vio Toribio: flavio_toribio@hotmail.com
 		Now maintained by Southclaw in version 2+ with new features.
 
 
