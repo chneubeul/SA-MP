@@ -93,6 +93,8 @@
  * EVF::IsPlayerInModShop(playerid);                                                                                              *
  * IsValidComponentForVehicle(vehicleid,componentid);                                                                             *
  * GetVehicleComponentPrice(componentid);                                                                                         *
+ * GetVehicleName(vehicleid);                                                                                                     *
+ * GetVehicleModelName(modelid);                                                                                                  *
  *                                                                                                                                *
  * Remote functions:                                                                                                              *
  * EVF_ImportVehicle(vehicleid,modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,worldid,interiorid,unoccupied_damage);   *
