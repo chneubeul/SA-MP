@@ -341,8 +341,8 @@
 #define GetVehicleConfigBit(%0)					((%0) % 32)
 
 //BitFunctions.inc
-#define VM_GetValueBit(%0,%1)					((%0) >>> (%1) & 0x01)
-#define VM_SetValueBit(%0,%1,%2)				((%0) = (((%0) & ~(0x01 << (%1))) | ((0x01 << (%1))*(%2))))
+#define VMC_GetValueBit(%0,%1)					((%0) >>> (%1) & 0x01)
+#define VMC_SetValueBit(%0,%1,%2)				((%0) = (((%0) & ~(0x01 << (%1))) | ((0x01 << (%1))*(%2))))
 
 new VehicleConfigMiniMissile[63],
 	VehicleConfigHeavyMissile[63],
@@ -381,8 +381,8 @@ new VehicleConfigMiniMissile[63],
 	bool:VehicleMissileAutoDisarm = false;
 
 
-#define IsToggleVehicleMiniMissile(%0)			VM_GetValueBit(VehicleConfigMiniMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define ToggleVehicleMiniMissile(%0,%1)			VM_SetValueBit(VehicleConfigMiniMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define IsToggleVehicleMiniMissile(%0)			VMC_GetValueBit(VehicleConfigMiniMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleMiniMissile(%0,%1)			VMC_SetValueBit(VehicleConfigMiniMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 #define GetVehicleMiniMissileSpeed(%0)			VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_MINI]
 #define SetVehicleMiniMissileSpeed(%0,%1)		VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_MINI] = (%1)
 #define GetVehicleMiniMissileReload(%0)			VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_MINI]
@@ -396,8 +396,8 @@ new VehicleConfigMiniMissile[63],
 #define GetVehicleMiniMissileVehDMG(%0)			VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_MINI]
 #define SetVehicleMiniMissileVehDMG(%0,%1)		VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_MINI] = (%1)
 
-#define IsToggleVehicleHeavyMissile(%0)			VM_GetValueBit(VehicleConfigHeavyMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define ToggleVehicleHeavyMissile(%0,%1)		VM_SetValueBit(VehicleConfigHeavyMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define IsToggleVehicleHeavyMissile(%0)			VMC_GetValueBit(VehicleConfigHeavyMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleHeavyMissile(%0,%1)		VMC_SetValueBit(VehicleConfigHeavyMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 #define GetVehicleHeavyMissileSpeed(%0)			VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
 #define SetVehicleHeavyMissileSpeed(%0,%1)		VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
 #define GetVehicleHeavyMissileReload(%0)		VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
@@ -411,8 +411,8 @@ new VehicleConfigMiniMissile[63],
 #define GetVehicleHeavyMissileVehDMG(%0)		VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_HEAVY]
 #define SetVehicleHeavyMissileVehDMG(%0,%1)		VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_HEAVY] = (%1)
 
-#define IsToggleVehicleBomberMissile(%0)		VM_GetValueBit(VehicleConfigBomberMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define ToggleVehicleBomberMissile(%0,%1)		VM_SetValueBit(VehicleConfigBomberMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define IsToggleVehicleBomberMissile(%0)		VMC_GetValueBit(VehicleConfigBomberMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleBomberMissile(%0,%1)		VMC_SetValueBit(VehicleConfigBomberMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 #define GetVehicleBomberMissileSpeed(%0)		VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
 #define SetVehicleBomberMissileSpeed(%0,%1)		VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
 #define GetVehicleBomberMissileReload(%0)		VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
@@ -426,8 +426,8 @@ new VehicleConfigMiniMissile[63],
 #define GetVehicleBomberMissileVehDMG(%0)		VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_BOMBER]
 #define SetVehicleBomberMissileVehDMG(%0,%1)	VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_BOMBER] = (%1)
 
-#define IsToggleVehicleRhinoMissile(%0)			VM_GetValueBit(VehicleConfigRhinoMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define ToggleVehicleRhinoMissile(%0,%1)		VM_SetValueBit(VehicleConfigRhinoMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define IsToggleVehicleRhinoMissile(%0)			VMC_GetValueBit(VehicleConfigRhinoMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleRhinoMissile(%0,%1)		VMC_SetValueBit(VehicleConfigRhinoMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 #define GetVehicleRhinoMissileReload(%0)		VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
 #define SetVehicleRhinoMissileReload(%0,%1)		VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
 #define GetVehicleRhinoMissileDistance(%0)		VMC::Distance[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
@@ -439,8 +439,8 @@ new VehicleConfigMiniMissile[63],
 #define GetVehicleRhinoMissileVehDMG(%0)		VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_RHINO]
 #define SetVehicleRhinoMissileVehDMG(%0,%1)		VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_RHINO] = (%1)
 
-#define IsToggleVehicleMortarMissile(%0)		VM_GetValueBit(VehicleConfigMortarMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define ToggleVehicleMortarMissile(%0,%1)		VM_SetValueBit(VehicleConfigMortarMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define IsToggleVehicleMortarMissile(%0)		VMC_GetValueBit(VehicleConfigMortarMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleMortarMissile(%0,%1)		VMC_SetValueBit(VehicleConfigMortarMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 #define GetVehicleMortarMissileSpeed(%0)		VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
 #define SetVehicleMortarMissileSpeed(%0,%1)		VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
 #define GetVehicleMortarMissileReload(%0)		VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
@@ -457,11 +457,11 @@ new VehicleConfigMiniMissile[63],
 #define SetVehicleMortarMissileDMG(%0,%1)		VMC::Damage[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
 #define GetVehicleMortarMissileVehDMG(%0)		VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_MORTAR]
 #define SetVehicleMortarMissileVehDMG(%0,%1)	VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_MORTAR] = (%1)
-#define GetVehicleMortarMissileAimSys(%0)		VM_GetValueBit(VehicleMortarTargeting[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define SetVehicleMortarMissileAimSys(%0,%1)	VM_SetValueBit(VehicleMortarTargeting[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define GetVehicleMortarMissileAimSys(%0)		VMC_GetValueBit(VehicleMortarTargeting[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define SetVehicleMortarMissileAimSys(%0,%1)	VMC_SetValueBit(VehicleMortarTargeting[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 
-#define IsToggleVehicleMegaMissile(%0)			VM_GetValueBit(VehicleConfigMegaMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define ToggleVehicleMegaMissile(%0,%1)			VM_SetValueBit(VehicleConfigMegaMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define IsToggleVehicleMegaMissile(%0)			VMC_GetValueBit(VehicleConfigMegaMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleMegaMissile(%0,%1)			VMC_SetValueBit(VehicleConfigMegaMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 #define GetVehicleMegaMissileSpeed(%0)			VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_MEGA]
 #define SetVehicleMegaMissileSpeed(%0,%1)		VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_MEGA] = (%1)
 #define GetVehicleMegaMissileReload(%0)			VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_MEGA]
@@ -478,11 +478,11 @@ new VehicleConfigMiniMissile[63],
 #define SetVehicleMegaMissileDMG(%0,%1)			VMC::Damage[(%0)][VEHICLE_MISSILE_TYPE_MEGA] = (%1)
 #define GetVehicleMegaMissileVehDMG(%0)			VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_MEGA]
 #define SetVehicleMegaMissileVehDMG(%0,%1)		VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_MEGA] = (%1)
-#define GetVehicleMegaMissileAimSys(%0)			VM_GetValueBit(VehicleMegaTargeting[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define SetVehicleMegaMissileAimSys(%0,%1)		VM_SetValueBit(VehicleMegaTargeting[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define GetVehicleMegaMissileAimSys(%0)			VMC_GetValueBit(VehicleMegaTargeting[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define SetVehicleMegaMissileAimSys(%0,%1)		VMC_SetValueBit(VehicleMegaTargeting[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 
-#define IsToggleVehicleCongreve(%0)				VM_GetValueBit(VehicleConfigCongreveMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define ToggleVehicleCongreve(%0,%1)			VM_SetValueBit(VehicleConfigCongreveMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define IsToggleVehicleCongreve(%0)				VMC_GetValueBit(VehicleConfigCongreveMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleCongreve(%0,%1)			VMC_SetValueBit(VehicleConfigCongreveMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 #define GetVehicleCongreveSpeed(%0)				VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_CON]
 #define SetVehicleCongreveSpeed(%0,%1)			VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_CON] = (%1)
 #define GetVehicleCongreveReload(%0)			VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_CON]
@@ -500,8 +500,8 @@ new VehicleConfigMiniMissile[63],
 #define GetVehicleCongreveVehDMG(%0)			VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_CON]
 #define SetVehicleCongreveVehDMG(%0,%1)			VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_CON] = (%1)
 
-#define IsToggleVehicleHavoc(%0)				VM_GetValueBit(VehicleConfigHavocMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define ToggleVehicleHavoc(%0,%1)				VM_SetValueBit(VehicleConfigHavocMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define IsToggleVehicleHavoc(%0)				VMC_GetValueBit(VehicleConfigHavocMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleHavoc(%0,%1)				VMC_SetValueBit(VehicleConfigHavocMissile[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 #define GetVehicleHavocSpeed(%0)				VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_HAVOC]
 #define SetVehicleHavocSpeed(%0,%1)				VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_HAVOC] = (%1)
 #define GetVehicleHavocReload(%0)				VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_HAVOC]
@@ -519,8 +519,8 @@ new VehicleConfigMiniMissile[63],
 #define GetVehicleHavocVehDMG(%0)				VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_HAVOC]
 #define SetVehicleHavocVehDMG(%0,%1)			VMC::VehDamage[(%0)][VEHICLE_MISSILE_TYPE_HAVOC] = (%1)
 
-#define IsToggleVehicleGroundBomb(%0)			VM_GetValueBit(VehicleConfigGroundBomb[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
-#define ToggleVehicleGroundBomb(%0,%1)			VM_SetValueBit(VehicleConfigGroundBomb[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
+#define IsToggleVehicleGroundBomb(%0)			VMC_GetValueBit(VehicleConfigGroundBomb[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0))
+#define ToggleVehicleGroundBomb(%0,%1)			VMC_SetValueBit(VehicleConfigGroundBomb[GetVehicleConfigAddress(%0)],GetVehicleConfigBit(%0),(%1))
 #define GetVehicleGroundBombSpeed(%0)			VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_BOMB]
 #define SetVehicleGroundBombSpeed(%0,%1)		VMC::Speed[(%0)][VEHICLE_MISSILE_TYPE_BOMB] = (%1)
 #define GetVehicleGroundBombReload(%0)			VMC::Reload[(%0)][VEHICLE_MISSILE_TYPE_BOMB]
@@ -1109,8 +1109,8 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 			}
 		}
 	}
-	#if defined VM_OnPlayerKeyStateChange
-		VM_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
+	#if defined VMC_OnPlayerKeyStateChange
+		VMC_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 	#endif
 	return 1;
 }
@@ -1120,9 +1120,9 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 #else
 	#define _ALS_OnPlayerKeyStateChange
 #endif
-#define OnPlayerKeyStateChange VM_OnPlayerKeyStateChange
-#if defined VM_OnPlayerKeyStateChange
-	forward VM_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
+#define OnPlayerKeyStateChange VMC_OnPlayerKeyStateChange
+#if defined VMC_OnPlayerKeyStateChange
+	forward VMC_OnPlayerKeyStateChange(playerid,newkeys,oldkeys);
 #endif
 
 new bool:CRC_VehicleMissileInit = true;
@@ -1133,8 +1133,8 @@ public OnFilterScriptInit(){
 		CRC_VehicleMissileInit = false;
 		OnVehicleMissileInit();
 	}
-	#if defined VM_OnFilterScriptInit
-		VM_OnFilterScriptInit();
+	#if defined VMC_OnFilterScriptInit
+		VMC_OnFilterScriptInit();
 	#endif
 	return 1;
 }
@@ -1144,9 +1144,9 @@ public OnFilterScriptInit(){
 #else
 	#define _ALS_OnFilterScriptInit
 #endif
-#define OnFilterScriptInit VM_OnFilterScriptInit
-#if defined VM_OnFilterScriptInit
-	forward VM_OnFilterScriptInit();
+#define OnFilterScriptInit VMC_OnFilterScriptInit
+#if defined VMC_OnFilterScriptInit
+	forward VMC_OnFilterScriptInit();
 #endif
 
 //Hook: OnGameModeInit
@@ -1155,8 +1155,8 @@ public OnGameModeInit(){
 		CRC_VehicleMissileInit = false;
 		OnVehicleMissileInit();
 	}
-	#if defined VM_OnGameModeInit
-		VM_OnGameModeInit();
+	#if defined VMC_OnGameModeInit
+		VMC_OnGameModeInit();
 	#endif
 	return 1;
 }
@@ -1166,13 +1166,13 @@ public OnGameModeInit(){
 #else
 	#define _ALS_OnGameModeInit
 #endif
-#define OnGameModeInit VM_OnGameModeInit
-#if defined VM_OnGameModeInit
-	forward VM_OnGameModeInit();
+#define OnGameModeInit VMC_OnGameModeInit
+#if defined VMC_OnGameModeInit
+	forward VMC_OnGameModeInit();
 #endif
 
 //Hook: CreateVehicle
-stock VM_CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,respawn_delay,addsiren=0){
+stock VMC_CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,respawn_delay,addsiren=0){
 	new vehicleid = CreateVehicle(modelid,x,y,z,angle,color1,color2,respawn_delay,addsiren);
 	if(IsToggleMissileAutoDisarm()){
 		DisarmVehicleMissile(vehicleid);
@@ -1186,10 +1186,10 @@ stock VM_CreateVehicle(modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2
 #else
 	#define _ALS_CreateVehicle
 #endif
-#define CreateVehicle VM_CreateVehicle
+#define CreateVehicle VMC_CreateVehicle
  
 //Hook: AddStaticVehicle
-stock VM_AddStaticVehicle(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Float:angle,color1,color2){
+stock VMC_AddStaticVehicle(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Float:angle,color1,color2){
 	new vehicleid = AddStaticVehicle(modelid,spawn_x,spawn_y,spawn_z,angle,color1,color2);
 	if(IsToggleMissileAutoDisarm()){
 		DisarmVehicleMissile(vehicleid);
@@ -1203,10 +1203,10 @@ stock VM_AddStaticVehicle(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Floa
 #else
 	#define _ALS_AddStaticVehicle
 #endif
-#define AddStaticVehicle VM_AddStaticVehicle
+#define AddStaticVehicle VMC_AddStaticVehicle
  
 //Hook: AddStaticVehicleEx
-stock VM_AddStaticVehicleEx(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Float:angle,color1,color2,respawn_delay,addsiren=0){
+stock VMC_AddStaticVehicleEx(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Float:angle,color1,color2,respawn_delay,addsiren=0){
 	new vehicleid = AddStaticVehicleEx(modelid,spawn_x,spawn_y,spawn_z,angle,color1,color2,respawn_delay,addsiren);
 	if(IsToggleMissileAutoDisarm()){
 		DisarmVehicleMissile(vehicleid);
@@ -1220,10 +1220,10 @@ stock VM_AddStaticVehicleEx(modelid,Float:spawn_x,Float:spawn_y,Float:spawn_z,Fl
 #else
 	#define _ALS_AddStaticVehicleEx
 #endif
-#define AddStaticVehicleEx VM_AddStaticVehicleEx
+#define AddStaticVehicleEx VMC_AddStaticVehicleEx
  
 //Hook: DestroyVehicle
-stock VM_DestroyVehicle(vehicleid){
+stock VMC_DestroyVehicle(vehicleid){
 	if(IsToggleMissileAutoDisarm()){
 		DisarmVehicleMissile(vehicleid);
 		SetVehicleMissileDefaultConfig(vehicleid);
@@ -1236,10 +1236,10 @@ stock VM_DestroyVehicle(vehicleid){
 #else
 	#define _ALS_DestroyVehicle
 #endif
-#define DestroyVehicle VM_DestroyVehicle
+#define DestroyVehicle VMC_DestroyVehicle
 
 //Hook: PutPlayerInVehicle
-stock VM_PutPlayerInVehicle(playerid,vehicleid,seatid){
+stock VMC_PutPlayerInVehicle(playerid,vehicleid,seatid){
 	if(seatid == 0){
 		if(IsToggleMissileAutoDisarm()){
 			DisarmVehicleMissile(vehicleid);
@@ -1255,7 +1255,7 @@ stock VM_PutPlayerInVehicle(playerid,vehicleid,seatid){
 #else
     #define _ALS_PutPlayerInVehicle
 #endif
-#define PutPlayerInVehicle VM_PutPlayerInVehicle
+#define PutPlayerInVehicle VMC_PutPlayerInVehicle
 
 //Hook: OnPlayerEnterVehicle
 public OnPlayerEnterVehicle(playerid,vehicleid,ispassenger){
@@ -1266,8 +1266,8 @@ public OnPlayerEnterVehicle(playerid,vehicleid,ispassenger){
 		}
 		CallLocalFunction("OnVehicleArmed","dd",playerid,vehicleid);
 	}
-	#if defined VM_OnPlayerEnterVehicle
-		VM_OnPlayerEnterVehicle(playerid,vehicleid,ispassenger);
+	#if defined VMC_OnPlayerEnterVehicle
+		VMC_OnPlayerEnterVehicle(playerid,vehicleid,ispassenger);
 	#endif
 	return 1;
 }
@@ -1277,17 +1277,17 @@ public OnPlayerEnterVehicle(playerid,vehicleid,ispassenger){
 #else
 	#define _ALS_OnPlayerEnterVehicle
 #endif
-#define OnPlayerEnterVehicle VM_OnPlayerEnterVehicle
-#if defined VM_OnPlayerEnterVehicle
-	forward VM_OnPlayerEnterVehicle(playerid,vehicleid,ispassenger);
+#define OnPlayerEnterVehicle VMC_OnPlayerEnterVehicle
+#if defined VMC_OnPlayerEnterVehicle
+	forward VMC_OnPlayerEnterVehicle(playerid,vehicleid,ispassenger);
 #endif
 
 //Hook: OnPlayerClickMap
 public OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ){
 	VMC::Target[playerid][0] = fX;
 	VMC::Target[playerid][1] = fY;
-	#if defined VM_OnPlayerClickMap
-		VM_OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ);
+	#if defined VMC_OnPlayerClickMap
+		VMC_OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ);
 	#endif
 	return 1;
 }
@@ -1297,16 +1297,16 @@ public OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ){
 #else
 	#define _ALS_OnPlayerClickMap
 #endif
-#define OnPlayerClickMap VM_OnPlayerClickMap
-#if defined VM_OnPlayerClickMap
-	forward VM_OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ);
+#define OnPlayerClickMap VMC_OnPlayerClickMap
+#if defined VMC_OnPlayerClickMap
+	forward VMC_OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ);
 #endif
 
 //Hook: OnPlayerConnect
 public OnPlayerConnect(playerid){
 	VMC::Target[playerid][0] = VMC::Target[playerid][1] = 0.0;
-	#if defined VM_OnPlayerConnect
-		VM_OnPlayerConnect(playerid);
+	#if defined VMC_OnPlayerConnect
+		VMC_OnPlayerConnect(playerid);
 	#endif
 	return 1;
 }
@@ -1316,9 +1316,9 @@ public OnPlayerConnect(playerid){
 #else
 	#define _ALS_OnPlayerConnect
 #endif
-#define OnPlayerConnect VM_OnPlayerConnect
-#if defined VM_OnPlayerConnect
-	forward VM_OnPlayerConnect(playerid);
+#define OnPlayerConnect VMC_OnPlayerConnect
+#if defined VMC_OnPlayerConnect
+	forward VMC_OnPlayerConnect(playerid);
 #endif
 
 //EOF
