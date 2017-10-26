@@ -639,7 +639,7 @@ T3D:function Hunting::OnUpdate(){
 					if(GetDistanceBetweenPoints2D(Hunting::Data[mobid][Hunting::tX],Hunting::Data[mobid][Hunting::tY],x,y) == 0.0){
 						for(;;){
 							vx = vy = vz = 0.0;
-							GetRandomPointInCircle(x,y,25.0,tx,ty);
+							GetRandomPointInCircle(x,y,RandomFloat(5.0,25.0),tx,ty);
 							if(!MovePointColCutLineEx(x,y,z+1.0,tx,ty,z+1.0,vx,vy,vz,3.0)) continue;
 							if(GetDistanceBetweenPoints2D(x,y,vx,vy) <= 2.0) continue;
 							if(IsPointInWater(vx,vy,vz)) continue;
