@@ -19,6 +19,7 @@
 #include "SAM/MD5.inc"
 #include "SAM/SHA256.inc"
 #include "SAM/ADM.inc"
+#include "SAM/SWAP.inc"
 #include "SAM/DataConvert.inc"
 #include "SAM/EVF.inc"
 #include "SAM/vnpc.inc"

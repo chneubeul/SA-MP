@@ -20,6 +20,9 @@
 │   ├───ADM
 │   │   ├───MD5
 │   │   └───SScanf
+│   ├───SWAP
+│   ├───ADM_Guard
+│   ├───SOI
 │   ├───ATM
 │   ├───BitFunctions
 │   ├───DataConvert
@@ -31,6 +34,7 @@
 │   ├───StreamerFunction
 │   │   └───Streamer
 │   ├───EVF
+│   ├───Zones
 │   └───vnpc
 │       └───YSF
 ├───engine
