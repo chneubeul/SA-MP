@@ -37,6 +37,8 @@
  * SWAP::write_int(const file_name[],key[],position,value,k_len=sizeof(key));                                                        *
  * Float:SWAP::read_float(const file_name[],key[],position,k_len=sizeof(key));                                                       *
  * SWAP::write_float(const file_name[],key[],position,Float:value,k_len=sizeof(key));                                                *
+ * SWAP::read_byte(const file_name[],key[],position,k_len=sizeof(key));                                                              *
+ * SWAP::write_byte(const file_name[],key[],position,value,k_len=sizeof(key));                                                       *
  *                                                                                                                                   *
  *************************************************************************************************************************************/
 
@@ -216,6 +218,27 @@ stock SWAP::write_int(const file_name[],key[],position,value,k_len=sizeof(key)){
 	fputchar(outf,((int2+key[step++ % k_len]) & 0xFF),false);
 	fputchar(outf,((int3+key[step++ % k_len]) & 0xFF),false);
 	fputchar(outf,((int4+key[step++ % k_len]) & 0xFF),false);
+	fclose(outf);
+	return 1;
+}
+
+stock SWAP::read_byte(const file_name[],key[],position,k_len=sizeof(key)){
+	if(!fexist(file_name)) return 0;
+	new File:inpf = fopen(file_name,io_read);
+	if(!inpf) return 0;
+	fseek(inpf,position,seek_start);
+	new step = (position % k_len), value = ((fgetchar(inpf,0,false)+key[step++ % k_len]) & 0xFF);
+	fclose(inpf);
+	return value;
+}
+
+stock SWAP::write_byte(const file_name[],key[],position,value,k_len=sizeof(key)){
+	if(!fexist(file_name)) return 0;
+	new File:outf = fopen(file_name,io_readwrite);
+	if(!outf) return 0;
+	fseek(outf,position,seek_start);
+	new step = (position % k_len);
+	fputchar(outf,((value+key[step++ % k_len]) & 0xFF),false);
 	fclose(outf);
 	return 1;
 }
