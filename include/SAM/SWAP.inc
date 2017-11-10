@@ -22,11 +22,11 @@
  * Integer - 4 bytes integer value                                                                                                   *
  *                                                                                                                                   *
  * Functions:                                                                                                                        *
- * SWAP::create_empty(const name[]);                   //create new empty file (not recommended)                                     *
- * SWAP::create_block(const name[],size);              //create block for empty file (not recommended, big fragmentation)            *
- * SWAP::reserve(const name[],size);                   //reserve new SWAP file size (recommended)                                    *
+ * SWAP::create_empty(const name[]);                       //create new empty file (not recommended)                                 *
+ * SWAP::create_block(const name[],size);                  //create block for empty file (not recommended, big fragmentation)        *
+ * SWAP::reserve(const name[],size);                       //reserve new SWAP file size (recommended)                                *
  * SWAP::format(const name[],key[][],k_len=sizeof(key[])); //format new SWAP file (use after SWAP::reserve, not recommended)         *
- * SWAP::format_random(const name[]);                  //format new SWAP file (use after SWAP::reserve, recommended)                 *
+ * SWAP::format_random(const name[]);                      //format new SWAP file (use after SWAP::reserve, recommended)             *
  * SWAP::decrypt_file(const input[],const output[],key[][],k_len=sizeof(key[]));                                                     *
  * SWAP::read_string(const name[],key[][],position,text[],len,k_len=sizeof(key[]));                                                  *
  * SWAP::write_string(const name[],key[][],position,text[],max_dest=sizeof(text),k_len=sizeof(key[]));                               *
@@ -35,7 +35,7 @@
  * SWAP::write_block(const name[],key[][],position,text[],max_dest=sizeof(text),k_len=sizeof(key[]));                                *
  * SWAP::read_int(const name[],key[][],position,k_len=sizeof(key[]));                                                                *
  * SWAP::write_int(const name[],key[][],position,value,k_len=sizeof(key[]));                                                         *
- * Float:SWAP::read_float(const name[],key[][],position,k_len=sizeof(key[]));                                                        *
+ * SWAP::read_float(const name[],key[][],position,k_len=sizeof(key[]));                                                              *
  * SWAP::write_float(const name[],key[][],position,Float:value,k_len=sizeof(key[]));                                                 *
  * SWAP::read_byte(const name[],key[][],position,k_len=sizeof(key[]));                                                               *
  * SWAP::write_byte(const name[],key[][],position,value,k_len=sizeof(key[]));                                                        *
