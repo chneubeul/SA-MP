@@ -1,12 +1,9 @@
-/*  SA-MP Functions
- *
- *  (c) Copyright 2005-2015, SA-MP Team
- *
- */
-
-/*******************
- * SAMP 0.3.7 R2-1 *
- *******************/
+/*****************************************************
+ *                                                   *
+ * Copyright © 2017 SA-MP Team. All rights reserved. *
+ * SAMP Version: 0.3.8 R1                            *
+ *                                                   *
+ *****************************************************/
 
 #if defined _samp_included
 	#endinput
@@ -58,10 +55,6 @@
 // --------------------------------------------------
 // Natives
 // --------------------------------------------------
-
-#if !defined gpci
-	native gpci(playerid, serial[], len);
-#endif
 
 // Util
 native print(const string[]);
@@ -159,6 +152,7 @@ native GetNetworkStats(retstr[], retstr_size);
 native GetPlayerVersion(playerid, const version[], len); // Returns the SA-MP client revision as reported by the player
 native BlockIpAddress(ip_address[], timems);
 native UnBlockIpAddress(ip_address[]);
+native gpci(playerid, serial[], len);
 
 // Deprecated:
 native GetServerVarAsString(const varname[], buffer[], len);
@@ -419,6 +413,7 @@ forward OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid);
 forward OnIncomingConnection(playerid, ip_address[], port);
 forward OnTrailerUpdate(playerid, vehicleid);
 forward OnVehicleSirenStateChange(playerid, vehicleid, newstate);
+forward OnPlayerFinishedDownloading(playerid, virtualworld);
 
 #define CLICK_SOURCE_SCOREBOARD			0
 forward OnPlayerClickPlayer(playerid, clickedplayerid, source);

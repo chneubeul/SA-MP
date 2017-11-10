@@ -1,8 +1,9 @@
-/*  SA-MP Object Functions
- *
- *  (c) Copyright 2005-2015, SA-MP Team
- *
- */
+/*****************************************************
+ *                                                   *
+ * Copyright © 2017 SA-MP Team. All rights reserved. *
+ * SAMP Version: 0.3.8 R1                            *
+ *                                                   *
+ *****************************************************/
 
 #if defined _objects_included
 	#endinput

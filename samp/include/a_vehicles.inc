@@ -1,12 +1,9 @@
-/*  SA-MP Vehicle Functions
- *
- *  (c) Copyright 2005-2012, SA-MP Team
- *
- */
-
-/*******************
- * SAMP 0.3.7 R2-1 *
- *******************/
+/*****************************************************
+ *                                                   *
+ * Copyright © 2017 SA-MP Team. All rights reserved. *
+ * SAMP Version: 0.3.8 R1                            *
+ *                                                   *
+ *****************************************************/
  
 #if defined _vehicles_included
 	#endinput
