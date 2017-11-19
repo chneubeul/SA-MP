@@ -1,7 +1,7 @@
 /*****************************************************
  *                                                   *
  * Copyright © 2017 SA-MP Team. All rights reserved. *
- * SAMP Version: 0.3.8 R1                            *
+ * SAMP Version: 0.3.8 RC2                           *
  *                                                   *
  *****************************************************/
 
@@ -37,7 +37,7 @@
 #define INVALID_VEHICLE_ID						(0xFFFF)
 #define INVALID_ACTOR_ID						(0xFFFF)
 #define NO_TEAM									(255)
-#define MAX_OBJECTS								(1000)
+#define MAX_OBJECTS								(2000)
 #define INVALID_OBJECT_ID						(0xFFFF)
 #define MAX_GANG_ZONES							(1024)
 #define MAX_TEXT_DRAWS							(2048)
@@ -140,6 +140,11 @@ native LimitPlayerMarkerRadius(Float:marker_radius);
 // Npc
 native ConnectNPC(name[], script[]);
 native IsPlayerNPC(playerid);
+
+// Artwork/NetModels
+native AddCharModel(baseid, newid, dffname[], txdname[]);
+native AddSimpleModel(virtualworld, baseid, newid, dffname[], txdname[]);
+native AddSimpleModelTimed(virtualworld, baseid, newid, dffname[], txdname[], timeon, timeoff);
 
 // Admin
 native IsPlayerAdmin(playerid);
