@@ -13,7 +13,7 @@
  *                                                                                                                                         *
  * File Version: 2.8.1                                                                                                                     *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                          *
- * Streamer Version: 2.9.1                                                                                                                 *
+ * Streamer Version: 2.9.2                                                                                                                 *
  *                                                                                                                                         *
  * Compiler Options:                                                                                                                       *
  * DISABLE_STREAMER_SPEC_CHECK  //Turn off check streamer version                                                                          *
@@ -397,7 +397,7 @@
 #endif
 
 #if ((!defined Streamer_AppendArrayData) || (!defined INVALID_STREAMER_ID) || (!defined STREAMER_TYPE_ACTOR))
-	#error [ADM] You need Streamer v2.9.1 (github.com/samp-incognito/samp-streamer-plugin/releases)
+	#error [ADM] You need Streamer v2.9.2 (github.com/samp-incognito/samp-streamer-plugin/releases)
 #endif
 
 #if defined STREAMER_TYPE_VEHICLE
@@ -406,7 +406,7 @@
 
 #define Streamer_Spec_Version 					(20801) //a.b.c 10000*a+100*b+c
 #define Streamer_Spec_SAMP_Version				"0.3.7"
-#define Valid_Streamer_Version 					(0x291)
+#define Valid_Streamer_Version 					(0x292)
 
 //Update Checker
 #if !defined HTTP

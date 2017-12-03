@@ -1,7 +1,7 @@
 /*****************************************************
  *                                                   *
  * Copyright © 2017 SA-MP Team. All rights reserved. *
- * SAMP Version: 0.3.8 RC2                           *
+ * SAMP Version: 0.3.8 RC4                           *
  *                                                   *
  *****************************************************/
 
@@ -90,6 +90,7 @@ native SetPlayerColor(playerid,color);
 native GetPlayerColor(playerid);
 native SetPlayerSkin(playerid, skinid);
 native GetPlayerSkin(playerid);
+native GetPlayerCustomSkin(playerid);
 native GivePlayerWeapon(playerid, weaponid, ammo);
 native ResetPlayerWeapons(playerid);
 native SetPlayerArmedWeapon(playerid, weaponid);

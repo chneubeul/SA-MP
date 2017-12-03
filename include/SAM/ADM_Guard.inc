@@ -110,8 +110,8 @@ ADMG::Function:: ADMG::GetPlayerIP(playerid){
 }
 
 //Hook: GetPlayerHealth
-ADMG::Function:: Float:ADMG::GetPlayerHealth(playerid){
-	return ADMG::health[playerid];
+ADMG::Function:: ADMG::GetPlayerHealth(playerid,&Float:health){
+	health = ADMG::health[playerid];
 }
 
 #if defined _ALS_GetPlayerHealth
@@ -136,8 +136,8 @@ ADMG::Function:: ADMG::SetPlayerHealth(playerid,Float:health){
 #define SetPlayerHealth ADMG::SetPlayerHealth
 
 //Hook: GetPlayerArmour
-ADMG::Function:: Float:ADMG::GetPlayerArmour(playerid){
-	return ADMG::armour[playerid];
+ADMG::Function:: ADMG::GetPlayerArmour(playerid,&Float:armour){
+	armour = ADMG::armour[playerid];
 }
 
 #if defined _ALS_GetPlayerArmour

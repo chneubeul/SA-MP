@@ -54,7 +54,7 @@
  * Float:fabs(Float:value);
  * power(value,Float:exponent);
  * IsEven(value);
- * Float:Tryg3D::RandomFloat(Float:min,Float:max,accuracy=4);
+ * Tryg3D::RandomFloat(Float:min,Float:max,accuracy=4);
  * 
  * //Internal Functions:
  * single_clock(max,id); //For GetRandomPointOnClock parameter rz
@@ -295,7 +295,7 @@
  * Tryg3D::GetErrorCount();
  * Tryg3D::ResetErrorCount();
  * Tryg3D::SetStreamDistance(Float:streamdistance); //default 300.0
- * Float:Tryg3D::GetStreamDistance();
+ * Tryg3D::GetStreamDistance();
  * Tryg3D::GetActiveCount();
  * Tryg3D::GetVersion(value);
  * 
@@ -318,11 +318,11 @@
  * Tryg3D::KeyHolding(key);
  * Tryg3D::GetSAMIncludeVersion(value,name[],maxdest=sizeof(name));
  * Tryg3D::DisableADMLogging(bool:disable);
- * Tryg3D::SecToTimeDay(second); //Use: %d:%02d:%02d:%02d
- * Tryg3D::MSToTimeDay(millisecond); //Use: %d:%02d:%02d:%02d
- * Tryg3D::SecToTime(second); //Use: %02d:%02d:%02d
- * Tryg3D::MSToTime(millisecond); //Use: %02d:%02d:%02d
- * Tryg3D::SecToTimeMini(second); //Use: %02d:%02d
+ * Tryg3D::SecToTimeDay(second);      //Use: %d:%02d:%02d:%02d
+ * Tryg3D::MSToTimeDay(millisecond);  //Use: %d:%02d:%02d:%02d
+ * Tryg3D::SecToTime(second);         //Use: %02d:%02d:%02d
+ * Tryg3D::MSToTime(millisecond);     //Use: %02d:%02d:%02d
+ * Tryg3D::SecToTimeMini(second);     //Use: %02d:%02d
  * Tryg3D::MSToTimeMini(millisecond); //Use: %02d:%02d
  * 
  * //Streamer Functions:
@@ -397,17 +397,17 @@
  * GetRandomPointInPlayerGangZone(playerid,zoneid,&Float:tx,&Float:ty);
  * 
  * //FCNPC Functions:
- * Float:FCNPC::GetPointInFront(npcid,&Float:tx,&Float:ty,Float:radius);
+ * FCNPC::GetPointInFront(npcid,&Float:tx,&Float:ty,Float:radius);
  * FCNPC::InRangeOfPoint(npcid,Float:range,Float:x,Float:y,Float:z);
- * Float:FCNPC::GetSpeed(npcid);
- * Float:FCNPC::GetTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0);
- * Float:FCNPC::SetTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0);
+ * FCNPC::GetSpeed(npcid);
+ * FCNPC::GetTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0);
+ * FCNPC::SetTargetAngle(npcid,Float:x,Float:y,&Float:rz=0.0);
  * FCNPC::SetVehicleRotation(npcid,Float:rx,Float:ry,Float:rz);
  * FCNPC::SetVehicleTargetRotation(npcid,Float:tx,Float:ty,Float:tz,Float:ry=0.0);
  * FCNPC::GoToAir(npcid,Float:x,Float:y,Float:z,type=FCNPC_MOVE_TYPE_AUTO,Float:speed=FCNPC_MOVE_SPEED_AUTO,Float:dist_offset=0.0,stopdelay=250);
  * 
  * //FCNPC Functions (ColAndreas):
- * Float:FCNPC::GetPointInFrontCol(npcid,&Float:tx,&Float:ty,Float:radius);
+ * FCNPC::GetPointInFrontCol(npcid,&Float:tx,&Float:ty,Float:radius);
  * FCNPC::GoToCol(npcid,Float:x,Float:y,Float:z,type=FCNPC_MOVE_TYPE_AUTO,Float:speed=FCNPC_MOVE_SPEED_AUTO,bool:UseMapAndreas=false,Float:cut_size=0.0,bool:setangle=true,Float:dist_offset=0.0,stopdelay=250);
  * FCNPC::GoToPlayerCol(npcid,playerid,type=FCNPC_MOVE_TYPE_AUTO,Float:speed=FCNPC_MOVE_SPEED_AUTO,bool:UseMapAndreas=false,Float:cut_size=0.0,bool:setangle=true,Float:dist_offset=0.0,stopdelay=250);
  * FCNPC::GoToPlayerOnGroundCol(npcid,playerid,type=FCNPC_MOVE_TYPE_AUTO,Float:speed=FCNPC_MOVE_SPEED_AUTO,bool:UseMapAndreas=false,Float:cut_size=1.0,Float:climbing=2.0,bool:setangle=true,Float:dist_offset=0.0,stopdelay=250);
@@ -5417,12 +5417,13 @@ Tryg3D::Function:: FCNPC::RandomMoveInDynamicArea(npcid,STREAMER_TAG_AREA areaid
 	FCNPC::GetPosition(npcid,x,y,z);
 	for(;;){
 		GetRandomPointInDynamicArea(areaid,tx,ty,tz);
-		if(ColAndreas::RayCastLine(x,y,z,tx,ty,z,T3D:tmp,T3D:tmp,T3D:tmp)) continue;
-		ColAndreas::FindZ_For2DCoord(tx,ty,tz); 
+		ColAndreas::FindZ_For2DCoord(tx,ty,tz);
+		tz += 1.0;
+		if(ColAndreas::RayCastLine(x,y,z,tx,ty,tz,T3D:tmp,T3D:tmp,T3D:tmp)) continue;
 		if(GetDistanceBetweenPoints1D(tz,z) > climbing) continue;
 		break;
 	}
-    return FCNPC::GoTo(npcid,tx,ty,tz+1.0,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
+    return FCNPC::GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
 }  
  
 #endif 
@@ -5434,12 +5435,13 @@ Tryg3D::Function:: FCNPC::RandomMoveInStream(npcid,Stream:StreamData[Stream3D],F
 	FCNPC::GetPosition(npcid,x,y,z);
 	for(;;){
 		GetRandomPointInStream(StreamData,tx,ty,tz);
-		if(ColAndreas::RayCastLine(x,y,z,tx,ty,z,T3D:tmp,T3D:tmp,T3D:tmp)) continue;
-		ColAndreas::FindZ_For2DCoord(tx,ty,tz); 
+		ColAndreas::FindZ_For2DCoord(tx,ty,tz);
+		tz += 1.0;
+		if(ColAndreas::RayCastLine(x,y,z,tx,ty,tz,T3D:tmp,T3D:tmp,T3D:tmp)) continue;
 		if(GetDistanceBetweenPoints1D(tz,z) > climbing) continue;
 		break;
 	}
-    return FCNPC::GoTo(npcid,tx,ty,tz+1.0,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
+    return FCNPC::GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
 } 
  
 #endif 
@@ -5731,21 +5733,22 @@ Tryg3D::Function:: Tryg3D::Init(){
 		#if defined Tryg3D_MapAndreas
 			Tryg3D::SafeMapAndreasInit(MAP_ANDREAS_MODE_FULL);
 		#endif
-	#endif
-	
-	#if ((defined Tryg3D_MapAndreas) && (defined Tryg3D_FCNPC))
-		new T3D:MapAddress = MapAndreas_GetAddress();
-		if(T3D:MapAddress != 0){
-			FCNPC::InitMapAndreas(T3D:MapAddress);
-			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				print("[ADM] Info: MapAndreas successfully attached to FCNPC.");
+		
+		#if ((defined Tryg3D_MapAndreas) && (defined Tryg3D_FCNPC))
+			new T3D:MapAddress = MapAndreas_GetAddress();
+			if(T3D:MapAddress != 0){
+				FCNPC::InitMapAndreas(T3D:MapAddress);
+				if(GetSVarInt("ADM:Logging:Disable") == 0){
+					print("[ADM] Info: MapAndreas successfully attached to FCNPC.");
+				}
+			} else {
+				if(GetSVarInt("ADM:Logging:Disable") == 0){
+					print("[ADM] Error: MapAndreas failed attach to FCNPC (MapAndreas not inited).");
+					Update3DTrygErrorCount();
+				}
 			}
-		} else {
-			if(GetSVarInt("ADM:Logging:Disable") == 0){
-				print("[ADM] Error: MapAndreas failed attach to FCNPC (MapAndreas not inited).");
-				Update3DTrygErrorCount();
-			}
-		}
+		#endif
+		
 	#endif
 	
 	#if defined Tryg3D_FCNPC

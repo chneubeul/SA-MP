@@ -16,6 +16,7 @@ SAM/FoxForeach.inc
 SAM/vnpc.inc
 SAM/SOI.inc
 SAM/Zones.inc
+SAM/SWAP.inc
 engine/EngineV6.inc
 engine/EngineX.inc
 engine/Knife.inc

@@ -11,7 +11,7 @@
  * Plugins: Streamer, ColAndreas                                                                                                  *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.3.1                                                                                                            *
+ * File Version: 1.3.2                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
@@ -625,7 +625,6 @@ stock Hunting::GetActiveMob(playerid,mob_state){
 T3D:function Hunting::OnUpdate(){
 	static	Float:tmp_float,Float:target_z,
 			Float:x,Float:y,Float:z,
-			Float:tx,Float:ty,
 			Float:vx,Float:vy,Float:vz;
 	
 	for(new mobid = 1; mobid <= Hunting::Upperbound; mobid++){
@@ -639,10 +638,12 @@ T3D:function Hunting::OnUpdate(){
 					if(GetDistanceBetweenPoints2D(Hunting::Data[mobid][Hunting::tX],Hunting::Data[mobid][Hunting::tY],x,y) == 0.0){
 						for(;;){
 							vx = vy = vz = 0.0;
-							GetRandomPointInCircle(x,y,RandomFloat(5.0,25.0),tx,ty);
-							if(!MovePointColCutLineEx(x,y,z+1.0,tx,ty,z+1.0,vx,vy,vz,3.0)) continue;
+							GetRandomPointInCircle(x,y,RandomFloat(5.0,25.0),vx,vy);
 							if(GetDistanceBetweenPoints2D(x,y,vx,vy) <= 2.0) continue;
-							if(IsPointInWater(vx,vy,vz)) continue;
+							if(IsPointInWater(vx,vy)) continue;
+							Tryg3D::MapAndreasFindZ(vx,vy,vz);
+							vz += 1.0;
+							if(ColAndreas::RayCastLine(x,y,z+1.0,vx,vy,vz,tmp_float,tmp_float,tmp_float)) continue;
 							if(Hunting::Data[mobid][Hunting::areaid] != STREAMER_TAG_AREA INVALID_STREAMER_ID){
 								if(!IsPointInDynamicArea(Hunting::Data[mobid][Hunting::areaid],vx,vy,vz)) continue;
 							}
