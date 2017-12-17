@@ -23,11 +23,12 @@
 * [Abyss Morgan](http://8.ct8.pl/r/abyssmorgan)
 
 
-### Beta Testers:
+### ADM Team:
 * [Banan](http://8.ct8.pl/r/banan)
 * [FerilanS](http://8.ct8.pl/r/ferilans)
 * [MuchomoE](http://8.ct8.pl/r/muchomoe)
 * [Unrea1](http://8.ct8.pl/r/Unrea1)
+* [TDI97](http://8.ct8.pl/r/TDI97)
 
 
 ### Contributors:
