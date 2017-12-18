@@ -5436,7 +5436,7 @@ Tryg3D::Function:: FCNPC::RandomMoveInDynamicArea(npcid,STREAMER_TAG_AREA areaid
 	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:T3D:tmp,cnt = 0;
 	FCNPC::GetPosition(npcid,x,y,z);
 	do {
-		if(cnt >= 1000) return 0;
+		if(cnt >= 100) return 0;
 		GetRandomPointInDynamicArea(areaid,tx,ty,tz);
 		ColAndreas::FindZ_For2DCoord(tx,ty,tz);
 		tz += 1.0;
@@ -5454,7 +5454,7 @@ Tryg3D::Function:: FCNPC::RandomMoveInStream(npcid,Stream:StreamData[Stream3D],F
 	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:T3D:tmp,cnt = 0;
 	FCNPC::GetPosition(npcid,x,y,z);
 	do {
-		if(cnt >= 1000) return 0;
+		if(cnt >= 100) return 0;
 		GetRandomPointInStream(StreamData,tx,ty,tz);
 		ColAndreas::FindZ_For2DCoord(tx,ty,tz);
 		tz += 1.0;
