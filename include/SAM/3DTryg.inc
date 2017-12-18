@@ -13,7 +13,7 @@
  * Modules: FoxForeach, Foreach                                                                                                      *
  * Internal Modules: Stream3D, Actor, ATM, Anims, VehicleCollision                                                                   *
  *                                                                                                                                   *
- * File Version: 4.5.2                                                                                                               *
+ * File Version: 4.5.3                                                                                                               *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                    *
  * MapAndreas Version: 1.2.1                                                                                                         *
  * ColAndreas Version: 1.4.0                                                                                                         *
@@ -283,6 +283,9 @@
  * Tryg3D::InitVehicleCollision(); //OnGameModeInit / OnFilterScriptInit
  * Tryg3D::ExitVehicleCollision();
  * Tryg3D::SyncVehicleCollision(vehicleid); //EVF -> OnVehicleCreated
+ * IsToggledVehicleCollision(vehicleid);
+ * ToggleVehicleCollision(vehicleid,bool:toggle);
+
  * MovePointColWithVehicle(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z);
  * MovePointColWithVehicleCut(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z,Float:cut_size=0.0);
  * IsBetweenElementToPointIsVeh(Float:x,Float:y,Float:z,TRYG3D_ELEMENT_TAG targetid,Item3D_Type:target_type);
@@ -371,6 +374,7 @@
  * GetPointInWallForPoint(Float:x,Float:y,Float:z,Float:radius,&Float:tx,&Float:ty,&Float:tz,Float:sector=90.0);
  * GetWallRotation(Float:sx,Float:sy,Float:sz,Float:ex,Float:ey,Float:ez,&Float:rx,&Float:rz,&Float:px=0.0,&Float:py=0.0,&Float:pz=0.0,Float:size=1.0,Float:cut_size=0.0);
  * Float:MapAndreasFindZ(Float:x,Float:y,&Float:z=0.0);
+ * ColAndreas::FindGroundZ(Float:x,Float:y,Float:z,&Float:gZ);
  * 
  * //ColAndreas Extended Functions:
  * Tryg3D::IsColAndreasInit();
@@ -638,11 +642,11 @@
 /*
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40502)
-	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40503)
+	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 */
 
@@ -657,7 +661,7 @@
 #endif
 #define _3D_Tryg
 
-#define Tryg3D_Version									(40502) //a.b.c 10000*a+100*b+c
+#define Tryg3D_Version									(40503) //a.b.c 10000*a+100*b+c
 #define Tryg3D_SAMP_Version								"0.3.7"
 
 #if (!defined GetPlayerPoolSize || !defined GetSVarInt)
@@ -1100,6 +1104,7 @@ new Tryg3D::VehicleFlags[212],
 	Tryg3D::DeatchTick[MAX_PLAYERS];
  
  
+//Update 3DTryg for SA:MP 0.3.7
 
 #if !defined isnull
 	#define isnull(%1) 									((!(%1[0])) || (((%1[0]) == '\1') && (!(%1[1]))))
@@ -1147,6 +1152,7 @@ new Tryg3D::VehicleFlags[212],
 #define VCOLLISION_EXTRA_ID_OFFSET				(800000)
 
 new STREAMER_TAG_AREA Tryg3D::VehicleCollisionZone[MAX_VEHICLES],
+	bool:Tryg3D::VehicleCollisionUsed[MAX_VEHICLES],
 	bool:Tryg3D::VehicleCollisionSystem = false;
 
 //Hook: OnVehicleSpawn
@@ -1399,6 +1405,7 @@ Tryg3D::Function:: Tryg3D::GetPartPos(modelid,partid,Float:x,Float:y,Float:z,Flo
 	oy += offset_y;
 	oz += offset_z;
 	ShiftOffsetToPosition(x,y,z, rx,ry,rz, ox,oy,oz, tx,ty,tz);
+	return !(ox == 0.0 && oy == 0.0 && oz == 0.0);
 } 
  
 //Original by Ivan_Ino Updated by Abyss Morgan SRC:https://github.com/Ino42O/VehiclePartPosition/blob/master/VehiclePartPosition.inc
@@ -1407,7 +1414,7 @@ Tryg3D::Function:: GetVehiclePartPos(vehicleid,partid,&Float:tx,&Float:ty,&Float
 	GetVehiclePos(vehicleid,x,y,z);
 	Tryg3D::GetVehicleRotation(vehicleid,rx,ry,rz);
 	GetVehicleZAngle(vehicleid,rz);
-	Tryg3D::GetPartPos(GetVehicleModel(vehicleid),partid,x,y,z,rx,ry,rz,tx,ty,tz,offset_x,offset_y,offset_z);
+	return Tryg3D::GetPartPos(GetVehicleModel(vehicleid),partid,x,y,z,rx,ry,rz,tx,ty,tz,offset_x,offset_y,offset_z);
 }
  
  
@@ -1419,7 +1426,7 @@ Tryg3D::Function:: GetDynamicVehiclePartPos(STREAMER_TAG_VEHICLE vehicleid,parti
 	GetDynamicVehiclePos(vehicleid,x,y,z);
 	GetDynamicVehicleRotation(vehicleid,rx,ry,rz);
 	GetDynamicVehicleZAngle(vehicleid,rz);
-	Tryg3D::GetPartPos(GetDynamicVehicleModel(vehicleid),partid,x,y,z,rx,ry,rz,tx,ty,tz,offset_x,offset_y,offset_z);
+	return Tryg3D::GetPartPos(GetDynamicVehicleModel(vehicleid),partid,x,y,z,rx,ry,rz,tx,ty,tz,offset_x,offset_y,offset_z);
 }
  
  
@@ -2991,10 +2998,10 @@ Tryg3D::Function:: Float:GetCameraTargetDistance(Float:CamX,Float:CamY,Float:Cam
 } 
  
 Tryg3D::Function:: IsPlayerAimingAt(playerid,Float:x,Float:y,Float:z,Float:radius){
-    new Float:cx,Float:cy,Float:cz,Float:fx,Float:fy,Float:fz;
-    GetPlayerCameraPos(playerid,cx,cy,cz);
-    GetPlayerCameraFrontVector(playerid,fx,fy,fz);
-    return (radius >= GetCameraTargetDistance(cx,cy,cz,x,y,z,fx,fy,fz));
+	new Float:cx,Float:cy,Float:cz,Float:fx,Float:fy,Float:fz;
+	GetPlayerCameraPos(playerid,cx,cy,cz);
+	GetPlayerCameraFrontVector(playerid,fx,fy,fz);
+	return (radius >= GetCameraTargetDistance(cx,cy,cz,x,y,z,fx,fy,fz));
 } 
  
 Tryg3D::Function:: IPL_CreateObject(modelid,Float:x,Float:y,Float:z,Float:qx,Float:qy,Float:qz,Float:qw,Float:drawdistance=0.0){
@@ -3504,7 +3511,12 @@ Tryg3D::Function:: GetElementOrientationPos(TRYG3D_ELEMENT_TAG elementid,Item3D_
  *                                                                                                                                  *
  ************************************************************************************************************************************/
 
-#define IsVehicleCollisionEnabled()				Tryg3D::VehicleCollisionSystem 
+#define IsVehicleCollisionEnabled()				Tryg3D::VehicleCollisionSystem
+
+#define IsToggledVehicleCollision(%0)			Tryg3D::VehicleCollisionUsed[(%0)]
+#define ToggleVehicleCollision(%0,%1)			Tryg3D::VehicleCollisionUsed[(%0)] = (%1)
+
+ 
  
 Tryg3D::Public:: Tryg3D::SyncVehicleCollision(vehicleid){
 	if(!Tryg3D::VehicleCollisionSystem) return 0;
@@ -3531,6 +3543,7 @@ Tryg3D::Public:: Tryg3D::InitVehicleCollision(){
 	
 	for(new vehicleid = 1; vehicleid < MAX_VEHICLES; vehicleid++){
 		Tryg3D::VehicleCollisionZone[vehicleid] = CreateDynamicCube(-1.0,-1.0,-6000.0,1.0,1.0,-5000.0);
+		Tryg3D::VehicleCollisionUsed[vehicleid] = true;
 		Streamer::SetIntData(STREAMER_TYPE_AREA,Tryg3D::VehicleCollisionZone[vehicleid],E_STREAMER_EXTRA_ID,(vehicleid+VCOLLISION_EXTRA_ID_OFFSET));
 		if(IsValidVehicle(vehicleid)){
 			Tryg3D::SyncVehicleCollision(vehicleid);
@@ -3547,6 +3560,7 @@ Tryg3D::Public:: Tryg3D::ExitVehicleCollision(){
 	for(new vehicleid = 1; vehicleid < MAX_VEHICLES; vehicleid++){
 		if(IsValidDynamicArea(Tryg3D::VehicleCollisionZone[vehicleid])) DestroyDynamicArea(Tryg3D::VehicleCollisionZone[vehicleid]);
 		Tryg3D::VehicleCollisionZone[vehicleid] = STREAMER_TAG_AREA INVALID_STREAMER_ID;
+		Tryg3D::VehicleCollisionUsed[vehicleid] = false;
 	}
 	Tryg3D::VehicleCollisionSystem = false;
 	print("[ADM] Info: Vehicle Collision successfully exit.");
@@ -3568,7 +3582,7 @@ Tryg3D::Public:: MovePointColWithVehicle(Float:StartX,Float:StartY,Float:StartZ,
 			for(new k = 0; k < Tryg3D::AreaCount; k++){
 				T3D:vehicleid = Streamer::GetIntData(STREAMER_TYPE_AREA,Tryg3D::Area[k],E_STREAMER_EXTRA_ID) - VCOLLISION_EXTRA_ID_OFFSET;
 				if(T3D:vehicleid >= 1 && T3D:vehicleid < MAX_VEHICLES && IsValidVehicle(T3D:vehicleid)){
-					if(Tryg3D::Area[k] == Tryg3D::VehicleCollisionZone[T3D:vehicleid]){
+					if(Tryg3D::Area[k] == Tryg3D::VehicleCollisionZone[T3D:vehicleid] && Tryg3D::VehicleCollisionUsed[T3D:vehicleid]){
 						GetVehiclePos(T3D:vehicleid,vx,vy,vz);
 						if((T3D:dist = GetDistanceBetweenPoints3D(StartX,StartY,StartZ,vx,vy,vz)) < T3D:last_dist){
 							T3D:last_dist = T3D:dist;
@@ -4694,6 +4708,11 @@ Tryg3D::Function:: GetElementsInDynamicArea(STREAMER_TAG_AREA areaid,Item3D_Type
 #define GetPointInFrontOnGround(%0,%1,%2,%3,%4,%5,%6,%7,%8) GetPointInFront3DCol((%0),(%1),(%2),(%3),(%4),(%8),(%5),(%6),(%7))
  
  
+Tryg3D::Function:: ColAndreas::FindGroundZ(Float:x,Float:y,Float:z,&Float:gZ){
+	new Float:gX,Float:gY;
+	ColAndreas::RayCastLine(x,y,z,x,y,z-1000.0,gX,gY,gZ);
+} 
+ 
 Tryg3D::Function:: MovePointCol(Float:StartX,Float:StartY,Float:StartZ,Float:EndX,Float:EndY,Float:EndZ,&Float:x,&Float:y,&Float:z){
 	x = y = z = 0.0;
 	ColAndreas::RayCastLine(StartX,StartY,StartZ,EndX,EndY,EndZ,x,y,z);
@@ -5403,9 +5422,9 @@ Tryg3D::Function:: FCNPC::GoToAirCol(npcid,Float:x,Float:y,Float:z,type = FCNPC_
 } 
  
 Tryg3D::Function:: FCNPC::SetFloorPos(npcid){
-	new Float:x,Float:y,Float:z,Float:T3D:tmp,Float:target_z;
+	new Float:x,Float:y,Float:z,Float:target_z;
 	FCNPC::GetPosition(npcid,x,y,z);
-	MovePointCol(x,y,z+1.0,x,y,-100.0,T3D:tmp,T3D:tmp,target_z);
+	ColAndreas::FindGroundZ(x,y,z,target_z);
 	FCNPC::SetPosition(npcid,x,y,target_z+1.0);
 	return 1;
 } 
@@ -5413,35 +5432,35 @@ Tryg3D::Function:: FCNPC::SetFloorPos(npcid){
 #if defined Tryg3D_Streamer 
  
 Tryg3D::Function:: FCNPC::RandomMoveInDynamicArea(npcid,STREAMER_TAG_AREA areaid,Float:climbing = 2.0,type = FCNPC_MOVE_TYPE_AUTO,Float:speed = FCNPC_MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true,Float:dist_offset = 0.0,stopdelay = 250){
-	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:T3D:tmp;
+	if(!FCNPC::IsValid(npcid) || FCNPC::IsDead(npcid)) return 0;
+	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:T3D:tmp,cnt = 0;
 	FCNPC::GetPosition(npcid,x,y,z);
-	for(;;){
+	do {
+		if(cnt >= 1000) return 0;
 		GetRandomPointInDynamicArea(areaid,tx,ty,tz);
 		ColAndreas::FindZ_For2DCoord(tx,ty,tz);
 		tz += 1.0;
-		if(ColAndreas::RayCastLine(x,y,z,tx,ty,tz,T3D:tmp,T3D:tmp,T3D:tmp)) continue;
-		if(GetDistanceBetweenPoints1D(tz,z) > climbing) continue;
-		break;
-	}
-    return FCNPC::GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
-}  
+		cnt++;
+	} while (ColAndreas::RayCastLine(x,y,z,tx,ty,tz,T3D:tmp,T3D:tmp,T3D:tmp) || GetDistanceBetweenPoints1D(tz,z) > climbing || !IsPointInDynamicArea(areaid,tx,ty,tz));
+	return FCNPC::GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
+} 
  
 #endif 
  
 #if defined Tryg3D_Stream3D 
  
 Tryg3D::Function:: FCNPC::RandomMoveInStream(npcid,Stream:StreamData[Stream3D],Float:climbing = 2.0,type = FCNPC_MOVE_TYPE_AUTO,Float:speed = FCNPC_MOVE_SPEED_AUTO,bool:UseMapAndreas = false,bool:setangle = true,Float:dist_offset = 0.0,stopdelay = 250){
-	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:T3D:tmp;
+	if(!FCNPC::IsValid(npcid) || FCNPC::IsDead(npcid)) return 0;
+	new Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,Float:T3D:tmp,cnt = 0;
 	FCNPC::GetPosition(npcid,x,y,z);
-	for(;;){
+	do {
+		if(cnt >= 1000) return 0;
 		GetRandomPointInStream(StreamData,tx,ty,tz);
 		ColAndreas::FindZ_For2DCoord(tx,ty,tz);
 		tz += 1.0;
-		if(ColAndreas::RayCastLine(x,y,z,tx,ty,tz,T3D:tmp,T3D:tmp,T3D:tmp)) continue;
-		if(GetDistanceBetweenPoints1D(tz,z) > climbing) continue;
-		break;
-	}
-    return FCNPC::GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
+		cnt++;
+	} while (ColAndreas::RayCastLine(x,y,z,tx,ty,tz,T3D:tmp,T3D:tmp,T3D:tmp) || GetDistanceBetweenPoints1D(tz,z) > climbing || !IsPointInStream(tx,ty,tz,StreamData));
+	return FCNPC::GoTo(npcid,tx,ty,tz,type,speed,UseMapAndreas,0.0,setangle,dist_offset,stopdelay);
 } 
  
 #endif 
