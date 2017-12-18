@@ -42,6 +42,7 @@
  *                                                                                                                                   *
  * RAM Functions:                                                                                                                    *
  * RAM::Create(const name[],key[][],block_size,max_blocks,k_len=sizeof(key[]));                                                      *
+ * RAM::CreateEx(const name[],key[][],block_size,max_blocks,k_len=sizeof(key[]));                                                    *
  * RAM::ResetVariables(const name[],key[][],k_len=sizeof(key[]));                                                                    *
  * RAM::CreateVariable(const name[],key[][],k_len=sizeof(key[]));                                                                    *
  * RAM::DestroyVariable(const name[],key[][],&variableid,k_len=sizeof(key[]));                                                       *
@@ -53,6 +54,7 @@
  * RAM::write_block(const name[],key[][],variableid,text[],max_dest=sizeof(text),k_len=sizeof(key[]));                               *
  * RAM::read_array(const name[],key[][],variableid,array[],len,k_len=sizeof(key[]));                                                 *
  * RAM::write_array(const name[],key[][],variableid,array[],max_dest=sizeof(array),k_len=sizeof(key[]));                             *
+ * RAM::SaveLog(const name[],key[][],string[],k_len=sizeof(key[]));                                                                  *
  *                                                                                                                                   *
  *************************************************************************************************************************************/
 
@@ -372,6 +374,23 @@ stock RAM::Create(const name[],key[][],block_size,max_blocks,k_len=sizeof(key[])
 	return size;
 }
 
+stock RAM::CreateEx(const name[],key[][],block_size,max_blocks,k_len=sizeof(key[])){
+	if(fexist(name)) return 0;
+	new size, header;
+	header = 0x08 + 4*(((max_blocks-1)/32)+1);
+	size = header + (block_size*max_blocks);
+	size += 4096 - (size % 4096);
+	
+	SWAP::reserve(name,size);
+	SWAP::format(name,key,k_len);
+	
+	SWAP::write_int(name,key,0,max_blocks,k_len);
+	SWAP::write_int(name,key,4,block_size,k_len);
+	RAM::ResetVariables(name,key,k_len);
+	RAM::write_string(name,key,0,"NULL\0",5,k_len);
+	return size;
+}
+
 stock RAM::CreateVariable(const name[],key[][],k_len=sizeof(key[])){
 	if(!fexist(name)) return 0;
 	new swap_header[SWAP::GetConfigSize(MAX_SWAP_RAM_ITEMS)], max_blocks = SWAP::read_int(name,key,0x00,k_len);
@@ -394,6 +413,20 @@ stock RAM::DestroyVariable(const name[],key[][],&variableid,k_len=sizeof(key[]))
 	SWAP::write_array(name,key,0x08,swap_header,((max_blocks-1)/32)+1,k_len);
 	variableid = 0;
 	return 1;
+}
+
+stock RAM::SaveLog(const name[],key[][],string[],k_len=sizeof(key[])){
+	if(!fexist(name)) RAM::CreateEx(name,key,384,MAX_SWAP_RAM_ITEMS,k_len);
+	new logid = RAM::CreateVariable(name,key,k_len);
+	if(logid == 0){
+		RAM::ResetVariables(name,key,k_len);
+		logid = RAM::CreateVariable(name,key,k_len);
+	}
+	static wl_date[3],wl_time[3],wl_str[384];
+	getdate(wl_date[0],wl_date[1],wl_date[2]);
+   	gettime(wl_time[0],wl_time[1],wl_time[2]);
+   	format(wl_str,sizeof(wl_str),"[%02d.%02d.%02d %02d:%02d:%02d] %s",wl_date[0],wl_date[1],wl_date[2],wl_time[0],wl_time[1],wl_time[2],string);
+	return RAM::write_string(name,key,logid,wl_str,384,k_len);
 }
 
 //EOF
