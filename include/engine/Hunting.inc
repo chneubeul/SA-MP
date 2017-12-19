@@ -11,11 +11,11 @@
  * Plugins: Streamer, ColAndreas                                                                                                  *
  * Modules: 3DTryg                                                                                                                *
  *                                                                                                                                *
- * File Version: 1.3.2                                                                                                            *
+ * File Version: 1.4.0                                                                                                            *
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
- * 3DTryg Version: 4.5.2                                                                                                          *
+ * 3DTryg Version: 4.5.3                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Hunting::Create(type,Float:x,Float:y,Float:z,Float:health,respawntime,worldid=-1,interiorid=-1,playerid=-1,                    *
@@ -89,11 +89,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40502)
-	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40503)
+	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #if defined _hunting_system
@@ -630,17 +630,18 @@ T3D:function Hunting::OnUpdate(){
 	for(new mobid = 1; mobid <= Hunting::Upperbound; mobid++){
 		switch(Hunting::Data[mobid][Hunting::state]){
 			case HUNTING_STATE_SPAWNED: {
-				x = y = z = target_z = 0.0;
+				x = y = z = target_z = 0.0, cnt = 0;
 				Hunting::GetPos(mobid,x,y,z);
 				if(x == 0.0 && y == 0.0 && z == 0.0) continue;
 				MovePointCol(x,y,z+1.0,x,y,-100.0,tmp_float,tmp_float,target_z);
 				if(Hunting::IsToggledMoving(mobid)){
 					if(GetDistanceBetweenPoints2D(Hunting::Data[mobid][Hunting::tX],Hunting::Data[mobid][Hunting::tY],x,y) == 0.0){
 						for(;;){
+							cnt++;
+							if(cnt >= 100) return 0;
 							vx = vy = vz = 0.0;
 							GetRandomPointInCircle(x,y,RandomFloat(5.0,25.0),vx,vy);
-							if(GetDistanceBetweenPoints2D(x,y,vx,vy) <= 2.0) continue;
-							if(IsPointInWater(vx,vy)) continue;
+							if(GetDistanceBetweenPoints2D(x,y,vx,vy) <= 2.0 || IsPointInWater(vx,vy)) continue;
 							Tryg3D::MapAndreasFindZ(vx,vy,vz);
 							vz += 1.0;
 							if(ColAndreas::RayCastLine(x,y,z+1.0,vx,vy,vz,tmp_float,tmp_float,tmp_float)) continue;

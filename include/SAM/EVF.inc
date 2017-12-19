@@ -12,7 +12,7 @@
  * Plugins: Streamer                                                                                                              *
  * Modules: None                                                                                                                  *
  *                                                                                                                                *
- * File Version: 3.1.1                                                                                                            *
+ * File Version: 3.2.0                                                                                                            *
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                                                 *
  * Streamer Version: 2.9.1                                                                                                        *
  *                                                                                                                                *
@@ -95,6 +95,12 @@
  * GetVehicleComponentPrice(componentid);                                                                                         *
  * GetVehicleName(vehicleid);                                                                                                     *
  * GetVehicleModelName(modelid);                                                                                                  *
+ * EVF::IsTrailer(vehicleid);                                                                                                     *
+ * EVF::IsCarBlinking(vehicleid);                                                                                                 *
+ * EVF::DisableCarBlinking(vehicleid);                                                                                            *
+ * EVF::SetCarBlinking(vehicleid,side,bool:skip=false);                                                                           *
+ * EVF::ToggleVehicleBlinking(bool:toggle);                                                                                       *
+ * EVF::IsToggledVehicleBlinking();                                                                                               *
  *                                                                                                                                *
  * Remote functions:                                                                                                              *
  * EVF_ImportVehicle(vehicleid,modelid,Float:x,Float:y,Float:z,Float:angle,color1,color2,worldid,interiorid,unoccupied_damage);   *
@@ -188,6 +194,11 @@
  * PINK_NEON                                                                                                                      *
  * WHITE_NEON                                                                                                                     *
  *                                                                                                                                *
+ * EVF_CAR_BLINK_NONE                                                                                                             *
+ * EVF_CAR_BLINK_LEFT                                                                                                             *
+ * EVF_CAR_BLINK_RIGHT                                                                                                            *
+ * EVF_CAR_BLINK_EMERGENCY                                                                                                        *
+ *                                                                                                                                *
  * MIN_VEHICLE_COMPONENT_ID                                                                                                       *
  * MAX_VEHICLE_COMPONENT_ID                                                                                                       *
  *                                                                                                                                *
@@ -242,11 +253,11 @@
 /*
 //Check Version EVF.inc
 #if !defined _EVF_include
-	#error [ADM] You need EVF.inc v3.1.1
+	#error [ADM] You need EVF.inc v3.2.0
 #elseif !defined EVF_Version
-	#error [ADM] Update you EVF.inc to v3.1.1
-#elseif (EVF_Version < 30101)
-	#error [ADM] Update you EVF.inc to v3.1.1
+	#error [ADM] Update you EVF.inc to v3.2.0
+#elseif (EVF_Version < 30200)
+	#error [ADM] Update you EVF.inc to v3.2.0
 #endif
 */
 
@@ -280,7 +291,7 @@
 	#error [ADM] Please include a_http.inc before EVF.inc
 #endif
 
-#define EVF_Version									(30101) //a.b.c 10000*a+100*b+c
+#define EVF_Version									(30200) //a.b.c 10000*a+100*b+c
 #define EVF_SAMP_Version							"0.3.7"
 
 #define EVF_Function::								stock
@@ -373,6 +384,11 @@
 #define VEHICLE_DAMAGE_LIGHTS						2
 #define VEHICLE_DAMAGE_TIRES						3
 
+#define EVF_CAR_BLINK_NONE							-1
+#define EVF_CAR_BLINK_LEFT							0
+#define EVF_CAR_BLINK_RIGHT							1
+#define EVF_CAR_BLINK_EMERGENCY						2
+
 #define RED_NEON									18647
 #define BLUE_NEON									18648
 #define GREEN_NEON									18649
@@ -459,6 +475,17 @@ enum EVF::NeonOffset {
 	Float:EVF::NeonY,
 	Float:EVF::NeonZ
 };
+
+#if defined EVF_Streamer
+	enum EVF::BlinkOffset {
+		Float:	EVF::X,
+		Float:	EVF::Y,
+		Float:	EVF::Z,
+		Float:	EVF::rX,
+		Float:	EVF::rY,
+		Float:	EVF::rZ
+	};
+#endif
 
 new EVF::VehicleProperty[MAX_VEHICLES][EVF::VehicleProperties];
 
@@ -677,13 +704,234 @@ new const EVF::NeonOffsetData[MAX_VEHICLE_MODELS][EVF::NeonOffset] = {
 	{0.0,0.0,0.0}
 };
 
+#if defined EVF_Streamer
+	new const EVF::BlinkOffsetData[][EVF::BlinkOffset] = {
+		{-0.9001, 2.0490, -0.0965, -0.9605, -2.2404, -0.0965},
+		{-0.9686, 2.5393, 0.0235, -0.9970, -2.2863, 0.0235},
+		{-0.8788, 2.5160, -0.0565, -0.9208, -2.5936, 0.0435},
+		{-1.3897, 3.6007, -0.2194, -1.1904, -0.9415, 1.8389},
+		{-0.7236, 2.1715, -0.0365, -0.7906, -2.7052, 0.0635},
+		{-0.9127, 2.2766, -0.0565, -0.8723, -2.6526, -0.0565},
+		{-2.2165, 4.9242, -0.0332, -2.0785, -5.2054, 0.5468},
+		{-0.9887, 4.0622, -0.0913, -1.0141, -3.4034, -0.0913},
+		{-0.9659, 4.7615, -0.2513, -0.8430, -3.9722, -0.5113},
+		{-0.7859, 3.5522, -0.0313, -0.8027, -3.8228, -0.0313},
+		{-0.825, 2.105, 0.0635, -0.8723, -2.1926, 0.1235},
+		{-0.9405, 2.6710, -0.1825, -0.9636, -2.4525, 0.0825},
+		{-0.8965, 2.6478, -0.0575, -0.9592, -3.4870, -0.1575},
+		{-0.8669, 2.5464, -0.0913, -0.8209, -2.5829, 0.0687},
+		{-0.8069, 2.7473, 0.0087, -0.9058, -3.2050, 0.1094},
+		{-0.8738, 2.4866, -0.2357, -0.7792, -2.3501, 0.0450},
+		{-0.8469, 2.9073, 0.0087, -1.0352, -3.5937, 1.4522},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-0.9511, 2.3820, -0.2357, -1.0081, -2.4904, -0.1557},
+		{-1.0742, 2.3978, -0.1757, -0.8127, -2.8620, -0.1557},
+		{-1.0142, 2.2978, -0.0157, -0.9637, -2.6744, 0.0043},
+		{-0.9013, 2.5343, -0.1357, -0.5921, -2.9228, -0.1957},
+		{-0.7813, 2.1543, -0.2657, -0.8985, -2.4349, -0.1057},
+		{-0.7817, 2.2093, -0.0313, -0.8340, -2.1794, 0.0596},
+		{-0.7350, 1.4505, 0.1087, -0.7062, -1.4778, 0.2996},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-1.0006, 2.3164, -0.0100, -0.9627, -2.6930, -0.0100},
+		{-0.8728, 2.5856, 0.1887, -0.9831, -3.8383, -0.3495},
+		{-0.8728, 2.5856, -0.2103, -0.9045, -2.8871, 1.2466},
+		{-0.7942, 2.2846, -0.2500, -0.8397, -2.3849, -0.0070},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-0.9771, 5.8479, 0.3497, -1.0300, -5.7043, -0.1041},
+		{-1.7168, 4.0330, 0.4497, -1.5830, -4.3414, 0.7039},
+		{-1.2619, 3.7708, -0.2163, -1.2966, -4.6534, -0.1051},
+		{0.0, 0.0, 0.0, -0.4811, -1.9838, -0.0670},
+		{0.0000, 0.0000, 0.0000, -1.0697, -3.9690, -1.1053}, //trailer
+		{-0.8495, 2.2519, -0.0070, -0.8948, -2.4838, 0.1130},
+		{-1.1156, 5.5395, -0.2163, -0.9856, -5.3099, 1.6458},
+		{-1.1128, 2.3675, -0.2870, -1.0992, -2.4601, -0.2870},
+		{-0.8381, 2.3101, -0.1470, -0.8221, -2.6534, -0.1070},
+		{-0.8270, 2.5573, -0.3173, -0.8676, -2.5376, -0.0149},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-1.0354, 2.8278, -0.1870, -1.0226, -3.0877, -0.1270},
+		{-1.0610, 5.7528, -0.9573, -1.2388, -7.1392, -0.8250},
+		{-0.9880, 2.7188, 0.6140, -1.0722, -3.0184, 0.7248},
+		{-0.9590, 2.3460, -0.0840, -0.9773, -2.8049, -0.0840},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{ -0.1992, -0.9229, -0.1270},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{ 0.0000, 0.0000, 0.0000, -1.0697, -3.9690, -1.1053}, //trailer
+		{-0.9826, 1.9642, -0.1399, -0.8894, -2.3991, -0.0199},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, -1.3866, -4.5162, -0.7399},
+		{0.0000, 0.0000, 0.0000, -1.3045, -4.6123, 0.4601},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-0.9513, 2.4197, -0.1399, -0.9703, -2.7779, 0.0201},
+		{-0.8214, 2.5716, -0.1274, -0.8760, -2.5775, 0.1127},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, -0.2054, -0.9359, -0.1399},
+		{-0.2276, 0.7185, 0.3201, -0.1952, -1.0037, 0.1601},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, -1.0201, -2.7994, 0.0401},
+		{0.0000, 0.0000, 0.0000, -0.9401, -3.0594, 0.1601},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-1.0259, 2.1382, 0.2001, -1.0433, -2.5463, 0.1201},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, -0.9833, -2.7663, -0.0599},
+		{-0.8681, 2.4086, -0.3399, -0.8632, -2.7629, -0.2399},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-0.8081, 2.6686, -0.1999, -0.9945, -2.6987, 0.0801},
+		{-1.0938, 2.0255, 0.1001, -1.0579, -2.5378, -0.2799},
+		{-0.9671, 2.4844, 0.0201, -0.9578, -2.7556, 0.0601},
+		{-0.5897, 2.2607, -0.4399, -0.9183, -2.3388, -0.1399},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-0.8841, 2.4094, -0.3399, -0.8685, -2.5676, 0.0201},
+		{-0.7770, 2.6235, -0.0199, -0.6709, -2.7712, -0.1999},
+		{ 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-0.6104, 1.7180, 0.2201, -0.7074, -1.3681, 0.1201},
+		{0.0000, 0.0000, 0.0000, -0.5919, -3.2353, 0.9601},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-1.1024, 2.5796, 0.0401, -1.1261, -2.6473, 0.1601},
+		{-1.0971, 3.1462, 0.0401, -1.1327, -3.1055, 0.1601},
+		{-0.8495, 2.5284, -0.0799, -0.8870, -2.7776, 0.0001},
+		{-0.7905, 2.4656, -0.0599, -0.9075, -2.8130, 0.0001},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-0.8513, 2.3630, -0.2199, -0.8275, -2.8485, 0.1401},
+		{-1.0909, 2.3818, 0.0001, -1.1540, -2.1156, -0.0399},
+		{-0.9219, 2.1787, 0.0401, -0.7095, -2.1087, 0.0801},
+		{0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000},
+		{-0.8915, 3.0670, 0.2201, -0.9740, -3.0460, 0.3601},
+		{-0.7725, 2.4576, -0.1999, -1.1318, -3.4186, 0.1401},
+		{-0.9152, 1.9097, -0.0355, -0.7552, -1.9266, -0.0355},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-0.8723, 2.5986, -0.1770, 0.0, 0.0, 0.0},
+		{-0.8579, 2.3582, -0.0213, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-1.1068, 2.5744, 0.0086, -1.1365, -2.6250, 0.1679},
+		{-0.7672, 2.2106, -0.3185, -0.9113, -2.3474, -0.0273},
+		{-1.1143, 2.6057, -0.0456, -1.1410, -2.9714, -0.0456},
+		{-0.7012, 3.0199, -0.6678, -1.3807, -3.3356, 1.2628},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-1.2341, 4.2204, 0.0806, 0.0, 0.0, 0.0},
+		{-1.4241, 4.4811, -0.7354, -1.2973, -4.8274, -0.8974},
+		{-0.9512, 2.7208, -0.0543, -0.9926, -2.7809, -0.0348},
+		{-0.9401, 2.7868, -0.0726, -1.0208, -2.7461, -0.1324},
+		{-0.9166, 2.6548, -0.0487, -1.0124, -2.8219, -0.0487}, //fake
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-0.2607, 0.6038, 0.2881, -0.1973, -0.9958, 0.0638},
+		{-0.9279, 3.6538, -0.0473, -1.3003, -3.9309, -1.0661}, //fake back
+		{-0.8576, 2.9431, 0.1425, -1.0428, -2.9851, -0.1486}, //fake back
+		{-0.9421, 2.3087, -0.1128, -0.9559, -2.2882, -0.0411},
+		{-0.9351, 2.4078, -0.0242, -0.9825, -2.2344, 0.0844},
+		{-0.8783, 2.5102, -0.1526, -0.8133, -2.5965, -0.3237}, //fake back
+		{-1.0177, 2.5256, 0.0698, -1.0505, -2.5713, 0.2047},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-0.4216, 1.5030, -0.1191, -0.5225, -1.0517, 0.4484}, //fake
+		{-4.0331, 3.9619, -0.9118, -1.5976, -0.3739, 0.4484}, //fake!
+		{-0.9410, 2.3774, 0.0985, -0.9852, -2.4663, -0.0020},
+		{-1.0159, 2.9278, -0.1698, -0.8236, -2.7548, -0.0574},
+		{-0.8265, 2.5014, -0.2084, -0.9267, -2.6058, -0.1784},
+		{-0.8577, 2.3943, -0.1248, -0.8736, -3.0999, -0.0900},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-0.9827, 2.5810, -0.1248, -1.0597, -2.7121, -0.0842},
+		{-0.6055, 2.3378, -0.2108, -0.7826, -2.1992, 0.0913},
+		{-0.9712, 2.6252, -0.0064, -0.8281, -2.9729, -0.0577},
+		{-0.8414, 2.2904, 0.0719, -0.9831, -2.6214, -0.0116}, //fake front
+		{-0.7346, 3.5720, 0.0200, -0.8597, -3.2242, -0.5918},
+		{-0.4372, 1.6776, -0.0400, -0.7955, -2.0453, -0.2888},
+		{-1.1294, 1.0702, 0.0719, -1.0580, -2.6948, 0.0719},
+		{-0.9582, 2.5222, 0.0271, -0.9937, -2.5915, 0.0719},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-0.9264, 2.4914, 0.0271, -0.9070, -2.5802, 0.0271},
+		{-1.0477, 2.5642, -0.1807, -1.0302, -2.6549, -0.1297},
+		{-0.9334, 2.6344, -0.0448, -0.9785, -3.0524, 0.0366},
+		{-0.8757, 3.0634, 0.3600, -0.9933, -2.9119, 0.4752},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-0.9409, 2.5345, 0.0600, -1.1112, -2.8095, 0.0651},
+		{-0.9236, 1.1282, -0.0462, 0.0, 0.0, 0.0},
+		{-0.9686, 2.5396, 0.5800, -1.1128, -2.8895, 0.7691},
+		{-0.9886, 2.4796, 0.7000, -1.0904, -2.7699, 0.6871},
+		{-0.9452, 2.0854, 0.0836, -0.9187, -2.4047, 0.3185},
+		{-0.9037, 2.4333, -0.0168, -0.8819, -2.2910, 0.1482},
+		{-0.9347, 2.5097, -0.2644, -0.9639, -2.2337, 0.1259},
+		{-0.9157, 2.5754, -0.0857, -0.9317, -2.5444, -0.0191},
+		{-0.9299, 2.3759, 0.0201, -0.8575, -2.2773, 0.1659},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-0.8503, 2.0545, 0.0346, -0.9249, -1.9224, 0.0816},
+		{-0.9539, 2.7226, 0.0346, -0.9506, -2.9199, 0.0346},
+		{-0.9942, 2.9212, -0.1543, -1.0077, -2.9164, -0.1543},
+		{-0.2962, 2.0729, -0.0171, -0.2384, -1.2180, 0.0720},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-0.3095, 0.7291, -0.0971, -0.4318, -0.8940, -0.0510},
+		{-0.7949, 3.0624, -0.3371, -0.8727, -3.0917, -0.4540},
+		{-0.4348, 1.6912, -0.2171, -0.4277, -1.1358, -0.2069},
+		{-0.9483, 2.3252, 0.1334, -0.9173, -2.7359, -0.0291},
+		{-0.9948, 2.4505, 0.1883, -0.9983, -3.1357, -0.0291},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-1.0478, 4.3687, -0.1800, -1.1188, -5.3472, -0.5099},
+		{-1.0598, 2.3634, 0.1013, -1.0873, -2.7596, 0.1013},
+		{-0.7970, 2.6313, -0.2429, -1.0776, -2.8302, 0.1013},
+		{0.0, 0.0, 0.0, -0.1975, -1.0375, 0.3448},
+		{-0.8583, 2.4404, -0.0571, -0.9214, -3.3625, 0.0521},
+		{-0.5225, 1.3799, 0.2429, -0.5486, -1.5684, 0.2462},
+		{0.0, 0.0, 0.0, -1.0452, -4.3338, -0.7298}, //trailer
+		{-1.0068, 2.7905, 0.0907, -0.9760, -3.0160, 0.2088},
+		{-0.2872, 0.5383, 0.2009, -0.1703, -1.3533, 0.2784},
+		{-1.0236, 2.1415, -0.2834, -1.0832, -2.4851, 0.1047},
+		{-1.0116, 3.3590, 0.1029, -1.0679, -3.9639, -0.3029},
+		{-0.8107, 2.3905, 0.1834, -0.9605, -2.2799, 0.3761},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, -1.0590, -3.9902, -1.0809}, //trailer
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-1.0419, 2.2929, -0.0255, -1.0332, -2.6951, 0.0005},
+		{-1.0419, 2.2929, -0.0255, -1.0332, -2.6951, 0.0005},
+		{-1.0423, 2.3495, 0.0600, -1.0326, -2.6930, 0.0600},
+		{-1.0837, 2.5663, 0.0301, -1.1267, -2.6290, 0.1451},
+		{-0.8782, 2.6525, -0.0344, -1.0586, -2.6696, 0.0596},
+		{-0.8094, 3.0084, 0.5429, -0.9321, -3.0808, 0.9071},
+		{-1.0297, 2.0487, -0.0543, -0.8907, -2.5334, -0.3228},
+		{-0.9069, 2.6672, -0.1335, -0.8647, -2.5991, -0.1335},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, -0.5702, -1.5842, 0.7956}, //trailer
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{-0.8972, 3.0244, 0.2629, -0.9349, -2.9809, 0.2791},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
+	};
+#endif
+
 new EVF::VehicleTrailerID[MAX_VEHICLES],
 	EVF::VehicleTempData[MAX_VEHICLES][EVF::VehicleData],
 	EVF::PlayerTempData[MAX_PLAYERS][EVF::PlayerData],
 	EVF::ModShopStatus[MAX_PLAYERS];
 	
 #if defined EVF_Streamer
-	new STREAMER_TAG_OBJECT EVF::VehicleNeon[MAX_VEHICLES][2];
+	new STREAMER_TAG_OBJECT EVF::VehicleNeon[MAX_VEHICLES][2],
+		EVF::Blink[MAX_VEHICLES][4],
+		EVF::BlinkSide[MAX_VEHICLES],
+		Float:EVF::BlinkR[MAX_VEHICLES],
+		bool:EVF::VehicleBlinking = false;
 #endif
 
 new const Float:EVF::TopSpeed[MAX_VEHICLE_MODELS] = {
@@ -929,7 +1177,7 @@ new const EVF::VehicleDoors[MAX_VEHICLE_MODELS] = {
 	4,0,2,2,0,4,0,2,2,2,0,0,0,2,0,0,4,4,4,2,2,0,2,2,4,2,0,0,0,2,0,0
 };
 
-static const EVF::ComponentPrice[][] = {
+new const EVF::ComponentPrice[][] = {
 	{1005, 150},	{1004, 100},	{1012, 250},	{1011, 220},
 	{1143, 150},	{1145, 100},	{1020, 250},	{1021, 200},
 	{1022, 150},	{1019, 300},	{1018, 350},	{1013, 100},
@@ -975,7 +1223,7 @@ static const EVF::ComponentPrice[][] = {
 	{1086, 100},	{1087, 1500}
 };
 
-static const EVF::ValidComponent[][] = {
+new const EVF::ValidComponent[][] = {
 	{400, 1024, 1021, 1020, 1019, 1018, 1013, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000},
 	{401, 1145, 1144, 1143, 1142, 1020, 1019, 1017, 1013, 1007, 1006, 1005, 1004, 1003, 1001, 0000, 0000, 0000, 0000},
 	{402, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000},
@@ -1190,7 +1438,7 @@ static const EVF::ValidComponent[][] = {
 	{611, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000, 0000}
 };
 
-static const EVF::ComponentNames[][] = {
+new const EVF::ComponentNames[][] = {
 	"Pro",
 	"Win",
 	"Drag",
@@ -1474,6 +1722,18 @@ static const EVF::ComponentNames[][] = {
 #define IsToggledVehicleBulletproof(%0)			GetVehiclePropertyValue((%0),e_VEHICLE_BULLETPROOF)
 #define ToggleVehicleBulletproof(%0,%1)			SetVehiclePropertyValue((%0),e_VEHICLE_BULLETPROOF,(_:%1))
 
+#if defined EVF_Streamer
+	#define EVF_IsCarBlinking(%0)				(EVF::BlinkSide[(%0)] != EVF_CAR_BLINK_NONE)
+	#define EVF_ToggleVehicleBlinking(%0)		EVF::VehicleBlinking = (%0)
+	#define EVF_IsToggledVehicleBlinking()		EVF::VehicleBlinking
+#endif
+
+
+//Keys
+#define EVF_KeyPressed(%0) 						(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
+#define EVF_KeyReleased(%0)						(((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
+#define EVF_KeyHolding(%0) 						((newkeys & (%0)) == (%0))
+
 //extra names:
 #define GetVehicleDoorAmountByModelid			GetVehicleModelDoorAmount
 #define ResetVehiclePaintjob					RemoveVehiclePaintjob
@@ -1529,6 +1789,114 @@ EVF::Function:: EVF::IsPlayerInModShop(playerid){
 	if(IsPlayerConnected(playerid)) return EVF::ModShopStatus[playerid];
 	return 0;
 }
+
+EVF::Function:: EVF::IsTrailer(vehicleid){
+	switch(GetVehicleModel(vehicleid)){
+		case 435, 450, 584, 591, 606: return 1;
+	}
+	return 0;
+}
+
+#if defined EVF_Streamer
+	EVF::Function:: EVF::DisableCarBlinking(vehicleid){
+		if(!IsValidVehicle(vehicleid)) return 0;
+		if(!EVF::IsCarBlinking(vehicleid)) return 0;
+		if(IsValidDynamicObject(EVF::Blink[vehicleid][0])) DestroyDynamicObject(EVF::Blink[vehicleid][0]);
+		if(IsValidDynamicObject(EVF::Blink[vehicleid][1])) DestroyDynamicObject(EVF::Blink[vehicleid][1]);
+		if(IsValidDynamicObject(EVF::Blink[vehicleid][2])) DestroyDynamicObject(EVF::Blink[vehicleid][2]);
+		if(IsValidDynamicObject(EVF::Blink[vehicleid][3])) DestroyDynamicObject(EVF::Blink[vehicleid][3]);
+		EVF::Blink[vehicleid][0] = EVF::Blink[vehicleid][1] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
+		EVF::Blink[vehicleid][2] = EVF::Blink[vehicleid][3] = STREAMER_TAG_OBJECT INVALID_STREAMER_ID;
+		EVF::BlinkSide[vehicleid] = EVF_CAR_BLINK_NONE;
+		return 1;
+	}
+	
+	EVF::Function:: EVF::SetCarBlinking(vehicleid,side,bool:skip=false){
+		if(!IsValidVehicle(vehicleid)) return 0;
+		if(EVF::IsCarBlinking(vehicleid) && !skip) return EVF::DisableCarBlinking(vehicleid);
+		new id = GetVehicleModel(vehicleid)-400, trailerid, obj[4];
+
+		if(!skip) EVF::BlinkSide[vehicleid] = side;
+
+		GetVehicleZAngle(vehicleid,EVF::BlinkR[vehicleid]);
+
+		if(id > -1){
+			if(EVF::BlinkOffsetData[id][EVF::X] != 0.0){
+				switch(side){
+					case EVF_CAR_BLINK_LEFT: {
+						obj[0] = CreateDynamicObject(19294,0.0,0.0,-9000.0,0.0,0.0,0.0);
+						EVF::Blink[vehicleid][0] = obj[0];
+					}
+					case EVF_CAR_BLINK_RIGHT: {
+						obj[2] = CreateDynamicObject(19294,0.0,0.0,0.0,0.0,0.0,0.0);
+						EVF::Blink[vehicleid][2] = obj[2];
+					}
+				}
+			}
+			if((trailerid = GetVehicleTrailer(vehicleid)) != 0){
+				if(EVF::IsTrailer(trailerid)){
+					switch(side){
+						case EVF_CAR_BLINK_LEFT: {
+							obj[1] = CreateDynamicObject(19294,0.0,0.0,-9000.0,0.0,0.0,0.0);
+							EVF::Blink[vehicleid][1] = obj[1];
+						}
+						case EVF_CAR_BLINK_RIGHT: {
+							obj[3] = CreateDynamicObject(19294,0.0,0.0,0.0,0.0,0.0,0.0);
+							EVF::Blink[vehicleid][3] = obj[3];
+						}
+					}
+				}
+			} else {
+				if(EVF::BlinkOffsetData[id][EVF::rX] != 0.0){
+					switch(side){
+						case EVF_CAR_BLINK_LEFT: {
+							obj[1] = CreateDynamicObject(19294,0.0,0.0,0.0,0.0,0.0,0.0);
+							EVF::Blink[vehicleid][1] = obj[1];
+						}
+						case EVF_CAR_BLINK_RIGHT: {
+							obj[3] = CreateDynamicObject(19294,0.0,0.0,0.0,0.0,0.0,0.0);
+							EVF::Blink[vehicleid][3] = obj[3];
+						}
+					}
+				}
+			}
+
+			switch(side){
+				case EVF_CAR_BLINK_LEFT: {
+					if(obj[0] != 0){
+						AttachDynamicObjectToVehicle(obj[0],vehicleid,EVF::BlinkOffsetData[id][EVF::X],EVF::BlinkOffsetData[id][EVF::Y],EVF::BlinkOffsetData[id][EVF::Z],0.0,0.0,0.0);
+					}
+					if(trailerid != 0){
+						id = GetVehicleModel(trailerid)-400;
+						AttachDynamicObjectToVehicle(obj[1],trailerid,EVF::BlinkOffsetData[id][EVF::rX],EVF::BlinkOffsetData[id][EVF::rY],EVF::BlinkOffsetData[id][EVF::rZ],0.0,0.0,0.0);
+					} else {
+						if(obj[1] != 0){
+							AttachDynamicObjectToVehicle(obj[1],vehicleid,EVF::BlinkOffsetData[id][EVF::rX],EVF::BlinkOffsetData[id][EVF::rY],EVF::BlinkOffsetData[id][EVF::rZ],0.0,0.0,0.0);
+						}
+					}
+				}
+				case EVF_CAR_BLINK_RIGHT: {
+					if(obj[2] != 0){
+						AttachDynamicObjectToVehicle(obj[2],vehicleid,-EVF::BlinkOffsetData[id][EVF::X],EVF::BlinkOffsetData[id][EVF::Y],EVF::BlinkOffsetData[id][EVF::Z],0.0,0.0,0.0);
+					}
+					if(trailerid != 0){
+						id = GetVehicleModel(trailerid)-400;
+						AttachDynamicObjectToVehicle(obj[3],trailerid,-EVF::BlinkOffsetData[id][EVF::rX],EVF::BlinkOffsetData[id][EVF::rY],EVF::BlinkOffsetData[id][EVF::rZ],0.0,0.0,0.0);
+					} else {
+						if(obj[3] != 0){
+							AttachDynamicObjectToVehicle(obj[3],vehicleid,-EVF::BlinkOffsetData[id][EVF::rX],EVF::BlinkOffsetData[id][EVF::rY],EVF::BlinkOffsetData[id][EVF::rZ],0.0,0.0,0.0);
+						}
+					}
+				}
+				case EVF_CAR_BLINK_EMERGENCY: {
+					EVF::SetCarBlinking(vehicleid,EVF_CAR_BLINK_LEFT,true);
+					EVF::SetCarBlinking(vehicleid,EVF_CAR_BLINK_RIGHT,true);
+				}
+			}
+		}
+		return 1;
+	}
+#endif
 
 EVF::Function:: IsValidComponentForVehicle(vehicleid,componentid){
 	new modelid = GetVehicleModel(vehicleid);
@@ -2817,8 +3185,19 @@ public OnPlayerUpdate(playerid){
 		if(EVF::VehicleTrailerID[vehicleid] != trailerid){
 			if(trailerid != 0){
 				CallRemoteFunction("OnTrailerHooked","iii",playerid,vehicleid,trailerid);
+				#if defined EVF_Streamer
+					EVF::SetCarBlinking(trailerid,EVF::BlinkSide[vehicleid]);
+				#endif
 			} else {
-				CallRemoteFunction("OnTrailerUnhooked","iii",playerid,vehicleid,EVF::VehicleTrailerID[vehicleid]);
+				if(EVF::VehicleTrailerID[vehicleid] != INVALID_VEHICLE_ID){
+					CallRemoteFunction("OnTrailerUnhooked","iii",playerid,vehicleid,EVF::VehicleTrailerID[vehicleid]);
+				
+					#if defined EVF_Streamer
+						if(GetPlayerVehicleSeat(playerid) == 0){
+							EVF::DisableCarBlinking(EVF::VehicleTrailerID[vehicleid]);
+						}
+					#endif
+				}
 			}
 			EVF::VehicleTrailerID[vehicleid] = trailerid;
 		}
@@ -2864,6 +3243,11 @@ public OnPlayerStateChange(playerid,newstate,oldstate){
 		if(IsVehicleSticky(vehicleid)){
 			SetVehicleParams(vehicleid,VEHICLE_TYPE_ENGINE,1);
 		}
+		#if defined EVF_Streamer
+			EVF::DisableCarBlinking(vehicleid);
+			new trailerid = GetVehicleTrailer(vehicleid);
+			if(IsValidVehicle(trailerid)) EVF::DisableCarBlinking(trailerid);
+		#endif
 	}
 	#if defined EVF_OnPlayerStateChange
 		EVF::OnPlayerStateChange(playerid,newstate,oldstate);
@@ -2896,6 +3280,64 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys){
 			}
 		}
 	}
+	
+	#if defined EVF_Streamer
+		if(EVF::IsToggledVehicleBlinking()){
+			new vehicleid = GetPlayerVehicleID(playerid);
+			if(IsValidVehicle(vehicleid)){
+				if(GetPlayerVehicleSeat(playerid) == 0){
+					if(EVF::KeyPressed(KEY_LOOK_BEHIND)){
+						if(!EVF::IsCarBlinking(vehicleid)){
+							EVF::SetCarBlinking(vehicleid,EVF_CAR_BLINK_EMERGENCY);
+						} else {
+							EVF::DisableCarBlinking(vehicleid);
+						}
+					}
+					if(EVF::KeyPressed(KEY_LOOK_LEFT)){
+						if(!EVF::IsCarBlinking(vehicleid)){
+							EVF::SetCarBlinking(vehicleid,EVF_CAR_BLINK_LEFT);
+						} else {
+							EVF::DisableCarBlinking(vehicleid);
+						}
+					} else if(EVF::KeyPressed(KEY_LOOK_RIGHT)){
+						if(!EVF::IsCarBlinking(vehicleid)){
+							EVF::SetCarBlinking(vehicleid,EVF_CAR_BLINK_RIGHT);
+						} else {
+							EVF::DisableCarBlinking(vehicleid);
+						}
+					}
+					if(EVF::IsCarBlinking(vehicleid)){
+						new Float:tmp_a, Float:tmp_b = EVF::BlinkR[vehicleid];
+						GetVehicleZAngle(vehicleid,tmp_a);
+						
+						switch(EVF::BlinkSide[vehicleid]){
+							case EVF_CAR_BLINK_LEFT: {
+								tmp_b += 55.0;
+								if(tmp_b > 360.0) tmp_b -= 360.0;
+								if(tmp_a < tmp_b-180.0) tmp_a = tmp_a+360.0;
+								if(tmp_b < tmp_a-180.0) tmp_b = tmp_b+360.0;
+
+								if(tmp_a > tmp_b){
+									EVF::DisableCarBlinking(vehicleid);
+								}
+							}
+							case EVF_CAR_BLINK_RIGHT: {
+								tmp_b -= 55.0;
+								if(tmp_b < 0.0) tmp_b = 360.0 + tmp_b;
+								if(tmp_a < tmp_b-180.0) tmp_a = tmp_a+360.0;
+								if(tmp_b < tmp_a-180.0) tmp_b = tmp_b+360.0;
+
+								if(tmp_a < tmp_b){
+									EVF::DisableCarBlinking(vehicleid);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	#endif
+	
 	#if defined EVF_OnPlayerKeyStateChange
 		EVF::OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
 	#endif
@@ -2945,6 +3387,10 @@ public OnVehicleSpawn(vehicleid){
 	if(EVF::GetVehicleColor(vehicleid,color1,color2)){
 		ChangeVehicleColor(vehicleid,color1,color2);
 	}
+	
+	#if defined EVF_Streamer
+		EVF::DisableCarBlinking(vehicleid);
+	#endif
 
 	new Float:pos[3];
 	GetVehiclePos(vehicleid,pos[0],pos[1],pos[2]);
@@ -2976,6 +3422,29 @@ public OnVehicleSpawn(vehicleid){
 	#define _ALS_OnVehicleSpawn
 #endif
 #define OnVehicleSpawn EVF_OnVehicleSpawn
+
+//Hook: OnVehicleDeath
+public OnVehicleDeath(vehicleid,killerid){
+	
+	#if defined EVF_Streamer
+		EVF::DisableCarBlinking(vehicleid);
+	#endif
+
+	#if defined EVF_OnVehicleDeath
+		EVF::OnVehicleDeath(vehicleid,killerid);
+	#endif
+	return 1;
+}
+
+#if defined EVF_OnVehicleDeath
+	forward EVF_OnVehicleDeath(vehicleid,killerid);
+#endif
+#if defined _ALS_OnVehicleDeath
+	#undef OnVehicleDeath
+#else
+	#define _ALS_OnVehicleDeath
+#endif
+#define OnVehicleDeath EVF_OnVehicleDeath
 
 EVF::Public:: EVF::OnRequestResponse(index, response_code, data[]){
 	if(response_code == 200){
