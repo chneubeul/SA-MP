@@ -2,7 +2,7 @@
  *                                                                                                                                  *
  *                                                      Ultimate Script Secure                                                      *
  *                                                                                                                                  *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                              *
+ * Copyright © 2018 Abyss Morgan. All rights reserved.                                                                              *
  *                                                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                                                      *
  * Publication: http://forum.sa-mp.com/showthread.php?t=600408                                                                      *
@@ -69,9 +69,9 @@ enum e_server_config {
 
 //IP Port LicenseID MaxPlayers RconPassword Language RuleType
 new ADMServerList[][e_server_config] = {
-	{ "127.0.0.1", 7777, 20170501, 500, "123", "Polish", USS_RULE_STANDARD},
-	{ "127.0.0.1", 7778, 20170501, 500, "123", "English", USS_RULE_STANDARD},
-	{ USS_ANONYMOUS, 0, 20170501, 150, "123", "English", USS_RULE_LID} //USS_ANONYMOUS - special option for any ip/port
+	{ "127.0.0.1", 7777, 20180501, 500, "123", "Polish", USS_RULE_STANDARD},
+	{ "127.0.0.1", 7778, 20180501, 500, "123", "English", USS_RULE_STANDARD},
+	{ USS_ANONYMOUS, 0, 20180501, 150, "123", "English", USS_RULE_LID} //USS_ANONYMOUS - special option for any ip/port
 };
 
 forward USS_OnScriptError(errorid);

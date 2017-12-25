@@ -2,7 +2,7 @@
  *                                                                                                  *
  *                                        Interior Teleport                                         *
  *                                                                                                  *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
+ * Copyright © 2018 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/other                         *
  * Publication: None                                                                                *
@@ -141,7 +141,7 @@ new InteriorList[][e_interiorlist] = {
 	{-285.2511,1471.197,1084.375,85.6547,15,"Burglary House X20"},
 	{-26.8339,-55.5846,1003.5469,3.9528,6,"24/7 [version 6]"},
 	{442.1295,-52.4782,999.7167,177.9394,6,"Secret Valley Diner"},
-	{2182.2017,1628.5848,1043.8723,224.8601,2,"Rosenberg's Office in Caligulas"},
+	{2182.2018,1628.5848,1043.8723,224.8601,2,"Rosenberg's Office in Caligulas"},
 	{748.4623,1438.2378,1102.9531,0.6069,6,"Fanny Batter's Whore House"},
 	{2807.3604,-1171.7048,1025.5703,13.7117,8,"Colonel Furhberger's"},
 	{366.0002,-9.4338,1001.8516,160.528,9,"Cluckin' Bell"},

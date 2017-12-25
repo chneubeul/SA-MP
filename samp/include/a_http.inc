@@ -1,9 +1,8 @@
-/*****************************************************
- *                                                   *
- * Copyright © 2017 SA-MP Team. All rights reserved. *
- * SAMP Version: 0.3.8 RC4                           *
- *                                                   *
- *****************************************************/
+ /*  SA-MP threaded HTTP/1.0 client for pawn
+ *
+ *  (c) Copyright 2010, SA-MP Team
+ *
+ */
 
 // HTTP requests
 #define HTTP_GET						1

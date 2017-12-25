@@ -2,7 +2,7 @@
  *                                                                                                                                *
  *                                           )(   Unsigned Long 61 Bit [Long Yoyo]   )(                                           *
  *                                                                                                                                *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                            *
+ * Copyright © 2018 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *
  * Publication: http://forum.sa-mp.com/showthread.php?t=598933                                                                    *
@@ -20,7 +20,7 @@
  * 0 - 2 000 000 000 000 000 000                                                                                                  *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
- * bool:IsValueContainLY(prefix,suffix,value);                                                                                    *
+ * IsValueContainLY(prefix,suffix,value);                                                                                         *
  * GetLYString(prefix,suffix,string[],maxdest = sizeof(string));                                                                  *
  * LYStringToLY(&prefix,&suffix,string[]); //Reverse to GetLYString                                                               *
  * UpdateLY(&prefix,&suffix,value,limitprefix = DEFAULT_MAX_LY_PREFIX);                                                           *
@@ -30,11 +30,11 @@
  * GetPercentLY(prefix,suffix,&o_prefix,&o_suffix,Float:percent = 0.0,limitprefix = DEFAULT_MAX_LY_PREFIX);                       *
  *                                                                                                                                *
  * Operators:                                                                                                                     *
- * bool:IsLYEqual(prefix,suffix,from_prefix,from_suffix);                                                                         *
- * bool:IsLYSmallerThan(prefix,suffix,from_prefix,from_suffix);                                                                   *
- * bool:IsLYSmallerThanOrEqual(prefix,suffix,from_prefix,from_suffix);                                                            *
- * bool:IsLYBiggerThan(prefix,suffix,from_prefix,from_suffix);                                                                    *
- * bool:IsLYBiggerThanOrEqual(prefix,suffix,from_prefix,from_suffix);                                                             *
+ * IsLYEqual(prefix,suffix,from_prefix,from_suffix);                                                                              *
+ * IsLYSmallerThan(prefix,suffix,from_prefix,from_suffix);                                                                        *
+ * IsLYSmallerThanOrEqual(prefix,suffix,from_prefix,from_suffix);                                                                 *
+ * IsLYBiggerThan(prefix,suffix,from_prefix,from_suffix);                                                                         *
+ * IsLYBiggerThanOrEqual(prefix,suffix,from_prefix,from_suffix);                                                                  *
  *                                                                                                                                *
  **********************************************************************************************************************************/
  
@@ -64,7 +64,7 @@
 #define MAX_LY_PREFIX	 				(2147483647)
 #define DEFAULT_MAX_LY_PREFIX			(2000000000)
 
-stock bool:IsValueContainLY(prefix,suffix,value){
+stock IsValueContainLY(prefix,suffix,value){
 	if((prefix == 0) && (suffix == 0)) return false;
 	if((suffix < value) && (prefix == 0)) return false;
 	return true;
@@ -190,34 +190,34 @@ stock GetPercentLY(prefix,suffix,&o_prefix,&o_suffix,Float:percent = 0.0,limitpr
 }
 
 //Operator  a == b
-stock bool:IsLYEqual(prefix,suffix,from_prefix,from_suffix){
+stock IsLYEqual(prefix,suffix,from_prefix,from_suffix){
 	if(prefix == from_prefix && suffix == from_suffix) return true;
 	return false;
 }
 
 //Operator  a < b
-stock bool:IsLYSmallerThan(prefix,suffix,from_prefix,from_suffix){
+stock IsLYSmallerThan(prefix,suffix,from_prefix,from_suffix){
 	if(prefix < from_prefix) return true;
 	if(prefix == from_prefix && suffix < from_suffix) return true;
 	return false;
 }
 
 //Operator  a <= b
-stock bool:IsLYSmallerThanOrEqual(prefix,suffix,from_prefix,from_suffix){
+stock IsLYSmallerThanOrEqual(prefix,suffix,from_prefix,from_suffix){
 	if(prefix <= from_prefix) return true;
 	if(prefix == from_prefix && suffix <= from_suffix) return true;
 	return false;
 }
 
 //Operator  a > b
-stock bool:IsLYBiggerThan(prefix,suffix,from_prefix,from_suffix){
+stock IsLYBiggerThan(prefix,suffix,from_prefix,from_suffix){
 	if(prefix > from_prefix) return true;
 	if(prefix == from_prefix && suffix > from_suffix) return true;
 	return false;
 }
 
 //Operator a >= b
-stock bool:IsLYBiggerThanOrEqual(prefix,suffix,from_prefix,from_suffix){
+stock IsLYBiggerThanOrEqual(prefix,suffix,from_prefix,from_suffix){
 	if(prefix >= from_prefix) return true;
 	if(prefix == from_prefix && suffix >= from_suffix) return true;
 	return false;

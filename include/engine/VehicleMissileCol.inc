@@ -2,7 +2,7 @@
  *                                                                                                                                *
  *                                         Vehicle Missile Launcher (ColAndreas Version)                                          *
  *                                                                                                                                *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                            *
+ * Copyright © 2018 Abyss Morgan. All rights reserved.                                                                            *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/engine                                                      *
  * Publication: http://forum.sa-mp.com/showthread.php?t=609788                                                                    *
@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
- * 3DTryg Version: 4.5.2                                                                                                          *
+ * 3DTryg Version: 4.5.3                                                                                                          *
  * Missile Version: 2.2.0                                                                                                         *
  *                                                                                                                                *
  * Vehicle Weapons:                                                                                                               *
@@ -261,11 +261,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40502)
-	#error [ADM] Update you 3DTryg.inc to v4.5.2 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40503)
+	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #if defined _veh_missile_launcher

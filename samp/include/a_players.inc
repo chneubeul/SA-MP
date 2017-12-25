@@ -56,6 +56,16 @@
 #define WEAPONSTATE_MORE_BULLETS		2
 #define WEAPONSTATE_RELOADING			3
 
+#define RACE_CP_TYPE_NORMAL				0
+#define RACE_CP_TYPE_FINISH				1
+#define RACE_CP_TYPE_NOTHING			2
+#define RACE_CP_TYPE_AIR_NORMAL			3
+#define RACE_CP_TYPE_AIR_FINISH			4
+#define RACE_CP_TYPE_AIR_ROTATE			5
+#define RACE_CP_TYPE_AIR_DISAPPEARS		6
+#define RACE_CP_TYPE_AIR_SWINGS_DOWN	7
+#define RACE_CP_TYPE_AIR_SWINGS_UP		8
+
 // Player
 native SetSpawnInfo(playerid, team, skin, Float:x, Float:y, Float:z, Float:rotation, weapon1, weapon1_ammo, weapon2, weapon2_ammo, weapon3, weapon3_ammo);
 native SpawnPlayer(playerid);

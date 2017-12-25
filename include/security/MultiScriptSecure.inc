@@ -2,7 +2,7 @@
  *                                                                                                  *
  *                                       Multi Script Secure                                        *
  *                                                                                                  *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
+ * Copyright © 2018 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/security                      *
  * Publication: http://forum.sa-mp.com/showthread.php?t=600408                                      *
@@ -74,7 +74,7 @@ Language - string
 //IP Port LicenseID MaxPlayers RconPassword Language
 new ADMServerList[][e_server_config] = {
 	{ "127.0.0.1", 7777, 20160201, 500, "123", "Polish" },
-	{ "127.0.0.1", 7778, 20170201, 500, "123", "English" }
+	{ "127.0.0.1", 7778, 20180201, 500, "123", "English" }
 };
 
 

@@ -2,7 +2,7 @@
  *                                                                                                  *
  *                                     )(   Bit Functions   )(                                      *
  *                                                                                                  *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
+ * Copyright © 2018 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  * Publication: http://forum.sa-mp.com/showthread.php?t=591223                                      *

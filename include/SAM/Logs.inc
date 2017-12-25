@@ -2,7 +2,7 @@
  *                                                                                                  *
  *                                        )(   Log File   )(                                        *
  *                                                                                                  *
- * Copyright © 2017 Witkacy. All rights reserved.                                                   *
+ * Copyright © 2018 Witkacy. All rights reserved.                                                   *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
  * Publication: None                                                                                *

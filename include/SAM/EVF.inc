@@ -2,7 +2,7 @@
  *                                                                                                                                *
  *                                              )(   Extended Vehicle Functions   )(                                              *
  *                                                                                                                                *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                            *
+ * Copyright © 2018 Abyss Morgan. All rights reserved.                                                                            *
  * Contributors: Emmet_, Pottus, kvann, Hanger, Freaksken, Gammix, Yashas, Admigo, RIDE2DAY                                       *
  *                                                                                                                                *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                         *

@@ -2,7 +2,7 @@
  *                                                                                                  *
  *                                         )(   SHA256   )(                                         *
  *                                                                                                  *
- * Copyright © 2017 National Security Agency. All rights reserved.                                  *
+ * Copyright © 2018 National Security Agency. All rights reserved.                                  *
  * Contributors: dwd222, Abyss Morgan                                                               *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *
@@ -16,8 +16,8 @@
  * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  * Functions:                                                                                       *
- * SHA256_Hash(str[]);                                                                              *
- * SHA256_HashFile(const file_name[]);                                                              *
+ * SHA256::Hash(str[]);                                                                             *
+ * SHA256::HashFile(const file_name[]);                                                             *
  *                                                                                                  *
  ****************************************************************************************************/
 
@@ -26,10 +26,9 @@
 #endif
 #define _SHA256_HASH
 
-#define SHA256(%0)			SHA256_Hash(%0)
-#define SHA_256(%0)			SHA256_Hash(%0)
+#define SHA256::			SHA256_
 
-stock UINT8ToBit(value){
+stock SHA256::UINT8ToBit(value){
 	new str[] = "00000000", i = 7;
 	while(value){
 	    str[i] = (value % 2) + 48;
@@ -39,7 +38,7 @@ stock UINT8ToBit(value){
 	return str;
 }
 
-stock UINT64ToBit(value){
+stock SHA256::UINT64ToBit(value){
 	new str[] = "0000000000000000000000000000000000000000000000000000000000000000", i = 63;
 	while(value){
 	    str[i] = (value % 2) + 48;
@@ -49,7 +48,7 @@ stock UINT64ToBit(value){
 	return str;
 }
 
-stock BitToUINT32(str[]){
+stock SHA256::BitToUINT32(str[]){
 	new results = 0, j, fx = 0, len = strlen(str);
 	if(len > 32) len = 32;
 	j = len - 1;
@@ -60,23 +59,23 @@ stock BitToUINT32(str[]){
 	return results;
 }
 
-stock TextToBit(text[], bittext[], len){
+stock SHA256::TextToBit(text[], bittext[], len){
 	new i = 0, n = 0;
 	while(text[i] && n < len){
 	    new j = 0;
 	    new tmp[9];
-		tmp = UINT8ToBit(text[i++]);
+		tmp = SHA256::UINT8ToBit(text[i++]);
 		while(tmp[j]) bittext[n++] = tmp[j++];
 	}
 	bittext[n] = '\0';
 	return n;
 }
 
-stock RotateRight(value, rot){
+stock SHA256::RotateRight(value, rot){
 	return (value >>> rot) | (value << (32 - rot));
 }
 
-stock SHA256_Hash(str[]){
+stock SHA256::Hash(str[]){
     new H[] =  {0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19};
 
 	new k[] =  {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -98,7 +97,7 @@ stock SHA256_Hash(str[]){
 	
 	for(new n = 0; n < it; n++){
 	    new sha_256[128*4+1], s0, s1, w[64] = 0;
-	 	new len = TextToBit(str[n*64], sha_256, 512);
+	 	new len = SHA256::TextToBit(str[n*64], sha_256, 512);
 		if(len < 512){
 			sha_256[len++] = '1';
 
@@ -106,7 +105,7 @@ stock SHA256_Hash(str[]){
 			    sha_256[len++] = '0';
 			}
 			new tmp[65];
-			tmp = UINT64ToBit(strlen(str) * 8);
+			tmp = SHA256::UINT64ToBit(strlen(str) * 8);
 			new i = 0;
 			while(tmp[i]){
 				sha_256[len++] = tmp[i++];
@@ -117,18 +116,18 @@ stock SHA256_Hash(str[]){
   		new a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
 		new j = 32;
 		for(new x = 0; x < 16; x++){
-			w[x] = BitToUINT32(sha_256[(j*x)]);
+			w[x] = SHA256::BitToUINT32(sha_256[(j*x)]);
 		}
 		for(new i = 16; i <= 63; i++){
-			s0 = RotateRight(w[i - 15], 7)^RotateRight(w[i - 15], 18)^(w[i - 15] >>> 3);
-			s1 = RotateRight(w[i - 2], 17)^RotateRight(w[i - 2], 19)^(w[i - 2] >>> 10);
+			s0 = SHA256::RotateRight(w[i - 15], 7)^SHA256::RotateRight(w[i - 15], 18)^(w[i - 15] >>> 3);
+			s1 = SHA256::RotateRight(w[i - 2], 17)^SHA256::RotateRight(w[i - 2], 19)^(w[i - 2] >>> 10);
 			w[i] = (w[i - 16] + s0 + w[i - 7] + s1)&0xffffffff;
 		}
 		for(new i = 0; i < 64; i++){
-		    s0 = RotateRight(a, 2)^RotateRight(a, 13)^RotateRight(a, 22);
+		    s0 = SHA256::RotateRight(a, 2)^SHA256::RotateRight(a, 13)^SHA256::RotateRight(a, 22);
 		    new maj = (a&b)^(a&c)^(b&c);
 		    new t2 = s0 + maj;
-		    s1 = RotateRight(e, 6)^RotateRight(e, 11)^RotateRight(e, 25);
+		    s1 = SHA256::RotateRight(e, 6)^SHA256::RotateRight(e, 11)^SHA256::RotateRight(e, 25);
 		    new ch = (e&f)^((~e)&g);
 		    new t1 = h + s1 + ch + k[i] + w[i];
 		    h = g;
@@ -171,8 +170,8 @@ stock SHA256_Hash(str[]){
 	return ret;
 }
 
-//SHA256_HashFile by Abyss Morgan for SA:MP
-stock SHA256_HashFile(const file_name[]){
+//SHA256::HashFile by Abyss Morgan for SA:MP
+stock SHA256::HashFile(const file_name[]){
 	new ret[65];
 	if(!fexist(file_name)) return ret;
 	new File:inpf = fopen(file_name,io_read);
@@ -209,7 +208,7 @@ stock SHA256_HashFile(const file_name[]){
 			}
 		}
 		
-	 	new len = TextToBit(buffer, sha_256, 512);
+	 	new len = SHA256::TextToBit(buffer, sha_256, 512);
 		if(len < 512){
 			sha_256[len++] = '1';
 
@@ -217,7 +216,7 @@ stock SHA256_HashFile(const file_name[]){
 			    sha_256[len++] = '0';
 			}
 			new tmp[65];
-			tmp = UINT64ToBit(flength(inpf) * 8);
+			tmp = SHA256::UINT64ToBit(flength(inpf) * 8);
 			new i = 0;
 			while(tmp[i]){
 				sha_256[len++] = tmp[i++];
@@ -228,18 +227,18 @@ stock SHA256_HashFile(const file_name[]){
   		new a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
 		new j = 32;
 		for(new x = 0; x < 16; x++){
-			w[x] = BitToUINT32(sha_256[(j*x)]);
+			w[x] = SHA256::BitToUINT32(sha_256[(j*x)]);
 		}
 		for(new i = 16; i <= 63; i++){
-			s0 = RotateRight(w[i - 15], 7)^RotateRight(w[i - 15], 18)^(w[i - 15] >>> 3);
-			s1 = RotateRight(w[i - 2], 17)^RotateRight(w[i - 2], 19)^(w[i - 2] >>> 10);
+			s0 = SHA256::RotateRight(w[i - 15], 7)^SHA256::RotateRight(w[i - 15], 18)^(w[i - 15] >>> 3);
+			s1 = SHA256::RotateRight(w[i - 2], 17)^SHA256::RotateRight(w[i - 2], 19)^(w[i - 2] >>> 10);
 			w[i] = (w[i - 16] + s0 + w[i - 7] + s1)&0xffffffff;
 		}
 		for(new i = 0; i < 64; i++){
-		    s0 = RotateRight(a, 2)^RotateRight(a, 13)^RotateRight(a, 22);
+		    s0 = SHA256::RotateRight(a, 2)^SHA256::RotateRight(a, 13)^SHA256::RotateRight(a, 22);
 		    new maj = (a&b)^(a&c)^(b&c);
 		    new t2 = s0 + maj;
-		    s1 = RotateRight(e, 6)^RotateRight(e, 11)^RotateRight(e, 25);
+		    s1 = SHA256::RotateRight(e, 6)^SHA256::RotateRight(e, 11)^SHA256::RotateRight(e, 25);
 		    new ch = (e&f)^((~e)&g);
 		    new t1 = h + s1 + ch + k[i] + w[i];
 		    h = g;

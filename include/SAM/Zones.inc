@@ -2,7 +2,7 @@
  *                                                                                                  *
  *                                      )(   SA:MP Zones   )(                                       *
  *                                                                                                  *
- * Copyright © 2017 Cueball. All rights reserved.                                                   *
+ * Copyright © 2018 Cueball. All rights reserved.                                                   *
  * Contributors: Betamaster, Mabako, Simon, RoamPT                                                  *
  *                                                                                                  *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                           *

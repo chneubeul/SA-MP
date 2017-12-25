@@ -2,9 +2,9 @@
  *                                                                                                  *
  *                                )(   Stable Accidental Modules   )(                               *
  *                                                                                                  *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                              *
+ * Copyright © 2018 Abyss Morgan. All rights reserved.                                              *
  *                                                                                                  *
- * Pack Version: 2017_FSE_17                                                                        *
+ * Pack Version: 2018_FSE_18                                                                        *
  * SA:MP Version: 0.3.7                                                                             *
  *                                                                                                  *
  ****************************************************************************************************/

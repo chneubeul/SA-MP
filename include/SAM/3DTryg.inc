@@ -2,7 +2,7 @@
  *                                                                                                                                   *
  *                                                    )(   3DTryg Functions   )(                                                     *
  *                                                                                                                                   *
- * Copyright © 2017 Abyss Morgan. All rights reserved.                                                                               *
+ * Copyright © 2018 Abyss Morgan. All rights reserved.                                                                               *
  * Contributors: Crayder, IllidanS4, Nero_3D, RyDeR, Zoutdaxv, hesambia, Neil Lamoureux, Ivan_Ino, Ralfie, Unrea1                    *
  *                                                                                                                                   *
  * Download: https://github.com/AbyssMorgan/SA-MP/tree/master/include/SAM                                                            *
