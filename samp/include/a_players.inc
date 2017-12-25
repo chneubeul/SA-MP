@@ -1,6 +1,6 @@
 /*****************************************************
  *                                                   *
- * Copyright © 2017 SA-MP Team. All rights reserved. *
+ * Copyright © 2018 SA-MP Team. All rights reserved. *
  * SAMP Version: 0.3.8 RC4                           *
  *                                                   *
  *****************************************************/
