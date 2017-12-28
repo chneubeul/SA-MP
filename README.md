@@ -29,6 +29,9 @@
 * [MuchomoE](http://8.ct8.pl/r/muchomoe)
 * [Unrea1](http://8.ct8.pl/r/Unrea1)
 * [TDI97](http://8.ct8.pl/r/TDI97)
+* [Switel1200](http://8.ct8.pl/r/Switel1200)
+* [N.i.n.F.o.m.A.n.k.A](http://8.ct8.pl/r/NinFomAnkA)
+
 
 
 ### Contributors:
