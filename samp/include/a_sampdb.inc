@@ -1,7 +1,9 @@
-//  SA-MP Native SQLite Database Functions
-//
-//  (c) Copyright 2015, SA-MP Team
-//
+/*****************************************************
+ *                                                   *
+ * Copyright © 2018 SA-MP Team. All rights reserved. *
+ * SAMP Version: 0.3.8 RC4                           *
+ *                                                   *
+ *****************************************************/
 
 #if defined _sampdb_included
 	#endinput
