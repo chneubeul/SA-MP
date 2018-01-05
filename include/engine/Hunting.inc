@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7                                                                                                           *
  * Streamer Version: 2.9.1                                                                                                        *
  * ColAndreas Version: 1.4.0                                                                                                      *
- * 3DTryg Version: 4.5.3                                                                                                          *
+ * 3DTryg Version: 4.6.0                                                                                                          *
  *                                                                                                                                *
  * Functions:                                                                                                                     *
  * Hunting::Create(type,Float:x,Float:y,Float:z,Float:health,respawntime,worldid=-1,interiorid=-1,playerid=-1,                    *
@@ -89,11 +89,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.6.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40503)
-	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.6.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40600)
+	#error [ADM] Update you 3DTryg.inc to v4.6.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 #if defined _hunting_system
@@ -541,7 +541,7 @@ stock Hunting::IsPlayerInRange(playerid,mobid,Float:range){
 	if(mobid <= 0 || mobid >= MAX_HUNTING_ANIMALS) return 0;
 	if(!Hunting::IsValid(mobid)) return 0;
 	if(!IsPlayerConnected(playerid)) return 0;
-	return (GetElementsDistance(playerid,item_player,Hunting::Data[mobid][Hunting::objectid],item_dynamic_object) <= range);
+	return (Item::GetDistance(playerid,item_player,Hunting::Data[mobid][Hunting::objectid],item_dynamic_object) <= range);
 }
 
 stock Float:Hunting::GetFacingAngle(mobid){

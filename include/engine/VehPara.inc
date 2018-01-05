@@ -15,7 +15,7 @@
  * SA:MP Version: 0.3.7 (REQUIRE)                                                                   *
  * Streamer Version: 2.9.1                                                                          *
  * ColAndreas Version: 1.4.0                                                                        *
- * 3DTryg Version: 4.5.3                                                                            *
+ * 3DTryg Version: 4.6.0                                                                            *
  *                                                                                                  *
  * Functions:                                                                                       *
  * bool:IsPlayerUsingVehPara(playerid);                                                             *
@@ -44,11 +44,11 @@
 
 //Check Version 3DTryg.inc
 #if !defined _3D_Tryg
-	#error [ADM] You need 3DTryg.inc v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] You need 3DTryg.inc v4.6.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #elseif !defined Tryg3D_Version
-	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
-#elseif (Tryg3D_Version < 40503)
-	#error [ADM] Update you 3DTryg.inc to v4.5.3 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+	#error [ADM] Update you 3DTryg.inc to v4.6.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
+#elseif (Tryg3D_Version < 40600)
+	#error [ADM] Update you 3DTryg.inc to v4.6.0 (github.com/AbyssMorgan/SA-MP/blob/master/include/SAM/3DTryg.inc)
 #endif
 
 //Language
@@ -150,7 +150,7 @@ stock StopVehicleParachuteAction(playerid,vehicleid=INVALID_VEHICLE_ID){
 //Hook: OnPlayerUpdate
 public OnPlayerUpdate(playerid){
 	if(IsPlayerUsingVehPara(playerid)){
-		if(IsCollisionFlag(GetElementCollisionFlags(GetPlayerVehicleID(playerid),item_vehicle),POSITION_FLAG_GROUND)){
+		if(IsCollisionFlag(Item::GetCollisionFlags(GetPlayerVehicleID(playerid),item_vehicle),POSITION_FLAG_GROUND)){
 			StopVehicleParachuteAction(playerid);
 			GameTextForPlayer(playerid,VP_LANG_01,2500,3);
 		} else {
@@ -272,7 +272,7 @@ public OnPlayerKeyStateChange(playerid,newkeys,oldkeys){
 					StopVehicleParachuteAction(playerid);
 					GameTextForPlayer(playerid,VP_LANG_01,2500,3);
 				} else {
-					if(IsCollisionFlag(GetElementCollisionFlags(vid,item_vehicle),POSITION_FLAG_AIR) && GetVehicleSpeed(vid) > 0.0){
+					if(IsCollisionFlag(Item::GetCollisionFlags(vid,item_vehicle),POSITION_FLAG_AIR) && GetVehicleSpeed(vid) > 0.0){
 						StartVehicleParachuteAction(playerid);
 						GameTextForPlayer(playerid,VP_LANG_02,2500,3);
 					} else {
