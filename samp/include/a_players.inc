@@ -2,6 +2,7 @@
  *                                                   *
  * Copyright © 2018 SA-MP Team. All rights reserved. *
  * SAMP Version: 0.3.8 RC4                           *
+ * Extended Version                                  *
  *                                                   *
  *****************************************************/
 
@@ -9,6 +10,7 @@
 	#endinput
 #endif
 #define _players_included
+#define _players_extended_include		"0.3.8 RC4"
 #pragma library players
 
 #define SPECIAL_ACTION_NONE				0
@@ -30,6 +32,7 @@
 #define SPECIAL_ACTION_DRINK_SPRUNK		23
 #define SPECIAL_ACTION_CUFFED			24
 #define SPECIAL_ACTION_CARRY			25
+#define SPECIAL_ACTION_PISSING			68
 
 #define FIGHT_STYLE_NORMAL				4
 #define FIGHT_STYLE_BOXING				5

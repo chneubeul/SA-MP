@@ -2,6 +2,7 @@
  *                                                   *
  * Copyright © 2018 SA-MP Team. All rights reserved. *
  * SAMP Version: 0.3.8 RC4                           *
+ * Extended Version                                  *
  *                                                   *
  *****************************************************/
 
@@ -9,6 +10,7 @@
 	#endinput
 #endif
 #define _samp_included
+#define _samp_extended_include			"0.3.8 RC4"
 #pragma library samp
 
 #pragma tabsize 4
@@ -38,7 +40,6 @@
 #define INVALID_ACTOR_ID						(0xFFFF)
 #define NO_TEAM									(255)
 #define MAX_OBJECTS								(2000)
-#define MAX_REMOVE_OBJECTS						(1000)
 #define INVALID_OBJECT_ID						(0xFFFF)
 #define MAX_GANG_ZONES							(1024)
 #define MAX_TEXT_DRAWS							(2048)
@@ -52,6 +53,11 @@
 #define INVALID_GANG_ZONE						(-1)
 #define INVALID_3DTEXT_ID						(0xFFFF)
 #define INVALID_PICKUP_ID						(-1)
+#define MAX_TEXT_DRAW_SPRITES					(200)
+#define MAX_REMOVE_OBJECTS						(1000)
+#define MAX_PLAYER_SKILL_LEVEL 					(999)
+#define MAX_WEAPON_AMMO							(0x7FFF)
+#define MAX_WEAPON_TYPES						(12)
 
 // --------------------------------------------------
 // Natives
@@ -368,6 +374,29 @@ native ShowPlayerDialog(playerid, dialogid, style, caption[], info[], button1[],
 #define KEY_DOWN						(128)
 #define KEY_LEFT						(-128)
 #define KEY_RIGHT						(128)
+
+// Weather
+#define WEATHER_EXTRASUNNY_LA			(0)
+#define WEATHER_SUNNY_LA				(1)
+#define WEATHER_EXTRASUNNY_SMOG_LA		(2)
+#define WEATHER_SUNNY_SMOG_LA			(3)
+#define WEATHER_CLOUDY_LA				(4)
+#define WEATHER_SUNNY_SF				(5)
+#define WEATHER_EXTRASUNNY_SF			(6)
+#define WEATHER_CLOUDY_SF				(7)
+#define WEATHER_RAINY_SF				(8)
+#define WEATHER_FOGGY_SF				(9)
+#define WEATHER_SUNNY_VEGAS				(10)
+#define WEATHER_EXTRASUNNY_VEGAS 		(11)	//(heat waves)
+#define WEATHER_CLOUDY_VEGAS			(12)
+#define WEATHER_EXTRASUNNY_COUNTRYSIDE	(13)
+#define WEATHER_SUNNY_COUNTRYSIDE		(14)
+#define WEATHER_CLOUDY_COUNTRYSIDE		(15)
+#define WEATHER_RAINY_COUNTRYSIDE		(16)
+#define WEATHER_EXTRASUNNY_DESERT		(17)
+#define WEATHER_SUNNY_DESERT			(18)
+#define WEATHER_SANDSTORM_DESERT		(19)
+#define WEATHER_UNDERWATER 				(20)	//(greenish, foggy)
 
 // --------------------------------------------------
 // Forwards (Callback declarations)
